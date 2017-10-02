@@ -98,6 +98,10 @@ npm run prod
 ```
 Seu código dentro da pasta resources irá ser compilado para produção com minificação e uglifyJS.
 
+## Modelos e Objetos
+
+Nossos modelos e objetos são todos baseados nos retornos da API dos Micro-Serviços. Para obter uma lista atualizada e mais completa dos Objetos e Modelos acesse nossa documentação online de ajuda. (https://neohelp.readme.io/v1/reference)
+
 ## Estrutura de Arquvios
 
 ```bash
