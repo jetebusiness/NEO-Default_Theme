@@ -77,7 +77,7 @@ Clone esse repositório e instale suas dependências:
 
 ```bash
 git clone git@github.com:jetebusiness/NEO-Default_Theme.git
-cd NEO-Default_Theme
+cd NEO-DefaultTheme
 npm install
 ```
 
