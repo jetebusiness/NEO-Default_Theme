@@ -1,0 +1,72 @@
+.mobile-hide {
+  @media screen and (max-width: $mobile-bp) {
+    display: none !important;
+  }
+}
+
+.mobile-fluid {
+  @media screen and (max-width: $mobile-bp) {
+    width: 100%;
+  }
+}
+
+.ui {
+
+  &.nowrap {
+    @media screen and (max-width: $mobile-bp) {
+      flex-wrap: nowrap !important;
+    }
+  }
+
+  &.steps {
+
+    .step {
+
+      > .icon {
+        @media screen and (max-width: $mobile-bp) {
+          margin: 0 !important;
+        }
+      }
+
+      > .content {
+        @media screen and (max-width: $mobile-bp) {
+          display: none !important;
+        }
+      }
+    }
+  }
+
+  &.mobile {
+
+    &.only {
+      @media screen and (max-width: $mobile-bp) {
+        display: block;
+      }
+    }
+
+    &.hide {
+      @media screen and (max-width: $mobile-bp) {
+        display: none !important;
+      }
+    }
+  }
+}
+
+*.no-p,
+.ui.container.fluid {
+  @media screen and (max-width: $mobile-bp) {
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+*.no-m {
+  @media screen and (max-width: $mobile-bp) {
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+  }
+}

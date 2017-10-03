@@ -1,0 +1,36 @@
+﻿@model List<DomainCheckout.Entities.BuyXGetY>
+
+@foreach (var item in Model)
+{
+    if (item.ImagePath != null)
+    {
+        <div class="row">
+            <div class="column">
+                <div class="ui promocao images">
+                    <a href="#"><img src="@item.ImagePath" alt="" id="dica_promocional"></a>
+                </div>
+            </div>
+        </div>
+    }
+    if (item.BuyXGetYRoles != null)
+    {
+        <div id="dica_leve_x" class="hideme">
+            @foreach (var regras in item.BuyXGetYRoles)
+            {
+                <div>
+                    @string.Format("- Leve {0} produto(s) e pague {1}.", regras.QuantityToBuy, regras.QuantityToBuy - regras.QuantityFree)
+                </div>
+                    <br />
+            }
+            <div>
+                <span>
+                    *Obs.: Quando os produtos adicionados ao carrinho de compras fizerem parte de uma campanha de Leve X Pague Y, será(ão) concedido(s) produto(s) grátis quando a condição da promoção for atendida.
+                    Exemplo: se a condição exige a compra de dois produtos da campanha para ganhar um grátis, a promoção será válida e o produto sairá grátis, quando dois produtos da campanha (iguais ou distintos) forem adicionados ao carrinho de compras.
+                </span>
+            </div>
+        </div>
+
+    }
+
+}
+

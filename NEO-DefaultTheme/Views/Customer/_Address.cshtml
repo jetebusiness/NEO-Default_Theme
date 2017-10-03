@@ -1,0 +1,234 @@
+﻿@model List<DomainCustomer.Entities.Address>
+
+
+@foreach (var item in Model)
+{
+    <div class="ui form">
+
+        @if (@Model.IndexOf(item) >= 1 && item.AddressType == DomainCustomer.Entities.Address.enumAddressType.Entrega)
+        {
+            <div class="field">
+                <div class="ui checkbox endereco igual-edit">
+                    <input type="checkbox" name="check" id="check">
+                    <label>O endereço de cobrança é o mesmo que o endereço de entrega?</label>
+                </div>
+            </div>
+        }
+
+        @if (item.AddressType == DomainCustomer.Entities.Address.enumAddressType.Entrega)
+        {
+            @Html.Raw("<div class='endereco cobranca-edit'>");
+        }
+        else
+        {
+            @Html.Raw("<div>");
+        }
+
+
+        @if ((int)item.AddressType == (int)DomainCustomer.Entities.Address.enumAddressType.Cadastro)
+        {
+            <h4 class="ui dividing header">Endereço de Entrega:</h4>
+        }
+        else if ((int)item.AddressType == (int)DomainCustomer.Entities.Address.enumAddressType.Entrega)
+        {
+            <h4 class="ui dividing header">Endereço de Cobrança:</h4>
+        }
+
+
+
+
+        <input type="hidden" name="Address[@Model.IndexOf(item)].Country" value="BRASIL" />
+        <div class="two fields required">
+            <div class="field">
+                <label>CEP</label>
+                <div class="ui left icon input">
+                    <i class="marker icon"></i>
+                    <input type="text" name="Address[@Model.IndexOf(item)].ZipCode" placeholder="00000-000" class="masked" data-validate="@string.Format("{0}{1}", "zipcode", @Model.IndexOf(item))" value="@Model[@Model.IndexOf(item)].ZipCode">
+                </div>
+            </div>
+            <div class="field">
+                <p>Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank"> Consulte Aqui</a>.</p>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label>Endereço</label>
+            <div class="ui input">
+                <input type="text" name="Address[@Model.IndexOf(item)].StreetAddress" placeholder="Endereço" data-validate="@string.Format("{0}{1}", "address", @Model.IndexOf(item))" value="@Model[@Model.IndexOf(item)].StreetAddress">
+            </div>
+        </div>
+
+        <div class="three fields">
+            <div class="field required">
+                <label>Número</label>
+                <div class="ui input">
+                    <input type="text" name="Address[@Model.IndexOf(item)].Number" placeholder="Número" data-validate="@string.Format("{0}{1}", "number", @Model.IndexOf(item))" value="@Model[@Model.IndexOf(item)].Number">
+                </div>
+            </div>
+            <div class="field">
+                <label>Complemento</label>
+                <div class="ui input">
+                    <input type="text" name="Address[@Model.IndexOf(item)].Complement" placeholder="Ex: ap. 123" data-validate="@string.Format("{0}{1}", "complement", @Model.IndexOf(item))" value="@Model[@Model.IndexOf(item)].Complement">
+                </div>
+            </div>
+            <div class="field">
+                <label>Bairro</label>
+                <div class="ui input">
+                    <input type="text" placeholder="Bairro" name="Address[@Model.IndexOf(item)].Neighbourhood" data-validate="@string.Format("{0}{1}", "neighbourhood", @Model.IndexOf(item))" value="@Model[@Model.IndexOf(item)].Neighbourhood">
+                </div>
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label>Cidade</label>
+                <div class="ui input">
+                    <input type="text" name="Address[@Model.IndexOf(item)].City" placeholder="Cidade" data-validate="@string.Format("{0}{1}", "city", @Model.IndexOf(item))" value="@Model[@Model.IndexOf(item)].City">
+                </div>
+            </div>
+            <div class="field">
+                <label>Estado</label>
+                <div class="ui dropdown search selection">
+                    <select id="estado_0" name="Address[@Model.IndexOf(item)].State" data-validate="@string.Format("{0}{1}", "state", @Model.IndexOf(item))">
+                        <option value="">Selecione</option>
+                        <option value="AC" @(Model[0].State == "AC" ? "selected" : "")>Acre</option>
+                        <option value="AL" @(Model[0].State == "AL" ? "selected" : "")>Alagoas</option>
+                        <option value="AP" @(Model[0].State == "AP" ? "selected" : "")>Amapá</option>
+                        <option value="AM" @(Model[0].State == "AM" ? "selected" : "")>Amazonas</option>
+                        <option value="BA" @(Model[0].State == "BA" ? "selected" : "")>Bahia</option>
+                        <option value="CE" @(Model[0].State == "CE" ? "selected" : "")>Ceará</option>
+                        <option value="DF" @(Model[0].State == "DF" ? "selected" : "")>Distrito Federal</option>
+                        <option value="ES" @(Model[0].State == "ES" ? "selected" : "")>Espírito Santo</option>
+                        <option value="GO" @(Model[0].State == "GO" ? "selected" : "")>Goiás</option>
+                        <option value="MA" @(Model[0].State == "MA" ? "selected" : "")>Maranhão</option>
+                        <option value="MT" @(Model[0].State == "MT" ? "selected" : "")>Mato Grosso</option>
+                        <option value="MS" @(Model[0].State == "MS" ? "selected" : "")>Mato Grosso do Sul</option>
+                        <option value="MG" @(Model[0].State == "MG" ? "selected" : "")>Minas Gerais</option>
+                        <option value="PA" @(Model[0].State == "PA" ? "selected" : "")>Pará</option>
+                        <option value="PB" @(Model[0].State == "PB" ? "selected" : "")>Paraíba</option>
+                        <option value="PR" @(Model[0].State == "PR" ? "selected" : "")>Paraná</option>
+                        <option value="PE" @(Model[0].State == "PE" ? "selected" : "")>Pernambuco</option>
+                        <option value="PI" @(Model[0].State == "PI" ? "selected" : "")>Piauí</option>
+                        <option value="RJ" @(Model[0].State == "RJ" ? "selected" : "")>Rio de Janeiro</option>
+                        <option value="RN" @(Model[0].State == "RN" ? "selected" : "")>Rio Grande do Norte</option>
+                        <option value="RS" @(Model[0].State == "RS" ? "selected" : "")>Rio Grande do Sul</option>
+                        <option value="RO" @(Model[0].State == "RO" ? "selected" : "")>Rondônia</option>
+                        <option value="RR" @(Model[0].State == "RR" ? "selected" : "")>Roraima</option>
+                        <option value="SC" @(Model[0].State == "SC" ? "selected" : "")>Santa Catarina</option>
+                        <option value="SP" @(Model[0].State == "SP" ? "selected" : "")>São Paulo</option>
+                        <option value="SE" @(Model[0].State == "SE" ? "selected" : "")>Sergipe</option>
+                        <option value="TO" @(Model[0].State == "TO" ? "selected" : "")>Tocantins</option>
+                    </select><i class="dropdown icon"></i><input class="search" autocomplete="off" tabindex="0"><div class="default text">Selecione</div><div class="menu" tabindex="-1"><div class="item" data-value="AC">Acre</div><div class="item" data-value="AL">Alagoas</div><div class="item" data-value="AP">Amapá</div><div class="item" data-value="AM">Amazonas</div><div class="item" data-value="BA">Bahia</div><div class="item" data-value="CE">Ceará</div><div class="item" data-value="DF">Distrito Federal</div><div class="item" data-value="ES">Espírito Santo</div><div class="item" data-value="GO">Goiás</div><div class="item" data-value="MA">Maranhão</div><div class="item" data-value="MT">Mato Grosso</div><div class="item" data-value="MS">Mato Grosso do Sul</div><div class="item" data-value="MG">Minas Gerais</div><div class="item" data-value="PA">Pará</div><div class="item" data-value="PB">Paraíba</div><div class="item" data-value="PR">Paraná</div><div class="item" data-value="PE">Pernambuco</div><div class="item" data-value="PI">Piauí</div><div class="item" data-value="RJ">Rio de Janeiro</div><div class="item" data-value="RN">Rio Grande do Norte</div><div class="item" data-value="RS">Rio Grande do Sul</div><div class="item" data-value="RO">Rondônia</div><div class="item" data-value="RR">Roraima</div><div class="item" data-value="SC">Santa Catarina</div><div class="item" data-value="SP">São Paulo</div><div class="item" data-value="SE">Sergipe</div><div class="item" data-value="TO">Tocantins</div></div><div class="results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Raw("</div>");
+}
+
+@if (Model.FindAll(x => x.AddressType == DomainCustomer.Entities.Address.enumAddressType.Entrega).Count() == 0)
+{
+    <div class="ui form">
+        <div class="field">
+            <div class="ui checkbox endereco igual">
+                <input type="checkbox" checked="checked" name="check" id="check">
+                <label>O endereço de cobrança é o mesmo que o endereço de entrega?</label>
+            </div>
+        </div>
+
+        <input type="hidden" value="@Convert.ChangeType(DomainCustomer.Entities.Address.enumAddressType.Cadastro, typeof(int))" name="Address[1].AddressType" />
+        <input type="hidden" name="Address[1].Country" value="BRASIL" />
+
+        <div class="endereco cobranca">
+            <h4 class="ui dividing header">Endereço de Cobrança</h4>
+            <div class="two fields required">
+                <div class="field">
+                    <label>CEP</label>
+                    <div class="ui left icon input">
+                        <i class="marker icon"></i>
+                        <input type="text" name="Address[1].ZipCode"
+                               placeholder="00000-000"
+                               class="masked" data-validate="zipcode">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="busca cep">
+                        <p>
+                            Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
+                                                   target="_blank">Consulte Aqui</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="field required">
+                <label>Endereço</label>
+                <div class="ui input">
+                    <input type="text" name="Address[1].StreetAddress" placeholder="Endereço" data-validate="address1">
+                </div>
+            </div>
+            <div class="three fields">
+                <div class="field required">
+                    <label>Número</label>
+                    <div class="ui input">
+                        <input type="text" name="Address[1].Number" placeholder="Número" data-validate="number1">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Complemento</label>
+                    <div class="ui input">
+                        <input type="text" name="Address[1].Complement"
+                               placeholder="Ex: ap. 123" data-validate="complement1">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Bairro</label>
+                    <div class="ui input">
+                        <input type="text" placeholder="Bairro" name="Address[1].Neighbourhood" data-validate="neighbourhood1">
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Cidade</label>
+                    <div class="ui input">
+                        <input type="text" name="Address[1].City" placeholder="Cidade" data-validate="city1">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Estado</label>
+                    <select class="ui dropdown search" id="estado_1" name="Address[1].State" data-validate="state1">
+                        <option value="">Selecione</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+}

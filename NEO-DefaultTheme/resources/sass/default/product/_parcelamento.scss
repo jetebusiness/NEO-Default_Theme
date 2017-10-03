@@ -1,0 +1,19 @@
+span.parcelamentos {
+  line-height: 1.5rem;
+  & > .parcelas {
+    font-weight: bold;
+    }
+  & > .valor {
+    font-weight: bold;
+    font-size: 1.1rem;
+    }
+  & > .modelo {
+    text-transform: lowercase;
+    font-size: 0.9rem;
+    }
+  & > .total {
+    color:#C5C7C9;
+    font-size: 0.8rem;
+    float: right;
+    }
+  }

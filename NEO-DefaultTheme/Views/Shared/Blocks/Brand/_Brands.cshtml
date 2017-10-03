@@ -1,0 +1,54 @@
+﻿@model IList<DomainProduct.Entities.Brand>
+
+<div class="ui container topsellers">
+    <div class="ui horizontal divider">
+        MARCAS
+    </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            $('.car-marcas').slick({
+                prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
+                nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
+                dots: false,
+                slidesToShow: 6,
+                accessibility: false,
+                responsive: [
+                    {
+                        breakpoint: 933,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    },
+                    {
+                        breakpoint: 723,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+    
+        <div class="ui car-marcas sixteen wide column">
+            @if (Model != null && Model.Count() > 0)
+            {
+                foreach (var brand in Model)
+                {
+                    <div class="two column">
+                        <a href="@brand.UrlFriendly">
+                            <img class="ui fluid image brands" src="@brand.Logo" alt="@brand.Name">
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    
+    <div class="ui divider hidden"></div>
+</div>

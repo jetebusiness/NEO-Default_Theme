@@ -1,0 +1,43 @@
+// -----[Font-Awesome - http://fontawesome.io/]----- //
+$fa-font-path: "~font-awesome/fonts/";
+
+// -----[Perfect Scroll - https://noraesae.github.io/perfect-scrollbar/]----- //
+// Colors
+$ps-border-radius: 6px;
+
+$ps-rail-default-opacity: 0;
+$ps-rail-container-hover-opacity: 0.6;
+$ps-rail-hover-opacity: 0.9;
+
+$ps-bar-bg: transparent;
+$ps-bar-container-hover-bg: #aaa;
+$ps-bar-hover-bg: #999;
+$ps-rail-hover-bg: #eee;
+
+// Sizes
+$ps-scrollbar-x-rail-bottom: 0px;
+$ps-scrollbar-x-rail-height: 15px;
+$ps-scrollbar-x-bottom: 2px;
+$ps-scrollbar-x-height: 6px;
+$ps-scrollbar-x-hover-height: 11px;
+
+$ps-scrollbar-y-rail-right: 0;
+$ps-scrollbar-y-rail-width: 15px;
+$ps-scrollbar-y-right: 2px;
+$ps-scrollbar-y-width: 6px;
+$ps-scrollbar-y-hover-width: 11px;
+
+
+// -----[SlickCarousel - http://kenwheeler.github.io/slick/]----- //
+
+$slick-font-family: "slick" ;
+$slick-arrow-color: white ;
+$slick-dot-color: black ;
+$slick-dot-color-active: $slick-dot-color ;
+$slick-prev-character: "\2190" ;
+$slick-next-character: "\2192" ;
+$slick-dot-character: "\2022" ;
+$slick-dot-size: 15px ;
+$slick-opacity-default: 0.75 ;
+$slick-opacity-on-hover: 1 ;
+$slick-opacity-not-active: 0.25 ;

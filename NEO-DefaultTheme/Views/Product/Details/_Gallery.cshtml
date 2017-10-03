@@ -1,0 +1,55 @@
+﻿@model IEnumerable<DomainProduct.Entities.ProductImage>
+
+<script>
+    jQuery(document).ready(function ($) {
+        slickGallery();
+    });
+
+
+    function destroyCarousel() {
+            $('.car-gallery').slick('destroy');
+    }
+
+
+    function slickGallery() {
+        $('.car-gallery').slick({
+            prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
+            nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
+            dots: false,
+            accessibility: false,
+            slidesToShow: 6,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 6
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                }
+            ]
+        });
+    }
+
+
+</script>
+<div class="ui small images car-gallery thumbnails">
+    @foreach (var item in Model)
+    {
+        <a href="@item.ImageHighResolution" data-standard="@item.ImageDefault" class="ui image">
+            @* HREF = Imagem ZOOMO / Data-starndard = Imagem Sem zoom*@
+            <img src="@item.ImageDefault" />
+        </a>
+    }
+</div>
+<div class="ui divider hidden"></div>

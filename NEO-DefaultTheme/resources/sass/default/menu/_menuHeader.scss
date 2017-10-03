@@ -1,0 +1,103 @@
+$menuBG: $primary-color;
+$menuTextColor: $white;
+$menuHeight: 60px;
+$menuHoverBorderColor: $ascent-1-color;
+
+.menuheader {
+  background-color: $menuBG;
+  min-height: $menuHeight;
+  width: 100%;
+  /*Sub Classes*/
+  .ui.menu {
+    background: transparent;
+    background-color: transparent;
+    border: 0px;
+    box-shadow: none;
+    display: flex;
+    font-weight: 400;
+    min-height: 2.85714286em;
+    flex-wrap: wrap;
+    li {
+      &:hover,
+      &.active,
+      &:focus {
+        box-shadow: inset 0 -5px 0 $menuHoverBorderColor;
+        }
+      > .item {
+        word-wrap: normal;
+        span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+            
+          }
+        
+        > .icon.dropdown {
+          line-height: 18px;
+          }
+        > .icon.content {
+          font-size: 26px;
+          line-height: 1;
+          margin-right: 15px;
+          }
+        .menu {
+          border-radius: 0px !important;
+          margin-top: 0px !important;
+          z-index: 10;
+          .item {
+            line-height: 18px;
+            &:hover,
+            &.active,
+            &:focus {
+              box-shadow: none !important;
+              }
+            }
+          .menu {
+            box-shadow: none;
+            }
+            
+          }
+        }
+      }
+    }
+  .ui.menu .item {
+    color: $menuTextColor;
+    line-height: $menuHeight;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    }
+  .ui.menu .item:hover,
+  .ui.menu .item.active {
+    box-shadow: inset 0 -5px 0 $menuHoverBorderColor;
+    color: $menuTextColor;
+    }
+  .sub-megamenu {
+    .ui.link.list {
+      .item {
+        color: rgba(0, 0, 0, 0.7);
+        margin: 0.5em 0px;
+        padding-left: 10px;
+        }
+      }
+    }
+  .ui.menu > .item:first-child,
+  .ui.menu > .item:last-child {
+    border-radius: 0px;
+    }
+  .ui.list {
+    .item {
+      color: rgba(0, 0, 0, .7);
+      padding-left: 10px !important;
+      &:hover,
+      &.active,
+      &:focus {
+        color: rgba(0, 0, 0, .9);
+        box-shadow: inset 5px 0 0 $menuHoverBorderColor;
+        transition: opacity 0.3s ease-in-out;
+        }
+      }
+    }
+  }
+/* Mega Menu Start */
+@import "wsmenu/style";
+/* MegaMenu End */

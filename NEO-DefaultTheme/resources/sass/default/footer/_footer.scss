@@ -1,0 +1,68 @@
+.footer-wrap{
+	position: absolute;
+	bottom: 0px;
+  }
+
+  .footer {
+	background-color: $ascent-4-color !important;
+	padding-bottom: 20px !important;
+	margin-top:30px !important;
+
+	.social.list {
+
+	  .button {
+		margin-left:10px;
+
+		i{
+		  font-size: 2em;
+		  line-height: 0.95em;
+		}
+	  }
+	}
+  }
+
+  .subFooter {
+	background-color: $ascent-5-color;
+
+	.menu_subfooter {
+	  margin-bottom: 1em;
+
+	  a.submenu {
+		padding: .42857143em 0.84285714em;
+		color: white;
+
+		&:hover {
+		  text-decoration: underline;
+		}
+	  }
+	}
+  }
+
+  .jetBrand{
+	height: 35px;
+	text-align: center;
+	padding: 0px !important;
+	background: black !important;
+
+	img{
+	  height: 25px;
+	  margin:5px;
+	}
+  }
+#seloEbit{
+	display: inline-block !important;
+	float: right;
+	margin-left: 10px;
+	}
+#jetLogo {
+    height: 28px;
+
+    .cinza {
+        fill: rgba(255, 255, 255, 1);
+    }
+
+    .vermelho {
+        fill: rgba(228, 25, 32, 1);
+    }
+}
+  

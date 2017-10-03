@@ -1,0 +1,128 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Área do Cliente";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section gtm {
+    <script>
+        dataLayer = [{
+            'pageType': 'other'
+        }];
+    </script>
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Área do Cliente</a>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+}
+
+<div class="column">
+    <div class="ui grid stackable">
+        <h4>Olá, @Model.Name</h4>
+        <div class="row two column">
+            <div class="column">
+                <div class="ui items very relaxed divided menuclient">
+                    <a class="item" href="/Order/LastOrderDetail">
+                        <div class="ui small">
+                            <i class="ui icon big asterisk orange "></i>
+                        </div>
+                        <div class="content">
+                            <div class="header">Último Pedido</div>
+                            <div class="description">
+                                <p>Consulte seu último pedido realizado em nossa loja.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="item" href="~/Order/Index">
+                        <div class="ui small">
+                            <i class="ui icon big shopping basket  blue "></i>
+                        </div>
+                        <div class="content">
+                            <div class="header">Consultar meus pedidos</div>
+                            <div class="description">
+                                <p>Consulte e acompanhe o status de seus pedidos em nossa loja.</p>
+                            </div>
+                        </div>
+                    </a>
+                                        @*
+        <a class="item" href="/client/wishlist/list">
+            <div class="ui small">
+                <i class="ui icon big heart red  "></i>
+            </div>
+            <div class="content">
+                <div class="header">Lista de Desejos</div>
+                <div class="description">
+                    <p>Consulte e gerencie sua(s) lista(s) de desejo.</p>
+                </div>
+            </div>
+                             </a>
+                                        *@
+                   
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui items very relaxed divided menuclient">
+                    <a class="item" href="/Customer/Edit">
+                        <div class="ui small">
+                            <i class="ui icon big user green  "></i>
+                        </div>
+                        <div class="content">
+                            <div class="header">Alterar Dados Cadastrais</div>
+                            <div class="description">
+                                <p>Você poderá alterar seus dados cadastrais.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="item" href="/Customer/changeAddress">
+                        <div class="ui small">
+                            <i class="ui icon big marker brown  "></i>
+                        </div>
+                        <div class="content">
+                            <div class="header">Gestão de Endereços</div>
+                            <div class="description">
+                                <p>Gerencie seus endereços de entrega em nosso sistema.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="item" href="/customer/changepassword">
+                        <div class="ui small">
+                            <i class="ui icon big lock gray  "></i>
+                        </div>
+                        <div class="content">
+                            <div class="header">Alterar senha</div>
+                            <div class="description">
+                                <p>Crie uma nova senha para seu cadastro em nossa loja.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="item" href="/Customer/ChangeEmail">
+                        <div class="ui small">
+                            <i class="ui icon big mail olive  "></i>
+                        </div>
+                        <div class="content">
+                            <div class="header">Alterar e-mail</div>
+                            <div class="description">
+                                <p>Crie um novo e-mail para o seu cadastro em nossa loja.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

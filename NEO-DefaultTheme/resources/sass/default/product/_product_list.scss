@@ -1,0 +1,40 @@
+
+/* Lista Produtos */
+.produtoList {
+	.content {
+	  width: 70% !important;
+	  .tags{
+		margin-top:25px;
+	  }
+	}
+	.extra {
+	  width: 30% !important;
+	  text-align: right;
+	  color: rgba(0,0,0,.9) !important;
+	  span{
+		clear: both;
+		display: block;
+		&:last-child {
+		  margin-bottom: 15px;
+		}
+	  }
+	  .precobase{
+		i{
+		  text-decoration: line-through;
+		}
+	  }
+	  .preco{
+
+		font-size: 1.2em;
+		line-height: 1.5em;
+		strong{
+		  font-size: 1.3em;
+		  color: $ascent-1-color;
+		}
+		&:after{
+		  content: '\A';
+		  white-space: pre;
+		}
+	  }
+	}
+  }

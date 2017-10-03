@@ -1,0 +1,11 @@
+﻿
+@model DomainCheckout.Entities.Cart
+
+@if (Model != null && Model.CartItems != null)
+{
+    foreach (var product in Model.CartItems)
+    {
+        <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
+        @Html.Partial("~/Views/Shared/Object/Product/_ProductcartItemMiniCart.cshtml", product)
+    }
+}

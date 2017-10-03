@@ -1,0 +1,64 @@
+.text {
+  &.color {
+  
+    &.white {
+      color: $white !important;
+      }
+    
+    &.red {
+      color: $red !important;
+    }
+
+    &.orange {
+      color: $orange !important;
+    }
+
+    &.yellow {
+      color: $yellow !important;
+    }
+
+    &.olive {
+      color: $olive !important;
+    }
+
+    &.green {
+      color: $green !important;
+    }
+
+    &.dark-green {
+      color: $dark-green !important;
+    }
+
+    &.teal {
+      color: $teal !important;
+    }
+
+    &.blue {
+      color: $blue !important;
+    }
+
+    &.violet {
+      color: $violet !important;
+    }
+
+    &.purple {
+      color: $purple !important;
+    }
+
+    &.pink {
+      color: $pink !important;
+    }
+
+    &.brown {
+      color: $brown !important;
+    }
+
+    &.grey {
+      color: $grey !important;
+    }
+
+    &.black {
+      color: $black !important;
+    }
+  }
+}

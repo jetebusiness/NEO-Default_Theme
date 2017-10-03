@@ -1,0 +1,65 @@
+﻿@model DomainProduct.Result
+@if (Model != null)
+            {
+<div class="ui container topsellers">
+    <div class="ui horizontal divider">
+        Mais Vendidos
+    </div>
+    <script>
+        jQuery(document).ready(function($) {
+            var settings = {
+                prevArrow:
+                    '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
+                nextArrow:
+                    '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
+                dots: false,
+                slidesToShow: 4,
+                accessibility: false,
+                responsive: [
+                    {
+                        breakpoint: 933,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 723,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }
+                ]
+            };
+            var $sliderCard = jQuery(".car-maisvendidos .card"),
+                $slider = jQuery(".car-maisvendidos"),
+                $width = jQuery(".pusher").width();
+                
+            if ($sliderCard.length >= 4 && $width > 934) {
+                $slider.slick(settings);
+            } else if ($sliderCard.length >= 3 && $width < 724) {
+                $slider.slick(settings);
+            } else if ($sliderCard.length >= 2 && $width < 481) {
+                $slider.slick(settings);
+            } 
+        });
+    </script>
+    <div class="topSellersProducts">
+        <div class="ui cards car-maisvendidos slideshow">
+           
+                @foreach (var product in Model.Products)
+                {
+                    <!-- Page: ~/Views/Shared/Object/Product/_ProductInCard.cshtml -->
+                    @Html.Partial("~/Views/Shared/Object/Product/_ProductInCard.cshtml", product)
+                }
+           
+        </div>
+    </div>
+    <div class="ui divider hidden"></div>
+</div>
+}

@@ -1,0 +1,43 @@
+﻿@model IList<DomainCompany.Entities.Banner>
+@if (Model != null && Model.Any())
+{
+<div class="ui container">
+    <div class="ui grid">
+        <div class="row one column">
+            <div class="column">
+                <div class="ui images text center left grid-banners  middle aligned center aligned">
+                    @{
+                        var contador = 0;
+                        foreach (var banner in Model)
+                        {
+                            <a href="@banner.Link">
+                                <img src="@banner.NameFileImage" alt="" class="ui image">
+                            </a>
+                            contador++;
+
+                            if (contador >= 3)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                </div>
+                <div class="ui images text center left grid-banners  middle aligned center aligned">
+                    @{
+                        contador = 0;
+                        foreach (var banner in Model)
+                        {
+                            contador++;
+
+                            if (contador > 3)
+                            {
+                                <img src="@banner.NameFileImage" alt="" class="ui image">
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        }

@@ -1,0 +1,48 @@
+topbar,
+headlogo {
+  width: 100%;
+}
+
+.logo{
+  max-height: 80px;
+}
+
+._header {
+  background: rgb(255,255,255);
+  margin-top: 0px;
+
+  &.fixed{
+  box-shadow: rgba(0,0,0,.3) 0px 0px 10px 0px;
+  }
+
+  .ui.container {
+    padding-top: 0px !important;
+    padding-bottom: 10px !important;
+  }
+
+  i.circular.icon {
+    box-shadow: none;
+  }
+
+  .ui.floating.label {
+    top: 0.8em;
+    left: 105%;
+  }
+
+  .searchcolumn {
+    @media screen and (max-width: $mobile-bp){
+      display: none !important;
+    }
+  }
+
+  .cartbutton {
+    .ui.basic.primary.button {
+      > span {
+        @media screen and (max-width: $mobile-bp){
+          display: none;
+        }
+      }
+    }
+  }
+
+}

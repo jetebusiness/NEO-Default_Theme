@@ -1,0 +1,28 @@
+﻿@model IList<DomainCompany.Entities.Banner>
+@if (Model != null && Model.Any())
+{
+<script>
+    jQuery(document).ready(function ($) {
+        $('.car-banners').slick({
+            infinite: true,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            slidesToScroll: 1,
+            arrows: false,
+            dots: true,
+            accessibility: false,
+            slidesToShow: 1
+        });
+    });
+</script>
+<div class="car-banners">
+   
+        @foreach (var banner in Model)
+        {
+            <a href="@banner.Link">
+                <img src="@banner.NameFileImage" class="ui fluid image" alt="@banner.Name" />
+            </a>
+        }
+    
+</div>
+}

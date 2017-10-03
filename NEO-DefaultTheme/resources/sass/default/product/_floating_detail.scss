@@ -1,0 +1,70 @@
+.detalhes.produto.flutuante {
+	background: #ffffff;
+	box-shadow: rgba(0,0,0,.3) 0 0 10px 0;
+	bottom: 0 !important;
+	opacity: 0;
+	position: fixed;
+	right: 0 !important;
+	transition: opacity .3s ease-in-out;
+	z-index: 9;
+	padding-bottom: 1em;
+
+	&.ativo {
+	  opacity: 1;
+	}
+
+	.column[itemprop="offers"]{
+
+	  .row{
+		padding: 0.25rem 0 !important;
+	  }
+
+	  .precoAntigo{
+		clear: both;
+		color:#C5C7C9;
+		font-size: 14px;
+		line-height: 18px;
+
+		&:after{
+		  content: '\A';
+		  white-space: pre;
+		}
+	  }
+	  .preco{
+		clear: both;
+		color:$ascent-1-color;
+		font-size: 24px;
+		line-height:30px;
+
+		&:after{
+		  content: '\A';
+		  white-space: pre;
+		}
+	  }
+
+	  .infoPreco{
+		clear: both;
+		color:#C5C7C9;
+		font-size: 14px;
+		line-height: 18px;
+
+		&:after{
+		  content: '\A';
+		  white-space: pre;
+		}
+
+		.descontoBoleto{
+		  color:$ascent-1-color;
+		  font-weight: 700;
+		}
+	  }
+	}
+  }
+
+  .produto.variacao{
+
+	&.popup{
+	  width: 400px;
+	  max-width: 400px;
+	}
+  }

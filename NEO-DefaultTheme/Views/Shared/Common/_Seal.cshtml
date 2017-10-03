@@ -1,0 +1,9 @@
+﻿@model List<DomainCompany.Entities.Seal>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <a href='@item.link'><img class='ui image' src='@item.Image'></a>
+    }
+}

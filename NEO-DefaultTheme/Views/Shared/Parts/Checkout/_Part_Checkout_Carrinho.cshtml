@@ -1,0 +1,32 @@
+﻿@model DomainCheckout.Entities.Cart
+
+<div class="ui segment teal">
+    <div class="ui accordion compra">
+        <div class="active title">
+            <i class="ui icon cart"></i>
+            <strong>Sua Compra</strong>
+            <i class="ui icon dropdown floated right"></i>
+        </div>
+        <div class="active content">
+            <div class="ui fluid items unstackable divided compra">
+                @if (Model != null && Model.CartItems != null)
+                {
+                    foreach (var product in Model.CartItems)
+                    {
+                        <div class="item">
+                            <div class="ui image tiny">
+                                <img src="@product.ProductImage.ImageDefault" />
+                            </div>
+                            <div class="content">
+                                <a href="" class="description"><strong>@Html.Raw(product.NameProduct)</strong></a>
+                                <div class="description">Quantidade: @product.Quantity Unidades</div>
+                                <div class="extra text color green left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <a href="/Checkout">Voltar para o carrinho</a>
+        </div>
+    </div>
+</div>

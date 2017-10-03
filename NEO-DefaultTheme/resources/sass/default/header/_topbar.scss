@@ -1,0 +1,86 @@
+.topbar {
+  background-color: $secondary-color;
+  color: #d8e5e6 !important;
+  height: 30px;
+  margin-bottom: 0px;
+
+  a {
+    color: #d8e5e6 !important;
+  }
+
+  .ui.horizontal.list {
+    padding-top: 5px;
+
+    span.text,
+    .menu {
+      @media screen and (max-width: $mobile-bp) {
+        display: none;
+      }
+    }
+  }
+
+  .menu {
+    background: #1b1c1d !important;
+
+    .item {
+
+      &:hover {
+        background: #3f4041 !important;
+      }
+    }
+  }
+
+  .ui.pointing.dropdown {
+
+    > .menu::after {
+      background: #1b1c1d;
+    }
+  }
+
+  .ui.grid > .row {
+    padding: 0.2em 0em;
+  }
+
+  socialbar {
+
+    .fa {
+      margin-right: 5px;
+    }
+
+    .facebook:hover {
+      color: #3b5998;
+    }
+
+    .twitter:hover {
+      color: #55acee;
+    }
+
+    .instagram:hover {
+      color: #e95950;
+    }
+
+    .youtube.play:hover {
+      color: #bb0000;
+    }
+
+    .whatsapp:hover {
+      color: #4dc247;
+    }
+
+    .vimeo:hover {
+      color: #162221;
+    }
+
+    .wordpress:hover {
+      color: #21759b;
+    }
+
+    .pinterest:hover {
+      color: #cb2027;
+    }
+
+    .google.plus:hover {
+      color: #dd4b39;
+    }
+  }
+}

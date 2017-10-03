@@ -1,0 +1,18 @@
+﻿@model List<DomainCompany.Entities.CustomPage>
+
+@foreach (var itemTitle in Model)
+{
+    <div class="column">
+        <h4 class="ui inverted header">@itemTitle.Name</h4>
+        <div class="ui inverted link list">
+            @foreach (var itemPage in itemTitle.CustomPagesContent)
+            {
+                <a href="/institucional/@itemTitle.IdCustomPage/@itemPage.IdCustomPageContent" class="item">@itemPage.Name</a>
+            }
+            @if (@itemTitle.Name == "DÚVIDAS")
+            {
+                <a href="@Url.Action("CommonQuestions", "Company")" class="item">Dúvidas Frequentes</a>
+            }
+        </div>
+    </div>
+}

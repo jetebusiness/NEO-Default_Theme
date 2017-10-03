@@ -1,0 +1,25 @@
+.text {
+  &.uppercase {
+    text-transform: uppercase !important;
+    }
+  
+  &.capitalize {
+    text-transform: capitalize !important;
+    }
+  
+  &.lowercase {
+    text-transform: lowercase !important;
+    }
+  
+  &.regular {
+    font-weight: normal !important;
+    }
+  
+  &.medium {
+    font-weight: 500 !important;
+    }
+  
+  &.bold {
+    font-weight: bold !important;
+    }
+  }

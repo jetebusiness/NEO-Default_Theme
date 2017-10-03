@@ -1,0 +1,18 @@
+.ui.tags {
+
+  .ui.tag.label {
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+.ui.label {
+
+  &.primary {
+    background-color: $primary-color !important;
+    color: white !important;
+  }
+
+  &.secondary {
+    background-color: $secondary-color !important;
+  }
+}

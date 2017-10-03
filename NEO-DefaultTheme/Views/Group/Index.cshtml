@@ -1,0 +1,107 @@
+﻿@model DomainProduct.Entities.Group
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui two column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <div class="ui breadcrumb">
+                            <a class="section" href="/">Home</a>
+                            <i class="right angle icon divider"></i>
+                            <div class="active section">@(Model != null ? Model.Name : "")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section filters {
+    <div class="four wide column filterColumn">
+        <div class="row one column">
+
+            <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
+            @Html.Action("FilterMenu", "Product")
+        </div>
+    </div>
+}
+
+<div class="twelve wide column">
+    <div class="ui grid">
+        <div class="row two column">
+            <div class="mobile only left floated column">
+                <button class="ui labeled icon blue button filterbutton" data-tooltip="Filtros" data-inverted="">
+                    <i class="filter icon"></i>
+                    Filtros
+                </button>
+            </div>
+            <div class="column right aligned right floated">
+                <div class="ui dropdown button dropdownorder">
+                    <span class="text">Ordenar por</span>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="lancamentos">
+                            <i class="asterisk icon"></i>
+                            Lançamentos
+                        </div>
+                        <div class="item" data-value="mais_vendidos">
+                            <i class="diamond icon"></i>
+                            Mais Vendidos
+                        </div>
+                        <div class="item" data-value="nome_a_z">
+                            <i class="sort alphabet ascending icon"></i>
+                            Nome [A-Z]
+                        </div>
+                        <div class="item" data-value="nome_z_a">
+                            <i class="sort alphabet descending icon"></i>
+                            Nome [Z-A]
+                        </div>
+                        <div class="item" data-value="menor_preco">
+                            <i class="sort numeric ascending icon"></i>
+                            Preço [Menor-Maior]
+                        </div>
+                        <div class="item" data-value="maior_preco">
+                            <i class="sort numeric descending icon"></i>
+                            Preço [Maior-Menor]
+                        </div>
+                    </div>
+                </div>
+                <button id="viewgrid" class="ui icon button viewgrid mobile hide" data-tooltip="Grid" data-inverted="">
+                    <i class="grid layout icon"></i>
+                </button>
+                <button id="viewlist" class="ui icon button viewlist mobile hide" data-tooltip="Lista" data-inverted="">
+                    <i class="list layout icon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="list">
+        <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryList.cshtml -->
+        <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
+        @if (Model != null)
+        {
+            @Html.Action("GetProducts", "Product", new { category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "", viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "", pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "", pageSize = 12, order = Request.QueryString["order"] != null ? Request.QueryString["order"] : "", brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "", group = Model.IdGroup, initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "", finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "", variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "" })
+        }
+    </div>
+
+</div>
+<!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
+@Html.Action("Brand", "Product")
+
+@section gtm {
+    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+}
+
+@section custom_js{
+    <script>
+        window.filterManipulation = { idGroup: @Model.IdGroup};
+    </script>
+}

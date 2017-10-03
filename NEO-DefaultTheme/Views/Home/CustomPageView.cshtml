@@ -1,0 +1,25 @@
+﻿@model DomainCompany.Entities.CustomPageContent
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+}
+
+<div class="ui container">
+    <div class="ui two column grid stackable middle aligned">
+        <div class="row">
+            <div class="column">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui container">
+    <div class="ui two column grid stackable middle aligned">
+        <div class="row one column">
+            <div class="column">
+                @Html.Raw(Model.Content)
+            </div>
+        </div>
+    </div>
+</div>

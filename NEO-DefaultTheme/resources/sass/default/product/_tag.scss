@@ -1,0 +1,9 @@
+.ui.imagetag {
+	background: transparent;
+	z-index: 4;
+
+	> img {
+	  height: 100% !important;
+	  max-height: 80px !important;
+	}
+  }

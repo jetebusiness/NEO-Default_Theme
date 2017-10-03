@@ -1,0 +1,10 @@
+.mobile-hide {
+	@media screen and (max-width: $mobile-bp){
+		display: none !important;
+	}
+}
+.mobile-fluid {
+	@media screen and (max-width: $mobile-bp) {
+		width: 100%;
+	}
+}

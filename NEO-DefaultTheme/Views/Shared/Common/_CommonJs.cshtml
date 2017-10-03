@@ -1,0 +1,33 @@
+﻿<!-- Start -->
+<script src="~/assets/js/manifest.js"></script>
+<script src="~/assets/js/vendor.js"></script>
+<script src="~/assets/js/app.js"></script>
+
+<!--GLOBAL-->
+<script type="text/javascript">
+    $(document).ready(function () {
+        updateQuantidadeTopoCarrinho();
+    })
+
+    function updateQuantidadeTopoCarrinho() {
+        $.ajax({
+            method: "GET",
+            url: "/Checkout/TotalItensCart",
+            data: {
+
+            },
+            success: function (data) {
+                $("#total_itens_card").text(data)
+                if (data != "")
+                    $("#MiniCartTitle").text("Meu carrinho (" + data + ")")
+            },
+            onFailure: function (data) {
+                if (action == "plus") {
+                    valorInput -= 1;
+                } else {
+                    valorInput += 1;
+                }
+            }
+        });
+    }
+</script>

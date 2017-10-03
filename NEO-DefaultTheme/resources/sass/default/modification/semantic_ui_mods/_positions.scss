@@ -1,0 +1,15 @@
+.ui {
+  &.right {
+
+    &.floated {
+      float: right !important;
+    }
+  }
+
+  &.left {
+
+    &.floated {
+      float: left !important;
+    }
+  }
+}

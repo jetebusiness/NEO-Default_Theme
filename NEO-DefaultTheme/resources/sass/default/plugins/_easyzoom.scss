@@ -1,0 +1,63 @@
+.easyzoom {
+  display: inline-block;
+  *display: inline;
+  position: relative;
+  *zoom: 1;
+
+  img {
+    vertical-align: bottom;
+  }
+
+  .is-loading img {
+    cursor: progress;
+  }
+
+  .is-ready img {
+    cursor: crosshair;
+  }
+
+  .is-error img {
+
+    cursor: auto !important;
+  }
+
+  &-notice {
+    display: none;
+    //position: absolute;
+    //top: 50%;
+    //left: 50%;
+    // z-index: 150;
+    //width: 10em;
+    //margin: -1em 0 0 -5em;
+    //line-height: 2em;
+    //text-align: center;
+    //background: #FFF;
+    // box-shadow: 0 0 10px #888;
+  }
+
+  &-flyout {
+    background: #ffffff;
+    overflow: hidden;
+    position: absolute;
+    z-index: 9;
+    > img {
+      max-width: inherit !important;
+      width: auto !important;
+    }
+  }
+
+  &--overlay .easyzoom-flyout {
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  &--adjacent .easyzoom-flyout {
+    height: 100%;
+    left: 100%;
+    margin-left: 20px;
+    top: 0;
+    width: 100%;
+  }
+}

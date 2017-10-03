@@ -1,0 +1,52 @@
+.ui {
+
+  &.search{
+
+    > .results{
+      .result
+      {
+        .imagem + .content {
+          margin: 0em 0em 0em 1em;
+        }
+
+        .imagem,
+        .contents{
+          display: flex;
+          align-items: center;
+        }
+
+        .imagem {
+        float: left;
+        overflow: hidden;
+        background: none;
+        max-width: 6rem;
+        border-radius: 0;
+
+        img {
+          display: block;
+          max-width: 6rem;
+        }
+      }
+
+        .title {
+          margin: -0.14285714em 0em 0em;
+          font-family: $font-family;
+          font-weight: bold;
+          font-size: 1em;
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
+    }
+  }
+
+  &.category {
+
+    &.search {
+
+      .results {
+        width: 39.5em !important;
+        z-index: 9;
+      }
+    }
+  }
+}

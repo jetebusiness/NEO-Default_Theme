@@ -1,0 +1,46 @@
+.text {
+
+  &.mini {
+    font-size: .64285714rem !important;
+  }
+
+  &.tiny {
+    font-size: .71428571rem !important;;
+  }
+
+  &.small {
+    font-size: .78571429rem !important;;
+  }
+
+  &.medium {
+    font-size: .85714286rem !important;;
+  }
+
+  &.large {
+    font-size: 1rem !important;;
+  }
+
+  &.big {
+    font-size: 1.28571429rem !important;;
+  }
+
+  &.huge {
+    font-size: 1.42857143rem !important;;
+  }
+
+  &.massive {
+    font-size: 1.71428571rem !important;;
+  }
+
+  &.center {
+    text-align: center !important;
+  }
+
+  &.left {
+    text-align: left !important;
+  }
+
+  &.right {
+    text-align: right !important;
+  }
+}

@@ -1,0 +1,29 @@
+﻿@*<meta name="distribution" content="Global">
+<meta name="Robots" content="INDEX,FOLLOW">
+{% if site.copyright %}
+<meta name="Copyright" content="{{ site.copyright }}">
+    {% elsif site.designer %}
+<meta name="Designer" content="{{ site.designer }}">
+    {% elsif site.publisher %}
+<meta name="Publisher" content="{{ site.publisher }}">
+    {% elsif seo.author %}
+<meta name="author" content="{{ seo.author }}">
+    {% elsif seo.subject %}
+<meta name="subject" content="{{ seo.subject }}">
+    {% elsif seo.description %}
+<meta name="Description" content="{{ seo.description }}">
+    {% elsif seo.classification %}
+<meta name="Classification" content="{{ seo.classification }}">
+    {% elsif seo.keywords %}
+<meta name="Keywords" content="{{ seo.keywords }}">
+    {% elsif store.address %}
+<meta name="Geography" content="{{ store.address }}">
+    {% elsif store.language %}
+<meta name="Language" content="{{ store.language }}">
+    {% elsif store.zipCode %}
+<meta name="zipcode" content="{{ store.zipCode }}">
+    {% elsif store.city %}
+<meta name="city" content="{{ store.city }}">
+    {% elsif store.country %}
+<meta name="country" content="{{ store.country }}">
+{% endif %}*@

@@ -1,0 +1,21 @@
+.ui.promocao.images .image,
+.ui.promocao.images img,
+.ui.promocao.images svg,
+.ui.promocao.image {
+  max-height: 65px;
+  width: auto;
+  font-size: 0.85714286rem;
+}
+.ui.variacao.images .image,
+.ui.variacao.images img,
+.ui.variacao.images svg,
+.ui.variacao.image,
+.ui.variacao.image img,
+.ui.variacao.image svg{
+  margin:0.2rem 0.1rem;
+  max-height: 55px;
+  width: 55px;
+}
+.img-selecionado > img{
+  border:3px rgba(0, 0, 0, .35) solid !important;
+}

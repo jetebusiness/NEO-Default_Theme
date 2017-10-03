@@ -1,0 +1,13 @@
+﻿@model List<DomainCheckout.Entities.Shipping>
+
+<select class="ui dropdown tabela frete" id="GetShipping">
+    @foreach (var item in Model)
+    {
+        int IdShippingMode = item.ShippingMode.IdShippingMode;
+        bool DeliveredByTheCorreiosService = @item.ShippingMode.DeliveredByTheCorreiosService ? true : false;
+
+        <option value="@IdShippingMode" id="ship_@IdShippingMode" data-correios="@string.Format("{0}", DeliveredByTheCorreiosService)">
+            @item.ShippingMode.Name (@item.ShippingMode.DeliveryTime dia(s) úteis) - @string.Format("{0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C"))
+        </option>
+    }
+</select>

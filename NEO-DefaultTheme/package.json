@@ -1,0 +1,37 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "watch-poll": "npm run watch -- --watch-poll",
+        "prod": "npm run production",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix-jet/setup/webpack.config.js",
+        "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix-jet/setup/webpack.config.js",
+        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix-jet/setup/webpack.config.js",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix-jet/setup/webpack.config.js"
+    },
+    "dependencies": {
+        "card": "^2.4.0",
+        "cross-env": "^3.2.3",
+        "easyzoom": "^2.5.0",
+        "inputmask": "^3.3.8",
+        "jetcheckout": "^1.0.4-1",
+        "jetroute": "^1.0.3",
+        "jquery": "^3.1.1",
+        "jquery-ajax-unobtrusive": "^3.2.4",
+        "jquery-touch-events": "^1.0.7",
+        "jquery-validation": "^1.17.0",
+        "mobile-detect": "^1.3.6",
+        "perfect-scrollbar": "^0.7.0",
+        "sass-semantic-ui": "^2.2.12-3",
+        "semantic-ui-calendar": "0.0.8",
+        "slick-carousel": "^1.7.1",
+        "sweetalert2": "^6.6.9"
+    },
+    "devDependencies": {
+        "browser-sync": "^2.18.13",
+        "browser-sync-webpack-plugin": "^1.2.0",
+        "cross-env": "^3.2.3",
+        "laravel-mix-jet": "^1.4.2",
+        "lodash": "^4.17.4"
+    }
+}

@@ -1,0 +1,115 @@
+
+.filterbar, #filtrosClose {
+  display: none;
+}
+
+.filtros {
+  ui.dropdown {
+    z-index: 0;
+    .menu {
+      z-index: 10;
+    }
+  }
+  .ui.accordion {
+    .title {
+      font-weight: 600;
+      font-size: 14px;
+      border-bottom: 1px solid #dededf;
+      text-transform: uppercase;
+      padding-left: 15px;
+      box-shadow: inset 5px 0 0 rgb(44, 62, 80);
+      margin-bottom: 10px;
+      &.active {
+        border-bottom: 0px solid #dededf;
+        background-color: rgb(44, 62, 80) !important;
+        color: #ffffff;
+      }
+      .icon {
+        float: right;
+        margin-top: 3px;
+      }
+    }
+  }
+
+  button.close {
+    display: none;
+  }
+}
+
+.filterColumn {
+  @media screen and (max-width: $mobile-bp) {
+    display: none !important;
+    }
+  &.ativo {
+    @media screen and (max-width: $mobile-bp) {
+      display: block !important;
+      }
+    }
+  }
+
+#filtros {
+
+  @media screen and (max-width: $mobile-bp) {
+    display: none !important;
+  }
+
+  .row {
+
+    @media screen and (max-width: $mobile-bp) {
+      padding: 0px;
+    }
+  }
+
+  .filterbar {
+
+    @media screen and (max-width: $mobile-bp) {
+      height: 45px;
+      color: #ffffff;
+      background: $ascent-5-color;
+      width: 100vw;
+      margin: -1em -1em 20px -1em !important;
+      vertical-align: middle;
+      line-height: 45px;
+    }
+
+    h3 {
+
+      @media screen and (max-width: $mobile-bp) {
+        line-height: 45px;
+        float: left;
+        width: calc(100vw - 60px);
+        position: absolute;
+        left: 10px;
+      }
+    }
+
+    .button {
+      @media screen and (max-width: $mobile-bp) {
+        float: right;
+        height: 45px;
+        width: 45px;
+        margin: 0px !important;
+        border-radius: 0px;
+        font-size: 20px;
+        padding: 10px;
+        margin-right: -14px !important;
+      }
+    }
+  }
+}
+
+#filtros.ativo {
+
+  @media screen and (max-width: $mobile-bp) {
+    background: #ffffff;
+    position: fixed !important;
+    bottom: 0px;
+    left: 0px;
+    z-index: 9999;
+    padding: 1em;
+    width: 100%;
+    display: inline-block !important;
+    height: 100%;
+    overflow: scroll;
+  }
+}

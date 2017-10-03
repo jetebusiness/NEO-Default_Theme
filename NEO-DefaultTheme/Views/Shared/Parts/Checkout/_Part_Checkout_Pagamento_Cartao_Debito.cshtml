@@ -1,0 +1,54 @@
+﻿@model DomainCheckout.Entities.PaymentMethod
+
+<div class="text big title color black">
+    <i class="credit card alternative icon"></i>
+    Cartão de Débito
+    <i class="ui icon dropdown floated right"></i>
+</div>
+<div class="content">
+    <form action="" method="post" class="jet checkout ui form debit-card" id="validCardDebit">
+        <div class="card-wrapper-debit"></div>
+        <div class="ui divider hidden"></div>
+        <div class="field required">
+            <label class="labelCheckPayment">Número</label>
+            <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" class="fieldCheckPayment" name="DebitCard" id="DebitCard" placeholder="Número do Cartão" data-type="debitnumber">
+            </div>
+        </div>
+
+        <div class="field required">
+            <label class="labelCheckPayment">
+                Nome</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitName" id="DebitName" placeholder="Nome Impresso no Cartão" data-type="debitname">
+                </div>
+        </div>
+        <div class="two fields">
+            <div class="field required">
+                <label class="labelCheckPayment">Data de Validade</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" name="DebitExpDate" id="DebitExpDate" placeholder="00/0000" data-type="debitexpiry">
+                </div>
+            </div>
+            <div class="field required">
+                <label class="labelCheckPayment">CVV</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" name="DebitCVV" id="DebitCVV" placeholder="Nº de Segurança" data-type="debitcvv">
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider hidden small"></div>
+        <input type="hidden" name="debitBrandCard" id="debitBrandCard" value="" />
+        <div class="field">
+            <button class="ui labeled icon green large fluid button GerarPedido" id="btnCardDebit" data-idBrand="" data-Card="">
+                <i class="credit card alternative icon"></i>
+                Pagar com Cartão de Débito
+            </button>
+        </div>
+    </form>
+</div>

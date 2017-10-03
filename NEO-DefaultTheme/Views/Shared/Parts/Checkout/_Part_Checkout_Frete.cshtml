@@ -1,0 +1,55 @@
+﻿@model List<DomainCheckout.Entities.Shipping>
+
+<div class="ui fluid items divided card-checkout" id="GetShippping">
+    @if (Model != null)
+    {
+        int _contador = 0;
+        string _checkFrete = "";
+        string _classCheckFrete = "";
+        foreach (var item in Model)
+        {
+            _contador++;
+
+            if (Convert.ToInt32(TempData["IdShippingModeCart"]) == item.ShippingMode.IdShippingMode)
+            {
+                _classCheckFrete = "checked";
+                _checkFrete = "checked='checked'";
+            }
+            else
+            {
+                _classCheckFrete = "";
+                _checkFrete = "";
+            }
+
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <div class="ui radio checkbox @_classCheckFrete">
+                            <input type="radio" name="radio" class="shippingGet" value="@item.ShippingMode.IdShippingMode" data-id="@item.ShippingMode.IdShippingMode" data-value="@string.Format("{0}", item.ValueShipping)" data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" @_checkFrete>
+                            <label>@item.ShippingMode.Name (@item.ShippingMode.DeliveryTime Dias)</label>
+                        </div>
+                        <span class="ui floated right">
+                            @{
+                                var _valueShipping = "";
+                                if (item.ValueShipping == 0)
+                                {
+                                    _valueShipping = "Frete Gratis";
+                                }
+                                else
+                                {
+                                    _valueShipping = string.Format("{0:c}", item.ValueShipping != null ? item.ValueShipping : 0);
+                                }
+                            }
+                            @_valueShipping
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        @Html.Raw("Nenhum Frete foi encontrado")
+    }
+</div>
+@*<a href="">Dica de Frete Grátis</a>*@

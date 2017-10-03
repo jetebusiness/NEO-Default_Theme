@@ -1,0 +1,203 @@
+﻿@model DomainOrder.Entities.Order
+@{
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+}
+
+@section gtm {
+    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+}
+
+@section steps{
+    <div class="jet checkout jBreadCrumb ">
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Identificação</h4>
+        </div>
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Pagamento</h4>
+        </div>
+        <div class="jCrumb active">
+            <div class="jBullet ">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4>Confirmação</h4>
+        </div>
+    </div>
+}
+<input type="hidden" name="idOrderCurrent" id="idOrderCurrent" value="@Model.IdOrder" />
+<div class="ui container fluid bg-green">
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="ui divider small hidden"></div>
+            <div class="row two column">
+                <div class="column">
+                    <h1 class="floated left">Pedido Confirmado </h1>
+                </div>
+                <div class="column text right">
+                    <h2 class="">#@Model.IdOrder</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <h3>Obrigado, @Model.NameCustomer</h3>
+                    <p>Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos.</p>
+                </div>
+            </div>
+            <div class="ui divider small hidden"></div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.ShowRegister)
+{
+    <div class="ui fluid container bg-dark-green">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="two column row">
+                    <div class="column">
+                        <h1>Quer acompanhar seu pedido?</h1>
+                    </div>
+                    <div class="column">
+                        <a class="ui large animated white inverted button floated right" tabindex="0" href="@ViewBag.Link">
+                            <div class="visible content">Cadastre-se em nossa loja!</div>
+                            <div class="hidden content">
+                                <i class="add user icon"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui divider hidden"></div>
+<div class="ui container">
+    <div class="ui grid divided horizontal">
+        <div class="row">
+            <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
+                <div class="ui divided items relaxed cart">
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model.OrderItems)
+                        {
+                            <div class="item">
+                                <div class="ui image small">
+                                    <img src="@item.Image">
+                                </div>
+                                <div class="content">
+                                    <a class="header">@Html.Raw(item.Name)</a>
+                                    <div class="meta">Disponibilidade</div>
+                                    <div class="description">
+                                        <table class="ui very basic unstackable table ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Qtd</th>
+                                                    <th>Valor Un.</th>
+                                                    <th>Valor Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p>@item.Quantity</p>
+                                                    </td>
+                                                    <td>@string.Format("{0:c}", item.UnitPrice)</td>
+                                                    <td><strong>@string.Format("{0:c}", item.Total)</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (ViewBag.ActiveEbit != 0)
+                    {
+                        <a id="bannerEbit"></a>
+                        <script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
+                    }
+                </div>
+            </div>
+            <div class="column six wide computer sixteen wide tablet sixteen wide mobile right aligned success compra">
+                <div class="ui sticky box success">
+                    <div class="ui divided items">
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    SubTotal: @string.Format("{0:c}", Model != null ? Model.TotalItens : 0)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    Desconto: @string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    <strong>@Model.NameShipping : @string.Format("{0:c}", Model != null ? Model.TotalShipping : 0)</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    <h3>Total a pagar: <span>@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui divider"></div>
+                    <div class="ui grid">
+                        <div class="row two column">
+                            <div class="column">
+                                <a href="/Home" class="ui animated button fluid large basic"
+                                   tabindex="0">
+                                    <div class="visible content">Voltar à Loja</div>
+                                    <div class="hidden content">
+                                        <i class="left arrow icon"></i>
+                                    </div>
+                                </a>
+                            </div>
+
+                            @if (ViewBag.ViewBoleto)
+                            {
+                                <div class="column">
+                                    <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                                          method="post"
+                                          name="itauShopline"
+                                          id="itauShopline"
+                                          target="openShopline">
+                                        <input type="hidden" name="DC" id="DC" value="@ViewBag.ItauShoplineKey" />
+                                        <input class="ui large green button floated right" id="itauShoplineBoleto" type="submit" value="Imprimir Boleto" />
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Começo do Itau Shopline -->
+            <div class="ui modal">
+                <div class="content">
+                    <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                </div>
+            </div>
+            <!-- Final do Itau Shopline -->
+        </div>
+    </div>
+</div>

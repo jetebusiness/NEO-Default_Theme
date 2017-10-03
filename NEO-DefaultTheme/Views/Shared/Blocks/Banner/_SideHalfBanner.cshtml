@@ -1,0 +1,14 @@
+﻿@model List<DomainCompany.Entities.Banner>
+@if (Model != null && Model.Any())
+{
+<div class="column text center mobile-hide">
+
+        @foreach (var banner in Model)
+        {
+            <a href="@banner.Link">
+                <img src="@banner.NameFileImage" alt="" class="ui image fluid">
+            </a>
+        }
+    
+</div>
+}

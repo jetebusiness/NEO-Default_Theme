@@ -1,0 +1,6 @@
+/* Breadbrumbs */
+.breadcrumbs {
+	@media only screen and(max-width: $mobile-bp) {
+		display: none !important;
+	}
+}

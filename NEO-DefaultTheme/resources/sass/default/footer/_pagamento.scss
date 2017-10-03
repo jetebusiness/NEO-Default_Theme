@@ -1,0 +1,181 @@
+﻿$height: 32px;
+$base: rgba(0, 0, 0, .7);
+$baseHover: rgba(255, 255, 255, 1);
+$text: rgba(255, 255, 255, 1);
+$marca: rgba(255, 255, 255, 1);
+.formas-pagamento {
+  display: flex;
+  justify-content: flex-end;
+  .pagamento {
+    margin-right: 5px;
+    svg {
+      height: $height;
+      }
+    
+    &.visa {
+      .base {
+        fill: $base;
+        }
+      
+      .marca {
+        fill: $marca;
+        }
+      
+      .texto {
+        fill: $text;
+        }
+      
+      &.default,
+      &:hover {
+        .base {
+          fill: $baseHover;
+          }
+        
+        .marca {
+          .azul {
+            fill: rgba(43, 56, 148, 1);
+            }
+          
+          .amarelo {
+            fill: rgba(247, 149, 16, 1);
+            }
+            
+          }
+        
+        .texto {
+          }
+          
+        }
+      }
+    
+    &.master {
+      .base {
+        fill: $base;
+        }
+      
+      .marca {
+        fill: $marca;
+        }
+      
+      .texto {
+        fill: $text;
+        }
+      
+      &.default,
+      &:hover {
+        .base {
+          fill: $baseHover;
+          }
+        
+        .marca {
+          .vermelho {
+            fill: rgba(235, 0, 27, 1);
+            }
+          
+          .laranja {
+            fill: rgba(255, 95, 0, 1);
+            }
+          
+          .amarelo {
+            fill: rgba(247, 149, 16, 1);
+            }
+            
+          }
+        
+        .texto {
+          fill: rgba(0, 0, 0, 1);
+          }
+          
+        }
+      }
+    
+    &.diners {
+      .base {
+        fill: $base;
+        }
+      
+      .marca {
+        fill: $marca;
+        }
+      
+      .texto {
+        fill: $text;
+        }
+      
+      &.default,
+      &:hover {
+        .base {
+          fill: $baseHover;
+          }
+        
+        .marca {
+          fill: rgba(27, 69, 142, 1);
+          }
+        
+        .texto {
+          fill: rgba(0, 0, 0, 1);
+          }
+          
+        }
+      }
+    
+    &.hiper {
+      .base {
+        fill: $base;
+        }
+      
+      .marca {
+        fill: $marca;
+        }
+      
+      .texto {
+        fill: $text;
+        }
+      
+      &.default,
+      &:hover {
+        .base {
+          fill: $baseHover;
+          }
+        
+        .marca {
+          fill: rgba(181, 21, 31, 1);
+          }
+        
+        .texto {
+          }
+          
+        }
+      }
+    
+    &.boleto {
+      .base {
+        fill: $base;
+        }
+      
+      .marca {
+        fill: $marca;
+        }
+      
+      .texto {
+        fill: $text;
+        }
+      
+      &.default,
+      &:hover {
+        .base {
+          fill: $baseHover;
+          }
+        
+        .marca {
+          fill: rgba(0, 0, 0, 1);
+          }
+        
+        .texto {
+          fill: rgba(0, 0, 0, 1);
+          }
+          
+        }
+      }
+    }
+  }

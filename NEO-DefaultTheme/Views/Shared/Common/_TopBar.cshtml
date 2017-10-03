@@ -1,0 +1,43 @@
+﻿<div class="ui container fluid topbar" id="top_bar">
+    <div class="ui container">
+        <div class="ui grid middle aligned inverted">
+            <div class="two column row">
+                @Html.Action("SocialBar", "SocialNetwork")
+                <div class="right floated right aligned wide column">
+                    <div class="ui horizontal list relaxed divided">
+
+
+                        <div class="item">
+                            <a href="~/fale-conosco"><i class="call square icon"></i> <span class="text">Fale Conosco</span></a>
+                        </div>
+                        @if (Session["UserAuthenticated"] == null || (Convert.ToBoolean(Session["Guest"]) == true))
+                        {
+                            <div class="item">
+                                <a href="/customer">
+                                    <i class="user icon regular"></i>
+                                    <span class="text">Central do Cliente</span>
+                                </a>
+                            </div>
+                        }
+                        @if ((Session["UserAuthenticated"] != null) && (Convert.ToBoolean(Session["Guest"]) == false))
+                        {
+                            var userAuthenticated = (DomainCustomer.Entities.Customer)Session["UserAuthenticated"];
+
+                            <div class="ui inline item dropdown pointing top right">
+                                <div class="text regular">
+                                    <i class="user icon regular"></i>
+                                    <span class="text">Olá <span id="userNameCommon">@userAuthenticated.Name</span></span>
+                                </div>
+                                <div class="menu">
+                                    <a href="/customer" class="item"><i class="options icon"></i>Minha Conta</a>
+                                    <a href="/order" class="item"><i class="shopping bag icon"></i>Meus Pedidos</a>
+                                    <a href="/customer/logout" class="item"><i class="sign out icon"></i>Sair</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

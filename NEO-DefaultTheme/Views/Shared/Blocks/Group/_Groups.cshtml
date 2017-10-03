@@ -1,0 +1,15 @@
+﻿@model IList<DomainProduct.Entities.Group>
+
+<div class="ui container topsellers">
+    @if (Model != null && Model.Count() > 0)
+    {
+        foreach (var group in Model)
+        {
+            <div class="ui horizontal divider">
+                <a href="@group.UrlFriendly">@group.Name</a>
+            </div>
+            @Html.Action("ProductsByGroup", "Product", new { id = group.IdGroup })
+        }
+    }
+</div>
+

@@ -1,0 +1,61 @@
+﻿<div class="text big title color black">
+    <i class="credit card alternative icon"></i>
+    Cartão de Crédito
+    <i class="ui icon dropdown floated right"></i>
+</div>
+<div class="content">
+    <form action="" method="post" class="jet checkout ui form credit-card" id="validCardCredit">
+        <div class="card-wrapper"></div>
+        <div class="ui divider hidden"></div>
+        <div class="field required">
+            <label class="labelCheckPayment">Número</label>
+            <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" class="fieldCheckPayment" name="CreditCard" id="CreditCard" placeholder="Número do Cartão" data-type="number">
+            </div>
+        </div>
+
+        <div class="field required">
+            <label class="labelCheckPayment">Desejo Parcelar em:</label>
+            <div class="ui left icon input">
+                <select class="fieldCheckPayment" name="idInstallment" id="parcCard">
+                    <option value="">Informe o numero do cartão primeiro</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label class="labelCheckPayment">
+                Nome</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" maxlength="100" name="Name" id="Name" placeholder="Nome Impresso no Cartão" data-type="name">
+                </div>
+        </div>
+        <div class="two fields">
+            <div class="field required">
+                <label class="labelCheckPayment">Data de Validade</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" name="ExpDate" id="ExpDate" placeholder="00/0000" data-type="expiry">
+                </div>
+            </div>
+            <div class="field required">
+                <label class="labelCheckPayment">CVV</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" name="CVV" id="CVV" placeholder="Nº de Segurança" data-type="cvv">
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider hidden small"></div>
+        <input type="hidden" name="brandCard" id="brandCard" value="" />
+        <div class="field">
+            <button class="ui labeled icon green large fluid button GerarPedido" id="btnCardCredit" data-idBrand="" data-Card="S">
+                <i class="credit card alternative icon"></i>
+                Pagar com Cartão de Crédito
+            </button>
+        </div>
+    </form>
+</div>

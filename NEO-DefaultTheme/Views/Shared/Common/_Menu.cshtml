@@ -1,0 +1,78 @@
+﻿@model List<DomainProduct.Entities.Category>
+
+<div class="ui container fluid menuheader">
+    <div class="overlapblackbg"></div>
+    <div class="ui container">
+        <div class="wsmobileheader clearfix">
+            <a id="wsnavtoggle" class="animated-arrow"><span></span></a>
+        </div>
+        <div class="wsmain">
+            <nav class="wsmenu">
+                <ul class="mobile-sub wsmenu-list ui menu">
+                    <li class="wssearchbar clearfix">
+                        <form class="topmenusearch" method="get" action="/busca">
+                            <input placeholder="Buscar..." name="n">
+                            <button class="btnstyle"><i class="icon search" aria-hidden="true"></i></button>
+                        </form>
+                    </li>
+                    @foreach (DomainProduct.Entities.Category category in Model)
+                    {
+                        if (category.Level.Length == 2)
+                        {
+                            <li>
+                                <a href="@category.UrlFriendly" class="item">
+                                    <span class="text">@category.Name</span>
+                                    @if (category.ChildCategories != null && category.ChildCategories.Any())
+                                    {
+                                        <i class="dropdown icon"></i>
+                                    }
+                                </a>
+                                @if (category.ChildCategories != null && category.ChildCategories.Any())
+                                {
+                                    <div class="megamenu clearfix">
+                                        <div class="ui grid">
+                                            <div class="row">
+                                                <div class="fifteen wide mobile twelve wide tablet twelve wide computer column">
+                                                    <div class="ui grid three column">
+                                                        @if (category.ChildCategories != null && category.ChildCategories.Any())
+                                                        {
+                                                            foreach (DomainProduct.Entities.Category subCategoryLevel1 in category.ChildCategories)
+                                                            {
+                                                                <div class="sixteen wide mobile eight wide tablet four wide computer column">
+                                                                    <div class="ui list relaxed">
+                                                                        <h4 class="header"><a href="@subCategoryLevel1.UrlFriendly">@subCategoryLevel1.Name</a></h4>
+                                                                        @if (subCategoryLevel1.ChildCategories != null && subCategoryLevel1.ChildCategories.Any())
+                                                                        {
+                                                                            <div class="ui divider"></div>
+                                                                            foreach (var subCategoryLevel2 in subCategoryLevel1.ChildCategories)
+                                                                            {
+                                                                                <a class="item" href="@subCategoryLevel2.UrlFriendly">@subCategoryLevel2.Name</a>
+                                                                            }
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="four wide tablet four wide computer column mobile-hide">
+                                                    <img class="ui image" src="@category.Image">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="item" href="~/category/index/@category.IdCategory"><span>@category.Name</span></a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

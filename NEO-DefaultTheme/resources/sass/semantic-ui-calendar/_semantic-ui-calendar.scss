@@ -1,0 +1,113 @@
+/*!
+ * # Semantic UI 0.0.8 - Calendar
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+.ui.calendar {
+  .ui.popup {
+    max-width: none;
+    padding: 0;
+    border: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .calendar:focus {
+    outline: 0;
+  }
+  .ui {
+    &.popup .ui.grid {
+      display: block;
+      white-space: nowrap;
+      > .column {
+        width: auto;
+      }
+    }
+    &.table {
+      &.year, &.month, &.minute {
+        min-width: 15em;
+      }
+      &.day {
+        min-width: 18em;
+      }
+      &.hour {
+        min-width: 20em;
+      }
+      tr {
+        th, td {
+          padding: 0.5em;
+          white-space: nowrap;
+        }
+        th {
+          border-left: none;
+          .icon {
+            margin: 0;
+            margin: 0;
+          }
+        }
+        &:first-child th {
+          position: relative;
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+      &.day tr {
+        &:first-child th {
+          border: none;
+        }
+        &:nth-child(2) th {
+          padding-top: 0.2em;
+          padding-bottom: 0.3em;
+        }
+      }
+      tr {
+        td {
+          padding-left: 0.1em;
+          padding-right: 0.1em;
+        }
+        .link {
+          cursor: pointer;
+        }
+        .prev.link {
+          width: 14.28571429%;
+          position: absolute;
+          left: 0;
+        }
+        .next.link {
+          width: 14.28571429%;
+          position: absolute;
+          right: 0;
+        }
+        .disabled {
+          pointer-events: none;
+          color: rgba(40, 40, 40, 0.3);
+        }
+        td {
+          &.today {
+            font-weight: bold;
+          }
+          &.range {
+            background: rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.95);
+            box-shadow: none;
+          }
+        }
+      }
+      &.inverted tr td.range {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+        box-shadow: none;
+      }
+    }
+  }
+  .calendar {
+    &:focus .ui.table tbody tr td.focus, &.active .ui.table tbody tr td.focus, &:focus .ui.table.inverted tbody tr td.focus, &.active .ui.table.inverted tbody tr td.focus {
+      box-shadow: inset 0 0 0 1px #85B7D9;
+    }
+  }
+}

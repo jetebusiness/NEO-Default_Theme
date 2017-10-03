@@ -1,0 +1,36 @@
+﻿@model List<DomainCheckout.Entities.PaymentGateway>
+
+@if (Model != null)
+{
+    <div class="sixteen wide mobile sixteen wide tablet six wide computer column">
+        <div class="ui styled fluid accordion jetCheckout margin top">
+            @foreach (var itemG in Model)
+            {
+                if (itemG.Status)
+                {
+                    foreach (var itemM in itemG.PaymentMethods)
+                    {
+                        switch (itemM.IdPaymentMethod)
+                        {
+                            case 1:
+                                <!-- Cartão de Crédito -->
+                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao.cshtml", itemM.PaymentBrands)
+
+                                break;
+                            case 3:
+                                <!-- Boleto Bancário -->
+                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Boleto.cshtml", itemM.PaymentBrands)
+
+                                break;
+                            case 14:
+                                <!-- Cartão de Débito -->
+                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao_Debito.cshtml", itemM)
+
+                                break;
+                        }
+                    }
+                }
+            }
+        </div>
+    </div>
+}

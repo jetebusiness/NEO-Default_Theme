@@ -1,0 +1,173 @@
+.ui.button.basic {
+
+  &.primary {
+
+    box-shadow: 0 0 0 1px $primary-color inset !important;
+    color: $primary-color !important;
+
+    &:hover {
+      background-color: $primary-color !important;
+      box-shadow: 0 0 0 1px $primary-color inset !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $active-color inset !important;
+      color: $active-color !important;
+    }
+  }
+
+  &.secondary {
+    box-shadow: 0 0 0 1px $secondary-color inset !important;
+    color: $secondary-color !important;
+
+    &:hover {
+      background-color: $secondary-color !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $active-color inset !important;
+      color: $active-color !important;
+    }
+  }
+  &.ascent-1 {
+    box-shadow: 0 0 0 1px $ascent-1-color inset !important;
+    color: $ascent-1-color !important;
+
+    &:hover {
+      background-color: $ascent-1-color !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $active-color inset !important;
+      color: $active-color !important;
+    }
+  }
+
+  &.ascent-2 {
+    box-shadow: 0 0 0 1px $ascent-2-color inset !important;
+    color: $ascent-2-color !important;
+
+    &:hover {
+      background-color: $ascent-2-color !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $active-color inset !important;
+      color: $active-color !important;
+    }
+  }
+
+  &.ascent-3 {
+    box-shadow: 0 0 0 1px $ascent-3-color inset !important;
+    color: $ascent-3-color !important;
+
+    &:hover {
+      background-color: $ascent-3-color !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $active-color inset !important;
+      color: $active-color !important;
+    }
+  }
+
+  &.heart {
+
+    &:hover {
+      background-color: $ascent-3-color !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $ascent-3-color inset !important;
+      color: $ascent-3-color !important;
+    }
+  }
+
+  &.default {
+
+    &:hover {
+      background-color: $ascent-1-color !important;
+      box-shadow: none !important;
+      color: white !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $ascent-1-color inset !important;
+      color: $ascent-1-color !important;
+    }
+  }
+}
+
+.ui.button {
+
+  .button {
+    margin-bottom: 0 !important;
+  }
+
+  &.colorcheck {
+
+    .label {
+      padding: .5833em .533em !important;
+    }
+  }
+}
+
+.ui.form {
+
+  .field {
+
+    > .button {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.qtd.action {
+
+  input {
+    border-radius: 0px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 40px;
+  }
+
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  .button:first-child {
+    border-radius: .28571429rem 0 0 .28571429rem !important;
+  }
+}
+
+.ui.basic.button.inverted {
+
+  &.white {
+
+    &:hover,
+    &:focus,
+    &:active,
+    .active {
+      background: white !important;
+      color: rgba(0, 0, 0, .8) !important;
+    }
+  }
+}

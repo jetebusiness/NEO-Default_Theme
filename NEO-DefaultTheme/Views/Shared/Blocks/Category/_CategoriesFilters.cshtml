@@ -1,0 +1,21 @@
+﻿@model IList<DomainProduct.Filter.FilterCategory>
+
+@if (Model != null)
+{
+    <div class="active title">Categorias<i class="dropdown icon"></i></div>
+    <div class="active content">
+        <div class="ui form">
+            <div class="grouped fields">
+                @foreach (var category in Model)
+                {
+                    <div class="field">
+                        <div class="ui checkbox checkCategory" id="@category.IdCategory" name="@category.Name">
+                            <input type="checkbox" name="@category.Name" id="checkCategory_@category.IdCategory" tabindex="0" value="@category.IdCategory">
+                            <label>@category.Name (@category.QuantityOfProduct)</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

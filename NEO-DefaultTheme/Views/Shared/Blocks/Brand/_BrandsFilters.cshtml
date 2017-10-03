@@ -1,0 +1,21 @@
+﻿@model IList<DomainProduct.Filter.FilterBrand>
+
+@if (Model != null)
+{
+    <div class="active title">Marcas<i class="dropdown icon"></i></div>
+    <div class="active content">
+        <div class="ui form">
+            <div class="grouped fields">
+                @foreach (var brand in Model)
+                {
+                    <div class="field">
+                        <div class="ui checkbox checkBrand" id="@brand.IdBrand" data-name="@brand.Name">
+                            <input type="checkbox" name="@brand.Name" id="checkBrand_@brand.IdBrand" tabindex="0" value="@brand.IdBrand">
+                            <label>@brand.Name (@brand.QuantityOfProduct)</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
