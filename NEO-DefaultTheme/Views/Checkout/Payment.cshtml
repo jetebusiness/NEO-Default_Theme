@@ -103,7 +103,7 @@
                 @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
 
                 <!-- Resumo das Compras -->
-                <div class="ui segment green active" id="resumoCheckout">
+                <div id="resumoCheckout">
                     @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Resumo.cshtml", Model)
                 </div>
             </div>
@@ -112,3 +112,9 @@
         </div>
     </div>
 </div>
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.ClearSale)) {
+        <script>(function (a, b, c, d, e, f, g) { a['CsdpObject'] = e; a[e] = a[e] || function () { (a[e].q = a[e].q || []).push(arguments) }, a[e].l = 1 * newDate(); f = b.createElement(c), g = b.getElementsByTagName(c)[0]; f.async = 1; f.src = d; g.parentNode.insertBefore(f, g) })(window, document, 'script', '//device.clearsale.com.br/p/fp.js', 'csdp'); csdp('app', ViewBag.ClearSale); csdp('sessionid', Session["SessionId"].ToString());</script>
+    }
+}

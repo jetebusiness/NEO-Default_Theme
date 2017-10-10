@@ -124,8 +124,6 @@
 <input type="hidden" value="@AvailableReferences" id="principal-produto-referecias" name="principal-produto-referecias" />
 
 <!-- FIM - Váriaveis Produto Unitário-->
-
-
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="description" content="">
     <link itemprop="url" href="" rel="author" />
@@ -172,7 +170,18 @@
                     <div class="column">
                         <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
                         <a href="#avaliacoes" onclick="calltab('avaliacoes')">
-                            @(Model.ProductRatings != null ? Model.ProductRatings.Count() : 0) avaliações
+                                @if (Model.ProductRatings != null)
+                                {
+                                    <span>0 avaliações</span>
+                                }
+                                else if (Model.ProductRatings.Count() == 1)
+                                {
+                                    <span>1 avaliação</span>
+                                }
+                                else
+                                {
+                                    <span>@Model.ProductRatings.Count() avaliações</span>
+                                }
                         </a>
                     </div>
                 </div>
@@ -283,7 +292,7 @@
                                 <div class="one column row">
                                     @if (!Model.FlagExhausted)
                                     {
-                                        @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao })
+                                        @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })
                                     }
                                 </div>
                                 <!--FIM VARIAÇÔES-->
@@ -316,23 +325,35 @@
                                                         <span>em</span>
                                                         <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de </span></span>
                                                         <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                        <br />
                                                         <span id="description">@SKUPadrao.InstallmentMax.Description</span>
+                                                        @if (ViewBag.DescontoBoleto > 0)
+                                                        {
+                                                            var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
+                                                            
+                                                            <br />
+                                                            <span>ou</span>
+                                                            <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                        }
                                                     </span>
                                                 }
                                                 else
                                                 {
                                                     <span itemprop="price" class="preco" id="preco">@SKUPadrao.Price.ToString("C")</span>
                                                     <span class="infoPreco">
-                                                        <span>ou</span>
+                                                        <span>em</span>
                                                         <span id="max-p">
                                                             @SKUPadrao.InstallmentMax.MaxNumber
                                                         </span>
                                                         <span>x de </span>
                                                         <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                        <br />
                                                         <span id="description">@SKUPadrao.InstallmentMax.Description</span>
-                                                        <br>
+                                                        @if (ViewBag.DescontoBoleto > 0)
+                                                        {
+                                                            var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
+                                                            <br />
+                                                                <span>ou</span>
+                                                                <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                        }
                                                     </span>
                                                 }
                                             }
@@ -349,8 +370,14 @@
                                                             <span>em</span>
                                                             <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
                                                             <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
-                                                            <br />
                                                             <span id="description">@Model.InstallmentMax.Description</span>
+                                                            @if (ViewBag.DescontoBoleto > 0)
+                                                            {
+                                                                var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
+                                                                <br />
+                                                                <span>ou</span>
+                                                                <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                            }
                                                         </span>
                                                     }
                                                 }
@@ -360,15 +387,17 @@
                                                     if (Model.InstallmentMax != null)
                                                     {
                                                         <span class="infoPreco">
-                                                            <span>ou</span>
-                                                            <span id="max-p">
-                                                                @Model.InstallmentMax.MaxNumber
-                                                            </span>
-                                                            <span>x de </span>
+                                                            <span>em</span>
+                                                            <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
                                                             <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
-                                                            <br />
                                                             <span id="description">@Model.InstallmentMax.Description</span>
-                                                            <br>
+                                                            @if (ViewBag.DescontoBoleto > 0)
+                                                            {
+                                                                var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
+                                                                <br />
+                                                                <span>ou</span>
+                                                                <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                            }
                                                         </span>
                                                     }
                                                 }
@@ -386,53 +415,24 @@
 
                                         @if (Model.Stock == 0 || Model.FlagExhausted)
                                         {
-                                            <h5 class="text grey regular right text bold color red">Produto Esgotado</h5>
+                                            <strong class="text color grey regular right text bold color red">Produto Esgotado</strong>
                                         }
                                         else if (!string.IsNullOrEmpty(@Model.DescriptionAvailabilityStatus))
                                         {
-                                            <h5 class="text grey regular right">@Model.DescriptionAvailabilityStatus</h5>
+                                            <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                                         }
-                                        else
-                                        {
-                                            <h5 class="text grey regular right"></h5>
-                                        }
-
-                                        @if (Model.HaveSku)
-                                        {
-                                            <a class="ui animated big green button fluid detalhes btn-comprar @(Model.FlagExhausted || SKUPadrao.Stock  == 0 ? "disabled" : "")">
+                                        
+                                            <a class="ui animated big green button fluid detalhes btn-comprar  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
                                                 <div class="visible content">Adicionar ao Carrinho</div>
                                                 <div class="hidden content">
                                                     <i class="add to cart icon"></i>
                                                 </div>
                                             </a>
-                                        }
-                                        else
-                                        {
-                                            <a class="ui animated big green button fluid detalhes btn-comprar @(Model.FlagExhausted || Model.Stock  == 0 ? "disabled" : "")">
-                                                <div class="visible content">Adicionar ao Carrinho</div>
-                                                <div class="hidden content">
-                                                    <i class="add to cart icon"></i>
-                                                </div>
-                                            </a>
-                                        }
+                                        
                                     </div>
                                 </div>
                                 <!--FIM DISPONIBILIDADE / CARRINHO-->
                             </div>
-
-                            <!-- COMEÇO REDES SOCIAIS-->
-                            <div class="one column row">
-                                <div class="column">
-                                    @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
-                                        <div class="addthis_inline_share_toolbox"></div>*@
-                                    <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
-                                    <div class="g-plus" data-action="share"></div>
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
-                                    @*<a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>*@
-                                    <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>
-                                </div>
-                            </div>
-                            <!-- FIM REDES SOCIAIS-->
 
                             @if (!Model.FlagExhausted)
             {
@@ -473,6 +473,23 @@
                                     @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", false)
                                 }
                             }
+                        <!-- COMEÇO REDES SOCIAIS-->
+                        <div class="one column row">
+                            <div class="column">
+                                @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
+                                        <div class="addthis_inline_share_toolbox"></div>
+                                    <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
+                                    <div class="g-plus" data-action="share"></div>
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
+                                    <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
+                                    <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
+                                <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
+                                <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                                <div class="addthis_inline_share_toolbox"></div>
+                            </div>
+                        </div>
+                        <!-- FIM REDES SOCIAIS-->
                         </div>
                     </div>
                 </div>
@@ -517,15 +534,7 @@
                             <div class="ui comments fluid" id="lista_avaliacoes">
                                 @if (Model.ProductRatings != null)
                                 {
-                                    int total = 0;
-                                    if (Model.ProductRatings.Count > 5)
-                                    {
-                                        total = 5;
-                                    }
-                                    else
-                                    {
-                                        total = Model.ProductRatings.Count;
-                                    }
+                                    int total = Model.ProductRatings.Count > 5 ? 5 : Model.ProductRatings.Count;
                                     for (int i = 0; i < total; i++)
                                     {
                                         <div class="comment">

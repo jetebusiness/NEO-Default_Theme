@@ -64,7 +64,7 @@
                                 <strong>@Model.NamePaymentMethodGateway </strong>
                                 @if (Model.NumberOfInstallments != null && Model.TotalInstallment != null)
                                 {
-                                    <span>(@Model.NumberOfInstallments@Html.Raw("x de ") @string.Format("{0:c}", Model.TotalInstallment))</span>
+                                    <span>(@Model.NumberOfInstallments@Html.Raw("x de ") @string.Format("{0:c}", Model.ValueOfInstallment))</span>
                                 }
                                 @{
                                     @* Forma de pagamento com boleto Itaú *@

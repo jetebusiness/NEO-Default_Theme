@@ -36,32 +36,30 @@
                                 {
                                     <span>@Model.Brand.Name</span>
                                 }
-                                else
-                                {
-                                    <span></span>
-                                }
-                                @if (Model.HaveSku)
-                                {
-                                    if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+                                <h4 class="margin medium top" id="price-buy-together">
+                                    @if (Model.HaveSku)
                                     {
-                                        <h4 class="margin medium top" id="price-buy-together">@SKUPadrao.PricePromotion.Value.ToString("C")</h4>
+                                        if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+                                        {
+                                            @SKUPadrao.PricePromotion.Value.ToString("C")
+                                        }
+                                        else
+                                        {
+                                            @SKUPadrao.Price.ToString("C")
+                                        }
                                     }
                                     else
                                     {
-                                        <h4 class="margin medium top" id="price-buy-together">@SKUPadrao.Price.ToString("C")</h4>
+                                        if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                                        {
+                                            @Model.PricePromotion.Value.ToString("C")
+                                        }
+                                        else
+                                        {
+                                            @Model.Price.ToString("C")
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    if (Model.PricePromotion != null && Model.PricePromotion > 0)
-                                    {
-                                        <h4 class="margin medium top" id="price-buy-together">@Model.PricePromotion.Value.ToString("C")</h4>
-                                    }
-                                    else
-                                    {
-                                        <h4 class="margin medium top" id="price-buy-together">@Model.Price.ToString("C")</h4>
-                                    }
-                                }
+                                </h4>
                             </div>
                             <div class="description">
                                 @if (Model.AvailableReferences != null)
@@ -102,7 +100,7 @@
 
                                     @if (item.AvailableReferences == null || item.AvailableReferences.Count() == 0)
                                     {
-                                        <h4 class="margin medium top" id="@item.IdProduct-price-product-buy-together">@preco_final</h4>
+                                        <h4 class="margin medium top" id="@item.IdProduct-price-product-buy-together">@preco_final.ToString("C")</h4>
                                     }
                                     else
                                     {

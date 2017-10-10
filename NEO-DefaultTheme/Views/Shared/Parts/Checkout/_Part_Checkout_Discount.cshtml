@@ -1,0 +1,26 @@
+﻿@model List<DomainCheckout.Entities.PaymentGateway>
+
+<div class="descontos">
+    @foreach (var gateway in Model)
+    {
+        foreach (var method in gateway.PaymentMethods)
+        {
+            foreach (var brand in method.PaymentBrands)
+            {
+                    if (brand.Discount > 0)
+                    {
+                        if (brand.typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
+                        {
+                            <span><span>@($"Em 1x no {brand.NamePayment}({brand.Discount}% de desconto)")</span><span>@($"{(brand.Installments != null ? brand.Installments.FirstOrDefault().Total : 0):c}")</span></span>
+                        }
+                        else
+                        {
+                            <span><span>@($"No {brand.NamePayment}({brand.Discount}% de desconto)")</span><span>@($"{(brand.Installments != null ? brand.Installments.FirstOrDefault().Total : 0):c}")</span></span>
+                        }
+                        <br />
+                    }
+            }
+        }
+    }
+</div>
+<br />

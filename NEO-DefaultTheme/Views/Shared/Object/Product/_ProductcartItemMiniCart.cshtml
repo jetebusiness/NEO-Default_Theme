@@ -5,7 +5,7 @@
         <img src="@Model.ProductImage.ImageDefault">
     </div>
     <div class="content">
-        <a class="header" id="name_@Model.IdCartItem">@Html.Raw(Model.NameProduct)</a>
+        <a href="/Product/Details/@Model.IdProduct" class="header" id="name_@Model.IdCartItem">@Html.Raw(Model.NameProduct)</a>
         <div class="meta" id="availability_@Model.IdCartItem">
             @if (Model.Stock == 0)
             {

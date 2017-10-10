@@ -1,5 +1,5 @@
 ﻿@model DomainCheckout.Entities.Cart
-
+<div class="ui segment green">
 <div class="ui accordion resumo">
     <div class="active title">
         <i class="ui icon calculator"></i>
@@ -20,7 +20,7 @@
                 <div class="content">
                     <div class="description">
                         <span>Desconto</span>
-                        <span class="ui floated right">@string.Format("{0:c}", Model.TotalDiscount != null ? Model.TotalDiscount : 0)</span>
+                        <span class="ui floated right" id="desconto_checkout" data-discount-initial="@(Model.TotalDiscount != null ? Model.TotalDiscount : 0)">@string.Format("{0:c}", Model.TotalDiscount != null ? Model.TotalDiscount : 0)</span>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                 <div class="content">
                     <div class="description">
                         <span>Total</span>
-                        <strong class="ui floated right text color green big">
+                        <strong class="ui floated right text color green big" id="total_checkout">
                             @string.Format("{0:c}", Model.Total != null ? Model.Total : 0)
                         </strong>
                     </div>
@@ -44,4 +44,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

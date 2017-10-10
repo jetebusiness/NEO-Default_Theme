@@ -2,18 +2,27 @@
 
 @{
     ViewBag.Title = "Recuperar Senha ou E-mail";
-    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
 }
-<div class="ui container">
-    <div class="ui two column grid stackable middle aligned">
-        <div class="row">
-            <div class="column">
-                <h1>@ViewBag.Title</h1>
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <span class="section">Central do Clinet</span>
+                        <i class="right angle icon divider"></i>
+                        <a class="section active">@ViewBag.Title</a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="ui divider"></div>
     </div>
-</div>
+}
+
 <div class="ui grid middle aligned center aligned">
     <div class="row">
         <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">

@@ -8,10 +8,8 @@
     <script>
         jQuery(document).ready(function($) {
             var settings = {
-                prevArrow:
-                    '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
-                nextArrow:
-                    '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
+                prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
+                nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
                 dots: false,
                 slidesToShow: 4,
                 accessibility: false,
@@ -52,7 +50,7 @@
         <div class="ui cards centered tambem-comprados slideshow">
             @foreach (var product in Model)
             {
-                @Html.Partial("~/Views/Shared/Object/Product/_ProductInCard.cshtml", product);
+                @Html.Partial("~/Views/Shared/Object/Product/_ProductInCard.cshtml", product)
             }
         </div>
     <div class="ui divider hidden"></div>

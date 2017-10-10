@@ -1,5 +1,6 @@
 ﻿@model DomainProduct.Entities.Product
-    <div class="item produtoList searchProducts" itemscope itemtype="http://schema.org/Product">
+
+    <div class="item produtoList searchProducts" itemscope itemtype="http://schema.org/Product" data-exhausted="@Model.FlagExhausted">
         <link itemprop="url" href="@Model.UrlFriendly" rel="author" />
         <div class="ui small image">
             <a itemprop="url" href="@Model.UrlFriendly">

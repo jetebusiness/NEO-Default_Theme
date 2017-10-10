@@ -64,12 +64,12 @@
                                     <div class="field required">
                                         <label>Perfil</label>
                                         <div class="ui dropdown selection tipo cliente">
-                                            <input type="hidden" name="TypeCustomer">
+                                            <input type="hidden" id="TypeCustomer" name="TypeCustomer">
                                             <div class="default text">Perfil de Cliente</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
-                                                <div class="item" data-value="pf" value="0">Pessoa Física</div>
-                                                <div class="item" data-value="pj" value="1">Pessoa Jurídica</div>
+                                                <div class="item" data-value="0">Pessoa Física</div>
+                                                <div class="item" data-value="1">Pessoa Jurídica</div>
                                             </div>
                                         </div>
                                     </div>
@@ -85,7 +85,7 @@
                                         <label>Responsável</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" name="" placeholder="Responsável pela Empresa" data-validate="businessRepresentant">
+                                            <input type="text" name="contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant">
                                         </div>
                                     </div>
                                     <div class="two fields pessoa juridica">
@@ -101,7 +101,7 @@
                                             <label>Nome Fantasia</label>
                                             <div class="ui left icon input">
                                                 <i class="suitcase icon"></i>
-                                                <input type="text" name="" placeholder="Nome Fantasia da Empresa"
+                                                <input type="text" name="FantasyName" placeholder="Nome Fantasia da Empresa"
                                                        value="" data-validate="businessName2">
                                             </div>
                                         </div>
@@ -119,7 +119,7 @@
                                         <div class="field required pessoa fisica">
                                             <label>RG</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="empty">
+                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="rg">
                                             </div>
                                         </div>
                                         <div class="field required pessoa juridica">
@@ -133,7 +133,7 @@
                                         <div class="field required pessoa juridica">
                                             <label>IE</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="empty">
+                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="ie">
                                             </div>
                                         </div>
                                     </div>
@@ -143,7 +143,7 @@
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
                                                 <input type="text" placeholder="DD/MM/YYYY" class="masked"
-                                                       data-inputmask="'alias': 'dd/mm/yyyy'" name="DateBirth" data-validate="date">
+                                                       data-inputmask="'alias': 'dd/mm/yyyy'" name="DateBirth" data-validate="birthdate">
                                             </div>
                                         </div>
                                         <div class="field">
@@ -162,10 +162,10 @@
                                             <label>Estado Civil</label>
                                             <select class="ui dropdown" name="MaritalStatus" data-validate="maritalstatus">
                                                 <option value="">Selecione</option>
-                                                <option value="0">Solteiro(a)</option>
-                                                <option value="1">Casado(a)</option>
-                                                <option value="2">Viúvo(a)</option>
-                                                <option value="3">Desquitado(a)</option>
+                                                <option value="1">Solteiro(a)</option>
+                                                <option value="0">Casado(a)</option>
+                                                <option value="3">Viúvo(a)</option>
+                                                <option value="2">Desquitado(a)</option>
                                                 <option value="4">Separado(a)</option>
                                             </select>
                                         </div>
@@ -206,7 +206,7 @@
                                             <div class="ui right action left icon input">
                                                 <i class="lock icon"></i>
                                                 <input type="password" name="User.password"
-                                                       placeholder="*******" data-validate="empty" class="password_box">
+                                                       placeholder="*******" data-validate="password" class="password_box">
                                                 <div class="ui basic icon button password_unhide">
                                                     <i class="unhide icon"></i>
                                                 </div>
@@ -272,14 +272,14 @@
                                     <div class="field required">
                                         <label>Endereço</label>
                                         <div class="ui input">
-                                            <input type="text" name="Address[0].StreetAddress" placeholder="Endereço" class="endereco" data-validate="empty">
+                                            <input type="text" name="Address[0].StreetAddress" placeholder="Endereço" class="endereco" data-validate="address">
                                         </div>
                                     </div>
                                     <div class="three fields">
                                         <div class="field required">
                                             <label>Número</label>
                                             <div class="ui input">
-                                                <input type="text" name="Address[0].Number" placeholder="Número" data-validate="empty">
+                                                <input type="text" name="Address[0].Number" placeholder="Número" data-validate="number">
                                             </div>
                                         </div>
                                         <div class="field">
@@ -292,7 +292,7 @@
                                         <div class="field required">
                                             <label>Bairro</label>
                                             <div class="ui input">
-                                                <input type="text" name="Address[0].Neighbourhood" placeholder="Bairro" class="bairro" data-validate="empty">
+                                                <input type="text" name="Address[0].Neighbourhood" placeholder="Bairro" class="bairro" data-validate="neighborhood">
                                             </div>
                                         </div>
                                     </div>
@@ -300,12 +300,12 @@
                                         <div class="field required">
                                             <label>Cidade</label>
                                             <div class="ui input">
-                                                <input type="text" name="Address[0].City" placeholder="Cidade" data-validate="empty">
+                                                <input type="text" name="Address[0].City" placeholder="Cidade" data-validate="city">
                                             </div>
                                         </div>
                                         <div class="field required">
                                             <label>Estado</label>
-                                            <select class="ui dropdown search" name="Address[0].State" id="estado_0" data-validate="select">
+                                            <select class="ui dropdown search" name="Address[0].State" id="estado_0" data-validate="state">
                                                 <option value="">Selecione</option>
                                                 <option value="AC">Acre</option>
                                                 <option value="AL">Alagoas</option>
@@ -360,7 +360,7 @@
                                                     <i class="marker icon"></i>
                                                     <input type="text" name="Address[1].ZipCode"
                                                            placeholder="00000-000"
-                                                           class="masked" data-validate="zipcode">
+                                                           class="masked" data-validate="zipcode1">
                                                 </div>
                                             </div>
                                             <div class="field">
@@ -385,17 +385,17 @@
                                                     <input type="text" name="Address[1].Number" placeholder="Número" data-validate="number1">
                                                 </div>
                                             </div>
-                                            <div class="field required">
+                                            <div class="field">
                                                 <label>Complemento</label>
                                                 <div class="ui input">
                                                     <input type="text" name="Address[1].Complement"
-                                                           placeholder="Ex: ap. 123" data-validate="complement1">
+                                                           placeholder="Ex: ap. 123" data-validate="complement">
                                                 </div>
                                             </div>
                                             <div class="field required">
                                                 <label>Bairro</label>
                                                 <div class="ui input">
-                                                    <input type="text" placeholder="Bairro" name="Address[1].Neighbourhood" data-validate="neighbourhood">
+                                                    <input type="text" placeholder="Bairro" name="Address[1].Neighbourhood" data-validate="neighborhood1">
                                                 </div>
                                             </div>
                                         </div>
@@ -403,12 +403,12 @@
                                             <div class="field required">
                                                 <label>Cidade</label>
                                                 <div class="ui input">
-                                                    <input type="text" name="Address[1].City" placeholder="Cidade" data-validate="city">
+                                                    <input type="text" name="Address[1].City" placeholder="Cidade" data-validate="city1">
                                                 </div>
                                             </div>
                                             <div class="field required">
                                                 <label>Estado</label>
-                                                <select class="ui dropdown search" id="estado_1" name="Address[1].State" data-validate="state">
+                                                <select class="ui dropdown search" id="estado_1" name="Address[1].State" data-validate="state1">
                                                     <option value="">Selecione</option>
                                                     <option value="AC">Acre</option>
                                                     <option value="AL">Alagoas</option>
@@ -444,16 +444,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row one column">
-                            <div class="column text right">
-                                <div class="field" style="display:inline-flex">
-                                    <div class="ui checkbox termo aceite">
-                                        <input type="checkbox" checked="checked" data-validate="termo">
-                                    </div>
-                                    <label id="termo_aceite">Concorda com o <a style="cursor: pointer;">termo de aceite?</a></label>
+                    <div class="row one column">
+                        <div class="column text right">
+                            <div class="inline field">
+                                <div class="ui checkbox  termo aceite">
+                                    <input type="checkbox" tabindex="0" class="hidden"  data-validate="termo">
+                                    <label >Concorda com o termo de aceite?</label>
                                 </div>
+                                <a id="termo_aceite" style="cursor: pointer; font-size: 0.9em; display: block;">Ler termo de aceite</a>
                             </div>
                         </div>
+                    </div>
                         <div class="row">
                             <div class="column">
                                 <a href="/Customer/Login" class="ui animated button large red left floated">
@@ -488,15 +489,14 @@
 
 @section custom_js {
     <script>
-
         function OnSuccess(response) {
             if (response.Success == true) {
                 swal({
                     title: '',
-                    text: response.Message,
+                    html: response.Message,
                     type: 'success',
                     showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#16ab39',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
@@ -506,10 +506,10 @@
             else {
                 swal({
                     title: '',
-                    text: response.Message,
+                    html: response.Message,
                     type: 'error',
                     showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#16ab39',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 });
@@ -523,7 +523,7 @@
                     text: response.Message,
                     type: 'error',
                     showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#16ab39',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {

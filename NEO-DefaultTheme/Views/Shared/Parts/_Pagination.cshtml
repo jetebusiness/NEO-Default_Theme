@@ -2,7 +2,7 @@
 
 @{ 
     var orderParam = Request.QueryString["order"] != null ? string.Concat("&order=", Request.QueryString["o"] != null ? Request.QueryString["order"].ToString() : string.Empty) : string.Empty;
-    var viewParam = Request.QueryString["viewList"] != null ? string.Concat("&viewList=", Request.QueryString["v"] != null ? Request.QueryString["viewList"].ToString() : string.Empty) : string.Empty;
+    var viewParam = Request.QueryString["viewList"] != null ? string.Concat("&viewList=", Request.QueryString["viewList"] != null ? Request.QueryString["viewList"].ToString() : string.Empty) : string.Empty;
 
     var queryParameters = string.Concat(orderParam, viewParam);
 }

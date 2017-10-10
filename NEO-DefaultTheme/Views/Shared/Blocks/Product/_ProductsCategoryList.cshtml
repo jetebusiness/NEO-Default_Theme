@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="center aligned column">
                     <!-- Page: ~/Views/Shared/Parts/_Pagination.cshtml -->
-                    @Html.Partial("~/Views/Shared/Parts/_Pagination.cshtml", Model.Settings, new ViewDataDictionary() { { "Url", HttpContext.Current.Request.Url.AbsolutePath } })
+                    @Html.Partial("~/Views/Shared/Parts/_Pagination.cshtml", Model.Settings, new ViewDataDictionary() { { "Url", ViewBag.localUrl } })
                 </div>
             </div>
         </div>

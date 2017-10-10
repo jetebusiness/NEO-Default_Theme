@@ -19,14 +19,16 @@
                             </div>
                             <div class="content">
                                 <a href="" class="description"><strong>@Html.Raw(product.NameProduct)</strong></a>
-                                <div class="description">Quantidade: @product.Quantity Unidades</div>
+                                <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
                                 <div class="extra text color green left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
                             </div>
                         </div>
                     }
                 }
             </div>
+            @Html.Action("ListaDescontosPagamento", "Checkout")
             <a href="/Checkout">Voltar para o carrinho</a>
         </div>
+
     </div>
 </div>

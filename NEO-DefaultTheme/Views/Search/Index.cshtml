@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Resultado da Busca";
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
+    var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
 
 @section breadcrumbs {
