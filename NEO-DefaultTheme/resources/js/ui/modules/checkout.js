@@ -135,3 +135,9 @@ $(document).ready(function () {
         $(".ui.accordion.compra, .ui.accordion.resumo, .ui.accordion.usuario").accordion('close', 0);
     }
 });
+
+$(".ui.dropdown").dropdown({
+    onChange: function () {
+        $(this).closest(".required").addClass("success").data("jet-active", true);
+    }
+});

@@ -1,30 +1,51 @@
 export function hideADDR(limpeza = false) {
-    $(".endereco.cobranca").hide().find("input").each(function () {
-        $(this).hide().attr("disabled", true);
-        if (limpeza){
-            $(this).val("");
-        }
-    });
+    $(".endereco.cobranca")
+        .hide()
+        .find("input")
+        .each(function () {
+            $(this).hide().attr("disabled", true);
+            if (limpeza) {
+                $(this).val("");
+            }
+        });
+    $(".endereco.cobranca")
+        .find("select")
+        .each(function () {
+            $(this).hide().attr("disabled", true);
+            if (limpeza) {
+                $(this).val("");
+            }
+        })
+        .dropdown("refresh");
 }
 
 export function showADDR(limpeza = false) {
     $(".endereco.cobranca").show().find("input").each(function () {
         $(this).show().attr("disabled", false);
-        if (limpeza){
+        if (limpeza) {
             $(this).val("");
         }
     });
+    $(".endereco.cobranca")
+        .find("select")
+        .each(function () {
+            $(this).hide().attr("disabled", false);
+            if (limpeza) {
+                $(this).val("");
+            }
+        })
+        .dropdown("refresh");
 }
 
 export function hideProfile(profile) {
     $(profile).hide().find('input').each(function () {
-        $(this).val('').attr('disabled', true);
+        $(this).attr('disabled', true);
     });
 }
 
 export function showProfile(profile) {
     $(profile).show().find('input').each(function () {
-        $(this).val('').attr('disabled', false);
+        $(this).attr('disabled', false);
     });
 }
 

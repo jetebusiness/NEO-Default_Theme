@@ -65,7 +65,7 @@ $(document).ready(function(){
     $("#qtdplus-detalhes, #qtdminus-detalhes").click(function(){
         AtualizarQuantidade();
     });
-    
+
     $(".btn-avaliar").click(function(){
         var response = grecaptcha.getResponse()
         if (response.length > 0) {
@@ -99,11 +99,12 @@ $(document).ready(function(){
 
         //PRODUTO DEVE SER DIFERENTE DE NULL
         if(productID != null && productID != ""){
+            $(this).addClass("loading");
             //SE FOR, VALIDA SE EXISTE VARIAÇÔES
             if(parseInt(totalVariations) > 0){
                 //SE EXISTE, VALIDA SE FOI SELECIONADA
                 if(productSKU != null && productSKU != "" && resultado > 0){
-                    AdicionarProdutoAjx(parseInt(productSKU), parseInt(productID), productQuantity)                   
+                    AdicionarProdutoAjx(parseInt(productSKU), parseInt(productID), productQuantity)
                     ApplyDiscountInCart()
                 }else {
                     swal({
@@ -187,8 +188,8 @@ $(document).ready(function(){
         var produto_sku_selecionado = id_product;
         var skusJaSelecionados = $('#buy-together-skus').val();
         var ArrskusJaSelecionados = skusJaSelecionados.split(',');
-        var preco_corrente =  $("#"+id_product+"-buy-together-preco").val();
-        var preco_promocao_corrente = $("#"+id_product+"-buy-together-preco-promocao").val();
+        var preco_corrente =  $("#"+id_product+"-buy-together-preco").val().replace(",",".");
+        var preco_promocao_corrente = $("#"+id_product+"-buy-together-preco-promocao").val().replace(",",".");
 
 
         if(parseInt(variacoes) == 0){
@@ -565,37 +566,52 @@ function AtualizarGradeCompreJunto(jsonSKU, productID){
 function AtualizarGrade(jsonSKU){
 
     let quantidade = parseInt($("#quantidade").val()),
-    estoque = parseInt(jsonSKU.Stock),
-    avise = "",
-    html_price = "",
-    price = moneyPtBR(jsonSKU.Price),
-    max_p = jsonSKU.InstallmentMax.MaxNumber,
-    max_v = jsonSKU.InstallmentMax.Value,
-    description = jsonSKU.InstallmentMax.Description,
-    pricePromotion = moneyPtBR(jsonSKU.PricePromotion) || "";
-
+        estoque = parseInt(jsonSKU.Stock),
+        avise = "",
+        html_price = "",
+        price = moneyPtBR(jsonSKU.Price),
+        max_p = jsonSKU.InstallmentMax.MaxNumber,
+        max_v = moneyPtBR(jsonSKU.InstallmentMax.Value),
+        description = jsonSKU.InstallmentMax.Description,
+        pricePromotion = moneyPtBR(jsonSKU.PricePromotion) || "",
+        valorDesconto = $("#desconto_boleto").val(),
+        descontoBoleto = "";
+    if (valorDesconto > 0){
+        descontoBoleto =`
+            <br />
+            <span>ou</span>
+            <span>
+                <span id="preco_boleto">${moneyPtBR((price / 100) * valorDesconto)}</span> 
+                no boleto bancário (${valorDesconto}% de desconto)
+            </span>
+            `
+    }
     if(jsonSKU.PricePromotion != "" && jsonSKU.PricePromotion != "0"){
-        html_price = `<span class="precoAntigo"><span>de: </span><span id="preco-antigo">${price}</span><span> por</span></span>
-                        <span itemprop='price' class='preco' id='preco'>${pricePromotion}</span>
-                          <span class='infoPreco'>
-                              <span>em</span>
-                              <span id='max-p'>${max_p}<span> </span></span>
-                              <span id='max-value'>${max_v}</span>
-                              <br />
-                              <span id='description'>${description}</span>
-                         </span>
-                        </span>`;
+        html_price = `<span class="precoAntigo">
+                        <span>de: </span>
+                        <span id="preco-antigo">${price}</span>
+                        <span> por</span>
+                      </span>
+                    <span itemprop="price" class="preco" id="preco">${pricePromotion}</span>
+                    <span class="infoPreco">
+                        <span>em</span>
+                        <span id="max-p">${max_p}<span>X de </span></span>
+                        <span id="max-value">${max_v}</span>
+                        <span id="description">${description}</span>
+                        ${descontoBoleto}
+                    </span>`;
     }else {
-        html_price = `<span itemprop='price' class='preco' id="preco">${price}</span>
-                          <span class='infoPreco'>
-                          <span>ou</span>
-                          <span id='max-p'>${max_p}</span>
-                          <span> </span>
-                          <span id='max-value'>${max_v}</span>
-                          <br />
-                          <span id='description'>${description}</span>
-                          <br>
-                          </span>`;
+        html_price = `<span itemprop="price" class="preco" id="preco">${price}</span>
+                                                    <span class="infoPreco">
+                                                        <span>em</span>
+                                                        <span id="max-p">
+                                                            ${max_p}
+                                                        </span>
+                                                        <span>x de </span>
+                                                        <span id="max-value">${max_v}</span>
+                                                        <span id="description">${description}</span>
+                                                        ${descontoBoleto}
+                                                    </span>`;
     }
 
     if(estoque == 0){
@@ -758,20 +774,23 @@ function AtualizarCarrinhoCompreJunto(valor, valorP, operador){
             valorP = 0;
         }
 
-        if(operador == "+"){
-            $("#compre-junto-total").text(moneyPtBR(parseFloat(total) + parseFloat(valor)));
+        if(operador == "+"){           
             $("#compre-junto-desconto").text(moneyPtBR(parseFloat(desconto) + parseFloat(descontoP)));
-            if(valorP != "" && valorP > 0){
+            if(valorP != "" && parseFloat(valorP) > 0){
+                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) + parseFloat(valorP)));
                 $("#compre-junto-total-final").text(moneyPtBR(parseFloat(total_final) + parseFloat(valorP)));
             }else {
+                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) + parseFloat(valor)));
                 $("#compre-junto-total-final").text(moneyPtBR(parseFloat(total_final) + parseFloat(valor)));
             }
         }else if(operador == "-") {
-            $("#compre-junto-total").text(moneyPtBR(parseFloat(total) - parseFloat(valor)));
+            
             $("#compre-junto-desconto").text(moneyPtBR(parseFloat(desconto) - parseFloat(descontoP)));
-            if(valorP != "" && valorP > 0){
+            if(valorP != "" && parseFloat(valorP) > 0){
+                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) - parseFloat(valorP)));
                 $("#compre-junto-total-final").text(moneyPtBR(parseFloat(total_final) - parseFloat(valorP)));
             }else {
+                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) - parseFloat(valor)));
                 $("#compre-junto-total-final").text(moneyPtBR(parseFloat(total_final) - parseFloat(valor)));
             }
         }
@@ -883,6 +902,7 @@ function AdicionarProdutoAjx(productSKU, productID, quantity){
         dataType:'json',
         success : function(response) {
             if(response.success == true){
+                $(document).find(".loading").removeClass("loading");
                 LoadCarrinho();
                 $(".carrinho").sidebar('toggle');
                 //window.location.href = "/Checkout/Index";
@@ -1281,8 +1301,11 @@ function ValidarSkuProdutoPrincipal(){
 
 function SomenteNumeros(valor){
     let valorFinal = 0.0;
-
-    valorFinal = valor.replace('.', ',').replace(',', '.').replace('R$', '');
-
+    if(valor.indexOf(',') != -1){
+      valorFinal = valor.substring(0, valor.indexOf(','));
+      valorFinal = valorFinal.replace('.', '').replace(',', '').replace('R$', '');
+    }else{
+      valorFinal = valor.replace('R$', '');
+    }
     return parseFloat(valorFinal);
 }

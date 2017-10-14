@@ -11,7 +11,7 @@ function RegisterNews() {
         success: function (response) {
             if (response.Success === true) {
                 swal({
-                    title: 'Cadastro Realizado com Sucesso!',
+                    title: 'Sucesso',
                     text: response.Message,
                     type: 'success',
                     showCancelButton: false,
@@ -24,7 +24,7 @@ function RegisterNews() {
             }
             else {
                 swal({
-                    title: '',
+                    title: 'Mensagem',
                     text: response.Message,
                     type: 'error',
                     showCancelButton: false,
@@ -41,7 +41,7 @@ function RegisterNews() {
         }
     });
 }
-$(document).ready(function () {    
+$(document).ready(function () {
     $(document).on("click", "#btn_news", function (event) {
         RegisterNews()
     });

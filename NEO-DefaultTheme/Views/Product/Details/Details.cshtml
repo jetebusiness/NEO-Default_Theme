@@ -79,6 +79,14 @@
             variacaoSelecionada = variacaoSelecionada.Remove(variacaoSelecionada.Length - 1);
         }
     }
+
+
+    if(SKUPadrao.InstallmentMax == null)
+    {
+        SKUPadrao.InstallmentMax = new DomainProduct.Entities.InstallmentMax();
+        SKUPadrao.InstallmentMax.MaxNumber = 0;
+        SKUPadrao.InstallmentMax.Value = 0;
+    }
 }
 
 
@@ -342,7 +350,7 @@
                                                     <span class="infoPreco">
                                                         <span>em</span>
                                                         <span id="max-p">
-                                                            @SKUPadrao.InstallmentMax.MaxNumber
+                                                             @SKUPadrao.InstallmentMax.MaxNumber
                                                         </span>
                                                         <span>x de </span>
                                                         <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
@@ -595,7 +603,7 @@
                                             <input type="text" maxlength="100" name="AddressCity" placeholder="Cidade" id="cidade" required>
                                         </div>
                                     </div>
-                                    <div class="field">
+                                    <div class="field required">
                                         <label>Estado</label>
                                         <select class="ui dropdown search" id="estado_0" name="AddressState">
                                             <option value="">Selecione</option>
@@ -629,15 +637,15 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="field" id="rating_st">
+                                <div class="field required" id="rating_st">
                                     <label>Nota</label>
                                     <div class="ui huge star rating"></div>
                                 </div>
-                                <div class="field">
+                                <div class="field required">
                                     <label>Título</label>
                                     <input type="text" name="Title" maxlength="200" placeholder="Titulo" id="Title">
                                 </div>
-                                <div class="field">
+                                <div class="field required">
                                     <label>Opinião</label>
                                     <textarea id="Comment" maxlength="1000" name="Comment"></textarea>
                                 </div>

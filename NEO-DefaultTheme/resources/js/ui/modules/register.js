@@ -31,12 +31,13 @@ $(document).ready(function () {
                     changing: function (uf) {
                         "use strict";
                         $(`#estado_${id}`).dropdown("set selected", uf);
-                        if ($(`#estado_${id}`).closest(".jet.checkout").length === 1){
+
+                        if ($(`#estado_${id}`).closest(".jet.checkout").length === 1) {
                             $(`#estado_${id}`).closest(".field").addClass("success");
                         }
                     },
-                    loading: function () {
-                        $("#estado_" + id + "").dropdown("set text", "...");
+                    loading: function (text) {
+                        $("#estado_" + id + "").dropdown("set text", text);
                     },
                     clearing: function () {
                         $("#estado_" + id + "").dropdown("clear");
@@ -73,17 +74,17 @@ $(document).ready(function () {
         }
     });
 
-    $(".tipo.cliente").dropdown('set selected', 'pf')
+    $(".tipo.cliente").dropdown('set selected', '0')
         .dropdown({
             allowReselection: true,
             action: 'activate',
             onChange: function (value) {
                 switch (value) {
-                    case "pf":
+                    case "0":
                         hideProfile(".pessoa.juridica");
                         showProfile(".pessoa.fisica");
                         break;
-                    case "pj":
+                    case "1":
                         hideProfile(".pessoa.fisica");
                         showProfile(".pessoa.juridica");
                         break;

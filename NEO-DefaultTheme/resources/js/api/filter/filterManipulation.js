@@ -26,6 +26,18 @@ function makeLabel() {
     $("#filter>div.ui.labels:first-child").html(htmlTag);
 }
 
+function ValidateLabel(type, id){
+    let labelVariation = window.filterManipulation.labelFilter;
+
+    for (let key in labelVariation) {
+        if (labelVariation[key].type === type && labelVariation[key].id === id) {
+            return true
+        }else{
+            return false
+        }
+    }
+}
+
 function ajaxColor() {
     isLoading("#list");
     let filters = window.filterManipulation;
@@ -407,10 +419,10 @@ $(document).on("click", ".checkColor", function () {
     }
 
     window.filterManipulation.labelFilter.push({
-            type: "color",
-            id: $(this).prop("id"),
-            name: $(this).data("reference"),
-            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
+        type: "color",
+        id: $(this).prop("id"),
+        name: $(this).data("reference"),
+        value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
     });
     ajaxColor();
 });
@@ -432,14 +444,14 @@ $(document).on("click", ".checkText", function () {
 $(document).on("change", ".checkCategory", function () {
     window.filterManipulation.nameCategory = $(this).attr("name");
     window.filterManipulation.idCategory = $(this).attr("id");
-
-    window.filterManipulation.labelFilter.push({
-        type: "category",
-        id: window.filterManipulation.idCategory,
-        name: "Categorias",
-        value: window.filterManipulation.nameCategory
-    });
-
+    if(!ValidateLabel("category", window.filterManipulation.idCategory)){
+        window.filterManipulation.labelFilter.push({
+            type: "category",
+            id: window.filterManipulation.idCategory,
+            name: "Categorias",
+            value: window.filterManipulation.nameCategory
+        });          
+    }
     ajaxCategory();
 });
 

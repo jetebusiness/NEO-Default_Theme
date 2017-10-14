@@ -111,7 +111,11 @@
 }
 
 .ui.button {
-
+  &.desabilitado{
+    background: rgba(0,0,0,0.1);
+    cursor: pointer;
+    color: rgba(0,0,0,0.4);
+    }
   .button {
     margin-bottom: 0 !important;
   }

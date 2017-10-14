@@ -386,6 +386,7 @@
     <Content Include="resources\sass\_semantic_ui.scss" />
     <Content Include="resources\sass\_variables.scss" />
     <Content Include="package.json" />
+    <Content Include="Views\HotSite\Home_Event_List_Marriage.cshtml" />
     <Content Include="webpack.mix.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

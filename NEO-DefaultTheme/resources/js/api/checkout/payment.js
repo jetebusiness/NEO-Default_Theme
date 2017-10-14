@@ -45,7 +45,7 @@ function disparaAjaxShipping(zipcode, idFrete, correiosEntrega){
 function OrderCreate() {
     $(".GerarPedido").click(function (event) {
         event.preventDefault();
-        
+
         $(this).addClass("disabled");
         $(this).addClass("loading");
 
@@ -88,7 +88,7 @@ function OrderCreate() {
         if(tipoVerificacao == "S"){
             idInstallment = $("#parcCard").val();
             installmentNumber = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
-            
+
             var dataCurrent = new Date();
             var anoCurrent = new Number(dataCurrent.getFullYear());
             var mesCurrent = new Number(dataCurrent.getMonth()+1);
@@ -112,7 +112,41 @@ function OrderCreate() {
                 var ponteiroCurrent = $(this);
                 var labelCurrent = $(".labelCheckPayment", this).text();
                 var valorCurrent = $(".fieldCheckPayment", this).val();
-                
+
+                if((valorCurrent == "") || (valorCurrent.length < 3)){
+                    msgErrors+= "<br />O campo "+labelCurrent+ " está inválido!";
+                }
+            });
+        }
+
+        if(tipoVerificacao == "D"){
+            idInstallment = $("#parcCard").val();
+            installmentNumber = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+
+            var dataCurrent = new Date();
+            var anoCurrent = new Number(dataCurrent.getFullYear());
+            var mesCurrent = new Number(dataCurrent.getMonth()+1);
+
+            if(validaMes > 12){
+                msgErrors+= "<br />O campo Data de Validade está com o mês inválido!";
+            }
+
+            if(validaAno < anoCurrent){
+                msgErrors+= "<br />O campo Data de Validade está com o ano inválido!";
+            }
+            else{
+                if(validaAno == anoCurrent){
+                    if(validaMes < mesCurrent){
+                        msgErrors+= "<br />O campo Data de Validade está com o mês inválido!";
+                    }
+                }
+            }
+
+            $("#validCardDebit").find(".required").each(function(){
+                var ponteiroCurrent = $(this);
+                var labelCurrent = $(".labelCheckPayment", this).text();
+                var valorCurrent = $(".fieldCheckPayment", this).val();
+
                 if((valorCurrent == "") || (valorCurrent.length < 3)){
                     msgErrors+= "<br />O campo "+labelCurrent+ " está inválido!";
                 }
@@ -147,7 +181,12 @@ function OrderCreate() {
                     },
                     success: function (response) {
                         if (response.success == true) {
-                            document.location = "Success?orderId=" + response.msg;
+                            if (response.urlRedirect != "") {
+                                document.location = response.urlRedirect;
+                            }
+                            else {
+                                document.location = "Success?orderId=" + response.idPedido;
+                            }
                         } else {
                             _alert("Ops! Encontramos um problema ..", response.msg, "warning");
                             $(".GerarPedido").removeClass("loading");
@@ -159,7 +198,7 @@ function OrderCreate() {
                 _alert("Ops! Encontramos um problema ..", "Escolha o frete antes de fechar o pedido!", "warning");
                 $(".GerarPedido").removeClass("loading");
                 $(".GerarPedido").removeClass("disabled");
-            }        
+            }
         }
     });
 }
@@ -193,8 +232,21 @@ function verificaPresente(){
     });
 }
 
+
+function onChangeParcelamento(){
+  $('#parcCard').on('change', function() {
+      var codigoBandeira = $("#btnCardCredit").attr("data-idBrand");
+      var parcela_selecionada = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+      var id_tipo = 1;
+
+      if(codigoBandeira != "" && id_tipo != "" && parcela_selecionada != ""){
+        AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
+      }
+  });
+}
 function validaCartaoCreditoBandeira(){
     $("#CreditCard").on("blur", function(){
+        $("#btnCardDebit").removeAttr("data-idBrand");
         var cartoes = {
             elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
             dinners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
@@ -226,7 +278,7 @@ function validaCartaoCreditoBandeira(){
                         break;
 
                     case "dinersClub":
-                        codigoBandeira = 0;
+                        codigoBandeira = 210;
                         break;
 
                     case "hipercard":
@@ -256,6 +308,8 @@ function validaCartaoCreditoBandeira(){
                 $("#btnCardCredit").attr("data-idBrand",codigoBandeira);
                 $("#brandCard").val(cartao);
                 atualizaParcelamento(codigoBandeira);
+                atualizaResumoCarrinho();
+                AtualizaResumoCarrinhocomDesconto(codigoBandeira, 1, 1);
             }
         }
         if(numeroCartao != "" && codigoBandeira == 0){
@@ -267,6 +321,7 @@ function validaCartaoCreditoBandeira(){
 
 function validaCartaoDebitoBandeira(){
     $("#DebitCard").on("blur", function(){
+      $("#btnCardCredit").removeAttr("data-idBrand");
         var cartoes = {
             elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
             dinners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
@@ -314,11 +369,11 @@ function validaCartaoDebitoBandeira(){
                         break;
 
                     case "mastercard":
-                        codigoBandeira = 208;
+                        codigoBandeira = 215;
                         break;
 
                     case "visa":
-                        codigoBandeira = 209;
+                        codigoBandeira = 216;
                         break;
 
                     case "jcb":
@@ -327,6 +382,8 @@ function validaCartaoDebitoBandeira(){
                 }
                 $("#btnCardDebit").attr("data-idBrand",codigoBandeira);
                 $("#debitBrandCard").val(cartao);
+                atualizaResumoCarrinho();
+                AtualizaResumoCarrinhocomDesconto(codigoBandeira, 14, 0);
             }
         }
         if(numeroCartao != "" && codigoBandeira == 0){
@@ -351,9 +408,10 @@ function atualizaParcelamento(codigoBandeira){
                 for (var i = 0; i < objParcelamento.length; i++) {
                     var IdInstallment = objParcelamento[i].IdInstallment;
                     var InstallmentNumber = objParcelamento[i].InstallmentNumber;
+                    var Description = objParcelamento[i].Description;
                     var Value = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(objParcelamento[i].Value);
- 
-                    option += "<option value='"+IdInstallment+"' data-InstallmentNumber='"+InstallmentNumber+"'>"+InstallmentNumber+"x - "+Value+"</option>";
+
+                    option += "<option value='"+IdInstallment+"' data-InstallmentNumber='"+InstallmentNumber+"'>"+InstallmentNumber+"x de "+Value+"("+Description+")</option>";
                     $("#parcCard").html(option);
                 }
             }
@@ -361,13 +419,73 @@ function atualizaParcelamento(codigoBandeira){
     }
 }
 
+function buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada){
+  var valor = {};
+  if(codigoBandeira > 0){
+      $.ajax({
+          method: "POST",
+          url: "LoadInstallmentJson",
+          async: false,
+          data: {
+              _codigoBandeira: new Number(codigoBandeira),
+              _paymentMethod: new Number(codigoPaymentMethod),
+              _parcela_selecionada: new Number(parcela_selecionada)
+          },
+          success: function (response) {
+              if(response.success === true){
+                  valor = response;
+              }else{
+                  _alert("Ops! Encontramos um problema ..", response.result, "warning");
+              }
+
+          }
+      });
+  }
+  return valor;
+}
+
+function buscaValorFinalCarrinho(){
+  var total = {};
+      $.ajax({
+          method: "POST",
+          url: "LoadTotalValueCart",
+          data: {},
+          async: false,
+          success: function (response) {
+              if(response.success === true){
+                  total = response;
+              }
+          }
+      });
+  return total;
+}
+
+function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, parcela_selecionada){
+  var obj_parcelamento = buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
+  var obj_carrinho = buscaValorFinalCarrinho();
+
+  if(Object.keys(obj_parcelamento).length > 0){
+  var desconto_inicial = $("#desconto_checkout").attr("data-discount-initial");
+
+  if(desconto_inicial.indexOf(',') != -1){
+    desconto_inicial = desconto_inicial.substring(0, desconto_inicial.indexOf(','));
+  }
+  desconto_inicial = desconto_inicial.replace(/[^0-9\.-]+/g,"");
+  desconto_inicial = parseFloat(desconto_inicial);
+
+  $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.discount + desconto_inicial));
+  $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.result));
+  }
+}
+
+
 function listAddressPayment(){
     $("#listAddressPayment").click(function(){
         $("#addDataAddress").removeClass("addAddress");
         $("#addDataAddress").text("Adicionar");
         $("#listAddressData").show();
         $("#registerAddressPayment").hide();
-        
+
         viewAddressLogged();
         RecoverPasswordByEmail();
         $('.ui.modal').modal('show');
@@ -461,6 +579,11 @@ function atualizaResumoCarrinho(){
             var codigoBandeira = $("#btnCardCredit").attr("data-idBrand");
             if(typeof(codigoBandeira) != "undefined"){
                 atualizaParcelamento(codigoBandeira);
+                var parcela_selecionada = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+                var id_tipo = 1;
+                if(codigoBandeira != "" && id_tipo != "" && parcela_selecionada != ""){
+                  AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
+                }
             }
         }
     });
@@ -714,7 +837,7 @@ function RecoverPasswordByEmail(){
 
 
 $(document).ready(function () {
-    //$.jetRoute("checkout", function (){ 
+    //$.jetRoute("checkout", function (){
         if($("#idAddress").val() != ""){
             clickShipping();
             if ($(".GerarPedido").length > 0) {
@@ -730,6 +853,7 @@ $(document).ready(function () {
             applyDiscount();
             CheckAccessKey();
             ReEnviarCodigoEmail();
+            onChangeParcelamento();
         }
         else{
             _alert("Ops! Encontramos um problema ..", "Você não pode fechar um pedido sem um endereço de entrega!", "warning");

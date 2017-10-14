@@ -279,6 +279,17 @@ function disparaAjaxUpdate(idCurrent, valorInput, action){
             if(data.success === true){
                 UpdateCarrinho();
             }else{
+              
+              swal({
+                  title: 'Mensagem',
+                  text: data.msg,
+                  type: 'warning',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+              });
+
                 if(action == "plus"){
                     valorInput -= 1;
                 }else{

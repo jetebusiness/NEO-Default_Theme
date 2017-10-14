@@ -25,6 +25,7 @@
             @using (Ajax.BeginForm("FinishRegistration", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente" }))
             {
                 @Html.AntiForgeryToken()
+
                 <input type="hidden" name="IdCustomer" value="@Model.IdCustomer" />
                 <input type="hidden" name="Address[0].IdAddress" value="@Model.Address[0].IdAddress" />
                 <input type="hidden" name="Address[0].Country" value="BRASIL" />
@@ -43,8 +44,9 @@
                                             <div class="default text">Perfil de Cliente</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
-                                                <div class="item" data-value="pf">Pessoa Física</div>
-                                                <div class="item" data-value="pj">Pessoa Jurídica</div>
+                                                <input type="hidden" id="auxTypeCustomer" value="@Model.TypeCustomer" />
+                                                <div id="fisica" class="item" data-value="0">Pessoa Física</div>
+                                                <div id="juridica" class="item" data-value="1">Pessoa Jurídica</div>
                                             </div>
                                         </div>
                                     </div>
@@ -60,7 +62,7 @@
                                         <label>Responsável</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" name="" placeholder="Responsável pela Empresa" data-validate="businessRepresentant">
+                                            <input type="text" name="contact" id="contact" value="@Model.Contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant" />
                                         </div>
                                     </div>
                                     <div class="two fields pessoa juridica">
@@ -68,16 +70,16 @@
                                             <label>Razão Social</label>
                                             <div class="ui left icon input">
                                                 <i class="suitcase icon"></i>
-                                                <input type="text" name="" placeholder="Razão Social da Empresa"
-                                                       value="" data-validate="businessName">
+                                                <input type="text" name="name" id="name" placeholder="Razão Social da Empresa"
+                                                       value="@Model.Name" data-validate="businessName">
                                             </div>
                                         </div>
                                         <div class="field required pessoa juridica">
                                             <label>Nome Fantasia</label>
                                             <div class="ui left icon input">
                                                 <i class="suitcase icon"></i>
-                                                <input type="text" name="" placeholder="Nome Fantasia da Empresa"
-                                                       value="" data-validate="businessName2">
+                                                <input type="text" name="FantasyName" id="FantasyName" placeholder="Nome Fantasia da Empresa"
+                                                       value="@Model.FantasyName" data-validate="businessName2">
                                             </div>
                                         </div>
                                     </div>
@@ -369,6 +371,14 @@
 
 @section custom_js {
     <script>
+        $(document).ready(function () {
+            if ($("#auxTypeCustomer").val() == "fisica") {
+                $("#fisica").trigger("click")
+            }                
+            else {
+                $("#juridica").trigger("click")
+            }               
+        })
 
         function OnSuccess(response) {
             if (response.Success == true) {

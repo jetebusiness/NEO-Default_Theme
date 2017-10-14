@@ -27,17 +27,17 @@ function forgotByEmail() {
             data:{email:_email},
             success: function (data) {
                 if(data.Success)
-                    _alert("Mensagem", data.Message, "success") 
+                    _alert("Mensagem", data.Message, "success")
                 else
-                    _alert("Mensagem", data.Message, "error") 
+                    _alert("Mensagem", data.Message, "error")
             },
             error: function (data) {
-                _alert("Informação", data.Message, "error") 
+                _alert("Informação", data.Message, "error")
             }
         });
     }
     else{
-        _alert("Mensagem", "Por favor, informe um e-mail válido.", "error") 
+        _alert("Mensagem", "Por favor, informe um e-mail válido.", "error")
     }
 }
 
@@ -52,14 +52,14 @@ function forgotByCpfPassword() {
         url: _url,
         data: { cpf: _cpf, password: _password},
         success: function (result) {
-            if (result.Success) {                             
+            if (result.Success) {
                 _alert("Informação","O seu e-mail de cadastro é: " + result.Message, "success")
             }
-            else {        
+            else {
                 _alert("Informação","Por favor, informe os dados de acesso.", "warning")
             }
         },
-        error: function (result) {    
+        error: function (result) {
             _alert("Erro","Falha ao buscar o e-mail!", "warning")
         }
     });

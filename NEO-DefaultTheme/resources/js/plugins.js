@@ -34,4 +34,11 @@ require("semantic-ui-calendar/src/definitions/modules/calendar");
  */
 window.easyzoom = require("easyzoom");
 
+/**
+ * Axios
+ * https://github.com/axios/axios
+ */
+window.axios = require("axios");
+
+
 

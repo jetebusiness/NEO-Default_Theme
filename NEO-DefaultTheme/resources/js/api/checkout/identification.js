@@ -14,7 +14,7 @@ function checkEmail() {
         var illegalChars = /[\(\)\ \<\>\,\;\:\\\/\"\[\]]/
         // condição
         if (!(emailFilter.test(sEmail)) || sEmail.match(illegalChars)) {
-            _alert("Ops! Encontramos um problema ..", "Informe um e-mail válido!", "warning");
+            _alert("Ops! Encontramos um problema ..", "Por favor, informe um e-mail válido.", "warning");
             $("#checkEmail").removeClass("loading");
             return (false);
         } else {

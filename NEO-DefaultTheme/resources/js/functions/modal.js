@@ -19,7 +19,7 @@ export function openModal(modal) {
  */
 export function openModalQuickView(modal, callback) {
     "use strict";
-    callback = typeof callback !== 'undefined' ? callback : function(){};
+    callback = typeof callback !== 'undefined' ? callback : null;
     //console.log('Modal ID: ' + modal);
     $('.ui.modal')
         .modal({
@@ -30,6 +30,11 @@ export function openModalQuickView(modal, callback) {
             onVisible: function () {
                 $(".ui.modal .dropdown").dropdown("refresh");
             },
+            onVisible: () =>{
+                if(typeof callback === "function"){
+                  callback();
+              }
+            },
             onHidden: function () {
                 //console.log($(this));
                 $(this).parent().remove();
@@ -37,12 +42,6 @@ export function openModalQuickView(modal, callback) {
             }
         })
         .modal('show');
-
-        if(typeof callback === "function"){
-            $(".ui.modal").modal({
-                onVisible: callback()
-            });
-        }
 }
 
 

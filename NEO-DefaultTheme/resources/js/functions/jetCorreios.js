@@ -3,7 +3,7 @@
         var settings    = $.extend({}, $.fn.buscaCep.defaults, options),
             sel         = settings.inputSelector,
             cleanString = (value) => value.replace(/[^\d]+/g, ""),
-            $this    = $(this);
+            $this       = $(this);
 
         function carregando() {
             for (let key in sel) {
@@ -51,7 +51,7 @@
                     }
                 }
             }
-            $this.val("").focus();
+
             settings.onClear.call($this);
 
             return false;
@@ -59,21 +59,33 @@
 
         function buscaCep(cep) {
             cep = cleanString(cep);
-            $.getJSON("//viacep.com.br/ws/" + cep + "/json/unicode", function (dados) {
-                if (dados.erro) {
-                    limpaForm();
-                    if (window.swal){
+            axios.get("//viacep.com.br/ws/" + cep + "/json/unicode")
+                .then(({data}) => {
+                    if (data.erro){
+                        if (window.swal) {
+                            window.swal('Erro', 'CEP não encontrado!', 'error');
+                            limpaForm();
+                        }
+                        else {
+                            alert("CEP não encontrado!");
+                            limpaForm();
+                        }   
+                    }else{
+                        atualizaCampos(data);
+                    }
+                })
+                .catch(error => {
+                    console.log("JET CORREIOS - Chamada AJAX");
+                    console.log(error);
+                    if (window.swal) {
                         window.swal('Erro', 'CEP não encontrado!', 'error');
+                        limpaForm();
                     }
-                    else{
+                    else {
                         alert("CEP não encontrado!");
+                        limpaForm();
                     }
-
-                }
-                else {
-                    atualizaCampos(dados);
-                }
-            });
+                });
         }
 
         carregando();
@@ -95,8 +107,7 @@
                 isDropDown: true,
                 changing: function (uf) {
                 },
-                loading: function () {
-
+                loading: function (text) {
                 },
                 clearing: function () {
 

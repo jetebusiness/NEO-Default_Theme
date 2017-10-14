@@ -1,0 +1,92 @@
+.lista.casamento {
+  margin-bottom: -30px;
+  @media screen and (max-width: $mobile-bp) {
+    margin-bottom: -30px;
+  }
+
+  @media only screen and (max-width: 1199px) and (min-width: 992px) {
+    //margin-bottom: -30px;
+  }
+
+  .index {
+
+    .img-banner-casal {
+      margin-top: 40px;
+
+      @media screen and (max-width: $tablet-bp-max) {
+        position: absolute;
+        bottom: 85px;
+      }
+
+      @media only screen and (max-width: 1199px) and (min-width: 992px) {
+        position: absolute;
+        bottom: 55px;
+      }
+    }
+
+    .busca-lista {
+
+      .img-banner-passaros {
+      }
+
+      h1 {
+        color: rgba(244, 115, 33, 1);
+
+        span {
+          font-weight: normal;
+          display: block;
+        }
+      }
+
+      h2 {
+        font-weight: lighter;
+      }
+
+      .ui.form {
+        margin: 20px 0px;
+
+        @media screen and (max-width: $mobile-bp) {
+          margin: auto;
+        }
+      }
+    }
+
+    .login-lista {
+      background-color: $primary-color;
+
+      h1 {
+        font-weight: lighter;
+      }
+    }
+  }
+
+  .barra-azul {
+    content: " ";
+    background-color: $primary-color;
+    height: 195px;
+    top: -195px;
+    width: 100%;
+    z-index: -1;
+    display: block;
+    position: relative;
+    float: left;
+
+    @media screen and (max-width: $mobile-bp) {
+      display: none;
+    }
+
+    &:before {
+      content: " ";
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(156, 172, 187, 0.15) 100%);
+      height: 100px;
+      width: 100%;
+      display: block;
+      bottom: 195px;
+      position: absolute;
+
+      @media screen and (max-width: $mobile-bp) {
+        display: none;
+      }
+    }
+  }
+}

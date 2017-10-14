@@ -1,8 +1,7 @@
 import {montaListaProdutos} from "../../ui/modules/mini_cart";
 
-
 export const formSettings = {
-    debug: true,
+    debug: false,
     on: "blur",
     inline: true,
     fields: {
@@ -12,6 +11,21 @@ export const formSettings = {
                 type: "regExp",
                 value: /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
                 prompt: "Preencha com seu nome completo. (Ex: João Silva ou Maria Silva)"
+            }]
+        },
+        businessRepresentant: {
+            identifier: "businessRepresentant",
+            rules: [{
+                type: "regExp",
+                value: /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
+                prompt: "Preencha com seu nome completo. (Ex: João Silva ou Maria Silva)"
+            }]
+        },
+        businessName: {
+            identifier: "businessName",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
             }]
         },
         email: {
@@ -35,12 +49,33 @@ export const formSettings = {
                 prompt: "{name} inválido"
             }]
         },
-        date: {
-            identifier: "date",
+        rg: {
+            identifier: "rg",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        ie: {
+            identifier: "ie",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        birthdate: {
+            identifier: "birthdate",
             rules: [{
                 type: "regExp",
                 value: /((([0][1-9]|[12][\d])|[3][01])[-/]([0][13578]|[1][02])[-/][1-9]\d\d\d)|((([0][1-9]|[12][\d])|[3][0])[-/]([0][13456789]|[1][012])[-/][1-9]\d\d\d)|(([0][1-9]|[12][\d])[-/][0][2][-/][1-9]\d([02468][048]|[13579][26]))|(([0][1-9]|[12][0-8])[-/][0][2][-/][1-9]\d\d\d)/u,
-                prompt: "{name} inválida"
+                prompt: "Data de aniversário inválida"
+            }]
+        },
+        password: {
+            identifier: "password",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
             }]
         },
         phone: {
@@ -51,27 +86,6 @@ export const formSettings = {
                 prompt: "Telefone inválido. (Ex: (16) 3645-9857 ou (16) 98764-5316)"
             }]
         },
-        empty: {
-            identifier: "empty",
-            rules: [{
-                type: "empty",
-                prompt: "O campo não foi preenchido"
-            }]
-        },
-        select: {
-            identifier: "select",
-            rules: [{
-                type: "empty",
-                prompt: "O campo não foi selecionado"
-            }]
-        },
-        checkbox: {
-            identifier: "checkbox",
-            rules: [{
-                type: "checked",
-                prompt: "{name} não foi selecionado"
-            }]
-        },
         zipcode: {
             identifier: "zipcode",
             rules: [{
@@ -79,12 +93,88 @@ export const formSettings = {
                 prompt: "{name} não foi preenchido"
             }]
         },
-        date: {
-            identifier: "date",
+        address: {
+            identifier: "address",
             rules: [{
-                type: "regExp",
-                value: /(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/g,
-                prompt: "Data Inválida"
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        number: {
+            identifier: "number",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        neighborhood: {
+            identifier: "neighborhood",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        city: {
+            identifier: "city",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        state: {
+            identifier: "state",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi selecionado"
+            }]
+        },
+        zipcode1: {
+            identifier: "zipcode1",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        address1: {
+            identifier: "address1",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        number1: {
+            identifier: "number1",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        neighborhood1: {
+            identifier: "neighborhood1",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        city1: {
+            identifier: "city1",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        state1: {
+            identifier: "state1",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi selecionado"
+            }]
+        },
+        termo: {
+            identifier: "termo",
+            rules: [{
+                type: "checked",
+                prompt: "{name} não foi selecionado"
             }]
         },
         matchemail: {

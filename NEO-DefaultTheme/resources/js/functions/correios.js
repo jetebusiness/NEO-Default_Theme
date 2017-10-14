@@ -1,4 +1,5 @@
 import {_alert} from "./message";
+import axios from "axios";
 
 /**
  * Funções Correios
@@ -36,23 +37,19 @@ export function completaCEP(cep, fieldEndereco, fieldBairro, fieldCidade, fieldE
             $(fieldCidade).val("...");
             $(fieldEstado).dropdown("set text", "...");
 
-
-            //Consulta o webservice viacep.com.br/
-            $.getJSON("//viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
-                if (!("erro" in dados)) {
-                    //Atualiza os campos com os valores da consulta.
-                    $(fieldEndereco).val(dados.logradouro).focus();
-                    $(fieldBairro).val(dados.bairro).focus();
-                    $(fieldCidade).val(dados.localidade).focus();
-                    $(fieldEstado).dropdown("set selected", dados.uf);
-                } //end if.
-                else {
-                    //CEP pesquisado não foi encontrado.
+            axios.get("//viacep.com.br/ws/" + cep + "/json/?callback=?")
+                .then(response => {
+                    console.log(response);
+                        $(fieldEndereco).val(response.logradouro).focus();
+                        $(fieldBairro).val(response.bairro).focus();
+                        $(fieldCidade).val(response.localidade).focus();
+                        $(fieldEstado).dropdown("set selected", response.uf);
+                    })
+                .catch(error => {
+                    console.log(error);
                     limpa_formulario_cep();
                     _alert('Erro', 'CEP não encontrado!', 'error');
-
-                }
-            });
+                });
         } //end if.
         else {
             //cep é inválido.
