@@ -1,4 +1,5 @@
 # NEO - Omnichannel commerce platform
+![alt-text](https://img.shields.io/badge/version-1.0.2RC-orange.svg "Release Version")
 Tema padrão para as novas lojas criadas na plataforma NEO.
 
 *ASP.NET MVC Razor Theme Engine*
