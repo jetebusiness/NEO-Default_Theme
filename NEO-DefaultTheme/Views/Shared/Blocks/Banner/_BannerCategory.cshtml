@@ -20,7 +20,7 @@
         @foreach (var banner in Model)
         {
             <a href="@banner.Link">
-                <img src="@banner.NameFileImage" class="ui fluid image" alt="@banner.Name" />
+                <img src="@banner.NameFileImage" class="ui fluid image" alt="@banner.Name" onerror="imgError(this)" />
             </a>
         }
     

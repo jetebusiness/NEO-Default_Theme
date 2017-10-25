@@ -17,12 +17,12 @@
 <div class="ui grid">
     <div class="row">
         <div class="column center aligned">
-            <div class="ui fluid image">
+            <div class="ui image">
                 <!--REMOVER && Model.SealStatus.Name != "Normal" ASSIM QUE CORRIGIR PAINEL-->
                 @if (!string.IsNullOrEmpty(tag.Name))
                 {
                     <div class="ui top right attached label massive imagetag">
-                        <img src="@tag.Image" alt="@tag.Name" class="ui image tiny">
+                        <img src="@tag.Image" alt="@tag.Name" class="ui image tiny" onerror="imgError(this)">
                     </div>
                 }
 
@@ -31,7 +31,7 @@
                     {
                         <a href="@Model.FirstOrDefault().ImageHighResolution">
                             @* Tem de Setar aqui a imagem de tamanho maior ZOOM!*@
-                            <img id="imagem-padrao" class="img" src="@Model.FirstOrDefault().ImageDefault" />
+                            <img id="imagem-padrao" class="img" src="@Model.FirstOrDefault().ImageDefault"  onerror="imgError(this)" />
                         </a>
                     }
                 </div>

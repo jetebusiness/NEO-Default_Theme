@@ -22,11 +22,11 @@
                         <div class="ui image medium">
                             @if (@Model.ImageHome != null)
                             {
-                                <img src="@Model.ImageHome" alt="@Model.Name">
+                                <img src="@Model.ImageHome" alt="@Model.Name"  onerror="imgError(this)">
                             }
                             else
                             {
-                                <img src="@Model.ProductImages.FirstOrDefault().ImageDefault" alt="@Model.Name">
+                                <img src="@Model.ProductImages.FirstOrDefault().ImageDefault" alt="@Model.Name"  onerror="imgError(this)">
                             }
                         </div>
                         <div class="content">
@@ -80,7 +80,7 @@
                         <div class="item buy-together" id="buy-together" data-id="@item.IdProduct" data-variacoes="@total_variacoes">
                             <div class="ui image small">
                                 <a href="@(item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly)">
-                                    <img src="@item.ImageHome" alt="">
+                                    <img src="@item.ImageHome" alt=""  onerror="imgError(this)">
                                 </a>
                             </div>
                             <div class="content">

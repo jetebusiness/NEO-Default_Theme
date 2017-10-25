@@ -1,0 +1,24 @@
+﻿@model DomainProduct.Entities.ProductDetail
+
+@{
+    List<DomainProduct.Entities.ProductRating> lista_avaliacoes_completa = new List<DomainProduct.Entities.ProductRating>();
+    if (Model.ProductRatings.Count > 5)
+    {
+        lista_avaliacoes_completa.AddRange(Model.ProductRatings);
+        lista_avaliacoes_completa.RemoveRange(0, 5);
+    }
+}
+
+
+<div class="ui grid stackable">
+    <div class="row horizontal divided one column">
+        <div class="column">
+            <div class="ui list product-conjunct-list">
+                @foreach (var conjunct in Model.ConjunctProducts)
+                {
+                    @Html.Partial("~/Views/Shared/Object/Product/_ProductConjunctInCard.cshtml", conjunct)
+                }
+            </div>
+        </div>
+    </div>
+</div>

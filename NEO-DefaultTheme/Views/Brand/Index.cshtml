@@ -23,6 +23,16 @@
         </div>
     </div>
 }
+@*
+    @section banner {
+        @if (Model != null)
+        {
+            <div class="sixteen wide column">
+                @Html.Action("CentralHalfBannerBrand", "Banner", new { brandID = Model.IdBrand })
+            </div>
+        }
+    }
+*@
 
 @section filters {
     <div class="four wide column filterColumn">
@@ -96,18 +106,18 @@
         {
             <div class="brandProducts">
                 @Html.Action("GetProducts", "Product", new
-                {
-                    category = Request.QueryString["c"] ?? "",
-                    viewList = Request.QueryString["v"] ?? "",
-                    pageNumber = Request.QueryString["p"] ?? "",
-                    pageSize = 10, order = Request.QueryString["o"] ?? "",
-                    brand = Model.IdBrand, group = Request.QueryString["g"] ?? ""
-                });
+           {
+               category = Request.QueryString["c"] ?? "",
+               viewList = Request.QueryString["v"] ?? "",
+               pageNumber = Request.QueryString["p"] ?? "",
+               pageSize = 10, order = Request.QueryString["o"] ?? "",
+               brand = Model.IdBrand, group = Request.QueryString["g"] ?? "",
+               idAttribute = Request.QueryString["idAttribute"] ?? ""
+           })
             </div>
         }
     </div>
 </div>
-
 <!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
 @Html.Action("Brand", "Product")
 

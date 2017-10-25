@@ -1,5 +1,4 @@
 ﻿@model DomainProduct.Entities.ProductDetail
-
 @{
     List<DomainProduct.Entities.ProductRating> lista_avaliacoes_completa = new List<DomainProduct.Entities.ProductRating>();
     if (Model.ProductRatings.Count > 5)
@@ -12,13 +11,11 @@
     var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
     var lista_avaliacao_produto = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
 </script>
-
 @{
 
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
-
 @section gtm {
     <script>
         dataLayer = [{
@@ -27,11 +24,8 @@
         }];
     </script>
 }
-
 @section breadcrumbs {
-
 }
-
 @{
     DomainProduct.Entities.Sku SKUPadrao = new DomainProduct.Entities.Sku();
     if (TempData["SKUPadrao"] != null)
@@ -81,15 +75,13 @@
     }
 
 
-    if(SKUPadrao.InstallmentMax == null)
+    if (SKUPadrao.InstallmentMax == null)
     {
         SKUPadrao.InstallmentMax = new DomainProduct.Entities.InstallmentMax();
         SKUPadrao.InstallmentMax.MaxNumber = 0;
         SKUPadrao.InstallmentMax.Value = 0;
     }
 }
-
-
 
 <div id="fb-root"></div>
 <script>
@@ -100,17 +92,13 @@
         js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.10&appId=656083874584141";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
-
 <!-- Posicione esta tag no cabeçalho ou imediatamente antes da tag de fechamento do corpo. -->
 <script src="https://apis.google.com/js/platform.js" async defer>
     { lang: 'pt-BR' }
 </script>
 
-
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 <!-- COMEÇO - Váriaveis Produto Principal-->
-
 <input type="hidden" id="produto-id" name="produto-id" value="@Model.IdProduct" />
 <input type="hidden" id="produto-stock" name="produto-stock" value="@Model.Stock" />
 <input type="hidden" id="produto-sku" name="produto-sku" value="@SKUPadrao.IdSku" />
@@ -130,18 +118,16 @@
     <input type="hidden" value="@Model.InstallmentMax.Description" id="pagamento-descricao" name="pagamento-descricao" />
 }
 <input type="hidden" value="@AvailableReferences" id="principal-produto-referecias" name="principal-produto-referecias" />
-
+<input type="hidden" value="@ViewBag.DescontoBoleto" id="desconto_boleto" name="desconto_boleto" />
 <!-- FIM - Váriaveis Produto Unitário-->
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="description" content="">
     <link itemprop="url" href="" rel="author" />
     <div class="ui grid stackable produto">
         <div class="row product information one column">
-
             <div class="column">
                 <div class="ui breadcrumb">
                     <a class="section" href=""></a>
-
                     <!--COMEÇO FOREACH CATEGORIAS-->
                     @if (Model.Categories != null)
                     {
@@ -157,7 +143,6 @@
                 </div>
             </div>
 
-
             <!-- COMEÇO MARCA MOBILE-->
             <div class="mobile only column">
                 <h1 itemprop="name" class="nomeProduto" id="produto-nome">@Model.Name</h1>
@@ -170,7 +155,6 @@
                     <h5 itemprop="productBrand" class="marcaProduto"></h5>
                 }
                 <!-- FIM MARCA MOBILE-->
-
                 <div class="ui two column grid">
                     <div class="column">
                         <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
@@ -178,28 +162,27 @@
                     <div class="column">
                         <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
                         <a href="#avaliacoes" onclick="calltab('avaliacoes')">
-                                @if (Model.ProductRatings != null)
-                                {
-                                    <span>0 avaliações</span>
-                                }
-                                else if (Model.ProductRatings.Count() == 1)
-                                {
-                                    <span>1 avaliação</span>
-                                }
-                                else
-                                {
-                                    <span>@Model.ProductRatings.Count() avaliações</span>
-                                }
+                            @if (Model.ProductRatings != null)
+                            {
+                                <span>0 avaliações</span>
+                            }
+                            else if (Model.ProductRatings.Count() == 1)
+                            {
+                                <span>1 avaliação</span>
+                            }
+                            else
+                            {
+                                <span>@Model.ProductRatings.Count() avaliações</span>
+                            }
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-
         <div class="row detalhes produto">
             <!-- FIM IMAGENS DO PRODUTO PRINCIPAL-->
-            <div class="sixteen wide mobile ten wide computer column" id="exibePartial">
+            <div class="sixteen wide mobile nine wide computer column" id="exibePartial">
                 @{
                     List<DomainProduct.Entities.ProductImage> productFirstReferenceImages = new List<DomainProduct.Entities.ProductImage>();
                     List<DomainProduct.Entities.ProductImage> productImages = new List<DomainProduct.Entities.ProductImage>();
@@ -250,15 +233,12 @@
                         productImages = Model.ProductImages;
                     }
                 }
-
                 @Html.Partial("~/Views/Product/Details/_Slide.cshtml", productImages.ToList())
             </div>
             <!-- COMEÇO IMAGENS DO PRODUTO PRINCIPAL-->
-
             <div class="ui divider hidden"></div>
-
             <!-- COMEÇO INFORMAÇÕES DO PRODUTO-->
-            <div class="sixteen wide mobile six wide computer column infoProduto">
+            <div class="sixteen wide mobile seven wide computer column infoProduto">
                 <div class="ui grid">
                     <div class="computer only row product information">
                         <div class="column">
@@ -271,7 +251,6 @@
                             {
                                 <h5 itemprop="productBrand" class="marcaProduto"></h5>
                             }
-
                             <div class="ui two column grid">
                                 <div class="column">
                                     <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
@@ -285,13 +264,11 @@
                             </div>
                         </div>
                     </div>
-
                     <!--COMEÇO DICA DE COMPRA-->
                     <div id="dica_compra_partial">
                         @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
-
 
                     <div class="row product-grid">
                         <div class="column">
@@ -317,9 +294,7 @@
                                             </button>
                                         </div>
                                     </div>
-
                                     <!--COMEÇO GRADE-->
-
                                     <div class="ten wide column text right" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
                                         <div id="variacao-preco">
                                             @if (Model.HaveSku)
@@ -331,13 +306,13 @@
                                                     <span itemprop="price" class="preco" id="preco">@dec.ToString("C")</span>
                                                     <span class="infoPreco">
                                                         <span>em</span>
-                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de </span></span>
-                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                        <span id="description">@SKUPadrao.InstallmentMax.Description</span>
+                                                        <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
+                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                                        <span id="description">@string.Format("({0})", @Model.InstallmentMax.Description)</span>
                                                         @if (ViewBag.DescontoBoleto > 0)
                                                         {
                                                             var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
-                                                            
+
                                                             <br />
                                                             <span>ou</span>
                                                             <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
@@ -350,16 +325,16 @@
                                                     <span class="infoPreco">
                                                         <span>em</span>
                                                         <span id="max-p">
-                                                             @SKUPadrao.InstallmentMax.MaxNumber
+                                                            @Model.InstallmentMax.MaxNumber
+                                                            <span>X de </span>
                                                         </span>
-                                                        <span>x de </span>
-                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                        <span id="description">@SKUPadrao.InstallmentMax.Description</span>
+                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                                        <span id="description">@string.Format("({0})", @Model.InstallmentMax.Description)</span>
                                                         @if (ViewBag.DescontoBoleto > 0)
                                                         {
                                                             var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
                                                             <br />
-                                                                <span>ou</span>
+                                                            <span>ou</span>
                                                                 <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
                                                         }
                                                     </span>
@@ -410,17 +385,14 @@
                                                     }
                                                 }
                                             }
-
                                         </div>
                                     </div>
                                     <!--FIM GRADE-->
                                 </div>
 
-
                                 <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
                                 <div class="row">
                                     <div class="column">
-
                                         @if (Model.Stock == 0 || Model.FlagExhausted)
                                         {
                                             <strong class="text color grey regular right text bold color red">Produto Esgotado</strong>
@@ -429,19 +401,18 @@
                                         {
                                             <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                                         }
-                                        
-                                            <a class="ui animated big green button fluid detalhes btn-comprar  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
-                                                <div class="visible content">Adicionar ao Carrinho</div>
-                                                <div class="hidden content">
-                                                    <i class="add to cart icon"></i>
-                                                </div>
-                                            </a>
-                                        
+
+                                        <a class="ui animated big green button fluid detalhes btn-comprar  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
+                                            <div class="visible content">Adicionar ao Carrinho</div>
+                                            <div class="hidden content">
+                                                <i class="add to cart icon"></i>
+                                            </div>
+                                        </a>
+
                                     </div>
                                 </div>
                                 <!--FIM DISPONIBILIDADE / CARRINHO-->
                             </div>
-
                             @if (!Model.FlagExhausted)
             {
                                 @*@Html.Partial("~/Views/Product/Details/_Shipping.cshtml", Model.FlagExhausted == true || SKUPadrao.Stock <= 0 ? false : true)*@
@@ -455,10 +426,8 @@
                                     {
                                         @Html.Action("Payment", "Product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
                                     }
-
                                 </div>
                             }
-
                             @if (Model.HaveSku)
             {
                 if (Model.FlagExhausted || SKUPadrao.Stock == 0)
@@ -482,6 +451,7 @@
                                 }
                             }
                         <!-- COMEÇO REDES SOCIAIS-->
+                        <div class="ui divider hidden"></div>
                         <div class="one column row">
                             <div class="column">
                                 @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
@@ -501,16 +471,12 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- FIM INFORMAÇÕES DO PRODUTO-->
         </div>
 
 
-
-
         <div class="ui divider hidden"></div>
-
         <!--COMEÇO DESCRIÇÃO-->
         <div class="row">
             <div class="ui top attached secondary pointing stackable menu tabular">
@@ -522,22 +488,40 @@
                 @Html.Raw(Model.DescriptionDetailSummary)
             </div>
 
-
             <!--COMEÇO DETALHES PRODUTO-->
             <div class="ui bottom attached tab segment basic" data-tab="detalhes" id="detalhes">
                 <div class="ui grid one column">
                     <div class="column">
                         @Html.Raw(@Model.DescriptionDetail)
                     </div>
+                    @if (Model.Attributes != null && Model.Attributes.Count() > 0)
+                    {
+                        <div class="column">
+                            <h4>Informações Adicionais do Produto</h4>
+                            @foreach (var atribute in Model.Attributes)
+                            {
+                                var attrValues = "";
+                                <p>
+                                    <strong>@atribute.name: </strong>
+                                    @foreach (var valor in atribute.attributeValues)
+                                    {
+                                        if (valor.active)
+                                        {
+                                            attrValues = attrValues != "" ? attrValues + "," + @valor.Value : @valor.Value;
+                                        }
+                                    }
+                                    @attrValues
+                                </p>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
             <!--FIM DETALHES PRODUTO-->
-
             <div class="ui bottom attached tab segment basic" data-tab="avaliacoes" id="avaliacoes">
                 <div class="ui grid">
                     <div class="row two column horizontal divided stackable">
                         <!-- COMEÇO AVALIAÇÂO-->
-
                         <div class="column">
                             <div class="ui comments fluid" id="lista_avaliacoes">
                                 @if (Model.ProductRatings != null)
@@ -552,7 +536,6 @@
                                                     <div class="rating">
                                                         <div class="ui mini star rating" data-rating="@Model.ProductRatings[i].Rate"></div>
                                                     </div>
-
                                                     <div class="date"></div>
                                                     @if (Model.ProductRatings[i].LeavePublicEmail == true)
                                                     {
@@ -664,7 +647,6 @@
                         <!-- FIM FOMULÁRIO DE AVALIAÇÂO-->
                     </div>
                 </div>
-
             </div>
         </div>
         <!--FIM DESCRIÇÃO-->
@@ -692,11 +674,9 @@
             </div>
         </div>
 
-
         @if (!Model.FlagExhausted)
             {
             @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
         }
-
     </div>
 </div>

@@ -1,0 +1,43 @@
+.card.produto.conjunto {
+  margin-bottom: 1em;
+  .content {
+    display: flex;
+    align-content: flex-end;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    z-index: auto; 
+    .info {
+      z-index: auto;
+    }
+    .top-info {
+      max-width: 25%;
+      .ui.imagetag > img{
+        max-height: 50px !important;
+      }
+    }
+    
+    .middle-info {
+      align-self: center;
+    }
+    .bottom-info {
+      max-width: 74%;
+      text-align: right;
+      align-self: flex-start;
+      width: auto;
+    }
+    .sku-options {
+      min-width: 200px;
+      max-height: 230px;
+      padding: 0px .125em;
+      
+    }
+  }
+  &:hover,
+  &:focus {
+    box-shadow: none !important;
+    .info {
+      transform: none !important;
+    }
+  }
+}
+

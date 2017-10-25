@@ -1,6 +1,17 @@
 ﻿@model DomainOrder.Entities.Order
 @{
+    ViewBag.Title = "Pedido Finalizado";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+
+    if(ViewBag.ShowRegister == null)
+    {
+        ViewBag.ShowRegister = false;
+    }
+
+    if(ViewBag.ViewBoleto == null)
+    {
+        ViewBag.ViewBoleto = false;
+    }
 }
 
 @section gtm {
@@ -42,7 +53,7 @@
             <div class="ui divider small hidden"></div>
             <div class="row two column">
                 <div class="column">
-                    <h1 class="floated left">Pedido Confirmado </h1>
+                    <h1 class="floated left">@string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado")  </h1>
                 </div>
                 <div class="column text right">
                     <h2 class="">#@Model.IdOrder</h2>
@@ -50,8 +61,16 @@
             </div>
             <div class="row">
                 <div class="column">
-                    <h3>Obrigado, @Model.NameCustomer</h3>
-                    <p>Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos.</p>
+                    @if (Request.QueryString["m"] == null)
+                    {
+                        <h3>Obrigado, @Model.NameCustomer</h3>
+                        <p>Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos.</p>
+                    }
+                    else
+                    {
+                        <h3>Obrigado, @Model.NameCustomer</h3>
+                        <p>@string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()))</p>
+                    }
                 </div>
             </div>
             <div class="ui divider small hidden"></div>
@@ -86,17 +105,17 @@
     <div class="ui grid divided horizontal">
         <div class="row">
             <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
-                <div class="ui divided items relaxed cart">
-                    @if (Model != null)
+                <div class="ui divided items relaxed cart"  id="checkout_products_list_cart">
+                    @if (Model != null && Model.OrderItems != null)
                     {
                         foreach (var item in Model.OrderItems)
                         {
                             <div class="item">
                                 <div class="ui image small">
-                                    <img src="@item.Image">
+                                    <img src="@item.Image" onerror="imgError(this)">
                                 </div>
                                 <div class="content">
-                                    <a class="header">@Html.Raw(item.Name)</a>
+                                    <a class="product title">@Html.Raw(item.Name)</a>
                                     <div class="meta">Disponibilidade</div>
                                     <div class="description">
                                         <table class="ui very basic unstackable table ">

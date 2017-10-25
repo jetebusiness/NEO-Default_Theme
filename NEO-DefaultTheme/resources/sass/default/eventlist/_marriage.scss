@@ -1,4 +1,6 @@
 .lista.casamento {
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 41%,rgba(234,234,234,1) 54%,rgba(44,62,80,1) 54%,rgba(44,62,80,1) 100%);
+  
   margin-bottom: -30px;
   @media screen and (max-width: $mobile-bp) {
     margin-bottom: -30px;

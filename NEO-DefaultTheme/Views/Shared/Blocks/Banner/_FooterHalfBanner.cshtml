@@ -11,7 +11,7 @@
                         foreach (var banner in Model)
                         {
                             <a href="@banner.Link">
-                                <img src="@banner.NameFileImage" alt="" class="ui image">
+                                <img src="@banner.NameFileImage" alt="" class="ui image" onerror="imgError(this)">
                             </a>
                             contador++;
 
@@ -31,7 +31,7 @@
 
                             if (contador > 3)
                             {
-                                <img src="@banner.NameFileImage" alt="" class="ui image">
+                                <img src="@banner.NameFileImage" alt="" class="ui image" onerror="imgError(this)">
                             }
                         }
                     }

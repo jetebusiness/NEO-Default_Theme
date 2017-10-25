@@ -1,5 +1,5 @@
 # NEO - Omnichannel commerce platform
-![alt-text](https://img.shields.io/badge/version-1.0.2RC-orange.svg "Release Version")
+![alt-text](https://img.shields.io/badge/version-1.1RC-orange.svg "Release Version")
 
 Tema padrão para as novas lojas criadas na plataforma NEO.
 
@@ -51,7 +51,7 @@ Linux, MacOS e Windows
 
 1. Instale o Node.JS
 2. Instale o Python com a opção de adicionar o Python ao PATH
-3. Abra o terminal de comando e execute o comando
+3. Abra o terminal de comando (PowerShell modo Administrador) e execute o comando
 ```bash
 npm install --global --production windows-build-tools
 ```

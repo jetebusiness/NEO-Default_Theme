@@ -6,8 +6,13 @@
  *
  * Retorno: Monta menssagem de alerta na tela via SweetAlert 2
  */
-export function _alert(titulo, texto, tipo) {
-    swal(titulo, texto, tipo)
+export function _alert(titulo, texto, tipo, allowOutsideClick = true) {
+    swal({
+        title: titulo,
+        text: texto,
+        type: tipo,
+        allowOutsideClick: allowOutsideClick
+    });
 }
 /**
  *

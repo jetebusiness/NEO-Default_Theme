@@ -2,6 +2,7 @@
 import {moneyPtBR} from "../../functions/money";
 import {ExibirDicadeFrete} from "./mini_cart";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
+import {disparaAjaxUpdate}  from "./mini_cart";
 
 function InserirQuantidadeManual(){
   $(document).on("keyup", "#ListProductsCheckoutCompleto input[id^='qtd_']", function (e) {
@@ -149,7 +150,7 @@ function ClearCart(){
                     method: "POST",
                     url: "/Checkout/ClearCart",
                     success: function(data){
-                        document.location = "/home";
+                        window.location.href = "/home";
                     }
                 });
             }
@@ -184,41 +185,10 @@ function LoadCarrinho(){
             }
             else{
                 _alert("Ops ... Seu carrinho agora está vazio!", "Estamos te direcionando para a Home!", "warning");
-                document.location = "/Home";
+                window.location.href = "/Home";
             }
         }
     });
-}
-
-function disparaAjaxUpdate(idCurrent, valorInput, action){
-    $.ajax({
-        method: "POST",
-        url: "/Checkout/UpdateProduct",
-
-        data:{
-            idCartItem  : idCurrent,
-            Quantity    : valorInput
-        },
-        success: function(data){
-            if(data.success === true){
-                LoadCarrinho();
-            }else{
-                if(action == "plus"){
-                    valorInput -= 1;
-                }else{
-                    valorInput += 1;
-                }
-            }
-        },
-        onFailure: function(data){
-            if(action == "plus"){
-                valorInput -= 1;
-            }else{
-                valorInput += 1;
-            }
-        }
-    });
-    return valorInput;
 }
 
 function UpdateCabecalhoCarrinho(descontoCarrinho, subTotalCarrinho, totalCarrinho){

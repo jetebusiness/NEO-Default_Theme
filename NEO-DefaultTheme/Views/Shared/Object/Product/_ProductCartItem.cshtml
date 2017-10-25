@@ -2,10 +2,10 @@
 
 <div class="item" data-id-produto="@Model.IdProduct" id="itemCartProduct_@Model.IdCartItem">
     <div class="ui image small">
-        <img src="@Model.ProductImage.ImageDefault">
+        <img src="@Model.ProductImage.ImageDefault"  onerror="imgError(this)">
     </div>
     <div class="content">
-        <a class="header">@Html.Raw(Model.NameProduct)</a>
+        <a class="product title">@Html.Raw(Model.NameProduct)</a>
         <div class="meta">
             @Model.IdProduct
         </div>
@@ -26,6 +26,7 @@
                                 <button class="ui icon button qtdAction" data-id="@Model.IdCartItem" data-action="minus">
                                     <i class="minus icon"></i>
                                 </button>
+                                <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
                                 <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
                                 <input type="number" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" />
                                 <button class="ui green icon button qtdAction" data-id="@Model.IdCartItem" data-action="plus">

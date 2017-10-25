@@ -12,7 +12,7 @@
     <div class="header">@Model.Name</div>
     <div class="image content">
         <div class="ui medium image">
-            <img src="@Model.ImageHome" />
+            <img src="@Model.ImageHome"  onerror="imgError(this)"/>
         </div>
         <div class="description">
             <h4 class="header divider">Gostaria de receber notificação quando este produto estiver disponível!</h4>

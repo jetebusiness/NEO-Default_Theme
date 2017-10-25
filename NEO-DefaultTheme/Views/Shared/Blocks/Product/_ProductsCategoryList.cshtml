@@ -2,7 +2,7 @@
 <div class="ui divider hidden"></div>
 <div class="ui container listResult type-list">
     <div class="ui divided items relaxed">
-        @if (Model != null && Model.Products.Any())
+        @if (Model != null && Model.Products.Count() > 0)
         {
             foreach (var product in Model.Products)
             {

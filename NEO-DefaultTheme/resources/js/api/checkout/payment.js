@@ -1,5 +1,6 @@
 ﻿import {_alert, _confirm} from '../../functions/message';
 import {buscaCep, atualizaCampos} from '../../api/customer/AddressManager';
+﻿import {isLoading} from "../../api/api_config";
 
 function clickShipping(){
     var zipcode = $("#zipcode").val();
@@ -154,7 +155,15 @@ function OrderCreate() {
         }
 
         if(msgErrors != ""){
-            _alert("Ops! Encontramos um problema ..", msgErrors, "warning");
+            swal({
+                title: 'Ops! Encontramos um problema ..',
+                html: msgErrors,
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
             $(".GerarPedido").removeClass("loading");
             $(".GerarPedido").removeClass("disabled")
         }
@@ -162,7 +171,7 @@ function OrderCreate() {
             if (validaFrete == "S") {
                 $.ajax({
                     method: "POST",
-                    url: "GerarPedido",
+                    url: "GerarPedidoCompleto",
                     data: {
                         idCustomer        : idCustomer,
                         idAddress         : new Number(idAddress),
@@ -182,15 +191,13 @@ function OrderCreate() {
                     success: function (response) {
                         if (response.success == true) {
                             if (response.urlRedirect != "") {
-                                document.location = response.urlRedirect;
+                                window.location.href = response.urlRedirect;
                             }
                             else {
-                                document.location = "Success?orderId=" + response.idPedido;
+                                window.location.href = "Success?orderId=" + response.idPedido;
                             }
                         } else {
-                            _alert("Ops! Encontramos um problema ..", response.msg, "warning");
-                            $(".GerarPedido").removeClass("loading");
-                            $(".GerarPedido").removeClass("disabled");
+                            window.location.href = "Success?orderId=" + response.idPedido + "&s="+response.success+"&m="+response.msgEncrypt;
                         }
                     }
                 });
@@ -244,9 +251,11 @@ function onChangeParcelamento(){
       }
   });
 }
-function validaCartaoCreditoBandeira(){
-    $("#CreditCard").on("blur", function(){
-        $("#btnCardDebit").removeAttr("data-idBrand");
+function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, codigoPaymentMethod, parcela_selecionada){
+    var backSpace = $.Event( "keypress", { which: 127 } );
+
+    $(idOnBlur).on("blur", function(){
+        $(btnCard).removeAttr("data-idBrand");
         var cartoes = {
             elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
             dinners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
@@ -294,105 +303,57 @@ function validaCartaoCreditoBandeira(){
                         break;
 
                     case "mastercard":
-                        codigoBandeira = 208;
+                        codigoBandeira = typeForm == "C" ? 208 : 215;
                         break;
 
                     case "visa":
-                        codigoBandeira = 209;
+                        codigoBandeira = typeForm == "C" ? 209 : 216;
                         break;
 
                     case "jcb":
                         codigoBandeira = 213;
                         break;
                 }
-                $("#btnCardCredit").attr("data-idBrand",codigoBandeira);
-                $("#brandCard").val(cartao);
-                atualizaParcelamento(codigoBandeira);
-                atualizaResumoCarrinho();
-                AtualizaResumoCarrinhocomDesconto(codigoBandeira, 1, 1);
+                $(btnCard).attr("data-idBrand",codigoBandeira);
+                $(updateBrand).val(cartao);
             }
         }
         if(numeroCartao != "" && codigoBandeira == 0){
-            $("#parcCard").html("<option value=''>Informe o numero do cartão primeiro</option>");
-            _alert("Ops! Encontramos um problema ..", "A loja pode não aceitar essa bandeira ou o cartão está incorreto", "warning");
-        }
-    });
-}
-
-function validaCartaoDebitoBandeira(){
-    $("#DebitCard").on("blur", function(){
-      $("#btnCardCredit").removeAttr("data-idBrand");
-        var cartoes = {
-            elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
-            dinners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
-            discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
-            dinersClub: /^3(?:0[0-5]|[68][0-9])[0-9]{11}/,
-            hipercard: /^(38[0-9]{17}|60[0-9]{14})$/,
-            amex: /^3[47][0-9]{13}$/,
-            aura: /^50[0-9]{14,17}$/,
-            mastercard: /^5[1-5][0-9]{14}$/,
-            visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
-            jcb: /^(?:2131|1800|35\d{3})\d{11}/
-        };
-
-        var numeroCartao = $(this).val().replace(/\s/g, '' );
-        var codigoBandeira = 0;
-        for (var cartao in cartoes){
-            if (numeroCartao.match(cartoes[cartao])){
-                switch(cartao) {
-                    case "elo":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "dinners":
-                        codigoBandeira = 210;
-                        break;
-
-                    case "discover":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "dinersClub":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "hipercard":
-                        codigoBandeira = 212;
-                        break;
-
-                    case "amex":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "aura":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "mastercard":
-                        codigoBandeira = 215;
-                        break;
-
-                    case "visa":
-                        codigoBandeira = 216;
-                        break;
-
-                    case "jcb":
-                        codigoBandeira = 213;
-                        break;
-                }
-                $("#btnCardDebit").attr("data-idBrand",codigoBandeira);
-                $("#debitBrandCard").val(cartao);
-                atualizaResumoCarrinho();
-                AtualizaResumoCarrinhocomDesconto(codigoBandeira, 14, 0);
+            if(typeForm == "C"){
+                $("#parcCard").html("<option value=''>Informe o numero do cartão primeiro</option>");
             }
-        }
-        if(numeroCartao != "" && codigoBandeira == 0){
             _alert("Ops! Encontramos um problema ..", "A loja pode não aceitar essa bandeira ou o cartão está incorreto", "warning");
+        }else{
+            if($(idOnBlur).val() != ""){
+                $.ajax({
+                    method: "POST",
+                    url: "VerificaStatusBandeira",
+                    data: {
+                        idPaymentMethod : codigoPaymentMethod,
+                        idPaymentBrand  : new Number(codigoBandeira)
+                    },
+                    success: function (response) {
+                        if(response.success){
+                            if(typeForm == "C"){
+                                atualizaParcelamento(codigoBandeira);
+                            }
+                            atualizaResumoCarrinho();
+                            AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
+                        }else{
+                            $(btnCard).attr("data-idBrand",0);
+                            $(updateBrand).val("");
+                            $(idOnBlur).val("");
+                            _alert("Ops! Encontramos um problema ..", response.message, "warning");
+                        }
+                    }
+                });
+            }
         }
     });
 }
 
 function atualizaParcelamento(codigoBandeira){
+    isLoading("#validCardCredit");
     var option = "";
     if(codigoBandeira > 0){
         $.ajax({
@@ -404,7 +365,6 @@ function atualizaParcelamento(codigoBandeira){
             },
             success: function (response) {
                 var objParcelamento = response.ListInstallment;
-
                 for (var i = 0; i < objParcelamento.length; i++) {
                     var IdInstallment = objParcelamento[i].IdInstallment;
                     var InstallmentNumber = objParcelamento[i].InstallmentNumber;
@@ -414,6 +374,12 @@ function atualizaParcelamento(codigoBandeira){
                     option += "<option value='"+IdInstallment+"' data-InstallmentNumber='"+InstallmentNumber+"'>"+InstallmentNumber+"x de "+Value+"("+Description+")</option>";
                     $("#parcCard").html(option);
                 }
+                isLoading("#validCardCredit");
+            },
+            error : function(request,error)
+            {
+                isLoading("#validCardCredit");
+                console.log(request);
             }
         });
     }
@@ -435,7 +401,7 @@ function buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_sel
               if(response.success === true){
                   valor = response;
               }else{
-                  _alert("Ops! Encontramos um problema ..", response.result, "warning");
+                  _alert("Ops! Encontramos um problema ..", response.result, "warning", false);
               }
 
           }
@@ -845,8 +811,14 @@ $(document).ready(function () {
             }
             onChangeCheckBox();
             verificaPresente();
-            validaCartaoCreditoBandeira();
-            validaCartaoDebitoBandeira();
+
+
+            //Cartão de Crédito
+            validaCartaoCreditoBandeira("#CreditCard", "#btnCardCredit", "#brandCard", "C", 1, 1);
+
+            //Cartão de Débito
+            validaCartaoCreditoBandeira("#DebitCard", "#btnCardDebit", "#debitBrandCard", "D", 14, 0);
+
             listAddressPayment();
             changeAddressPayment();
             showAddressPayment();

@@ -1,0 +1,48 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- CSS Styles -->
+    @Html.Partial("Common/_CommonCss")
+
+    <!-- Scripts -->
+    @Html.Partial("Common/_CommonJs")
+</head>
+<body>
+<div class="ui container">
+    <div class="ui grid middle aligned centered"  style="height: 100vh; width:100%">
+        <div class="row">
+            <div class="column eight wide column ">
+                <div class="ui grid middle aligned centered">
+                    <div class="row two column">
+                        <div class="column ">
+                            <a href="/Home">
+                                <img class="ui middle aligned image" src="~/assets/image/logo/logo.png"
+                                     alt="">
+                            </a>
+                        </div>
+                        <div class="ui center aligned column searchcolumn">
+                            <div class="ui category search">
+                                <div class="ui icon input fluid">
+                                    <input class="prompt" type="text" placeholder="Buscar...">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row one column">
+                        <div class="column text align center">
+                            <h1>Página não encontrada.</h1>
+                            <a href="#" onclick="window.history.go(-1); return false;"><h3>Voltar para a página anterior</h3></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

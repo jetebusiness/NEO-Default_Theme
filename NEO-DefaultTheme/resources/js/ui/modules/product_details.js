@@ -32,9 +32,10 @@ $(document).ready(function () {
          * Box Compre Junto
          */
         $(".ui.sticky.comprar.junto").sticky({
-            offset:  120,
+            offset:  130,
             context: ".ui.rail.compre.junto"
         });
+
         $(".tabular.menu .item").tab({
             onVisible:function(){
                 $(".ui.sticky.comprar.junto").sticky("refresh");

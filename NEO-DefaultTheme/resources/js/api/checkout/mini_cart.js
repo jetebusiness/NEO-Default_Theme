@@ -46,41 +46,41 @@ $(document).ready(function(){
         $(this).addClass("loading");
         var zipCode = $(this).prev('input').inputmask('unmaskedvalue');
         if(zipCode != ""){
-          $.ajax({
-              method: "POST",
-              url: "/Checkout/GetShippingValues",
-              data:{ zipCode: zipCode},
-              success: function(data){
-                  $("#CallServiceShippingMiniCart").removeClass("loading");
-                  $(".description.frete").hide();
-                  //Coloca as infoam��es no Bloco HMTL com os valores corretos
-                  $(".description.resultado .valor").html(data);
-                  //$(".tabela.frete").dropdown('refresh');
-                  $(".description.resultado").show();
+            $.ajax({
+                method: "POST",
+                url: "/Checkout/GetShippingValues",
+                data:{ zipCode: zipCode},
+                success: function(data){
+                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $(".description.frete").hide();
+                    //Coloca as infoam��es no Bloco HMTL com os valores corretos
+                    $(".description.resultado .valor").html(data);
+                    //$(".tabela.frete").dropdown('refresh');
+                    $(".description.resultado").show();
 
-                  ChangeFrete();
-                  var idCurrent = $("#GetShipping").val();
-                  var idShippingMode = idCurrent;
-                  var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
+                    ChangeFrete();
+                    var idCurrent = $("#GetShipping").val();
+                    var idShippingMode = idCurrent;
+                    var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
 
-                  $("#id_frete_selecionado").val(idShippingMode);
-                  $("#cep_selecionado").val(zipCode);
+                    $("#id_frete_selecionado").val(idShippingMode);
+                    $("#cep_selecionado").val(zipCode);
 
-                  ExibirDicadeFrete(idShippingMode, zipCode);
-                  SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
-              }
-          });
+                    ExibirDicadeFrete(idShippingMode, zipCode);
+                    SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+                }
+            });
         }else {
-          swal({
-              title: '',
-              text: 'Digite um CEP válido!',
-              type: 'error',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'OK'
-          });
-          $(this).removeClass('loading');
+            swal({
+                title: '',
+                text: 'Digite um CEP válido!',
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+            $(this).removeClass('loading');
         }
         event.stopPropagation();
     });
@@ -123,7 +123,7 @@ $(document).ready(function(){
                     method: "POST",
                     url: "Checkout/ClearCart",
                     success: function (data) {
-                        document.location = "/home";
+                        window.location.href = "/home";
                     }
                 });
             }
@@ -157,9 +157,8 @@ $(document).ready(function(){
         else{
             _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
             valorInput -= 1
-        }
-
-        $("#qtd_"+idCurrent).val(valorInput);
+            disparaAjaxUpdate(idCurrent, valorInput, action);
+        }        
         e.stopPropagation();
     });
 
@@ -191,7 +190,7 @@ $(document).ready(function(){
                 disparaAjaxUpdate(idCurrent, valorInput, action);
             }
         }
-         $("#qtd_"+idCurrent).val(valorInput);
+        $("#qtd_"+idCurrent).val(valorInput);
     });
 
 
@@ -205,45 +204,45 @@ $(document).ready(function(){
 
 
 function excluirProdutoCarrinho(idCurrent){
-  _confirm({
-      title: "Deseja realmente remover esse produto do carrinho?",
-      text: "",
-      type: "warning",
-      confirm: {
-          text: "Remover"
-      },
-      cancel: {
-          text: "Cancelar"
-      },
-      callback: function () {
-          CancelarCalculoFreteCart(0);
-          $.ajax({
-              method: "POST",
-              url: "/Checkout/DeleteProduct",
-              data: {
-                  idCartItem: idCurrent
-              },
-              success: function (data) {
-                  if (data.success === false) {
-                      console.log("Erro ao excluir produto");
-                  }else {
-                      LoadCarrinho();
-                  }
-              }
-          });
-      }
-  });
+    _confirm({
+        title: "Deseja realmente remover esse produto do carrinho?",
+        text: "",
+        type: "warning",
+        confirm: {
+            text: "Remover"
+        },
+        cancel: {
+            text: "Cancelar"
+        },
+        callback: function () {
+            CancelarCalculoFreteCart(0);
+            $.ajax({
+                method: "POST",
+                url: "/Checkout/DeleteProduct",
+                data: {
+                    idCartItem: idCurrent
+                },
+                success: function (data) {
+                    if (data.success === false) {
+                        console.log("Erro ao excluir produto");
+                    }else {
+                        LoadCarrinho();
+                    }
+                }
+            });
+        }
+    });
 }
 
 //FUNÇÕES
 export function CancelarCalculoFreteCart(flagUpdate){
-  var existeCep = $("#cep_selecionado").val();
-  if(existeCep != "" && existeCep != "0"){
-    console.log("cancelando o frete");
-    $("#id_frete_selecionado").val("");
-    $("#cep_selecionado").val("");
-    $(".description.frete").css("display", "block");
-    $(".description.resultado").css("display", "none");
+    var existeCep = $("#cep_selecionado").val();
+    if(existeCep != "" && existeCep != "0"){
+        console.log("cancelando o frete");
+        $("#id_frete_selecionado").val("");
+        $("#cep_selecionado").val("");
+        $(".description.frete").css("display", "block");
+        $(".description.resultado").css("display", "none");
         $.ajax({
             method: "POST",
             url: "/Checkout/CancelarCalculoFrete",
@@ -253,7 +252,7 @@ export function CancelarCalculoFreteCart(flagUpdate){
                     console.log("Erro ao excluir frete");
                 }
                 if(flagUpdate === 1){
-                  UpdateCarrinho();
+                    UpdateCarrinho();
                 }
             },
             onFailure: function(data){
@@ -265,8 +264,9 @@ export function CancelarCalculoFreteCart(flagUpdate){
 
 
 
-function disparaAjaxUpdate(idCurrent, valorInput, action){
+export function disparaAjaxUpdate(idCurrent, valorInput, action){
     CancelarCalculoFreteCart(0);
+    var qtdInicial = $("#qtdInicial_"+idCurrent).val()
     $.ajax({
         method: "POST",
         url: "/Checkout/UpdateProduct",
@@ -280,32 +280,41 @@ function disparaAjaxUpdate(idCurrent, valorInput, action){
                 UpdateCarrinho();
             }else{
               
-              swal({
-                  title: 'Mensagem',
-                  text: data.msg,
-                  type: 'warning',
-                  showCancelButton: false,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'OK'
-              });
+                swal({
+                    title: 'Mensagem',
+                    text: data.msg,
+                    type: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
 
                 if(action == "plus"){
                     valorInput -= 1;
-                }else{
+                    $("#qtd_"+idCurrent).val(valorInput);
+                }else if(action == "ipt"){                    
+                    $("#qtd_"+idCurrent).val(qtdInicial);
+                }
+                else{
                     valorInput += 1;
+                    $("#qtd_"+idCurrent).val(qtdInicial);
                 }
             }
         },
         onFailure: function(data){
             if(action == "plus"){
                 valorInput -= 1;
-            }else{
+                $("#qtd_"+idCurrent).val(valorInput);
+            }else if(action == "ipt"){
+                $("#qtd_"+idCurrent).val(qtdInicial);
+            }
+            else{
                 valorInput += 1;
+                $("#qtd_"+idCurrent).val(valorInput);
             }
         }
     });
-    return valorInput;
 }
 
 

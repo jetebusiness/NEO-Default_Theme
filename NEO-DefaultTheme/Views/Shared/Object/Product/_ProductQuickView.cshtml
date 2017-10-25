@@ -17,7 +17,7 @@
                                             @if (Model.SealStatus != null)
                                             {
                                                 <div class="ui bottom right attached label massive imagetag">
-                                                    <img src="@Model.SealStatus.Image" class="ui image tiny">
+                                                    <img src="@Model.SealStatus.Image" class="ui image tiny" onerror="imgError(this)">
                                                 </div>
                                             }
                                             <script>
@@ -38,7 +38,7 @@
                                                 {
                                                     foreach (var productImage in Model.ProductImages)
                                                     {
-                                                        <img src="@productImage.ImageDefault" />
+                                                        <img src="@productImage.ImageDefault"  onerror="imgError(this)"/>
                                                     }
                                                 }
                                             </div>

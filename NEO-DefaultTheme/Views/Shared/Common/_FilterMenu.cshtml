@@ -34,6 +34,12 @@
                             @Html.Partial("~/Views/Shared/Blocks/Category/_CategoriesFilters.cshtml", Model.Categories)
                         }
 
+                        @if (Model.Attributes != null && Model.Attributes.Count() > 0)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Atribute/_AtributesFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Atributes/_AtributesFilters.cshtml", Model.Attributes)
+                        }
+
                         @Html.Partial("~/Views/Shared/Blocks/Product/_PriceFilters.cshtml")
                     </div>
                 </div>

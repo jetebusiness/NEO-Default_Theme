@@ -201,3 +201,41 @@
 #checkout {
   display: none;
 }
+
+
+#ListProductsCheckout,
+#checkout_products_list,
+#checkout_products_list_cart{
+  a.product.title{
+    h1{
+      font-size: 1.2em;
+      margin-bottom: 0.2em;
+    }
+    div{
+      font-weight: normal;
+      font-size: 12px;
+      color:$grey;
+    }
+  }
+  .product.avaibility{
+    color:$grey;
+    font-size: 0.85em;
+  }
+}
+#checkout_products_list_cart{
+  a.product.title{
+    h1{
+      font-size: 1.35em;
+      margin-bottom: 0.3em;
+    }
+    div{
+      font-weight: normal;
+      font-size: 13px;
+      color:$grey;
+    }
+  }
+  .product.avaibility{
+    color:$grey;
+    font-size: 0.95em;
+  }
+}

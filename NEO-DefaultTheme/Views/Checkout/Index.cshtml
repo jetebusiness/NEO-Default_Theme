@@ -24,7 +24,7 @@
             {
                 string _linkHref = "/checkout/CheckoutNext";
                 <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
-                    <div class="ui divided items relaxed cart">
+                    <div class="ui divided items relaxed cart"  id="checkout_products_list_cart">
                         @if (Model != null && Model.CartItems != null)
                         {
                             foreach (var product in Model.CartItems)

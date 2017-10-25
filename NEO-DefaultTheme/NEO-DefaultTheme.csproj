@@ -290,6 +290,9 @@
     <Content Include="resources\js\ui\_start.js" />
     <Content Include="resources\js\vendors\semantic-ui.js" />
     <Content Include="resources\js\vendors\validators.js" />
+    <Content Include="resources\sass\default\eventlist\_all.scss" />
+    <Content Include="resources\sass\default\eventlist\_marriage.scss" />
+    <Content Include="resources\sass\default\modification\semantic_ui_mods\_dropdown.scss" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -386,7 +389,14 @@
     <Content Include="resources\sass\_semantic_ui.scss" />
     <Content Include="resources\sass\_variables.scss" />
     <Content Include="package.json" />
-    <Content Include="Views\HotSite\Home_Event_List_Marriage.cshtml" />
+    <Content Include="Views\ErrorPages\403.cshtml" />
+    <Content Include="Views\ErrorPages\404.cshtml" />
+    <Content Include="Views\ErrorPages\500.cshtml" />
+    <Content Include="Views\Product\Conjunct\Details.cshtml" />
+    <Content Include="Views\Product\Conjunct\_ProductConjunctList.cshtml" />
+    <Content Include="Views\Shared\Blocks\Atributes\_AtributesFilters.cshtml" />
+    <Content Include="Views\Shared\Object\Product\_ProductConjunctInCard.cshtml" />
+    <Content Include="Views\Shared\Parts\Checkout\_Part_Checkout_Discount.cshtml" />
     <Content Include="webpack.mix.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -419,8 +429,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Brand\Index.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
@@ -546,6 +554,7 @@
     <Folder Include="Models\" />
     <Folder Include="resources\js\actions\" />
     <Folder Include="Views\Banner\" />
+    <Folder Include="Views\HotSite" />
     <Folder Include="Views\SocialNetwork\" />
   </ItemGroup>
   <ItemGroup>

@@ -23,14 +23,14 @@
 
         foreach (var randombanner in bannerRandom)
         {
-            <a href="@randombanner.Link"><img src="@randombanner.NameFileImage" class="ui fluid image" alt="@randombanner.Name" /></a>
+            <a href="@randombanner.Link"><img src="@randombanner.NameFileImage" class="ui fluid image" alt="@randombanner.Name" onerror="imgError(this)" /></a>
         }
     }
 </div>
 <div class="ui images middle aligned center aligned">
     @foreach (var banner in bannerNoRandom)
     {
-        <a href="@banner.Link"><img src="@banner.NameFileImage" class="ui image" alt="@banner.Name" /></a>
+        <a href="@banner.Link"><img src="@banner.NameFileImage" class="ui image" alt="@banner.Name" onerror="imgError(this)" /></a>
     }
 </div>
         }

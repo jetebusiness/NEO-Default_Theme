@@ -84,7 +84,12 @@
                 <div class="column text small">
                     <p>@LojaCorp.Control.Company._Company.FantasyName</p>
                     <address>
-                        @string.Format("{0}, {1}, {2}", LojaCorp.Control.Company._Company.Address, LojaCorp.Control.Company._Company.Complement, LojaCorp.Control.Company._Company.Neighbourhood)<br> @string.Format("{0}-{1}-{2}", LojaCorp.Control.Company._Company.CEP, LojaCorp.Control.Company._Company.City, LojaCorp.Control.Company._Company.State)
+                        @{
+                            string complementAddress = LojaCorp.Control.Company._Company.Complement != "" ? " "+LojaCorp.Control.Company._Company.Complement+", " : "";
+                        }
+                        @string.Format("{0}, {1}{2}", LojaCorp.Control.Company._Company.Address, complementAddress, LojaCorp.Control.Company._Company.Neighbourhood)
+                       <br>
+                       @string.Format("{0}-{1}-{2}", LojaCorp.Control.Company._Company.CEP, LojaCorp.Control.Company._Company.City, LojaCorp.Control.Company._Company.State)
                     </address>
                 </div>
                 <div class="right aligned column">

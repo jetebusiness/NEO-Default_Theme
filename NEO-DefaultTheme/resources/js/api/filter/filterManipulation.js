@@ -27,15 +27,13 @@ function makeLabel() {
 }
 
 function ValidateLabel(type, id){
-    let labelVariation = window.filterManipulation.labelFilter;
-
+    let labelVariation = window.filterManipulation.labelFilter    
     for (let key in labelVariation) {
         if (labelVariation[key].type === type && labelVariation[key].id === id) {
             return true
-        }else{
-            return false
         }
     }
+    return false
 }
 
 function ajaxColor() {
@@ -51,12 +49,13 @@ function ajaxColor() {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
     $.ajax({
         url: "/product/getproducts/",
@@ -102,12 +101,13 @@ function ajaxText() {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
 
     $.ajax({
@@ -151,13 +151,19 @@ function ajaxCategory() {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
+
+    //console.log("----- Inicio ajaxCategory -----");
+    //console.log(filters);
+    //console.log(data);
+    //console.log("----- Fim ajaxCategory -----");
 
     $.ajax({
         url: "/product/getproducts/",
@@ -200,13 +206,19 @@ function ajaxBrand() {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
+
+    //console.log("----- Inicio ajaxBrand -----");
+    //console.log(filters);
+    //console.log(data);
+    //console.log("----- Fim ajaxBrand -----");
 
     $.ajax({
         url: "/product/getproducts/",
@@ -243,13 +255,19 @@ function ajaxPrice() {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
+
+    //console.log("----- Inicio ajaxPrice -----");
+    //console.log(filters);
+    //console.log(data);
+    //console.log("----- Fim ajaxPrice -----");
 
     $.ajax({
         url: "/product/getproducts/",
@@ -281,10 +299,75 @@ function ajaxPrice() {
         }
     });
 }
+
+function ajaxAttribute() {
+    isLoading("#list");
+
+    let filters = window.filterManipulation;
+
+    if (filters.idAtribute !== undefined && filters.idAtribute !== "") {
+        filters.atributeSelected.push(filters.idAtribute);
+    }
+    let data = {
+        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        pageNumber: "1",
+        pageSize: "",
+        order: filters.order === undefined ? "" : filters.order,
+        brand: filters.idBrand === undefined ? "" : filters.idBrand,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
+        initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
+        finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
+        variations: filters.variationSelected.toString(),
+        group: filters.idGroup === undefined ? "" : filters.idGroup,
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
+    };
+
+    //console.log("----- Inicio ajaxAttribute -----");
+    //console.log(filters);
+    //console.log(data);
+    //console.log("----- Fim ajaxAttribute -----");
+
+    $.ajax({
+        url: "/product/getproducts/",
+        method: "GET",
+        dataType: "html",
+        data: data,
+        success: function onSuccess(response) {
+            $("#list").html(response);
+
+            $.ajax({
+                url: "/product/filtermenu/",
+                method: "GET",
+                dataType: "html",
+                success: function (response) {
+                    $("#filter").html(response);
+                    makeLabel();
+                }
+            });
+        },
+        failure: function onFailure(response) {
+            console.log("Falha aplicar filtro: " + response);
+        },
+        error: function onError(response) {
+            console.log("Erro aplicar filtro: " + response);
+        },
+        complete: function (response) {
+            uiReload();
+        }
+    });
+}
+
+var genericoPageFilter = "";
 $(document).ready(function () {
+    if($("#GenericPageFilter").length > 0){
+        genericoPageFilter = $("#GenericPageFilter").val();
+    }
+
     if (window.filterManipulation !== undefined) {
         window.filterManipulation.variationSelected = [];
         window.filterManipulation.labelFilter = [];
+        window.filterManipulation.atributeSelected = [];
     }
 
     $(".dropdownorder").dropdown({
@@ -301,12 +384,13 @@ $(document).ready(function () {
                 pageSize: "",
                 order: filters.order === undefined ? "" : filters.order,
                 brand: filters.idBrand === undefined ? "" : filters.idBrand,
-                category: filters.idCategory === undefined ? "" : filters.idCategory,
+                category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
                 initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
                 finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
                 variations: filters.variationSelected.toString(),
                 group: filters.idGroup === undefined ? "" : filters.idGroup,
-                keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+                keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+                idAttribute: filters.atributeSelected.toString()
             };
 
             $.ajax({
@@ -343,12 +427,13 @@ $(document).on("click", "#viewgrid", function () {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
 
     $.ajax({
@@ -383,12 +468,13 @@ $(document).on("click", "#viewlist", function () {
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
-        category: filters.idCategory === undefined ? "" : filters.idCategory,
+        category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
         initialprice: filters.initialPrice === undefined ? "" : filters.initialPrice,
         finalprice: filters.finalPrice === undefined ? "" : filters.finalPrice,
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord
+        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+        idAttribute: filters.atributeSelected.toString()
     };
 
     $.ajax({
@@ -417,13 +503,14 @@ $(document).on("click", ".checkColor", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.variationSelected.push($(this).prop("id"));
     }
-
-    window.filterManipulation.labelFilter.push({
-        type: "color",
-        id: $(this).prop("id"),
-        name: $(this).data("reference"),
-        value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
-    });
+    if(!ValidateLabel("color", $(this).prop("id"))){
+        window.filterManipulation.labelFilter.push({
+            type: "color",
+            id: $(this).prop("id"),
+            name: $(this).data("reference"),
+            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
+        });
+    }
     ajaxColor();
 });
 
@@ -431,20 +518,36 @@ $(document).on("click", ".checkText", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.variationSelected.push($(this).prop("id"));
     }
-
-    window.filterManipulation.labelFilter.push({
-        type: "text",
-        id: $(this).prop("id"),
-        name: $(this).data("reference"),
-        value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
-    });
+    if(!ValidateLabel("text", $(this).prop("id"))){
+        window.filterManipulation.labelFilter.push({
+            type: "text",
+            id: $(this).prop("id"),
+            name: $(this).data("reference"),
+            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
+        });
+    }
     ajaxText();
+});
+
+$(document).on("click", ".checkAtribute", function () {
+    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
+        window.filterManipulation.atributeSelected.push($(this).prop("id"));
+    }
+    if(!ValidateLabel("atributo", window.filterManipulation.labelFilter)){
+        window.filterManipulation.labelFilter.push({
+            type: "atributo",
+            id: $(this).prop("id"),
+            name: "atributo",
+            value: $(".fields").find("#checkAtribute_" + $(this).prop("id")).prop("name")
+        });
+    }
+    ajaxAttribute();
 });
 
 $(document).on("change", ".checkCategory", function () {
     window.filterManipulation.nameCategory = $(this).attr("name");
     window.filterManipulation.idCategory = $(this).attr("id");
-    if(!ValidateLabel("category", window.filterManipulation.idCategory)){
+    if(!ValidateLabel("category", window.filterManipulation.labelFilter)){
         window.filterManipulation.labelFilter.push({
             type: "category",
             id: window.filterManipulation.idCategory,
@@ -458,27 +561,28 @@ $(document).on("change", ".checkCategory", function () {
 $(document).on("change", ".checkBrand", function () {
     window.filterManipulation.nameBrand = $(this).attr("data-name");
     window.filterManipulation.idBrand = $(this).attr("id");
-
-    window.filterManipulation.labelFilter.push({
-        type: "brand",
-        id: window.filterManipulation.idBrand,
-        name: "Marcas",
-        value: window.filterManipulation.nameBrand
-    });
-
+    if(!ValidateLabel("brand", window.filterManipulation.labelFilter)){
+        window.filterManipulation.labelFilter.push({
+            type: "brand",
+            id: window.filterManipulation.idBrand,
+            name: "Marcas",
+            value: window.filterManipulation.nameBrand
+        });
+    }
     ajaxBrand();
 });
 
 $(document).on("click", ".pricefilter", function () {
     window.filterManipulation.initialPrice = $("#initialPrice").val().replace(".","").replace(",", ".");
     window.filterManipulation.finalPrice = $("#finalPrice").val().replace(".","").replace(",", ".");
-
-    window.filterManipulation.labelFilter.push({
-        type: "price",
-        id: "",
-        name: "Preço",
-        value: `${window.filterManipulation.initialPrice} a ${window.filterManipulation.finalPrice}`
-    });
+    if(!ValidateLabel("price", window.filterManipulation.labelFilter)){
+        window.filterManipulation.labelFilter.push({
+            type: "price",
+            id: "",
+            name: "Preço",
+            value: `${window.filterManipulation.initialPrice} a ${window.filterManipulation.finalPrice}`
+        });
+    }
     
     ajaxPrice();
 })
@@ -501,7 +605,7 @@ $(document).on("click", ".ui.label.filters", function () {
         ajaxBrand();
     }
     else if (type == "category") {
-        filters.idCategory = "";
+        filters.idCategory = genericoPageFilter;
 
         for (let key in filters.labelFilter) {
             if (filters.labelFilter[key].id == id) {
@@ -523,6 +627,19 @@ $(document).on("click", ".ui.label.filters", function () {
         }
 
         ajaxCategory();
+    }
+    else if (type == "atributo")
+    {
+        filters.idAtribute = "";
+
+        for (let key in filters.labelFilter) {
+            if (filters.labelFilter[key].id == id) {
+                _.pull(filters.atributeSelected, id.toString());
+                _.pullAt(filters.labelFilter, [key]);
+            }
+        }
+
+        ajaxAttribute();
     }
     else {
         filters.idVariation = "";

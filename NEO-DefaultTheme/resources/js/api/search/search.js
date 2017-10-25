@@ -28,7 +28,7 @@ $.fn.search.settings.templates.autoComplete = function (response, fields) {
             html += `<div class="contents">`;
             if (result[fields.image] !== undefined) {
                 html += `<div class="imagem">
-                            <img src="${result[fields.image]}">
+                            <img src="${result[fields.image]}" onerror="imgError(this)">
                         </div>`;
             }
             html += `<div class="content text left">`;
@@ -94,7 +94,7 @@ $(document).ready(function () {
                     }
                     response.results.push({
                         title: item.Name,
-                        url: item.UrlFriendly,
+                        url: item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly,
                         image: item.ImageHome,
                     });
                 });
