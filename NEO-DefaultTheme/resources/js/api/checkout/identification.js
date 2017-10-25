@@ -26,7 +26,7 @@ function checkEmail() {
                 },
                 success: function(response){
                     if(response.success){
-                        window.location.href = response.action;
+                        document.location = response.action;
                     }
                     else{
                         $("#identificationForm").attr("action", "/checkout/" + response.action);

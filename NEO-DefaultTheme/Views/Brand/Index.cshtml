@@ -23,16 +23,6 @@
         </div>
     </div>
 }
-@*
-    @section banner {
-        @if (Model != null)
-        {
-            <div class="sixteen wide column">
-                @Html.Action("CentralHalfBannerBrand", "Banner", new { brandID = Model.IdBrand })
-            </div>
-        }
-    }
-*@
 
 @section filters {
     <div class="four wide column filterColumn">
@@ -113,7 +103,7 @@
                pageSize = 10, order = Request.QueryString["o"] ?? "",
                brand = Model.IdBrand, group = Request.QueryString["g"] ?? "",
                idAttribute = Request.QueryString["idAttribute"] ?? ""
-           })
+           });
             </div>
         }
     </div>

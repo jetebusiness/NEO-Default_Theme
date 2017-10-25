@@ -123,7 +123,7 @@ $(document).ready(function(){
                     method: "POST",
                     url: "Checkout/ClearCart",
                     success: function (data) {
-                        window.location.href = "/home";
+                        document.location = "/home";
                     }
                 });
             }

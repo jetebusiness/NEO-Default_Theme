@@ -1,6 +1,5 @@
 ﻿@model DomainOrder.Entities.Order
 @{
-    ViewBag.Title = "Pedido Finalizado";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
 
     if(ViewBag.ShowRegister == null)
@@ -105,7 +104,7 @@
     <div class="ui grid divided horizontal">
         <div class="row">
             <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
-                <div class="ui divided items relaxed cart"  id="checkout_products_list_cart">
+                <div class="ui divided items relaxed cart">
                     @if (Model != null && Model.OrderItems != null)
                     {
                         foreach (var item in Model.OrderItems)
@@ -115,7 +114,7 @@
                                     <img src="@item.Image" onerror="imgError(this)">
                                 </div>
                                 <div class="content">
-                                    <a class="product title">@Html.Raw(item.Name)</a>
+                                    <a class="header">@Html.Raw(item.Name)</a>
                                     <div class="meta">Disponibilidade</div>
                                     <div class="description">
                                         <table class="ui very basic unstackable table ">

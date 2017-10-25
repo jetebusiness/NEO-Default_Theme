@@ -155,15 +155,7 @@ function OrderCreate() {
         }
 
         if(msgErrors != ""){
-            swal({
-                title: 'Ops! Encontramos um problema ..',
-                html: msgErrors,
-                type: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
+            _alert("Ops! Encontramos um problema ..", msgErrors, "warning");
             $(".GerarPedido").removeClass("loading");
             $(".GerarPedido").removeClass("disabled")
         }
@@ -191,13 +183,13 @@ function OrderCreate() {
                     success: function (response) {
                         if (response.success == true) {
                             if (response.urlRedirect != "") {
-                                window.location.href = response.urlRedirect;
+                                document.location = response.urlRedirect;
                             }
                             else {
-                                window.location.href = "Success?orderId=" + response.idPedido;
+                                document.location = "Success?orderId=" + response.idPedido;
                             }
                         } else {
-                            window.location.href = "Success?orderId=" + response.idPedido + "&s="+response.success+"&m="+response.msgEncrypt;
+                            document.location = "Success?orderId=" + response.idPedido + "&s="+response.success+"&m="+response.msgEncrypt;
                         }
                     }
                 });
@@ -811,8 +803,8 @@ $(document).ready(function () {
             }
             onChangeCheckBox();
             verificaPresente();
-
-
+            
+            
             //Cartão de Crédito
             validaCartaoCreditoBandeira("#CreditCard", "#btnCardCredit", "#brandCard", "C", 1, 1);
 

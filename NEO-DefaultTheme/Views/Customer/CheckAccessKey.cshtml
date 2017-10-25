@@ -111,7 +111,7 @@
                         },
                         success: function(data) {
                             if (data.Success == true) {
-                                window.location.href = data.Message;
+                                document.location = data.Message
                             } else {
                                 swal({
                                     title: 'Mensagem',

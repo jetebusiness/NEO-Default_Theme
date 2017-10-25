@@ -1,8 +1,6 @@
 ﻿@model DomainCheckout.Entities.Cart
 @{
-    ViewBag.Title = "Identificação";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
-    
 }
 
 @section steps{
@@ -136,7 +134,7 @@
                                             <label>Razão Social</label>
                                             <div class="ui left icon input">
                                                 <i class="suitcase icon"></i>
-                                                <input type="text" name="razaoSocial" data-jet-validate="empty"
+                                                <input type="text" name="" data-jet-validate="empty"
                                                        placeholder="Razão Social da Empresa"
                                                        data-validate="businessName"
                                                        tabindex="6">
@@ -328,7 +326,7 @@
     <script>
     function OnSuccess(response) {
         if (response.success == true) {
-            window.location.href = "/checkout/Payment";
+            document.location = "/checkout/Payment";
         } else {
             $("#email").attr("disabled", false);
             swal({

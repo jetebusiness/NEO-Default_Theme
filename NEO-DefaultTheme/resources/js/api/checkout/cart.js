@@ -150,7 +150,7 @@ function ClearCart(){
                     method: "POST",
                     url: "/Checkout/ClearCart",
                     success: function(data){
-                        window.location.href = "/home";
+                        document.location = "/home";
                     }
                 });
             }
@@ -185,7 +185,7 @@ function LoadCarrinho(){
             }
             else{
                 _alert("Ops ... Seu carrinho agora está vazio!", "Estamos te direcionando para a Home!", "warning");
-                window.location.href = "/Home";
+                document.location = "/Home";
             }
         }
     });

@@ -39,11 +39,12 @@
                                     <h4 class="ui dividing header">Informações Pessoais</h4>
                                     <div class="field required">
                                         <label>Perfil</label>
-                                        <div class="ui dropdown selection tipo cliente">                   
+                                        <div class="ui dropdown selection tipo cliente">
+                                            <input type="hidden" name="perfil_cliente">
                                             <div class="default text">Perfil de Cliente</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
-                                                <input name="typeCustomer" type="hidden" id="auxTypeCustomer" value="@Model.TypeCustomer" />
+                                                <input type="hidden" id="auxTypeCustomer" value="@Model.TypeCustomer" />
                                                 <div id="fisica" class="item" data-value="0">Pessoa Física</div>
                                                 <div id="juridica" class="item" data-value="1">Pessoa Jurídica</div>
                                             </div>
@@ -390,7 +391,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/area-cliente";
+                    document.location = "/area-cliente";
                 });
             }
             else {
@@ -417,7 +418,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/area-cliente";
+                    document.location = "/area-cliente";
                 });
             }
         }

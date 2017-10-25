@@ -6,11 +6,4 @@
             return (code == 13) ? false : true;
         });
     });
-
-    $(window).keydown(function (event) {
-        if (event.keyCode == 10 || event.keyCode == 13) {
-            event.preventDefault();
-            return false;
-        }
-    });
 });

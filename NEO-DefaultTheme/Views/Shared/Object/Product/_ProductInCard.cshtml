@@ -1,9 +1,10 @@
 ﻿@model DomainProduct.Entities.Product
+
 <div id="Product_@Model.IdProduct" class="ui card produto" data-exhausted="@Model.FlagExhausted">
     <input type="hidden" id="selected-references_@Model.IdProduct" />
     <div class="content">
         @if (Model.AlternativeImage != null)
-        {
+            {
             <a class="ui slide masked reveal image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
                 <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content"  onerror="imgError(this)">
                 <img src="@Model.AlternativeImage" class="hidden content"  onerror="imgError(this)">
@@ -21,7 +22,7 @@
         {
             <a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
                 <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content"  onerror="imgError(this)">
-                @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
+                @if (Model.SealStatus != null)
                 {
                     <div class="ui bottom right attached label massive imagetag">
                         <img src="@Model.SealStatus.Image" class="ui image tiny" onerror="imgError(this)">

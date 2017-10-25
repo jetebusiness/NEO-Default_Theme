@@ -8,17 +8,15 @@ import {updateProductConjunctTable} from "./detail";
 function isExhausted(productId) {
     return !($("#Product_" + productId).data("exhausted").toLowerCase() === "false");
 }
-function loading(element) {
-    $(element).toggleClass('loading');
-}
+
 $(document).on('click', '.btn-adiciona-conjunto', function () {
 
     let $checkbox = $(this).next(".conjunct_product");
-
+    
     if ($(this).attr("disabled")){
         return false;
     }
-
+    
     if ($checkbox.prop("checked")) {
         $(this)
             .prop("checked", false)
@@ -69,8 +67,6 @@ $(document).on("click", "#btn_compre_conjunto_selecionado", function () {
 });
 
 $(document).on("click", ".button.avise-card", function () {
-    var that = $(this);
-    loading(that);
     $.ajax({
         method: "GET",
         url: "/Product/AlertMe",
@@ -86,13 +82,10 @@ $(document).on("click", ".button.avise-card", function () {
             $(".modal-block").append(response);
             openModalQuickView($(this).attr("data-modal-open"), callback => {
                 $("input.masked").inputmask();
-                loading(that);
             });
-
         },
         onFailure: function (response) {
             console.log(response);
-            loading(that);
         }
     });
 });
@@ -119,20 +112,20 @@ $(document).ready(function () {
             console.log(errorMessage);
         }
     });
-
+    
     if ($(".conjunct_product:checked").length) {
 
         $('.card.produto.conjunto').each(function (index, element) {
             let variations = $(this).data('variation');
-
+            
             $(element).find('.ui.dropdown').each(function () {
                 let $that = $(this);
                 for (let variation in variations){
-                    $that.dropdown('set selected', variations[variation].IdVariation);
+                    $that.dropdown('set selected', variations[variation].IdVariation);    
                 }
             });
             callAjaxGetSku(element);
-
+            
             updateStockConjunct(element);
         });
         updateProductConjunctTable();
@@ -140,11 +133,24 @@ $(document).ready(function () {
 });
 
 function insertItemInCart(productId, element) {
-    let $parent           = $(element).closest("div[id^='Product_']"),
-        variationSelected = getVariationIds($parent, productId);
+    let keep              = true,
+        variationSelected = "",
+        $parent           = $(element).closest(".card.produto");
 
-    if (variationSelected.status) {
-        callAjaxInsertItemInCart(productId, variationSelected.ids, 1);
+    $parent.find(".sku-options [id=referencefromproduct_" + productId + "]").each(function () {
+        let idVariation = $(this).dropdown("get value");
+        if (idVariation === "") {
+            keep = false;
+            return false;
+        }
+        else {
+            variationSelected += variationSelected !== "" ? "," + idVariation : idVariation;
+            keep = true;
+        }
+    });
+
+    if (keep) {
+        callAjaxInsertItemInCart(productId, variationSelected, 1);
     }
     else {
         _alert("", "Variação não selecionada!", "warning");
@@ -154,17 +160,31 @@ function insertItemInCart(productId, element) {
 
 function callAjaxGetSku(element) {
 
-    let productId         = $(element).data("idproduct"),
-        $parent           = $(element).closest("div[id^='Product_']"),
-        variationSelected = getVariationIds($parent, productId);
+    let keep              = false,
+        variationSelected = "",
+        productId         = $(element).data("idproduct"),
+        $parent           = $(element).closest(".card.produto");
 
-    if (variationSelected.status) {
-        console.warn("Buscando SKU de Produto por variação");
-        console.log(`ID produto: ${productId}
-            Variações: ${variationSelected.ids}`);
+    $parent.find(".sku-options [id=referencefromproduct_" + productId + "]").each(function () {
+
+        let idVariation = $(this).dropdown("get value");
+        if (idVariation === "") {
+            keep = false;
+            return false;
+        }
+        else {
+            variationSelected += variationSelected !== "" ? "," + idVariation : idVariation;
+            keep = true;
+        }
+    });
+
+    if (keep) {
+        //console.warn("Buscando SKU de Produto por variação");
+        /*console.log(`ID produto: ${productId}
+            Variações: ${variationSelected}`);*/
         $.ajax({
             url: "/product/GetSkuByIdProductJson",
-            data: {id: productId, variations: variationSelected.ids},
+            data: {id: productId, variations: variationSelected},
             method: "GET",
             success: function (response) {
 
@@ -183,7 +203,7 @@ function callAjaxGetSku(element) {
                     if(ponteiroPricesCurrent > 0){
                         $parent.find("#basePrice_" + productId).remove();
                     }
-                    $parent.find(".preco").text(moneyPtBR(sku.Price));
+                    $parent.find("#price_" + productId).text(moneyPtBR(sku.Price));
                 }
 
                 if (sku.InstallmentMax) {
@@ -192,19 +212,19 @@ function callAjaxGetSku(element) {
                 }
 
                 if (sku.Stock <= 0 || isExhausted(productId)) {
-                    $parent.find("#btn-comprar-card-" + productId)
+                    $("#btn-comprar-card-" + productId)
                         .removeClass("green btn-comprar-card")
                         .addClass("grey avise-card avise-me-modal")
                         .html('<i class="icon announcement"></i> Avise-me');
-                    $parent.find("#produto-esgotado_" + productId).removeClass("hideme");
+                    $("#produto-esgotado_" + productId).removeClass("hideme");
                     $parent.data("stock", sku.Stock);
                 }
                 else {
-                    $parent.find("#btn-comprar-card-" + productId)
+                    $("#btn-comprar-card-" + productId)
                         .removeClass("grey avise-card avise-me-modal")
                         .addClass("green btn-comprar-card")
                         .html('<i class="icon add to cart"></i> Comprar');
-                    $parent.find("#produto-esgotado_" + productId).addClass("hideme");
+                    $("#produto-esgotado_" + productId).addClass("hideme");
                     $parent.data("stock", sku.Stock);
                 }
 
@@ -262,7 +282,7 @@ function updateStockConjunct(element) {
             .attr("class", "icon warning circle")
             .next("span")
             .text("Esgotado");
-
+        
         $button
             .next('input.conjunct_product')
             .prop('checked', false);
@@ -288,24 +308,4 @@ function updateStockConjunct(element) {
     }
 }
 
-function getVariationIds(parentElement, productId) {
-    let variationSelected = "",
-        _return = {};
-    $(parentElement).find(".sku-options [id=referencefromproduct_" + productId + "]").each(function () {
-        let idVariation = $(this).dropdown("get value");
-        if (idVariation === "") {
-            _return = {
-                status: false
-            };
-        }
-        else {
-            variationSelected += variationSelected !== "" ? "," + idVariation : idVariation;
-            _return = {
-                status: true,
-                ids: variationSelected
-            };
-        }
-    });
 
-    return _return;
-}

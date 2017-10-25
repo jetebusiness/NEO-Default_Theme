@@ -1,7 +1,6 @@
 ﻿@model DomainCheckout.Entities.Cart
 
 @{
-    ViewBag.Title = "Pagamento";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
 }
 
@@ -13,8 +12,15 @@
     </script>
 }
 
-@section steps{
-    <div class="jet checkout jBreadCrumb">
+@{
+    if (!string.IsNullOrEmpty(ViewBag.ClearSale))
+    {
+        <script>
+            (function (a, b, c, d, e, f, g) { a['CsdpObject'] = e; a[e] = a[e] || function () { (a[e].q = a[e].q || []).push(arguments) }, a[e].l = 1 * new Date(); f = b.createElement(c), g = b.getElementsByTagName(c)[0]; f.async = 1; f.src = d; g.parentNode.insertBefore(f, g) })(window, document, 'script', '//device.clearsale.com.br/p/fp.js', 'csdp'); csdp('app', '@ViewBag.ClearSale'); csdp('sessionid', '@Session["SessionId"].ToString()');
+        </script>
+    }
+
+<div class="jet checkout jBreadCrumb">
         <div class="jCrumb completed">
             <div class="jBullet">
                 <div class="jButton">
@@ -41,7 +47,6 @@
         </div>
     </div>
 }
-
 <input type="hidden" name="idShipping" id="idShipping" value="@Model.IdShippingMode" />
 
 <div class="ui tiny scrolling modal" id="ListaEnderecosCliente">
@@ -115,22 +120,3 @@
     </div>
 </div>
 
-@{
-    if (!string.IsNullOrEmpty(ViewBag.ClearSale))
-    {
-        <script>
-            (function(a, b, c, d, e, f, g) {
-                a['CsdpObject'] = e;
-                a[e] = a[e] || function() {
-                    (a[e].q = a[e].q || []).push(arguments)
-                }, a[e].l = 1 * new Date();
-                f = b.createElement(c), g = b.getElementsByTagName(c)[0];
-                f.async = 1;
-                f.src = d;
-                g.parentNode.insertBefore(f, g)
-            })(window, document, 'script', '//device.clearsale.com.br/p/fp.js', 'csdp');
-            csdp('app', '@ViewBag.ClearSale');
-            csdp('sessionid', '@Session["SessionId"].ToString()');
-        </script>
-    }
-}

@@ -197,8 +197,8 @@
                                             <label>Email</label>
                                             <div class="ui left icon input">
                                                 <i class="mail icon"></i>
-                                                <input type="email" name="Email" id="Email" placeholder="Seu Email"
-                                                       value="@(string.IsNullOrEmpty(Session["Email"].ToString()) ? @Html.Raw("") : @Html.Raw(Session["Email"].ToString()))" data-validate="email">
+                                                <input type="email" name="Email" id="Email" @(Model.Email == null ? @Html.Raw("") : @Html.Raw("readonly")) placeholder="Seu Email"
+                                                       value="@(Model.Email != "" ? Model.Email : "")" data-validate="email">
                                             </div>
                                         </div>
                                         <div class="field required">
@@ -500,7 +500,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/area-cliente";
+                    document.location = "/area-cliente";
                 });
             }
             else {
@@ -527,7 +527,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/area-cliente";
+                    document.location = "/area-cliente";
                 });
             }
         }

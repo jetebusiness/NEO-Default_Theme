@@ -4,17 +4,10 @@
     jQuery(document).ready(function ($) {
         slickGallery();
     });
-    function checkImagesSize(imageQuantity) {
-        var images = $(".car-gallery .ui.image").length;
-        if (images >= imageQuantity) {
-            return imageQuantity;
-        } else {
-            return images;
-        }
-    }
+
 
     function destroyCarousel() {
-        $('.car-gallery').slick('destroy');
+            $('.car-gallery').slick('destroy');
     }
 
 
@@ -23,9 +16,8 @@
             prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
             nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
             dots: false,
+            accessibility: false,
             slidesToShow: 6,
-            mobileFirst:true,
-            useTransform:false,
             responsive: [
                 {
                     breakpoint: 1024,
@@ -48,13 +40,15 @@
             ]
         });
     }
+
+
 </script>
-<div class="car-gallery thumbnails">
+<div class="ui small images car-gallery thumbnails">
     @foreach (var item in Model)
     {
-        <a href="@(item.ImageHighResolution != null ? item.ImageHighResolution : "#" )" data-standard="@item.ImageDefault">
+        <a href="@item.ImageHighResolution" data-standard="@item.ImageDefault" class="ui image">
             @* HREF = Imagem ZOOMO / Data-starndard = Imagem Sem zoom*@
-            <img src="@item.ImageDefault" onerror="imgError(this)" class="ui image small"/>
+            <img src="@item.ImageDefault" onerror="imgError(this)"/>
         </a>
     }
 </div>

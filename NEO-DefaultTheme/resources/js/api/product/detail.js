@@ -490,23 +490,15 @@ function buscarSKU(seletor, produtoID) {
     var ArrReferenciasJaSelecionadas = referenciasJaSelecionadas.split(',');
     var totalVariacoes               = $("#" + seletor + "-total-variacoes").val();
     var jsonSKU                      = $("#" + seletor + "-lista-sku").val();
-    var parcelaMaximaUnidade         = $("#parcela-maxima-unidade").val();
-    parcelaMaximaUnidade             = parcelaMaximaUnidade.replace(/\./gi,"");
-    parcelaMaximaUnidade             = parcelaMaximaUnidade.replace(",",".");
-
-    var qtdParcelaMaximaUnidade      = $("#qtd-parcela-maxima-unidade").val();
-    var pagamentoDescricao           = $("#pagamento-descricao").val();
 
     if (parseInt(totalVariacoes) == ArrReferenciasJaSelecionadas.length) {
+
         $.ajax({
             url: '/Product/GetSku/',
             type: 'POST',
             data: {
-                jsonSKU                 : jsonSKU,
-                referencias             : referenciasJaSelecionadas,
-                parcelaMaximaUnidade    : parcelaMaximaUnidade,
-                qtdParcelaMaximaUnidade : new Number(qtdParcelaMaximaUnidade),
-                pagamentoDescricao      : pagamentoDescricao
+                jsonSKU: jsonSKU,
+                referencias: referenciasJaSelecionadas
             },
             dataType: 'json',
             success: function (data) {
@@ -580,7 +572,7 @@ function AtualizarGrade(jsonSKU) {
             <br />
             <span>ou</span>
             <span>
-                <span id="preco_boleto">${moneyPtBR((jsonSKU.Price - (jsonSKU.Price / 100) * valorDesconto))}</span>
+                <span id="preco_boleto">${moneyPtBR((jsonSKU.Price - (jsonSKU.Price / 100) * valorDesconto))}</span> 
                 no boleto bancário (${valorDesconto}% de desconto)
             </span>
             `
@@ -596,7 +588,7 @@ function AtualizarGrade(jsonSKU) {
                         <span>em</span>
                         <span id="max-p">${max_p}<span>X de </span></span>
                         <span id="max-value">${max_v}</span>
-                        <span id="description">(${description})</span>
+                        <span id="description">${description}</span>
                         ${descontoBoleto}
                     </span>`;
     } else {
@@ -605,10 +597,10 @@ function AtualizarGrade(jsonSKU) {
                                                         <span>em</span>
                                                         <span id="max-p">
                                                             ${max_p}
-                                                            <span>X de </span>
                                                         </span>
+                                                        <span>x de </span>
                                                         <span id="max-value">${max_v}</span>
-                                                        <span id="description">()${description})</span>
+                                                        <span id="description">${description}</span>
                                                         ${descontoBoleto}
                                                     </span>`;
     }
@@ -656,30 +648,20 @@ function AtualizarQuantidade() {
         preco_promocao = SomenteNumeros($("#preco-promocao-unidade").val()),
         preco_max      = SomenteNumeros($("#parcela-maxima-unidade").val()),
         max_p          = $("#qtd-parcela-maxima-unidade").val(),
-        description    = $("#pagamento-descricao").val(),
-        desconto_boleto = $("#desconto_boleto").val(),
-        preco_final = 0;
-
+        description    = $("#pagamento-descricao").val();
 
 
     $("#max-value").text(moneyPtBR(quantidade * preco_max));
-    $("#max-p").text(max_p + "X de ");
-    $("#description").text("(" + description+ ")");
+    $("#max-p").text(max_p + "X");
+    $("#description").text(description);
 
 
     if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) == false) {
-        preco_final = quantidade * preco_promocao;
         $("#preco").text(moneyPtBR(quantidade * preco_promocao));
         $("#preco-antigo").text(moneyPtBR(quantidade * preco));
     } else {
-        preco_final = quantidade * preco;
         $("#preco").text(moneyPtBR(quantidade * preco));
         $("#preco-antigo").text("");
-    }
-
-    if(desconto_boleto > 0){
-      var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * desconto_boleto));
-      $("#preco_boleto").text(valor_boleto);
     }
 
     var stock = $("#produto-stock").val();
@@ -1301,17 +1283,17 @@ function SomenteNumeros(valor) {
 }
 
 export function updateProductConjunctTable() {
-
+    
     let valor_total = 0.0,
         valor_base  = 0.0,
         desconto = 0.0;
 
     $('.conjunct_product:checked').each(function () {
-
+ 
         let $card = $(this).closest('.card.produto'),
             preco_base,
             preco = getFloatFromCurrency($card.find('span.preco').text());
-
+        
         if ($card.find('span.precoBase > i').length) {
             preco_base = getFloatFromCurrency($card.find('span.precoBase > i').text());
         } else {
@@ -1323,18 +1305,18 @@ export function updateProductConjunctTable() {
             ID: ${$card.data('idproduto')}
             ID SKU:  ${$card.data('idsku')}
             Preço: ${preco}
-            Preço Base: ${preco_base}
+            Preço Base: ${preco_base}    
         `);*/
         valor_total = parseFloat(valor_total) + parseFloat(preco);
         valor_base  = parseFloat(valor_base) + parseFloat(preco_base);
         desconto = parseFloat((parseFloat(valor_total) - parseFloat(valor_base)));
-
+        
     });
     $("#preco-antigo").text(moneyPtBR(parseFloat(valor_base).toFixed(2)))
     $("#preco").text(moneyPtBR(parseFloat(valor_total).toFixed(2)))
     $("#conjunto-total").text(moneyPtBR(parseFloat(valor_base).toFixed(2)));
     $("#conjunto-desconto").text(moneyPtBR(parseFloat(desconto).toFixed(2)));
-    $("#conjunto-total-final").text(moneyPtBR(parseFloat(valor_total).toFixed(2)));
+    $("#conjunto-total-final").text(moneyPtBR(parseFloat(valor_total).toFixed(2)));   
     AtualizarParcelamento(valor_total)
     RefreshInfoPreco(valor_total)
 }
@@ -1349,5 +1331,5 @@ function getFloatFromCurrency(currency) {
 
 function RefreshInfoPreco(valor_total){
     var max_p =  $("#max-parc").val()
-    $("#max-value").text(moneyPtBR(valor_total / max_p))
+    $("#max-value").text(moneyPtBR(valor_total / max_p))   
 }
