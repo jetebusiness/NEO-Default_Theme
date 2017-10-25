@@ -101,9 +101,9 @@
                 $("#UserName").val($('#email').val())
                 $('.ui.modal').modal('show');
             } else if (response.Success == true && response.Message == "CadastrarSenha") {
-                document.location = "/Customer/CheckAccessKey"
+                window.location.href = "/Customer/CheckAccessKey";
             } else if (response.Success == true && response.Message == "Cadastro") {
-                document.location = "/Customer/Register"
+                window.location.href = "/Customer/Register";
             } else {
                 swal({
                     title: 'Mensagem',

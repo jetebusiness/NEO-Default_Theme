@@ -81,7 +81,7 @@ export function UpdateCarrinho() {
             }
             else {
                 //_alert("Ops ... Seu carrinho agora está vazio!", "Estamos te direcionando para a Home!", "warning");
-                //document.location = "/Home";
+                //window.location.href = "/Home";
                 $("#totalCarrinho").text("");
                 $("#subTotalCarrinho").text("");
                 updateQuantidadeTopoCarrinho();

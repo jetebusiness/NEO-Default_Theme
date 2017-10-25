@@ -9,13 +9,13 @@
 <div class="ui pagination menu">
     @if (Model.HasPreviousPage)
     {
-        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), "?pageNumber=", Model.PageNumber - 1, queryParameters)">
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber - 1, queryParameters)">
             <i class="angle left icon"></i>
         </a>
     }
     else
     {
-        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), "?pageNumber=", Model.PageNumber - 1, queryParameters)">
+        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber - 1, queryParameters)">
             <i class="angle left icon"></i>
         </a>
     }
@@ -30,7 +30,7 @@
         }
         else
         {
-        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), "?pageNumber=", (i+1), queryParameters)">
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", (i+1), queryParameters)">
             @(i+1)
         </a>
         }
@@ -38,13 +38,13 @@
 
     @if (Model.HasNextPage)
     {
-        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), "?pageNumber=", Model.PageNumber + 1, queryParameters)">
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber + 1, queryParameters)">
             <i class="angle right icon"></i>
         </a>
     }
     else
     {
-        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), "?pageNumber=", Model.PageNumber + 1, queryParameters)">
+        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber + 1, queryParameters)">
             <i class="angle right icon"></i>
         </a>
     }

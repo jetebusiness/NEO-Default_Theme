@@ -27,15 +27,13 @@ function makeLabel() {
 }
 
 function ValidateLabel(type, id){
-    let labelVariation = window.filterManipulation.labelFilter;
-
+    let labelVariation = window.filterManipulation.labelFilter    
     for (let key in labelVariation) {
         if (labelVariation[key].type === type && labelVariation[key].id === id) {
             return true
-        }else{
-            return false
         }
     }
+    return false
 }
 
 function ajaxColor() {
@@ -505,13 +503,14 @@ $(document).on("click", ".checkColor", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.variationSelected.push($(this).prop("id"));
     }
-
-    window.filterManipulation.labelFilter.push({
-        type: "color",
-        id: $(this).prop("id"),
-        name: $(this).data("reference"),
-        value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
-    });
+    if(!ValidateLabel("color", $(this).prop("id"))){
+        window.filterManipulation.labelFilter.push({
+            type: "color",
+            id: $(this).prop("id"),
+            name: $(this).data("reference"),
+            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
+        });
+    }
     ajaxColor();
 });
 
@@ -519,13 +518,14 @@ $(document).on("click", ".checkText", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.variationSelected.push($(this).prop("id"));
     }
-
-    window.filterManipulation.labelFilter.push({
-        type: "text",
-        id: $(this).prop("id"),
-        name: $(this).data("reference"),
-        value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
-    });
+    if(!ValidateLabel("text", $(this).prop("id"))){
+        window.filterManipulation.labelFilter.push({
+            type: "text",
+            id: $(this).prop("id"),
+            name: $(this).data("reference"),
+            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
+        });
+    }
     ajaxText();
 });
 
@@ -533,20 +533,21 @@ $(document).on("click", ".checkAtribute", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.atributeSelected.push($(this).prop("id"));
     }
-
-    window.filterManipulation.labelFilter.push({
-        type: "atributo",
-        id: $(this).prop("id"),
-        name: "atributo",
-        value: $(".fields").find("#checkAtribute_" + $(this).prop("id")).prop("name")
-    });
+    if(!ValidateLabel("atributo", window.filterManipulation.labelFilter)){
+        window.filterManipulation.labelFilter.push({
+            type: "atributo",
+            id: $(this).prop("id"),
+            name: "atributo",
+            value: $(".fields").find("#checkAtribute_" + $(this).prop("id")).prop("name")
+        });
+    }
     ajaxAttribute();
 });
 
 $(document).on("change", ".checkCategory", function () {
     window.filterManipulation.nameCategory = $(this).attr("name");
     window.filterManipulation.idCategory = $(this).attr("id");
-    if(!ValidateLabel("category", window.filterManipulation.idCategory)){
+    if(!ValidateLabel("category", window.filterManipulation.labelFilter)){
         window.filterManipulation.labelFilter.push({
             type: "category",
             id: window.filterManipulation.idCategory,
@@ -560,27 +561,28 @@ $(document).on("change", ".checkCategory", function () {
 $(document).on("change", ".checkBrand", function () {
     window.filterManipulation.nameBrand = $(this).attr("data-name");
     window.filterManipulation.idBrand = $(this).attr("id");
-
-    window.filterManipulation.labelFilter.push({
-        type: "brand",
-        id: window.filterManipulation.idBrand,
-        name: "Marcas",
-        value: window.filterManipulation.nameBrand
-    });
-
+    if(!ValidateLabel("brand", window.filterManipulation.labelFilter)){
+        window.filterManipulation.labelFilter.push({
+            type: "brand",
+            id: window.filterManipulation.idBrand,
+            name: "Marcas",
+            value: window.filterManipulation.nameBrand
+        });
+    }
     ajaxBrand();
 });
 
 $(document).on("click", ".pricefilter", function () {
     window.filterManipulation.initialPrice = $("#initialPrice").val().replace(".","").replace(",", ".");
     window.filterManipulation.finalPrice = $("#finalPrice").val().replace(".","").replace(",", ".");
-
-    window.filterManipulation.labelFilter.push({
-        type: "price",
-        id: "",
-        name: "Preço",
-        value: `${window.filterManipulation.initialPrice} a ${window.filterManipulation.finalPrice}`
-    });
+    if(!ValidateLabel("price", window.filterManipulation.labelFilter)){
+        window.filterManipulation.labelFilter.push({
+            type: "price",
+            id: "",
+            name: "Preço",
+            value: `${window.filterManipulation.initialPrice} a ${window.filterManipulation.finalPrice}`
+        });
+    }
     
     ajaxPrice();
 })

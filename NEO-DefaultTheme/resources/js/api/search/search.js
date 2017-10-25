@@ -94,7 +94,7 @@ $(document).ready(function () {
                     }
                     response.results.push({
                         title: item.Name,
-                        url: item.UrlFriendly,
+                        url: item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly,
                         image: item.ImageHome,
                     });
                 });

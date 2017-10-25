@@ -1,14 +1,13 @@
 ﻿@model DomainProduct.Entities.Product
-
-    <div class="item produtoList searchProducts" itemscope itemtype="http://schema.org/Product" data-exhausted="@Model.FlagExhausted">
+    <div class="item produtoList" itemscope itemtype="http://schema.org/Product" data-exhausted="@Model.FlagExhausted" id="Product_@Model.IdProduct">
         <link itemprop="url" href="@Model.UrlFriendly" rel="author" />
         <div class="ui small image">
             <a itemprop="url" href="@Model.UrlFriendly">
-                <img src="@Model.ImageHome" data-src="@Model.ImageHome" onerror="imgError(this)">
+                <img src="@Model.ImageHome" data-src="@Model.ImageHome" id="mainImageCard_@Model.IdProduct" onerror="imgError(this)">
             </a>
         </div>
         <div class="content">
-            <a class="header"><span itemprop="name">@Model.Name</span></a>
+            <a class="header" href="@Model.UrlFriendly"><span itemprop="name">@Model.Name</span></a>
             <div class="meta">
                 <span>@Model.Code</span>
             </div>
@@ -17,7 +16,7 @@
                 </div>*@
             <div class="sku-options">
                 <div class="ui grid horizontal divided middle aligned">
-                    <div class="row three column stackable doubling">
+                    <div class="row two column stackable doubling">
                         @if (Model.AvailableReferences != null)
                         {
                             foreach (var reference in Model.AvailableReferences)
@@ -53,11 +52,11 @@
             </div>
         </div>
         <div class="extra">
-            <span itemprop="offers" class="info" itemscope itemtype="http://schema.org/Offer">
+            <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 @if (Model.PricePromotion != null && Model.PricePromotion > 0)
             {
                     <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por</span>
-                    <span class="preco"><strong itemprop="price">@string.Format("{0:c}", Model.PricePromotion)</strong> à vista</span>
+                    <span itemprop="preco" class="preco">@string.Format("{0:c}", Model.PricePromotion)</span>
                 }
                 else
                 {
@@ -67,24 +66,26 @@
                 @if (Model.InstallmentMax != null)
             {
                     <span>
-                        ou em @Model.InstallmentMax.MaxNumber
-                        x de  @string.Format("{0:c}", Model.InstallmentMax.Value)
+                        ou em <span class="installmentMaxNumber">@Model.InstallmentMax.MaxNumber</span>
+                        x de <span class="installmentMaxValue">@string.Format("{0:c}", Model.InstallmentMax.Value)</span>
                     </span>
                 }
+        </span>
 
                 <div class="ui divider hidden"></div>
-                <!--     <a class="ui circular basic icon button heart mobile-hide">
-                         <i class="icon heart"></i>
-                     </a>
+                
+                    @*<a class="ui circular basic icon button heart mobile-hide">
+                        <i class="icon heart"></i>
+                    </a>
 
-                     <a class="ui circular basic icon button default mobile-hide quick-view-opener"
-                        data-modal-open="@Model.IdProduct">
-                         <i class="icon unhide"></i>
-                     </a>
-                        -->
+                    <a class="ui circular basic icon button default mobile-hide quick-view-opener"
+                       data-modal-open="@Model.IdProduct">
+                        <i class="icon unhide"></i>
+                    </a>*@
+                
                 @if (Model.FlagExhausted || Model.Stock <= 0)
             {
-                    <a id="btn-comprar-card-@Model.IdProduct" class="ui labeled icon button grey fluid avise avise-me-modal" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                    <a id="btn-comprar-card-@Model.IdProduct" class="ui labeled icon button grey fluid avise-card avise-me-modal" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
                         <i id="btn-icon-card-@Model.IdProduct" class="icon announcement"></i>
                         Avise-me
                     </a>
@@ -96,7 +97,6 @@
                         Comprar
                     </a>
                 }
-            </span>
         </div>
 
     </div>

@@ -182,7 +182,7 @@
 
         <div class="row detalhes produto">
             <!-- FIM IMAGENS DO PRODUTO PRINCIPAL-->
-            <div class="sixteen wide mobile ten wide computer column" id="exibePartial">
+            <div class="sixteen wide mobile nine wide computer column" id="exibePartial">
                 @{
                     List<DomainProduct.Entities.ProductImage> productFirstReferenceImages = new List<DomainProduct.Entities.ProductImage>();
                     List<DomainProduct.Entities.ProductImage> productImages = new List<DomainProduct.Entities.ProductImage>();
@@ -238,7 +238,7 @@
             <!-- COMEÇO IMAGENS DO PRODUTO PRINCIPAL-->
             <div class="ui divider hidden"></div>
             <!-- COMEÇO INFORMAÇÕES DO PRODUTO-->
-            <div class="sixteen wide mobile six wide computer column infoProduto">
+            <div class="sixteen wide mobile seven wide computer column infoProduto">
                 <div class="ui grid">
                     <div class="computer only row product information">
                         <div class="column">
@@ -306,9 +306,9 @@
                                                     <span itemprop="price" class="preco" id="preco">@dec.ToString("C")</span>
                                                     <span class="infoPreco">
                                                         <span>em</span>
-                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de </span></span>
-                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                        <span id="description">@SKUPadrao.InstallmentMax.Description</span>
+                                                        <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
+                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                                        <span id="description">@string.Format("({0})", @Model.InstallmentMax.Description)</span>
                                                         @if (ViewBag.DescontoBoleto > 0)
                                                         {
                                                             var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
@@ -325,11 +325,11 @@
                                                     <span class="infoPreco">
                                                         <span>em</span>
                                                         <span id="max-p">
-                                                            @SKUPadrao.InstallmentMax.MaxNumber
+                                                            @Model.InstallmentMax.MaxNumber
+                                                            <span>X de </span>
                                                         </span>
-                                                        <span>x de </span>
-                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                        <span id="description">@SKUPadrao.InstallmentMax.Description</span>
+                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                                        <span id="description">@string.Format("({0})", @Model.InstallmentMax.Description)</span>
                                                         @if (ViewBag.DescontoBoleto > 0)
                                                         {
                                                             var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));

@@ -8,7 +8,7 @@
             <i class="ui icon dropdown floated right"></i>
         </div>
         <div class="active content">
-            <div class="ui fluid items unstackable divided compra">
+            <div class="ui fluid items unstackable divided compra"  id="checkout_products_list">
                 @if (Model != null && Model.CartItems != null)
                 {
                     foreach (var product in Model.CartItems)
@@ -18,7 +18,7 @@
                                 <img src="@product.ProductImage.ImageDefault"  onerror="imgError(this)"/>
                             </div>
                             <div class="content">
-                                <a href="" class="description"><strong>@Html.Raw(product.NameProduct)</strong></a>
+                                <a class="product title description"><strong>@Html.Raw(product.NameProduct)</strong></a>
                                 <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
                                 <div class="extra text color green left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
                             </div>
