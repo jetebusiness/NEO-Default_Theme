@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Lista de Casamento";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="row">
+        <div class="ui two column grid">
+            <div class="column">
+                <div class="ui segment">
+                    <div class="ui grid">
+                        <div class="four wide computer sixteen wide tablet sixteen wide mobile column">
+                            <div class="ui small image">
+                                <img src="/assets/image/img_default.png">
+                            </div>
+                        </div>
+                        <div class="twelve wide computer sixteen wide tablet sixteen wide mobile column">
+                            <div class="content">
+                                <h4 class="header">João e Maria</h4>
+                                <p>28/10/2017</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel erat eget nisl vehicula ornare.</p>
+                                <div class="ui right floated">
+                                    <a href="#">
+                                        <button class="ui tiny compact icon teal button">
+                                            <i class="unhide icon"></i>
+                                            Ver Lista
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*@if (Model.Settings.PageCount > 1)
+{
+    <div class="ui centered grid ">
+        <div class="row">
+            <div class="center aligned column">
+                <!-- Page: ~/Views/Shared/Parts/_Pagination.cshtml -->
+                @Html.Partial("~/Views/Shared/Parts/_Pagination.cshtml", Model.Settings, new ViewDataDictionary() { { "Url", ViewBag.localUrl } } )
+            </div>
+        </div>
+    </div>
+}*@

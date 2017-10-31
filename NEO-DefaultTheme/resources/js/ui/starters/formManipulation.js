@@ -234,17 +234,17 @@ $(document).ready(function () {
     /**
      * Quantity Buttons - General
      */
-    $(".qtdminus").click(function () {
-        if (parseInt($(this).next("input").val()) <= 0) {
-            $(this).next("input").val(1);
-        }
-        else {
-            $(this).next("input").val(parseInt($(this).next("input").val()) - 1);
-        }
-    });
-    $(".qtdplus").click(function () {
-        $(this).prev("input").val(parseInt($(this).prev("input").val()) + 1);
-    });
+    //$(".qtdminus").click(function () {
+    //    if (parseInt($(this).next("input").val()) <= 0) {
+    //        $(this).next("input").val(1);
+    //    }
+    //    else {
+    //        $(this).next("input").val(parseInt($(this).next("input").val()) - 1);
+    //    }
+    //});
+    //$(".qtdplus").click(function () {
+    //    $(this).prev("input").val(parseInt($(this).prev("input").val()) + 1);
+    //});
     /**
      * Variation Buttons , radio and checkout
      */

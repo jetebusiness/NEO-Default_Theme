@@ -1,8 +1,10 @@
 import {openModalQuickView} from "../../functions/modal";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
+import {LoadCarrinhoEventList} from "../../functions/mini_cart_generic";
 import {_alert, _confirm} from "../../functions/message";
 import {CancelarCalculoFreteCart} from "../checkout/mini_cart";
 import {moneyPtBR} from "../../functions/money";
+﻿import {isLoading} from "../api_config";
 import {updateProductConjunctTable} from "./detail";
 
 function isExhausted(productId) {
@@ -54,18 +56,56 @@ $(document).on("click", ".btn-comprar-card", function () {
     insertItemInCart($(this).data("idproduct"), this);
 });
 
-$(document).on("click", "#btn_compre_conjunto_selecionado", function () {
+$(document).on("click", ".add-event-list", function () {
+    $(this).addClass("loading");
+    //isLoading("#miniCarrinho");
+    $.when(insertItemInList($(this).data("idproduct"), this)).then(
+      function() {
+          //isLoading("#miniCarrinho");
+      });
+});
+
+function insertItemInList(productId, element) {
+    let keep              = true,
+        variationSelected = "",
+        $parent = $(element).closest(".ui.card.produto");
+
+    $parent.find(".sku-options [id=referencefromproduct_" + productId + "]").each(function () {
+        let idVariation = $(this).dropdown("get value");
+        if (idVariation === "") {
+            keep = false;
+            return false;
+        }
+        else {
+            variationSelected += variationSelected !== "" ? "," + idVariation : idVariation;
+            keep = true;
+        }
+    });
+
+    if (keep) {
+        callAjaxInsertItemInList(productId, variationSelected, 1, element);
+    }
+    else {
+        _alert("", "Varia&ccedil;&atilde;o n&atilde;o selecionada!", "warning")
+    }
+}
+
+$(document).on("click", "#btn_compre_conjunto_selecionado", function (e) {
+    e.preventDefault()
     let $product_selected = $(".conjunct_product:checked");
     if ($product_selected.length > 0) {
         $(this).addClass("loading");
         CancelarCalculoFreteCart(1);
         $product_selected.each(function () {
             insertItemInCart($(this).val(), $(this));
-        });
-    } else {
-        _alert('', 'Selecione ao menos um produto, antes de adicionar ao carrinho.', 'error');
+        })
+        LoadCarrinho(true)
+    }else if($(".conjunct_product").length == 0){
+        _alert('', 'Conjunto indisponível!', 'error');
     }
-
+    else {
+        _alert('', 'Selecione ao menos um produto, antes de adicionar ao carrinho.', 'error');
+    }      
 });
 
 $(document).on("click", ".button.avise-card", function () {
@@ -120,7 +160,7 @@ $(document).ready(function () {
         }
     });
 
-    if ($(".conjunct_product:checked").length) {
+    if ($(".conjunct_product:checked").length > 0) {
 
         $('.card.produto.conjunto').each(function (index, element) {
             let variations = $(this).data('variation');
@@ -136,6 +176,11 @@ $(document).ready(function () {
             updateStockConjunct(element);
         });
         updateProductConjunctTable();
+    }else{
+        $(".buy-conjunct").removeClass("ui animated green button fluid")
+        $(".buy-conjunct").addClass("ui labeled icon button fluid grey disabled")
+        $("#buttonText").text("Indisponível")
+        $("#iconCart").remove()
     }
 });
 
@@ -144,7 +189,7 @@ function insertItemInCart(productId, element) {
         variationSelected = getVariationIds($parent, productId);
 
     if (variationSelected.status) {
-        callAjaxInsertItemInCart(productId, variationSelected.ids, 1);
+        callAjaxInsertItemInCart(productId, variationSelected.ids, 1, element);
     }
     else {
         _alert("", "Variação não selecionada!", "warning");
@@ -220,7 +265,7 @@ function callAjaxGetSku(element) {
     }
 }
 
-function callAjaxInsertItemInCart(idProduct, variations, quantity) {
+function callAjaxInsertItemInCart(idProduct, variations, quantity, element) {
     console.warn("Adicionando Produto ao Carrinho");
     console.log(`ID produto: ${idProduct}
             Variações: ${variations}
@@ -230,10 +275,10 @@ function callAjaxInsertItemInCart(idProduct, variations, quantity) {
         method: "POST",
         data: {idProduct: idProduct, variations: variations, quantity: quantity},
         success: function (response) {
-            if (response.success) {
+            if(response.success){
                 $(document).find(".loading").removeClass("loading");
-                LoadCarrinho();
-                $(".carrinho").sidebar('show');
+                if(!(String(element[0]).indexOf("conjunct") > -1))
+                    LoadCarrinho(true);
             }
             else {
                 $(document).find(".loading").removeClass("loading");
@@ -242,6 +287,32 @@ function callAjaxInsertItemInCart(idProduct, variations, quantity) {
         },
         error: function (response) {
             console.log(response);
+        }
+    });
+}
+
+function callAjaxInsertItemInList(idProduct, variations, quantity, element) {
+    console.warn("Adicionando Produto ao Carrinho");
+    console.log(`ID produto: ${idProduct}
+            Variações: ${variations}
+            Quantidade: ${quantity}`);
+    $.ajax({
+        url: "/EventList/InsertProductInEventList",
+        method: "POST",
+        data: {idProduct: idProduct, variations: variations, quantity: quantity },
+        success: function (response) {
+            if(response.success){
+                LoadCarrinhoEventList(true);
+                $(element).removeClass("loading");
+            }
+            else{
+                _alert("Mensagem", response.msg, "warning");
+                $(element).removeClass("loading");
+            }
+        },
+        error: function (response) {
+            console.log(response);
+            $(element).removeClass("loading");
         }
     });
 }

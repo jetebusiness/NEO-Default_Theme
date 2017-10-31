@@ -1,0 +1,21 @@
+﻿<div class="row">
+    <div class="column">
+        <div class="fluid ui ordered steps">
+            <div class="@(ViewData["Step"] != null && ViewData["step"].ToString() == "1" ? "active" : "disabled") step">
+                <div class="content">
+                    <div class="title">Configurar Dados</div>
+                </div>
+            </div>
+            <div class="@(ViewData["Step"] != null && ViewData["step"].ToString() == "1" ? "active" : "disabled") step">
+                <div class="content">
+                    <div class="title">Configurar Entrega</div>
+                </div>
+            </div>
+            <div class="@(ViewData["Step"] != null && ViewData["step"].ToString() == "1" ? "active" : "disabled") step">
+                <div class="content">
+                    <div class="title">Escolher Produtos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

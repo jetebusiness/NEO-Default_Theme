@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- ~/Views/Shared/Common/_Header.cshtml -->
+    @Html.Partial("Common/_Header")
+
+    <!-- CSS Styles -->
+    @Html.Partial("Common/_CommonCss")
+    @RenderSection("custom_css", required: false)
+
+    <!-- Scripts -->
+    @Html.Partial("Common/_CommonJs")
+    @RenderSection("custom_js", required: false)
+</head>
+<body>
+    <!-- ~/Views/Shared/Common/_Cart.cshtml -->
+    @Html.Action("GetCartBySession", "Checkout")
+    <div class="pusher">
+        <!-- ~/Views/Shared/Common/_TopBar.cshtml -->
+        @Html.Partial("Common/_TopBar")
+        <!-- ~/Views/Shared/Common/_Head.cshtml -->
+        @Html.Partial("Common/_Head")
+        @RenderSection("breadcrumbs", required: true)
+        <div class="ui container margin bottom large">
+            <div class="ui divider"></div>
+            <div class="ui grid">
+                <div class="row">
+                    @RenderSection("banner", required: false)
+                </div>
+                <div class="row divided horizontal stackable">
+                    @RenderSection("filters", required: true)
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+        <!-- Page: ~/Views/Shared/Common/_Footer.cshtml -->
+        @Html.Partial("Common/_Footer")
+    </div>
+</body>
+</html>

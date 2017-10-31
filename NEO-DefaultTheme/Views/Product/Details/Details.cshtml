@@ -401,14 +401,14 @@
                                         {
                                             <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                                         }
-
-                                        <a class="ui animated big green button fluid detalhes btn-comprar  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
-                                            <div class="visible content">Adicionar ao Carrinho</div>
-                                            <div class="hidden content">
-                                                <i class="add to cart icon"></i>
-                                            </div>
-                                        </a>
-
+                                        
+                                            <a class="ui animated big green button fluid detalhes @(Session["EventList"] != null ? "btn-add-event-list" :"btn-comprar")  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
+                                                <div class="visible content">@(Session["EventList"] != null ? "Adicionar à Lista" : "Adicionar ao Carrinho")</div>
+                                                <div class="hidden content">
+                                                    <i class="add to cart icon"></i>
+                                                </div>
+                                            </a>
+                                        
                                     </div>
                                 </div>
                                 <!--FIM DISPONIBILIDADE / CARRINHO-->
@@ -639,7 +639,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="" />
-                                <div id="gCaptchaDetail" class="g-recaptcha" data-sitekey="6LfLiC4UAAAAAAg5rllr-GsMmbJpXx_H3I_0RiyU"></div>
+                                <div id="gCaptchaDetail" class="g-recaptcha" data-sitekey="6Lf_2TUUAAAAAGugApQHHa-a2HtNPmxwNGrYZKQ8"></div>
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>
@@ -653,7 +653,7 @@
         @if (!Model.FlagExhausted)
         {
             <div class="row" id="buy-together">
-                @if (Model.BuyTogether != null && Model.BuyTogether.Count > 0)
+                @if (Model.BuyTogether != null && Model.BuyTogether.Count > 0 && Session["EventList"] == null)
                 {
                     @Html.Partial("~/Views/Product/Details/_BuyTogether.cshtml", Model)
                 }
@@ -674,7 +674,8 @@
             </div>
         </div>
 
-        @if (!Model.FlagExhausted)
+
+        @if (!Model.FlagExhausted && Session["EventList"] != null)
             {
             @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
         }

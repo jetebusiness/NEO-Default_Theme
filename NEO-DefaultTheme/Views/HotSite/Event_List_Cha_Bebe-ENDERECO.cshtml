@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Lista de Chá de Bebê";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid middle center aligned">
+        <div class="row">
+            <div class="column">
+                <div class="fluid ui ordered steps">
+                    <div class="completed step">
+                        <div class="content">
+                            <div class="title">Configurar Dados</div>
+                        </div>
+                    </div>
+                    <div class="active step">
+                        <div class="content">
+                            <div class="title">Configurar Entrega</div>
+                        </div>
+                    </div>
+                    <div class="disabled step">
+                        <div class="content">
+                            <div class="title">Escolher Produtos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="eight wide computer ten wide tablet sixteen wide mobile column">
+                <h2>Configurar Entrega</h2>
+                <div class="ui segment">
+                    <div class="ui grid stackable top left aligned vertically divided">
+                        <div class="row">
+                            <div class="column">
+                                <div class="ui form">
+                                    <div class="field">
+                                        <h3>Entrega no meu endereço</h3>
+                                        <p>Rua Galileu Galilei, 1800</p>
+                                        <p>Jardim Irajá</p>
+                                        <p>Ribeirão Preto/SP</p>
+                                        <p>CEP: 14020-620</p>
+                                    </div>
+                                    <div class="field">
+                                        <button class="ui tiny compact icon teal button">
+                                            <i class="check icon"></i>
+                                            Alterar Endereço
+                                        </button>
+                                        <button class="ui tiny compact icon teal button">
+                                            <i class="check icon"></i>
+                                            Adicionar Endereço
+                                        </button>
+                                    </div>
+                                    <div class="field">
+                                        <button type="submit"
+                                                class="ui animated button large submit green floated right">
+                                            <div class="visible content">Entrega no meu endereço</div>
+                                            <div class="hidden content">
+                                                <i class="checkmark icon"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <div class="ui form">
+                                    <div class="field">
+                                        <h3>Entrega no endereço do convidado</h3>
+                                        <p>Ao selecionar esta opção, os produtos serão enviados ao endereço identificado pelo convidado no momento de sua compra.</p>
+                                    </div>
+                                    <div class="field">
+                                        <button type="submit"
+                                                class="ui animated button large submit green floated right">
+                                            <div class="visible content">Entrega no endereço do convidado</div>
+                                            <div class="hidden content">
+                                                <i class="checkmark icon"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <a href="/Customer/Login" class="ui animated button large red left floated">
+                            <div class="visible content">Cancelar</div>
+                            <div class="hidden content">
+                                <i class="remove icon"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

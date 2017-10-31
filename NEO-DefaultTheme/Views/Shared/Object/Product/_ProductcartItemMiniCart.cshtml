@@ -1,5 +1,29 @@
 ﻿@model DomainCheckout.Entities.CartItem
 
+@{ 
+    string classe_qtd = "ui icon button ";
+    string classe_remove = "mini ui icon red button produto ";
+    string id_ipt_qtd = "qtd_";
+    string classe_stock = "stock_";
+    string classe_ipt_qtd = "";
+
+    if (Session["EventList"] != null)
+    {
+        classe_qtd += "qtdActionEventList";
+        classe_remove += "removeItemEventList";
+        id_ipt_qtd += Model.IdCartItem;
+        classe_stock += Model.IdCartItem;
+        classe_ipt_qtd += "event_list";
+    }
+    else
+    {
+        classe_qtd += "qtdActionMiniCart";
+        classe_remove += "removeCartItem";
+        id_ipt_qtd += Model.IdCartItem;
+        classe_stock += Model.IdCartItem;
+        classe_ipt_qtd += "mini_cart";
+    }
+}
 <div class="item" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem"  id="itemCartProduct_@Model.IdCartItem">
     <div class="ui image small">
         <img src="@Model.ProductImage.ImageDefault"  onerror="imgError(this)">
@@ -30,7 +54,7 @@
                     <tr>
                         <td data-idCartItem="@Model.IdCartItem">
                             <div class="ui qtd action mini input">
-                                <button class="ui icon button qtdActionMiniCart" data-id="@Model.IdCartItem" data-action="minus">
+                                <button class="@classe_qtd" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
                                     <i class="minus icon"></i>
                                 </button>
                                 <input type="hidden"  id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
@@ -44,7 +68,7 @@
                         <td id="preco_unitario_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceProduct)</td>
                         <td><strong id="preco_total_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceTotalProduct)</strong></td>
                         <td>
-                            <button class="mini ui icon red button produto removeCartItem" data-id="@Model.IdCartItem">
+                            <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
                                 <i class="remove icon"></i>
                             </button>
                         </td>

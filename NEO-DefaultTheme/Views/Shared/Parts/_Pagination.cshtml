@@ -1,50 +1,57 @@
 ﻿@model DomainProduct.Settings
 
-@{ 
+@{
     var orderParam = Request.QueryString["order"] != null ? string.Concat("&order=", Request.QueryString["o"] != null ? Request.QueryString["order"].ToString() : string.Empty) : string.Empty;
     var viewParam = Request.QueryString["viewList"] != null ? string.Concat("&viewList=", Request.QueryString["viewList"] != null ? Request.QueryString["viewList"].ToString() : string.Empty) : string.Empty;
 
     var queryParameters = string.Concat(orderParam, viewParam);
+
+    var total_pages = Model.PageCount;
+    var comeco_exibir = Model.PageNumber > 5 ? Model.PageNumber - 5 : 1;
+    var fim_exibir = Model.PageNumber + 5 < total_pages ? Model.PageNumber + 5 : total_pages;
 }
 <div class="ui pagination menu">
     @if (Model.HasPreviousPage)
     {
-        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber - 1, queryParameters)">
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", comeco_exibir - 1 > 1 ? comeco_exibir - 1 : 1, queryParameters)">
             <i class="angle left icon"></i>
         </a>
     }
     else
     {
-        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber - 1, queryParameters)">
+        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", comeco_exibir - 1 > 1 ? comeco_exibir - 1 : 1, queryParameters)">
             <i class="angle left icon"></i>
         </a>
     }
 
-    @for (int i = 0; i < Model.PageCount; i++)
+    @for (int i = comeco_exibir -1; i < fim_exibir; i++)
     {
-        if ((i+1) == Model.PageNumber)
+        if ((i + 1) == Model.PageNumber)
         {
             <a class="active item">
-                @(i+1)
+                @(i + 1)
             </a>
         }
         else
         {
-        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", (i+1), queryParameters)">
-            @(i+1)
-        </a>
+            <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", (i+1), queryParameters)">
+                @(i + 1)
+            </a>
         }
     }
 
+
+
+
     @if (Model.HasNextPage)
     {
-        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber + 1, queryParameters)">
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", fim_exibir + 1 < Model.PageCount ? fim_exibir + 1 : Model.PageCount , queryParameters)">
             <i class="angle right icon"></i>
         </a>
     }
     else
     {
-        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", Model.PageNumber + 1, queryParameters)">
+        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), Request.QueryString["n"] != null ? "busca?n="+Request.QueryString["n"]+"&" : "?", "pageNumber=", fim_exibir + 1 < Model.PageCount ? fim_exibir + 1 : Model.PageCount , queryParameters)">
             <i class="angle right icon"></i>
         </a>
     }

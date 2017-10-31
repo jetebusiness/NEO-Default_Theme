@@ -1,0 +1,111 @@
+﻿@model DomainCustomer.Entities.EventList
+<div class="row">
+    <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+        @using (Html.BeginForm(Model != null && Model.IdEventList > 0 ? "ManagerList" : "CreateList", "EventList", FormMethod.Post, new { name = "formEventList", id = "formEventList", enctype = "multipart/form-data" }))
+        {
+
+            <input type="hidden" name="IdClient" value="@(Session["UserAuthenticated"] != null ? ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).IdCustomer.ToString() : "")" />
+            <input type="hidden" name="Type" value="4" />
+
+            if (Model != null && Model.IdEventList > 0)
+            {
+                <input type="hidden" name="IdEventList" value="@(Model != null ? Model.IdEventList.ToString() : "0")" />
+            }
+
+            <div class="ui segment">
+                <div class="ui grid stackable top aligned left grid">
+                    <div class="row two column divided horizontal">
+                        <div class="column">
+                            <div class="ui form">
+                                <h4 class="ui dividing header">Dados do Evento</h4>
+                                <div class="field calendar required">
+                                    <label>Data do Evento</label>
+                                    <div class="ui input left icon">
+                                        <i class="calendar icon"></i>
+                                        <input type="text" class="masked" name="EventDate" placeholder="DD/MM/YYYY" data-inputmask="'alias': 'dd/mm/yyyy'" value="@(Model != null && Model.IdEventList > 0 ? Model.EventDate.ToString() : "")">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Criador da Lista</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="CreatorName" value="@(Model != null && Model.CreatorName != null ? Model.CreatorName.ToString() : "")" placeholder="João das Flores" data-validate="name">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Nome do Bebê</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="Name1" value="@(Model != null && Model.Name1 != null ? Model.Name1 : "")" placeholder="João das Flores">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Nome do Pai</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="Name2" value="@(Model != null && Model.Name2 != null ? Model.Name2 : "")" placeholder="João das Flores">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Nome da Mãe</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="Name3" value="@(Model != null && Model.Name3 != null ? Model.Name3 : "")" placeholder="Maria das Flores">
+                                    </div>
+                                </div>
+
+
+                                @if (Model.IdEventList == 0) {
+                                <div class="field">
+                                    <label>Termos e Condições</label>
+                                </div>
+                                <div class="field" style="display: inline-flex">
+                                    <div class="ui checkbox termo aceite">
+                                        <input type="checkbox" checked="checked">
+                                    </div>
+                                    <label id="termo_aceite">Li e estou de acordo com o regulamento. <a style="cursor: pointer;">Ler o Regulamento</a></label>
+                                </div>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="ui form">
+                                <div class="field required">
+                                    <label>Mensagem aos convidados</label>
+                                    <div class="ui input">
+                                        <textarea name="Message">@(Model != null ? Model.Message : "")</textarea>
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Imagem do Evento</label>
+                                    <img class="ui image fluid" id="imgPicture" src="@(Model != null ? Model.UrlPicture : "")" />
+                                    <div class="ui input">
+                                        <input type="file" id="filePicture" name="Picture" />
+                                    </div>
+                                    <div class="text small">Extensões permitidas: .jpg .png ou .gif</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <a href="javascript:history.go(-1)" class="ui animated button large red left floated">
+                                <div class="visible content">Cancelar</div>
+                                <div class="hidden content">
+                                    <i class="remove icon"></i>
+                                </div>
+                            </a>
+                            <button type="submit" class="ui animated button large submit green right floated">
+                                <div class="visible content">@(Model.IdEventList > 0 ? "Salvar": "Próximo")</div>
+                                <div class="hidden content">
+                                    <i class="checkmark icon"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

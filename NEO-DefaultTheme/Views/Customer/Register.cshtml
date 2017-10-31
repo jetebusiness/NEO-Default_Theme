@@ -198,7 +198,7 @@
                                             <div class="ui left icon input">
                                                 <i class="mail icon"></i>
                                                 <input type="email" name="Email" id="Email" placeholder="Seu Email"
-                                                       value="@(string.IsNullOrEmpty(Session["Email"].ToString()) ? @Html.Raw("") : @Html.Raw(Session["Email"].ToString()))" data-validate="email">
+                                                       value="@(string.IsNullOrEmpty((string)Session["Email"]) ? @Html.Raw("") : @Html.Raw((string)Session["Email"]))" data-validate="email">
                                             </div>
                                         </div>
                                         <div class="field required">

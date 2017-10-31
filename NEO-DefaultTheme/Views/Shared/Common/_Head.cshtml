@@ -24,7 +24,16 @@
                             <span>Meu Carrinho</span>
                         </div>
                         <a class="ui left pointing primary label" id="total_itens_card">
-                            @Html.Action("TotalItensCart", "Checkout")
+                            @{
+                                if (Session["EventList"] == null)
+                                {
+                                    @Html.Action("TotalItensCart", "Checkout")
+                                }else
+	                            {
+	                                    @Html.Action("TotalItensList", "EventList")
+                                }
+                            }
+                            
                         </a>
                     </div>
                 </div>

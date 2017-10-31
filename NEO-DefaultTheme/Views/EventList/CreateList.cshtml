@@ -1,0 +1,110 @@
+﻿@model DomainCustomer.Entities.EventList
+
+@{
+    ViewBag.Title = "Lista de Chá de Bebê";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui container margin bottom large">
+    <div class="ui grid middle aligned center aligned">
+        @Html.Partial("~/Views/Shared/Parts/EventList/_Steps.cshtml", new ViewDataDictionary { { "step", "1" } } )
+
+        @Html.Action("ShowEventListByType", "EventList", Model)
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function onSuccess(response) {
+            if (response.success == true) {
+                if (response.urlRedirect != "") {
+                    document.location = response.urlRedirect;
+                }
+                else {
+                    swal({
+                        title: '',
+                        html: response.message,
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+            if (response.success == true && response.urlRedirect != "") {
+                document.location = response.urlRedirect;
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        $(document).on('submit', '#formEventList', function (event) {
+            event.preventDefault();
+
+            var dataString;
+            var action = $(this).attr('action');
+
+            if ($(this).attr("enctype") == "multipart/form-data") {
+                dataString = new FormData($(this)[0]);
+                contentType = false;
+                processData = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: dataString,
+                    contentType: contentType,
+                    processData: processData,
+                    success: function (response) {
+                        onSuccess(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        onFailure(jqXHR.responseText);
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+}
