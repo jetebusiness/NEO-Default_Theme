@@ -151,8 +151,6 @@ $(document).ready(function(){
         var valorInput = new Number($("#qtd_"+idCurrent).val());
         var valorStock = new Number($("#stock_"+idCurrent).val());
 
-        console.log(e);
-
         if(valorInput <= valorStock && valorInput < 1000){
             disparaAjaxUpdate(idCurrent, valorInput, action);
         }
@@ -307,11 +305,16 @@ export function disparaAjaxUpdate(idCurrent, valorInput, action){
         onFailure: function(data){
             if(action == "plus"){
                 valorInput -= 1;
-            }else{
+                $("#qtd_"+idCurrent).val(valorInput);
+            }else if(action == "ipt"){
+                $("#qtd_"+idCurrent).val(qtdInicial);
+            }
+            else{
                 valorInput += 1;
+                $("#qtd_"+idCurrent).val(valorInput);
             }
         }
-    });    
+    });
 }
 
 

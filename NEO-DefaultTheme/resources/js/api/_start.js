@@ -8,7 +8,6 @@ require("./product/card");
  * CheckOut API Calls
  */
 require("./checkout/mini_cart");
-require("./checkout/mini_cart_event_list");
 require("./checkout/cart");
 require("./checkout/identification");
 require("./checkout/register.js");
@@ -39,6 +38,3 @@ require("./customer/login");
 
 //--------------------[ Search ]--------------------//
 require('./search/search');
-
-//--------------------[ Event List ]----------------//
-require('./eventlist/manager_event_list');

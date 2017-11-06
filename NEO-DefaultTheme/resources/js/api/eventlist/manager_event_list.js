@@ -40,6 +40,8 @@ $(document).on("click", "#product_manager .removeItemEventList", function(e) {
     e.stopPropagation();
 });
 
+
+
 $(document).on("keyup", "#product_manager input[id^='qtd_product_']", function (e) {
     var valor_final = SomenteNumerosPositivos($(this).val());
     $(this).val(valor_final);
@@ -73,66 +75,6 @@ $(document).on("click", "button[id^='btnDeleteGuest_']", function(e){
     let idGuest = $(this).data("id");
 
     deleteGuest(idGuest);
-});
-
-
-$(document).on("click", "#view_invited_purchased", function(e){
-  var productID = $(this).attr("data-product-id");
-  var productSKU = $(this).attr("data-product-id-sku");
-  ShowModalEventListPurchased(productID, productSKU);
-});
-
-$(document).on("click", "#addGuest", function (e) {
-    let nameGuest = $("#NameGuest").val();
-    let emailGuest = $("#EmailGuest").val();
-
-    addGuest(nameGuest, emailGuest);
-});
-
-$(document).on("click", "button[id^='btnShareEventList_']", function (e) {
-    let listId = $(this).data("id");
-
-    shareEventList(listId);
-});
-
-$(document).on("click", "#btnSendToMyAddress", function (e) {
-    let listId = $(this).data("id");
-
-    sendToMyAddress(listId);
-});
-
-$(document).on("click", "#btnSendToGuestAddress", function (e) {
-    let listId = $(this).data("id");
-
-    sendToGuestAddress(listId);
-});
-
-$(document).on("change", "#fileInvitation", function(e){
-    let input = this;
-
-    if (input.files && input.files[0]) {
-        let reader = new FileReader();
-
-        reader.onload = function(e) {
-            $('#imgInvitation').attr('src', e.target.result);
-        }
-
-        reader.readAsDataURL(input.files[0]);
-    }
-});
-
-$(document).on("change", "#filePicture", function(e){
-    let input = this;
-
-    if (input.files && input.files[0]) {
-        let reader = new FileReader();
-
-        reader.onload = function(e) {
-            $('#imgPicture').attr('src', e.target.result);
-        }
-
-        reader.readAsDataURL(input.files[0]);
-    }
 });
 
 function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
@@ -197,49 +139,6 @@ function DeleteProductEventList(eventListIDCurrent){
   });
 }
 
-function addGuest(nameGuest, emailGuest) {
-    $.ajax({
-        method: "POST",
-        url: "/EventList/AddGuest",
-        data: {
-            nameGuest: nameGuest,
-            emailGuest: emailGuest
-        },
-        onBegin: function(){
-            isLoading("#divEventList");
-        },
-        success: function (response) {
-            $("#guestsList").html(response);
-            $("#NameGuest").val("");
-            $("#EmailGuest").val("");
-
-            swal({
-                title: "Mensagem",
-                text: "Convidado adicionado com sucesso!",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        },
-        onFailure: function (response) {
-            swal({
-                title: "Mensagem",
-                text: "Não foi possível adicionar o convidado!",
-                type: "error",
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        },
-        onComplete: function(response) {
-            isLoading("#divEventList");
-        }
-    });
-}
-
 function deleteGuest(idGuest) {
     $.ajax({
         method: "POST",
@@ -247,13 +146,17 @@ function deleteGuest(idGuest) {
         data: {
             guestId: idGuest
         },
-        success: function (response) {
-            $("#guestsList").html(response);
+        success: function (data) {
+            let typeMessage = "warning"
+            if (data.success === true) {
+                $("#guest_" & idGuest).remove();
+                typeMessage = "success";
+            }
 
             swal({
-                title: "Mensagem",
-                text: "Convidado excluído com sucesso!",
-                type: "success",
+                titl: "Mensagem",
+                text: data.message,
+                type: typeMessage,
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -261,10 +164,12 @@ function deleteGuest(idGuest) {
             });
 
         },
-        onFailure: function (response) {
+        onFailure: function (data) {
+            console.log("N�o foi poss�vel excluir o convidado!");
+
             swal({
-                title: "Mensagem",
-                text: "Não foi possível excluir este convidado!",
+                titl: "Mensagem",
+                text: data.message,
                 type: "error",
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
@@ -273,122 +178,4 @@ function deleteGuest(idGuest) {
             });
         }
     })
-}
-
-function shareEventList(listId) {
-    $.ajax({
-        method: "POST",
-        url: "/EventList/ShareEventList",
-        data: {
-            listId: listId
-        },
-        success: function (response) {
-            swal({
-                title: "Mensagem",
-                text: response.message,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-            document.location = "/EventList/ManagerGuest";
-        },
-        onFailure: function (response) {
-            swal({
-                title: "Mensagem",
-                text: response.message,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-}
-
-function sendToMyAddress(lisId) {
-    $.ajax({
-        method: "POST",
-        url: "/EventList/UpdateDeliveryAddress",
-        data: {
-            listId: listId,
-            sendToGuest: false
-        },
-        onFailure: function (response) {
-            swal({
-                title: "Mensagem",
-                text: response.message,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-}
-
-function sendToGuestAddress(listId) {
-    $.ajax({
-        method: "POST",
-        url: "/EventList/UpdateDeliveryAddress",
-        data: {
-            listId: listId,
-            sendToGuest: true
-        },
-        onFailure: function (response) {
-            swal({
-                title: "Mensagem",
-                text: response.message,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-}
-
-
-function ShowModalEventListPurchased(productID, skuID){
-  $.ajax({
-      method: "GET",
-      type: "JSON",
-      url: "/EventList/GetPurchasedProductbyInvited",
-      data: {
-          productID: productID,
-          skuID: skuID
-      },
-      success: function (response){
-        if(response.success === true){
-              let lista_cliente = "";
-              let obj_product = $.parseJSON(response.product);
-              let obj_customer = $.parseJSON(response.customer);
-
-              $("imagem").attr("src", obj_product.ImageHome);
-              $("titulo").text(obj_product.ProductName);
-
-              for (var i = 0; i < obj_customer.length; i++) {
-
-              }
-        }else{
-
-        }
-        $('#event_list_product.ui.longer.modal').modal('show');
-      },
-      onFailure: function (response) {
-          swal({
-              titl: "Mensagem",
-              text: response.message,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'OK'
-          });
-      }
-  })
 }

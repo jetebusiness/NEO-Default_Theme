@@ -4,7 +4,7 @@ import {RecalcularFrete} from "../api/checkout/mini_cart";
 ﻿import {isLoading} from "../api/api_config";
 
 
-export function LoadCarrinho(showSidebar = false){
+export function LoadCarrinho(){
   console.log("Carregar Carrinho");
     $.ajax({
         method: "GET",
@@ -13,7 +13,7 @@ export function LoadCarrinho(showSidebar = false){
             var retornoAjax      = loadProduct.split("|$|");
             var listaProdutos    = retornoAjax[0];
             $("#ListProductsCheckout").html(listaProdutos);
-            UpdateCarrinho(showSidebar);
+            UpdateCarrinho();
         },
         error : function(request,error)
         {
@@ -22,7 +22,8 @@ export function LoadCarrinho(showSidebar = false){
     });
 }
 
-export function UpdateCarrinho(showSidebar) {
+
+export function UpdateCarrinho() {
     console.log("passando no update carrinho");
     isLoading("#miniCarrinho");
     $.ajax({
@@ -91,9 +92,6 @@ export function UpdateCarrinho(showSidebar) {
             }
               $(".qtdActionMiniCart").on("click");
               isLoading("#miniCarrinho");
-              if(showSidebar == true){
-                $(".carrinho").sidebar('toggle');
-              }
         },
         onFailure: function(response){
               $(".qtdActionMiniCart").on("click");
@@ -103,36 +101,9 @@ export function UpdateCarrinho(showSidebar) {
     });
 }
 
+
 function UpdateCabecalhoCarrinho(descontoCarrinho, subTotalCarrinho, totalCarrinho) {
     $("#descontoCarrinho").text(descontoCarrinho);
     $("#subTotalCarrinho").text(subTotalCarrinho);
     $("#totalCarrinho").text(totalCarrinho);
-}
-
-
-export function LoadCarrinhoEventList(showSidebar = false){
-  isLoading("#miniCarrinho");
-  $.ajax({
-      method: "GET",
-      url: "/EventList/LoadProductsEventListMiniCart",
-      success: function(loadProduct){
-          var retornoAjax      = loadProduct.split("|$|");
-          var listaProdutos    = retornoAjax[0];
-
-          $("#ListProductsCheckout").html(listaProdutos);
-          updateQuantidadeTopoCarrinho();
-          $(".qtdActionEventList").on("click");
-          if(showSidebar === true){
-              $(".carrinho").sidebar('toggle');
-          }
-          isLoading("#miniCarrinho");
-
-      },
-      error : function(request,error)
-      {
-          console.log(request);
-          isLoading("#miniCarrinho");
-
-      }
-  });
 }

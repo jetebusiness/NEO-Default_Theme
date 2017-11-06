@@ -52,7 +52,7 @@ mix.browserSync({
 });
 
 mix.options({
-    publicPath: './',
+    publicPath: './assets/',
     uglify: {
         compress: true,
         comment: false
@@ -60,10 +60,10 @@ mix.options({
     clearConsole:true
 });
 
-mix.js('resources/js/app.js', 'assets/js')
+mix.js('resources/js/app.js', 'js')
     .sourceMaps()
     .extract(['jquery', 'slick-carousel', 'perfect-scrollbar', 'inputmask', 'sweetalert2', 'easyzoom'])
     .version();
 
-mix.sass('resources/sass/style.scss', 'assets/css')
+mix.sass('resources/sass/style.scss', 'css')
     .sourceMaps();

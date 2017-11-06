@@ -14,13 +14,10 @@
             </div>
 
             <div class="six wide tablet four wide computer column">
-                    
-                @Html.Action("GetList", "EventList")
                 <h4 class="ui inverted header">Central de Relacionamento</h4>
                 <p>Preparada para esclarecer suas dúvidas e problemas.</p>
                 <h5>SAC: @LojaCorp.Control.Company._Company.Phone1</h5>
             </div>
-
 
             <div class="six wide computer column left aligned">
                 <h4 class="ui inverted header">Siga nos</h4>
@@ -100,7 +97,7 @@
                     <div class="ui horizontal list">
                         <div class="item">
                             @Html.Action("EBit", "Company")
-                        </div>
+                            </div>
                         <div class="item">
                             <div class="ui tiny images">
                                 @Html.Action("GetCompanySeal", "Company")
