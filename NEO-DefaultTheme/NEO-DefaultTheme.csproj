@@ -54,36 +54,63 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>SDK_NEO\SDK_Checkout.dll</HintPath>
     </Reference>
+    <Reference Include="SDK_Checkout, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>SDK_NEO\SDK_Checkout.dll</HintPath>
+    </Reference>
     <Reference Include="SDK_Company, Version=1.0.34.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>SDK_NEO\SDK_Company.dll</HintPath>
+    </Reference>
+    <Reference Include="SDK_Company, Version=1.0.34.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>SDK_NEO\SDK_Company.dll</HintPath>
     </Reference>
     <Reference Include="SDK_Customer, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>SDK_NEO\SDK_Customer.dll</HintPath>
     </Reference>
+    <Reference Include="SDK_Customer, Version=1.0.37.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>SDK_NEO\SDK_Customer.dll</HintPath>
+    </Reference>
     <Reference Include="SDK_FraudProtection, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>SDK_NEO\SDK_FraudProtection.dll</HintPath>
+    </Reference>
+    <Reference Include="SDK_FraudProtection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>SDK_NEO\SDK_FraudProtection.dll</HintPath>
     </Reference>
     <Reference Include="SDK_Order, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>SDK_NEO\SDK_Order.dll</HintPath>
     </Reference>
+    <Reference Include="SDK_Order, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>SDK_NEO\SDK_Order.dll</HintPath>
+    </Reference>
     <Reference Include="SDK_Payment, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>SDK_NEO\SDK_Payment.dll</HintPath>
+    </Reference>
+    <Reference Include="SDK_Payment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>SDK_NEO\SDK_Payment.dll</HintPath>
     </Reference>
     <Reference Include="SDK_Product, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>SDK_NEO\SDK_Product.dll</HintPath>
     </Reference>
+    <Reference Include="SDK_Product, Version=3.0.4.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>SDK_NEO\SDK_Product.dll</HintPath>
+    </Reference>
     <Reference Include="SDK_SalesPromotion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>SDK_NEO\SDK_SalesPromotion.dll</HintPath>
     </Reference>
+    <Reference Include="SDK_SalesPromotion, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>SDK_NEO\SDK_SalesPromotion.dll</HintPath>
+    </Reference>
     <Reference Include="SDK_SocialNetwork, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>SDK_NEO\SDK_SocialNetwork.dll</HintPath>
+    </Reference>
+    <Reference Include="SDK_SocialNetwork, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>SDK_NEO\SDK_SocialNetwork.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -551,7 +578,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="resources\js\actions\" />
     <Folder Include="Views\Banner\" />
     <Folder Include="Views\HotSite" />
     <Folder Include="Views\SocialNetwork\" />

@@ -41,7 +41,7 @@ const { mix } = require('laravel-mix-jet');
  | });
  */
 
-mix.browserSync({
+/*mix.browserSync({
     files: ['assets/css/!*.css', 'assets/js/!*.js', 'Views/!*.cshtml'],
     ui: false,
     server: false,
@@ -49,7 +49,7 @@ mix.browserSync({
     ghostMode: false,
     injectChanges: true,
     proxy: 'localhost:5001'
-});
+});*/
 
 mix.options({
     publicPath: './assets/',
