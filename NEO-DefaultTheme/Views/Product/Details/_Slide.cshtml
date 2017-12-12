@@ -18,14 +18,12 @@
     <div class="row">
         <div class="column center aligned">
             <div class="ui image">
-                <!--REMOVER && Model.SealStatus.Name != "Normal" ASSIM QUE CORRIGIR PAINEL-->
                 @if (!string.IsNullOrEmpty(tag.Name))
                 {
                     <div class="ui top right attached label massive imagetag">
                         <img src="@tag.Image" alt="@tag.Name" class="ui image tiny" onerror="imgError(this)">
                     </div>
                 }
-
                 <div class="produto easyzoom easyzoom--overlay easyzoom--with-thumbnails">
                     @if (Model != null && Model.Count() > 0)
                     {
@@ -35,15 +33,6 @@
                         </a>
                     }
                 </div>
-
-
-               <!-- <div class="product-button">
-                    <a class="ui circular basic icon button heart">
-                        <i class="icon heart"></i>
-                    </a>
-                </div>
-                -->
-
             </div>
         </div>
     </div>

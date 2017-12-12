@@ -27,7 +27,7 @@ function makeLabel() {
 }
 
 function ValidateLabel(type, id){
-    let labelVariation = window.filterManipulation.labelFilter    
+    let labelVariation = window.filterManipulation.labelFilter
     for (let key in labelVariation) {
         if (labelVariation[key].type === type && labelVariation[key].id === id) {
             return true
@@ -44,7 +44,7 @@ function ajaxColor() {
         filters.variationSelected.push(filters.idVariation);
     }
     let data = {
-        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -55,36 +55,11 @@ function ajaxColor() {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-            
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").html(response);
-                    makeLabel();
-                }
-            });
-        },
-        onFailure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+
+    updateAjax(data);
 }
 
 function ajaxText() {
@@ -96,7 +71,7 @@ function ajaxText() {
         filters.variationSelected.push(filters.idVariation);
     }
     let data = {
-        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -107,37 +82,11 @@ function ajaxText() {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function onSuccess(response) {
-            $("#list").html(response);
-
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").html(response);
-                    makeLabel();
-                }
-            });
-        },
-        failure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        error: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 }
 
 function ajaxCategory() {
@@ -146,7 +95,7 @@ function ajaxCategory() {
     let filters = window.filterManipulation;
 
     let data = {
-        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -157,42 +106,11 @@ function ajaxCategory() {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    //console.log("----- Inicio ajaxCategory -----");
-    //console.log(filters);
-    //console.log(data);
-    //console.log("----- Fim ajaxCategory -----");
-
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").html(response);
-                    makeLabel();
-                }
-            });
-        },
-        onFailure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 }
 
 function ajaxBrand() {
@@ -201,7 +119,7 @@ function ajaxBrand() {
     let filters = window.filterManipulation;
 
     let data = {
-        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -212,45 +130,20 @@ function ajaxBrand() {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    //console.log("----- Inicio ajaxBrand -----");
-    //console.log(filters);
-    //console.log(data);
-    //console.log("----- Fim ajaxBrand -----");
-
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").html(response);
-                    makeLabel();
-                }
-            });
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 }
 
 function ajaxPrice() {
     isLoading("#list");
-    
+
     let filters = window.filterManipulation;
 
     let data = {
-        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -261,43 +154,11 @@ function ajaxPrice() {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    //console.log("----- Inicio ajaxPrice -----");
-    //console.log(filters);
-    //console.log(data);
-    //console.log("----- Fim ajaxPrice -----");
-
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").html(response);
-
-                    makeLabel();
-                }
-            });
-        },
-        onFailure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 }
 
 function ajaxAttribute() {
@@ -309,7 +170,7 @@ function ajaxAttribute() {
         filters.atributeSelected.push(filters.idAtribute);
     }
     let data = {
-        viewList: filters.viewList === undefined ? "g" : filters.viewList,
+        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -320,48 +181,50 @@ function ajaxAttribute() {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    //console.log("----- Inicio ajaxAttribute -----");
-    //console.log(filters);
-    //console.log(data);
-    //console.log("----- Fim ajaxAttribute -----");
-
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function onSuccess(response) {
-            $("#list").html(response);
-
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").html(response);
-                    makeLabel();
-                }
-            });
-        },
-        failure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        error: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 }
 
 var genericoPageFilter = "";
+var idEventListFilter = "";
+var viewListGlobal = "g";
+var urlBase = "/product/getproducts/";
 $(document).ready(function () {
+
+    let filters = window.filterManipulation;
+
     if($("#GenericPageFilter").length > 0){
         genericoPageFilter = $("#GenericPageFilter").val();
+    }
+
+    if(window.pageNumber > 1){
+          let filters = window.filterManipulation;
+          let data = {
+              viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
+              pageNumber: window.pageNumber === undefined ? "" : window.pageNumber,
+              pageSize: filters.pageSize === undefined ? "" : filters.pageSize,
+              order: filters.order === undefined ? "" : filters.order,
+              brand: filters.brand === undefined ? "" : filters.brand,
+              category: filters.category === undefined ? genericoPageFilter : filters.category,
+              initialprice: filters.initialprice === undefined ? "" : filters.initialprice,
+              finalprice: filters.finalprice === undefined ? "" : filters.finalprice,
+              variations: filters.variations === undefined ? "" : filters.variations,
+              group: filters.group === undefined ? "" : filters.group,
+              keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
+              idAttribute: filters.idAttribute === undefined ? "" : filters.idAttribute,
+              idEventList: idEventListFilter
+          };
+
+          updateAjax(data);
+    }
+
+    if($("#idEventListFilter").length > 0){
+        idEventListFilter = $("#idEventListFilter").val();
+        viewListGlobal = "l";
+        urlBase = "/product/GetProductsListEvents/";
     }
 
     if (window.filterManipulation !== undefined) {
@@ -379,7 +242,7 @@ $(document).ready(function () {
             filters.order = $(this).dropdown("get value");
 
             let data = {
-                viewList: filters.viewList === undefined ? "g" : filters.viewList,
+                viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
                 pageNumber: "1",
                 pageSize: "",
                 order: filters.order === undefined ? "" : filters.order,
@@ -390,29 +253,11 @@ $(document).ready(function () {
                 variations: filters.variationSelected.toString(),
                 group: filters.idGroup === undefined ? "" : filters.idGroup,
                 keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-                idAttribute: filters.atributeSelected.toString()
+                idAttribute: filters.atributeSelected.toString(),
+                idEventList: idEventListFilter
             };
 
-            $.ajax({
-                url: "/product/getproducts/",
-                method: "GET",
-                dataType: "html",
-                data: data,
-                success: function (response) {
-                    $("#list").html(response);
-
-                    //$("#viewList").val(order);
-                },
-                onFailure: function onFailure(response) {
-                    console.log("Falha aplicar filtro: " + response);
-                },
-                onError: function onError(response) {
-                    console.log("Erro aplicar filtro: " + response);
-                },
-                complete: function (response) {
-                    uiReload();
-                }
-            });
+            updateAjax(data);
         }
     });
 });
@@ -422,7 +267,7 @@ $(document).on("click", "#viewgrid", function () {
     let filters = window.filterManipulation;
 
     let data = {
-        viewList: "g",
+        viewList: viewListGlobal,
         pageNumber: "1",
         pageSize: "",
         order: filters.order === undefined ? "" : filters.order,
@@ -433,29 +278,11 @@ $(document).on("click", "#viewgrid", function () {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-
-            filters.viewList = "g";
-        },
-        onFailure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 });
 
 $(document).on("click", "#viewlist", function () {
@@ -474,29 +301,11 @@ $(document).on("click", "#viewlist", function () {
         variations: filters.variationSelected.toString(),
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.atributeSelected.toString()
+        idAttribute: filters.atributeSelected.toString(),
+        idEventList: idEventListFilter
     };
 
-    $.ajax({
-        url: "/product/getproducts/",
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-
-            filters.viewList = "l";
-        },
-        onFailure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
+    updateAjax(data);
 });
 
 $(document).on("click", ".checkColor", function () {
@@ -533,7 +342,7 @@ $(document).on("click", ".checkAtribute", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.atributeSelected.push($(this).prop("id"));
     }
-    if(!ValidateLabel("atributo", window.filterManipulation.labelFilter)){
+    if(!ValidateLabel("atributo", $(this).prop("id"))){
         window.filterManipulation.labelFilter.push({
             type: "atributo",
             id: $(this).prop("id"),
@@ -547,13 +356,13 @@ $(document).on("click", ".checkAtribute", function () {
 $(document).on("change", ".checkCategory", function () {
     window.filterManipulation.nameCategory = $(this).attr("name");
     window.filterManipulation.idCategory = $(this).attr("id");
-    if(!ValidateLabel("category", window.filterManipulation.labelFilter)){
+    if(!ValidateLabel("category", $(this).prop("id"))){
         window.filterManipulation.labelFilter.push({
             type: "category",
             id: window.filterManipulation.idCategory,
             name: "Categorias",
             value: window.filterManipulation.nameCategory
-        });          
+        });
     }
     ajaxCategory();
 });
@@ -561,7 +370,7 @@ $(document).on("change", ".checkCategory", function () {
 $(document).on("change", ".checkBrand", function () {
     window.filterManipulation.nameBrand = $(this).attr("data-name");
     window.filterManipulation.idBrand = $(this).attr("id");
-    if(!ValidateLabel("brand", window.filterManipulation.labelFilter)){
+    if(!ValidateLabel("brand", $(this).prop("id"))){
         window.filterManipulation.labelFilter.push({
             type: "brand",
             id: window.filterManipulation.idBrand,
@@ -575,7 +384,7 @@ $(document).on("change", ".checkBrand", function () {
 $(document).on("click", ".pricefilter", function () {
     window.filterManipulation.initialPrice = $("#initialPrice").val().replace(".","").replace(",", ".");
     window.filterManipulation.finalPrice = $("#finalPrice").val().replace(".","").replace(",", ".");
-    if(!ValidateLabel("price", window.filterManipulation.labelFilter)){
+    if(!ValidateLabel("price", $(this).prop("id"))){
         window.filterManipulation.labelFilter.push({
             type: "price",
             id: "",
@@ -583,7 +392,7 @@ $(document).on("click", ".pricefilter", function () {
             value: `${window.filterManipulation.initialPrice} a ${window.filterManipulation.finalPrice}`
         });
     }
-    
+
     ajaxPrice();
 })
 
@@ -595,65 +404,115 @@ $(document).on("click", ".ui.label.filters", function () {
 
     if (type == "brand") {
         filters.idBrand = "";
-
-        for (let key in filters.labelFilter) {
-            if (filters.labelFilter[key].id == id) {
-                _.pullAt(filters.labelFilter, [key]);
-            }
-        }
-
+        filters = labelFilter(filters, "brand", id);
         ajaxBrand();
     }
     else if (type == "category") {
         filters.idCategory = genericoPageFilter;
-
-        for (let key in filters.labelFilter) {
-            if (filters.labelFilter[key].id == id) {
-                _.pullAt(filters.labelFilter, [key]);
-            }
-        }
-
+        filters = labelFilter(filters, "category", id);
         ajaxPrice();
     }
     else if (type == "price")
     {
         filters.initialPrice = "";
         filters.finalPrice = "";
-
-        for (let key in filters.labelFilter) {
-            if (filters.labelFilter[key].id == id) {
-                _.pullAt(filters.labelFilter, [key]);
-            }
-        }
-
+        filters = labelFilter(filters, "price", id);
         ajaxCategory();
     }
     else if (type == "atributo")
     {
         filters.idAtribute = "";
-
-        for (let key in filters.labelFilter) {
-            if (filters.labelFilter[key].id == id) {
-                _.pull(filters.atributeSelected, id.toString());
-                _.pullAt(filters.labelFilter, [key]);
-            }
-        }
-
+        filters = labelFilter(filters, "atributo", id);
         ajaxAttribute();
     }
     else {
         filters.idVariation = "";
-
-        for (let key in filters.labelFilter) {
-            if (filters.labelFilter[key].id == id) {
-                _.pull(filters.variationSelected, id.toString());
-                _.pullAt(filters.labelFilter, [key]);
-            }
-        }
-
+        filters = labelFilter(filters, "default", id);
         ajaxColor();
     }
 
     makeLabel();
-
 });
+
+$(document).on("keyup", ".filterListEventsProducts", function(event){
+    var wordCurrent = event.target.value;
+    var totalCaracteres = wordCurrent.length;
+    wordCurrent = totalCaracteres > 2 ? wordCurrent : "";
+
+    if(totalCaracteres > 2){
+        isLoading("#list");
+    }
+
+    let data = {
+        viewList: viewListGlobal,
+        pageNumber: "1",
+        pageSize: "",
+        order: "",
+        brand: "",
+        category: "",
+        initialprice: "",
+        finalprice: "",
+        variations: "",
+        group: "",
+        keyWord: wordCurrent,
+        idAttribute: "",
+        idEventList: idEventListFilter
+    };
+
+    updateAjax(data);
+});
+
+function updateAjax(data){
+    var data_temp = JSON.stringify(window.filterManipulation.labelFilter);
+    data.labelFilter = data_temp;
+    $.ajax({
+        url: urlBase,
+        method: "GET",
+        dataType: "html",
+        data: data,
+        success: function (response) {
+            $("#list").html(response);
+
+            $.ajax({
+                url: "/product/filtermenu/",
+                method: "GET",
+                data: {
+                    idEventListFilter : idEventListFilter
+                },
+                dataType: "html",
+                success: function (response) {
+                    $("#filter").html(response);
+                    if(window.filterManipulation.labelFilter.length === 0){
+                      window.filterManipulation.labelFilter = JSON.parse(data_temp);
+                    }
+                    makeLabel();
+                }
+            });
+        },
+        onFailure: function onFailure(response) {
+            console.log("Falha aplicar filtro: " + response);
+        },
+        onError: function onError(response) {
+            console.log("Erro aplicar filtro: " + response);
+        },
+        complete: function (response) {
+            uiReload();
+        }
+    });
+}
+
+function labelFilter(filters, typeFilter, id){
+    for (let key in filters.labelFilter) {
+        if (filters.labelFilter[key].id == id) {
+            switch(typeFilter) {
+                case "default":
+                    _.pull(filters.variationSelected, id.toString());
+                case "atributo":
+                    _.pull(filters.atributeSelected, id.toString());
+            }
+            _.pullAt(filters.labelFilter, [key]);
+        }
+    }
+
+    return filters;
+}

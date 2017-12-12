@@ -45,7 +45,10 @@
                             }
                         }
                         <a href="ChangeUserPayment" class="ui mini compact floated left" id="changeUserPayment">Não é você? Sair!</a>
-                        <a class="ui teal mini compact floated right button" id="listAddressPayment">Alterar Endereço</a>
+                        @if (Session["idEventList"] == null)
+                        {
+                            <a class="ui teal mini compact floated right button" id="listAddressPayment">Alterar Endereço</a>
+                        }
                     </div>
                 </div>
             </div>

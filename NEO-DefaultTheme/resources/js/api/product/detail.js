@@ -6,6 +6,7 @@ import {openModalQuickView} from "../../functions/modal";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
 import {openLongModal} from "../../functions/modal";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
+import {LoadCarrinhoEventList} from "../../functions/mini_cart_generic";
 
 
 $(document).ready(function () {
@@ -18,15 +19,6 @@ $(document).ready(function () {
         AtualizarQuantidade();
         e.stopPropagation();
     });
-
-    // $(document).on("focusout", "#quantidade", function (e) {
-    //     if(SomenteNumerosPositivos($(this).val()) == ""){
-    //      var total = SomenteNumerosPositivos($(this).val());
-    //         $(this).val(total);
-    //         AtualizarQuantidade();
-    //       }
-    //       e.stopPropagation();
-    // });
 
 
     $(".button.avise").api({
@@ -63,7 +55,16 @@ $(document).ready(function () {
     VariacaoRadio();
 
 
-    $("#qtdplus-detalhes, #qtdminus-detalhes").click(function () {
+    $("#qtdplus-detalhes, #qtdminus-detalhes").click(function(){
+        var quantidade = parseInt($("#quantidade").val());
+        var tipo = $(this).hasClass("qtdminus");
+
+        if(tipo){
+          quantidade -= 1;
+        }else {
+          quantidade += 1;
+        }
+       $("#quantidade").val(quantidade);
         AtualizarQuantidade();
     });
 
@@ -84,7 +85,6 @@ $(document).ready(function () {
 
 
     //PRODUTO PRINCIPAL
-
     VariacaoDropDown();
     VariacaoImagem();
     /////
@@ -105,44 +105,48 @@ $(document).ready(function () {
                 if (productSKU != null && productSKU != "" && resultado > 0) {
                     AdicionarProdutoAjx(parseInt(productSKU), parseInt(productID), productQuantity)
                     ApplyDiscountInCart()
-                } else {
-                    swal({
-                        title: 'Mensagem',
-                        text: 'Grade indisponível, escolha outra combinação!',
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'OK'
-                    });
+                }else {
+                  _alert("Grade indisponível, escolha outra combinação!", "Mensagem", "error");
                 }
             } else {
                 ///GRAVA PRODUTO SEM VARIACAO
                 AdicionarProdutoAjx(null, parseInt(productID), productQuantity)
                 ApplyDiscountInCart()
             }
-
-        } else {
-            swal({
-                title: '',
-                text: 'Erro ao adicionar produto',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-
+        }else {
+          _alert("Erro ao adicionar produto", "Mensagem", "error");
         }
     });
 
+    $(".detalhes.btn-add-event-list").click(function(){
+        var resultado = ValidarSkuProdutoPrincipal();
+        let productSKU = $("#produto-sku").val(),
+        productID = $("#produto-id").val(),
+        productQuantity = parseInt($("#quantidade").val()),
+        totalVariations = $("#principal-total-variacoes").val()
+
+        //PRODUTO DEVE SER DIFERENTE DE NULL
+        if(productID != null && productID != ""){
+            $(this).addClass("loading");
+            //SE FOR, VALIDA SE EXISTE VARIAÇÔES
+            if(parseInt(totalVariations) > 0){
+                //SE EXISTE, VALIDA SE FOI SELECIONADA
+                if(productSKU != null && productSKU != "" && resultado > 0){
+                    AdicionarProdutoAjxEventList(parseInt(productSKU), parseInt(productID), productQuantity);
+                }else {
+                  _alert("Grade indisponível, escolha outra combinação!", "Mensagem", "error");
+                }
+            }else {
+                  ///GRAVA PRODUTO SEM VARIACAO
+                  AdicionarProdutoAjxEventList(0, parseInt(productID), productQuantity);
+            }
+        }else {
+          _alert("Erro ao adicionar produto", "Mensagem", "error");
+        }
+    });
 
     //COMPRE JUNTO
-    //$("#btn_comprejunto").click(function(e){
-    //    AdicionarProdutosCompreJuntoAjx();
-    //});
-
-    $("#btn_comprejunto").click(function () {
+    $("#btn_comprejunto").click(function(){
         isLoading("body");
         AdicionarProdutosCompreJuntoAjx();
         isLoading("body");
@@ -580,7 +584,7 @@ function AtualizarGrade(jsonSKU) {
             <br />
             <span>ou</span>
             <span>
-                <span id="preco_boleto">${moneyPtBR((jsonSKU.Price - (jsonSKU.Price / 100) * valorDesconto))}</span>
+                <span id="preco_boleto">${moneyPtBR((price / 100) * valorDesconto)}</span>
                 no boleto bancário (${valorDesconto}% de desconto)
             </span>
             `
@@ -618,6 +622,7 @@ function AtualizarGrade(jsonSKU) {
         $("#avise_me").removeClass("detalhes hideme");
         $("#btn_comprejunto").addClass("disabled");
         $(".btn-comprar").addClass("disabled");
+        $(".btn-add-event-list").addClass("disabled");
         $("#calculo-frete").addClass("detalhes hideme");
         $("#calculo-parcelamento").addClass("detalhes hideme");
     } else {
@@ -922,9 +927,39 @@ function AdicionarProdutoAjx(productSKU, productID, quantity) {
                 });
                 $(document).find(".loading").removeClass("loading");
             }
+
         },
-        error: function (request, error) {
+        error : function(request,error)
+        {
             $(document).find(".loading").removeClass("loading");
+        }
+    });
+}
+
+
+
+function AdicionarProdutoAjxEventList(productSKU, productID, quantity){
+      $.ajax({
+        url : '/EventList/InsertProductInEventListWithSku',
+        type : 'POST',
+        data : {
+            idProduct: productID,
+            idSKU    : productSKU,
+            quantity : quantity
+        },
+        dataType:'json',
+        success : function(response) {
+            if(response.success == true){
+                $(document).find(".loading").removeClass("loading");
+                LoadCarrinhoEventList(true);
+            }else {
+                _alert(response.msg, "", "error");
+            }
+        },
+        error : function(request,error)
+        {
+            _alert("Erro ao adicionar produto.", "", "error");
+            console.log("Erro ao adicionar produto a lista de eventos");
         }
     });
 }

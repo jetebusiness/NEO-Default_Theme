@@ -545,7 +545,8 @@ function atualizaResumoCarrinho(){
             var codigoBandeira = $("#btnCardCredit").attr("data-idBrand");
             if(typeof(codigoBandeira) != "undefined"){
                 atualizaParcelamento(codigoBandeira);
-                var parcela_selecionada = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+                var _parcela = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+                var parcela_selecionada = _parcela != undefined ? _parcela : "1";
                 var id_tipo = 1;
                 if(codigoBandeira != "" && id_tipo != "" && parcela_selecionada != ""){
                   AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);

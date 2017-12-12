@@ -299,4 +299,21 @@ $(document).ready(function () {
     ClearCart();
     InserirQuantidadeManual();
     CancelarCalculoFreteClk();
-});
+})
+
+$(document).on("click", "#finalizePurchase", function(e){        
+    $.ajax({
+        method: "GET",
+        url: "/Checkout/CheckoutNext",
+        data: {},
+        success: function(data){
+            if(data.success === true)
+               window.location.href = data.redirect
+            else
+                _alert("Mensagem", data.message, "error")                
+        },
+        onFailure: function(data){
+            console.log("Erro ao excluir frete");
+        }
+    })
+})

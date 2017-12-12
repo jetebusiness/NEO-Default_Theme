@@ -10,7 +10,7 @@
     <div class="ui one column grid stackable middle aligned">
         <div class="row">
             <div class="column">
-                <h1>Meu Carrinho</h1>
+                <h1>@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</h1>
                 <div class="ui clearing divider"></div>
             </div>
         </div>
@@ -21,8 +21,7 @@
             <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
 
             @if (Model != null && Model.CartItems != null)
-            {
-                string _linkHref = "/checkout/CheckoutNext";
+            {               
                 <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
                     <div class="ui divided items relaxed cart"  id="checkout_products_list_cart">
                         @if (Model != null && Model.CartItems != null)
@@ -120,13 +119,13 @@
                                     </a>
                                 </div>
                                 <div class="column">
-                                    <a href="@_linkHref" class="ui animated button fluid large submit green"
+                                    <button id="finalizePurchase" class="ui animated button fluid large submit green"
                                        tabindex="0">
                                         <div class="visible content">Finalizar Compra</div>
                                         <div class="hidden content">
                                             <i class="right arrow icon"></i>
                                         </div>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>

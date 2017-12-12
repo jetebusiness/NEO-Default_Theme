@@ -1,11 +1,9 @@
 ﻿@model DomainProduct.Entities.Category
-
 @{
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
     var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
-
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui two column grid stackable middle aligned">
@@ -22,30 +20,23 @@
         </div>
     </div>
 }
-
 @section banner {
     @if (Model != null)
     {
         <div class="sixteen wide column">
             <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
-            @Html.Action("BannerCategory", "Banner", new {id = Model.IdCategory, type = 'F'})
-
+            @Html.Action("BannerCategory", "Banner", new { id = Model.IdCategory, type = 'F' })
         </div>
     }
 }
-
 @section filters {
     <div class="four wide column filterColumn">
         <div class="row one column">
-
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @Html.Action("FilterMenu", "Product")
-
             <div class="ui divider hidden"></div>
-
             <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
-            @Html.Action("SideHalfBannerCategory", "Banner", new {categoryId = Model.IdCategory})
-
+            @Html.Action("SideHalfBannerCategory", "Banner", new { categoryId = Model.IdCategory })
         </div>
     </div>
 }
@@ -107,7 +98,8 @@
                category = Model.IdCategory,
                viewList = Request.QueryString["viewList"] ?? "",
                pageNumber = Request.QueryString["pageNumber"] ?? "",
-               pageSize = 12, order = Request.QueryString["order"] ?? "",
+               pageSize = 12,
+               order = Request.QueryString["order"] ?? "",
                brand = Request.QueryString["brand"] ?? "",
                group = Request.QueryString["group"] ?? "",
                initialPrice = Request.QueryString["initialPrice"] ?? "",
@@ -119,14 +111,47 @@
         }
     </div>
 </div>
-
 <input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdCategory" />
 @section gtm {
-    @Html.Action("GoogleTagManager", "Common", new {origin = ViewContext.RouteData.Values["controller"]})
+    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
 }
-
 @section custom_js{
     <script>
-        window.filterManipulation = { idCategory: @Model.IdCategory };
+        @{
+            string json_ = "";
+            string labelFilters = "";
+            string pageNumberCurrent = "";
+            string brands = Request.QueryString["brand"] != null ? Request.QueryString["brand"].ToString() : "";
+            if (Request.QueryString["pageNumber"] != null)
+            {
+                pageNumberCurrent = Request.QueryString["pageNumber"].ToString();
+                @:window.pageNumber = "@pageNumberCurrent";
+                        if (Request.QueryString["pageNumber"].ToString() != "1") {
+                    labelFilters = HttpUtility.HtmlDecode(Request.QueryString["labelFilter"]) ?? "";
+                }
+            }
+
+            var dict = HttpUtility.ParseQueryString(Request.QueryString.ToString());
+            dict.Remove("labelFilter");
+            dict.Remove("pageNumber");
+
+            if(dict.Count == 0)
+            {
+                dict.Add("idCategory", @Model.IdCategory.ToString());
+            }
+
+            json_ = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(dict.AllKeys.ToDictionary(k => k, k => dict[k]));
+
+        }
+
+        window.filterManipulation = JSON.parse("@json_".replace(/&quot;/g,'"'));
+                   
+        //window.filterManipulation = { idCategory: @Model.IdCategory, idBrand : "@brands" };
+
+
+        @if(labelFilters != "") {
+            @:window.filterManipulation.labelFilter = JSON.parse("@labelFilters".replace(/&quot;/g,'"'));
+        }
+
     </script>
 }

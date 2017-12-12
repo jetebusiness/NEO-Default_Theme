@@ -32,5 +32,15 @@
                 }
             }
         </div>
+        @if (TempData["AddressListEvents"] != null)
+        {
+            <br />
+            <div class="margin top column">
+                <p class="text small color grey aligned description">
+                    <strong>ATENÇÃO!</strong>
+                    Os produtos serão entregues no endereço do dono da lista.
+                </p>
+            </div>
+        }
     </div>
 }

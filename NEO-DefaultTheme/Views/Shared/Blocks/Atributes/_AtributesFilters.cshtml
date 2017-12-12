@@ -2,13 +2,13 @@
 
 @if (Model != null)
 {
-    <div class="active title">Atributos<i class="dropdown icon"></i></div>
-    <div class="active content">
-        <div class="ui form">
-            <div class="grouped fields">
-                @foreach (var atribute in Model)
-                {
-                    foreach (var valor in atribute.attributeValues)
+    foreach (var atribute in Model)
+    {
+        <div class="active title">@atribute.name<i class="dropdown icon"></i></div>
+        <div class="active content">
+            <div class="ui form">
+                <div class="grouped fields">
+                    @foreach (var valor in atribute.attributeValues)
                     {
                         if (valor.active)
                         {
@@ -20,8 +20,8 @@
                             </div>
                         }
                     }
-                }
+                </div>
             </div>
         </div>
-    </div>
+    }
 }

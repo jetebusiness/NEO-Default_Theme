@@ -5,17 +5,24 @@
     align-content: flex-end;
     flex-wrap: wrap;
     justify-content: space-between;
-    z-index: auto; 
+    z-index: auto;
     .info {
       z-index: auto;
     }
     .top-info {
       max-width: 25%;
-      .ui.imagetag > img{
-        max-height: 50px !important;
+      .top-info {
+        max-width: 120px;
+        .ui.imagetag {
+          padding: 0.7em 0.35em !important;
+          img,
+          svg {
+            max-height: 30px !important;
+          }
+        }
       }
     }
-    
+
     .middle-info {
       align-self: center;
     }
@@ -29,7 +36,7 @@
       min-width: 200px;
       max-height: 230px;
       padding: 0px .125em;
-      
+
     }
   }
   &:hover,

@@ -12,7 +12,6 @@
     var lista_avaliacao_produto = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
 </script>
 @{
-
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
@@ -269,7 +268,7 @@
                         @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
-
+                    <!--COMEÇO GRADE-->
                     <div class="row product-grid">
                         <div class="column">
                             <div class="ui middle aligned grid blue segment">
@@ -294,7 +293,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <!--COMEÇO GRADE-->
+                                    
                                     <div class="ten wide column text right" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
                                         <div id="variacao-preco">
                                             @if (Model.HaveSku)
@@ -306,9 +305,9 @@
                                                     <span itemprop="price" class="preco" id="preco">@dec.ToString("C")</span>
                                                     <span class="infoPreco">
                                                         <span>em</span>
-                                                        <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
-                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
-                                                        <span id="description">@string.Format("({0})", @Model.InstallmentMax.Description)</span>
+                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de </span></span>
+                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
+                                                        <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
                                                         @if (ViewBag.DescontoBoleto > 0)
                                                         {
                                                             var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
@@ -325,11 +324,11 @@
                                                     <span class="infoPreco">
                                                         <span>em</span>
                                                         <span id="max-p">
-                                                            @Model.InstallmentMax.MaxNumber
+                                                            @SKUPadrao.InstallmentMax.MaxNumber
                                                             <span>X de </span>
                                                         </span>
-                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
-                                                        <span id="description">@string.Format("({0})", @Model.InstallmentMax.Description)</span>
+                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
+                                                        <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
                                                         @if (ViewBag.DescontoBoleto > 0)
                                                         {
                                                             var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
@@ -401,14 +400,14 @@
                                         {
                                             <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                                         }
-
-                                        <a class="ui animated big green button fluid detalhes btn-comprar  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
-                                            <div class="visible content">Adicionar ao Carrinho</div>
-                                            <div class="hidden content">
-                                                <i class="add to cart icon"></i>
-                                            </div>
-                                        </a>
-
+                                        
+                                            <a class="@(Model.Stock == 0 || Model.FlagExhausted ? "disabled " : "")ui animated big green button fluid detalhes @(Session["EventList"] != null ? "btn-add-event-list" :"btn-comprar")  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
+                                                <div class="visible content">@(Session["EventList"] != null ? "Adicionar à Lista" : "Adicionar ao Carrinho")</div>
+                                                <div class="hidden content">
+                                                    <i class="add to cart icon"></i>
+                                                </div>
+                                            </a>
+                                        
                                     </div>
                                 </div>
                                 <!--FIM DISPONIBILIDADE / CARRINHO-->
@@ -496,24 +495,31 @@
                     </div>
                     @if (Model.Attributes != null && Model.Attributes.Count() > 0)
                     {
-                        <div class="column">
-                            <h4>Informações Adicionais do Produto</h4>
-                            @foreach (var atribute in Model.Attributes)
-                            {
-                                var attrValues = "";
-                                <p>
-                                    <strong>@atribute.name: </strong>
-                                    @foreach (var valor in atribute.attributeValues)
+                        var useFilter = Model.Attributes.Where(attr => attr.useFilter).ToList();
+                        if (useFilter.Count > 0)
+                        {
+                            <div class="column">
+                                <h4>Informações Adicionais do Produto</h4>
+                                @foreach (var atribute in Model.Attributes)
+                                {
+                                    if (atribute.useFilter)
                                     {
-                                        if (valor.active)
-                                        {
-                                            attrValues = attrValues != "" ? attrValues + "," + @valor.Value : @valor.Value;
-                                        }
+                                        var attrValues = "";
+                                        <p>
+                                            <strong>@atribute.name: </strong>
+                                            @foreach (var valor in atribute.attributeValues)
+                                            {
+                                                if (valor.active)
+                                                {
+                                                    attrValues = attrValues != "" ? attrValues + "," + @valor.Value : @valor.Value;
+                                                }
+                                            }
+                                            @attrValues
+                                        </p>
                                     }
-                                    @attrValues
-                                </p>
-                            }
-                        </div>
+                                }
+                            </div>
+                        }
                     }
                 </div>
             </div>
@@ -639,7 +645,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="" />
-                                <div id="gCaptchaDetail" class="g-recaptcha" data-sitekey="6Lf_2TUUAAAAAHLguiuYBOzBxmR_5-raRFYh5mpV"></div>
+                                <div id="gCaptchaDetail" class="g-recaptcha" data-sitekey="6Lf_2TUUAAAAAGugApQHHa-a2HtNPmxwNGrYZKQ8"></div>
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>
@@ -653,7 +659,7 @@
         @if (!Model.FlagExhausted)
         {
             <div class="row" id="buy-together">
-                @if (Model.BuyTogether != null && Model.BuyTogether.Count > 0)
+                @if (Model.BuyTogether != null && Model.BuyTogether.Count > 0 && Session["EventList"] == null)
                 {
                     @Html.Partial("~/Views/Product/Details/_BuyTogether.cshtml", Model)
                 }
@@ -674,7 +680,8 @@
             </div>
         </div>
 
-        @if (!Model.FlagExhausted)
+
+        @if (!Model.FlagExhausted || Session["EventList"] != null)
             {
             @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
         }

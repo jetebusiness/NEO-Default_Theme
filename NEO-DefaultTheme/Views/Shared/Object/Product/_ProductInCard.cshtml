@@ -1,12 +1,13 @@
 ﻿@model DomainProduct.Entities.Product
+
 <div id="Product_@Model.IdProduct" class="ui card produto" data-exhausted="@Model.FlagExhausted">
     <input type="hidden" id="selected-references_@Model.IdProduct" />
     <div class="content">
         @if (Model.AlternativeImage != null)
         {
             <a class="ui slide masked reveal image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
-                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content"  onerror="imgError(this)">
-                <img src="@Model.AlternativeImage" class="hidden content"  onerror="imgError(this)">
+                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
+                <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)">
 
                 <!--REMOVER && Model.SealStatus.Name != "Normal" ASSIM QUE CORRIGIR PAINEL-->
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
@@ -20,7 +21,7 @@
         else
         {
             <a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
-                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content"  onerror="imgError(this)">
+                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
                     <div class="ui bottom right attached label massive imagetag">
@@ -34,9 +35,9 @@
         </div>
         <div class="info">
 
-            <div class="sku-options mobile-hide">
+            <div class="sku-options mobile-hide @(Session["segment"] != null && Session["segment"].ToString() == "b2b" ? "hideme" : string.Empty)">
 
-                <h5 id="produto-esgotado_@Model.IdProduct" class="text center @(Model.FlagExhausted ? "" : "hideme")">Produto Esgotado</h5>
+                <h5 id="produto-esgotado_@Model.IdProduct" class="text center @(Model.FlagExhausted ? " " : "hideme" )">Produto Esgotado</h5>
 
                 @if (Model.AvailableReferences != null)
                 {
@@ -64,11 +65,11 @@
                                 </div>
                             </div>
                         </div>
-                            <div class="ui small divider hidden"></div>
+                        <div class="ui small divider hidden"></div>
                     }
                 }
                 <!-- Verificar se o produto é conjunto -->
-                @if(Model.HasConjunct)
+                @if (Model.HasConjunct)
                 {
                     <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" class="ui labeled icon button green fluid btn-comprar" data-idproduct="@Model.IdProduct" data-name="Model.Name">
                         <i id="btn-icon-card-Model.IdProduct" class="icon announcement"></i>
@@ -80,6 +81,13 @@
                     <a id="btn-comprar-card-@Model.IdProduct" class="ui labeled icon button grey fluid avise-card avise-me-modal" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
                         <i id="btn-icon-card-@Model.IdProduct" class="icon announcement"></i>
                         Avise-me
+                    </a>
+                }
+                else if (Session["EventList"] != null)
+                {
+                    <a id="add-event-list-@Model.IdProduct" class="ui labeled icon button green fluid add-event-list" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                        <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
+                        Adicionar à Lista
                     </a>
                 }
                 else
@@ -97,12 +105,12 @@
                     <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                         @if (Model.PricePromotion != null && Model.PricePromotion > 0)
                         {
-                            <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por</span>
-                                <span itemprop="preco" class="preco">@string.Format("{0:c}", Model.PricePromotion)</span>
+                            <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span> 
+                            <span itemprop="preco" class="preco">@string.Format("{0:c}", Model.PricePromotion)</span>
                         }
                         else
                         {
-                            <span id="price_@Model.IdProduct" class="preco">@string.Format("{0:c}", Model.Price)</span>
+                            <span id="price_@Model.IdProduct" class="preco"><span class="precoBase">@(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span> @string.Format("{0:c}", Model.Price)</span>
                         }
                         @if (Model.InstallmentMax != null)
                         {

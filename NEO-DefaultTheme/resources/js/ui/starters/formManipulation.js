@@ -183,6 +183,71 @@ export const formSettings = {
                 type: "match[email]",
                 prompt: "{name} não é igual ao email digitado"
             }]
+        },
+        date: {
+            identifier: "date",
+            rules: [{
+                type: "regExp",
+                value: /((([0][1-9]|[12][\d])|[3][01])[-/]([0][13578]|[1][02])[-/][1-9]\d\d\d)|((([0][1-9]|[12][\d])|[3][0])[-/]([0][13456789]|[1][012])[-/][1-9]\d\d\d)|(([0][1-9]|[12][\d])[-/][0][2][-/][1-9]\d([02468][048]|[13579][26]))|(([0][1-9]|[12][0-8])[-/][0][2][-/][1-9]\d\d\d)/u,
+                prompt: "Data inválida"
+            }]
+        },
+        eventdate: {
+            identifier: "eventdate",
+            rules: [{
+                type: "regExp",
+                value: /((([0][1-9]|[12][\d])|[3][01])[-/]([0][13578]|[1][02])[-/][1-9]\d\d\d)|((([0][1-9]|[12][\d])|[3][0])[-/]([0][13456789]|[1][012])[-/][1-9]\d\d\d)|(([0][1-9]|[12][\d])[-/][0][2][-/][1-9]\d([02468][048]|[13579][26]))|(([0][1-9]|[12][0-8])[-/][0][2][-/][1-9]\d\d\d)/u,
+                prompt: "A data do evento está inválida"
+            }]
+        },
+        bridename: {
+            identifier: "bridename",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        groomname: {
+            identifier: "groomname",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        babyname: {
+            identifier: "babyname",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        fathername: {
+            identifier: "fathername",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        mothername: {
+            identifier: "mothername",
+            rules: [{
+                type: "empty",
+                prompt: "{name} não foi preenchido"
+            }]
+        },
+        brideemail: {
+            identifier: "brideemail",
+            rules: [{
+                type: "email",
+                prompt: "{name} não é um email válido"
+            }]
+        },
+        groomemail: {
+            identifier: "groomemail",
+            rules: [{
+                type: "email",
+                prompt: "{name} não é um email válido"
+            }]
         }
 
     }
@@ -199,29 +264,30 @@ $(document).ready(function () {
     /**
      * Semantic-UI Calendar Call
      */
-    /*  $('.field.calendar').calendar({
-     monthFirst: false,
-     type: 'date',
-     text: {
-     days: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-     months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Stembro', 'Outubro', 'Novembro', 'Dezembro'],
-     monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-     today: 'Hoje'
-     },
-     formatInput: true,
-     formatter: {
-     date: function (date) {
-     if (!date) return '';
-     var day = date.getDate();
-     var month = date.getMonth() + 1;
-     var year = date.getFullYear();
-     return day + '/' + month + '/' + year;
-     }
-     },
-     onChange:function (date, text, mode) {
-     //$(this).find("input[placeholder='DD/MM/YYYY']").val(text).blur();
-     }
-     });
+    $('.field.calendar').calendar({
+        monthFirst: false,
+        type: 'date',
+        text: {
+            days: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+            months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            today: 'Hoje'
+        },
+        formatInput: true,
+        formatter: {
+            date: function (date, settings) {
+                if (!date) return '';
+                return date.toLocaleString('pt-br', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$1/$2/$3');
+            }
+        },
+        onChange:function (date, text, mode) {
+            $(this).find("input[placeholder='DD/MM/YYYY']").val(text).blur();
+        },
+        regExp: {
+            dateWords: /[^A-Za-z\u00C0-\u024F]+/g,
+            dateNumbers: /[^\d:]+/g
+        },
+    });
 
      /**
      * Form Clear
@@ -234,17 +300,17 @@ $(document).ready(function () {
     /**
      * Quantity Buttons - General
      */
-    $(".qtdminus").click(function () {
-        if (parseInt($(this).next("input").val()) <= 0) {
-            $(this).next("input").val(1);
-        }
-        else {
-            $(this).next("input").val(parseInt($(this).next("input").val()) - 1);
-        }
-    });
-    $(".qtdplus").click(function () {
-        $(this).prev("input").val(parseInt($(this).prev("input").val()) + 1);
-    });
+    //$(".qtdminus").click(function () {
+    //    if (parseInt($(this).next("input").val()) <= 0) {
+    //        $(this).next("input").val(1);
+    //    }
+    //    else {
+    //        $(this).next("input").val(parseInt($(this).next("input").val()) - 1);
+    //    }
+    //});
+    //$(".qtdplus").click(function () {
+    //    $(this).prev("input").val(parseInt($(this).prev("input").val()) + 1);
+    //});
     /**
      * Variation Buttons , radio and checkout
      */

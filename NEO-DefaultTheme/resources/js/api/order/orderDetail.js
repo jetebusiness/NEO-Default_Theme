@@ -37,4 +37,21 @@ $(document).ready(function () {
             }
         })
     })
+
+    $(document).on("keypress", ".prompt_pedidos", function (event) {
+        var val = event.target.value;
+        var filtered = val.replace(/[^0-9]/g, '');
+
+        if (filtered !== val) {
+            event.target.value = filtered;
+        }
+
+        console.log("prompt_pedidos: " + $(".prompt_pedidos").val());
+
+        if (filtered != "") {
+            if (event.which === 13) {
+                location.href = `/Order/Index?n=${$(".prompt_pedidos").val()}`;
+            }
+        }
+    });
 })

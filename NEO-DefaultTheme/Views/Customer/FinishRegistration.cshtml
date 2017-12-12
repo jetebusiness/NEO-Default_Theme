@@ -114,7 +114,7 @@
                                         </div>
                                     </div>
                                     <div class="three fields pessoa fisica">
-                                        <div class="field calendar required">
+                                        <div class="field required">
                                             <label>Data de Nascimento</label>
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
@@ -326,16 +326,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row one column">
-                            <div class="column text right">
-                                <div class="field" style="display:inline-flex">
-                                    <div class="ui checkbox termo aceite">
-                                        <input type="checkbox" checked="checked" data-validate="termo">
+                        @if (!string.IsNullOrEmpty(termo))
+                        {
+                            <div class="row one column">
+                                <div class="column text right">
+                                    <div class="field" style="display:inline-flex">
+                                        <div class="ui checkbox termo aceite">
+                                            <input type="checkbox" checked="checked" data-validate="termo">
+                                        </div>
+                                        <label id="termo_aceite">Concorda com o <a style="cursor: pointer;">termo de aceite?</a></label>
                                     </div>
-                                    <label id="termo_aceite">Concorda com o <a style="cursor: pointer;">termo de aceite?</a></label>
                                 </div>
                             </div>
-                        </div>
+                        }
                         <div class="row">
                             <div class="column">
                                 <a href="/Customer/Login" class="ui animated button large red left floated">

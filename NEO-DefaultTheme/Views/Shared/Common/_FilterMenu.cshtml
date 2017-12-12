@@ -44,8 +44,11 @@
                     </div>
                 </div>
             </div>
-            <!-- Page: ~/Views/Shared/Blocks/Group/_GroupList.cshtml -->
-            @Html.Action("GroupList", "Group")
+            @if (Session["idEventList"] == null)
+            {
+                <!-- Page: ~/Views/Shared/Blocks/Group/_GroupList.cshtml -->
+                @Html.Action("GroupList", "Group")
+            }
         </div>
 
     </div>

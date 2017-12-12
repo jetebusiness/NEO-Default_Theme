@@ -12,22 +12,20 @@
     function updateQuantidadeTopoCarrinho() {
         $.ajax({
             method: "GET",
-            url: "/Checkout/TotalItensCart",
-            data: {
-
-            },
+            url: "@(Session["EventList"] != null ? "/EventList/TotalItensList" : "/Checkout/TotalItensCart")",
+            data: {},
             success: function (data) {
                 $("#total_itens_card").text(data)
                 if (data != "")
-                    $("#MiniCartTitle").text("Meu carrinho (" + data + ")")
+                    $("#MiniCartTitle").text("@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista") (" + data + ")")
             },
             onFailure: function (data) {
-                if (action == "plus") {
-                    valorInput -= 1;
-                } else {
-                    valorInput += 1;
+                    if (action == "plus") {
+                        valorInput -= 1;
+                    } else {
+                        valorInput += 1;
+                    }
                 }
-            }
-        });
+             });
     }
 </script>

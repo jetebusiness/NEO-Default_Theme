@@ -111,7 +111,7 @@
                                         <div class="field required pessoa fisica">
                                             <label>CPF</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@(Model.Email != "" ? Model.Email : "")" name="Cpf_cnpj" class="masked"
+                                                <input type="text" value="" name="Cpf_cnpj" class="masked"
                                                        placeholder="000.000.000-00"
                                                        data-inputmask="'mask': '999.999.999-99'" data-validate="cpf">
                                             </div>
@@ -138,7 +138,7 @@
                                         </div>
                                     </div>
                                     <div class="three fields pessoa fisica">
-                                        <div class="field calendar required">
+                                        <div class="field required">
                                             <label>Data de Nascimento</label>
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
@@ -444,17 +444,20 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="row one column">
-                        <div class="column text right">
-                            <div class="inline field">
-                                <div class="ui checkbox  termo aceite">
-                                    <input type="checkbox" tabindex="0" class="hidden"  data-validate="termo">
-                                    <label >Concorda com o termo de aceite?</label>
+                        @if (!string.IsNullOrEmpty(termo))
+                        {
+                            <div class="row one column">
+                                <div class="column text right">
+                                    <div class="inline field">
+                                        <div class="ui checkbox  termo aceite">
+                                            <input type="checkbox" tabindex="0" class="hidden" data-validate="termo">
+                                            <label>Concorda com o termo de aceite?</label>
+                                        </div>
+                                        <a id="termo_aceite" style="cursor: pointer; font-size: 0.9em; display: block;">Ler termo de aceite</a>
+                                    </div>
                                 </div>
-                                <a id="termo_aceite" style="cursor: pointer; font-size: 0.9em; display: block;">Ler termo de aceite</a>
                             </div>
-                        </div>
-                    </div>
+                        }
                         <div class="row">
                             <div class="column">
                                 <a href="/Customer/Login" class="ui animated button large red left floated">

@@ -1,28 +1,29 @@
 ﻿@model List<DomainCheckout.Entities.PaymentGateway>
-@if (Model.Any() && Model.FirstOrDefault().PaymentMethods.Any())
-{
-    <div class="ui green segment formas-pagamento" id="calculo-parcelamento">
-        <div class="ui accordion fluid">
-            <div class="title">
-                <i class="dropdown icon"></i>
-                <span id="btnParcelamento text color black"><strong>Parcelas e formas de pagamento</strong></span>
-            </div>
-            <div class="content">
-                <div class="accordion">
-                    @foreach (var method in Model.FirstOrDefault().PaymentMethods.FirstOrDefault().PaymentBrands)
+
+<div class="ui green segment formas-pagamento" id="calculo-parcelamento">
+    <div class="ui accordion fluid" id="parcelamento_b2b">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            <span id="btnParcelamento text color black"><strong>Parcelas e formas de pagamento</strong></span>
+        </div>
+        <div class="content first-b2b-payment">
+            <div class="accordion" id="parcelamento_info">
+            @if (Model != null && Model.Any() && Model.FirstOrDefault().PaymentMethods.Any())
+            {
+                    foreach (var method in Model.FirstOrDefault().PaymentMethods.FirstOrDefault().PaymentBrands)
                     {
                         <div class="title">
                             <i class="dropdown icon"></i>
                             @method.Name
                         </div>
-                        <div class="content">
+                        <div class="content others">
                             <div class="ui list">
                                 @foreach (var parcelas in method.Installments)
                                 {
                                     var typeDiscount = method.typeDiscount != null ? method.typeDiscount.Value : DomainCheckout.Entities.typeDiscount.General;
                                     var totalCompra = parcelas.Total.ToString("C");
 
-                                    if(parcelas.InstallmentNumber == 1)
+                                    if (parcelas.InstallmentNumber == 1)
                                     {
                                         if (typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
                                         {
@@ -39,8 +40,8 @@
                             </div>
                         </div>
                     }
-                </div>
+                }
             </div>
         </div>
     </div>
-}
+</div>

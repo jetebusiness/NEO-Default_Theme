@@ -1,0 +1,25 @@
+#fileInvitation, #filePicture {
+  display: none;
+}
+#imgPicture{
+  margin-bottom: 15px;
+}
+#changeEventPicture{
+  display: none;
+}
+#uploadArea{
+  border-radius: 3px;
+  border:1px dashed rgba(0,0,0,0.35);
+  background-color: rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 28px 0;
+  cursor: pointer;
+  margin-bottom: 15px;
+  span{
+    width: 100%;
+    > i{
+      display: block;
+      width: 100%;
+    }
+  }
+}

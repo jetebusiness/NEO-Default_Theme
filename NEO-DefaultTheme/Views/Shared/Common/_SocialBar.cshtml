@@ -1,25 +1,23 @@
 ﻿@model List<DomainSocialNetwork.Entities.SocialNetwork>
-
 <div class="left floated column">
     <socialbar>
         @if (Model != null)
         {
             foreach (var social in Model)
             {
-                <a href="@social.Content" target="_blank">
-                    <i class="@social.Identifier icon"></i>
-                </a>
+                if (social.Identifier.ToUpper() == "WHATSAPP")
+                {
+                    <a href="https://api.whatsapp.com/send?text=@HttpContext.Current.Request.Url.ToString()" target="_blank">
+                        <i class="@social.Identifier icon"></i>
+                    </a>
+                }
+                else
+                {
+                    <a href="@social.Content" target="_blank">
+                        <i class="@social.Identifier icon"></i>
+                    </a>
+                }
             }
         }
-        @*<i class="facebook icon"></i>
-        <i class="twitter icon"></i>
-        <i class="instagram icon"></i>
-        <i class="youtube play icon"></i>
-        <i class="whatsapp icon"></i>
-         <i class="vimeo icon"></i>
-        <i class="wordpress icon"></i>
-        <i class="pinterest icon"></i>
-        <i class="google plus icon"></i>*@ 
-
     </socialbar>
 </div>

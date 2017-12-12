@@ -1,16 +1,17 @@
 ﻿@model List<DomainProduct.Entities.Group>
-
-<div class="column">
-    <div class="ui segment orange">
-        <div class="ui list">
-            @if (Model != null)
-            {
-                foreach (var group in Model)
+@if (Model.Any())
+{
+    <div class="column">
+        <div class="ui segment orange">
+            <div class="ui list">
+                @if (Model != null)
                 {
-                    <a class="item" href="@group.UrlFriendly">@group.Name</a>
+                    foreach (var group in Model)
+                    {
+                        <a class="item" href="@group.UrlFriendly">@group.Name</a>
+                    }
                 }
-            }
+            </div>
         </div>
     </div>
-</div>
-
+}

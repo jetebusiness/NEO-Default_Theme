@@ -7,12 +7,13 @@
 
     if (Model.SKUs != null)
     {
-        Model.SKUs = Model.SKUs.OrderBy(c => c.PricePromotion).ToList();
-
-        foreach (var variation in Model.SKUs[0].Variations)
-        {
-            variationsArray.Add(variation);
-            variationIds += Model.SKUs[0].Variations.IndexOf(variation) == Model.SKUs[0].Variations.Count - 1 ? variation.IdVariation + "" : variation.IdVariation + ",";
+        Model.SKUs = Model.SKUs.OrderBy(c => c.PricePromotion == 0 ? c.Price : c.PricePromotion).ToList();
+        if(Model.SKUs[0].Variations != null) {
+            foreach (var variation in Model.SKUs[0].Variations)
+            {
+                variationsArray.Add(variation);
+                variationIds += Model.SKUs[0].Variations.IndexOf(variation) == Model.SKUs[0].Variations.Count - 1 ? variation.IdVariation + "" : variation.IdVariation + ",";
+            }
         }
     }
 }

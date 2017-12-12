@@ -3,6 +3,86 @@ import {_alert, _confirm} from "../../functions/message";
 import {openModalQuickView} from "../../functions/modal";
 import {openLongModal} from "../../functions/modal";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
+import {formSettings} from "../../ui/starters/formManipulation";
+
+$(document).ready(function () {
+
+    $("#formEventList").form(formSettings);
+    $("#formAddress").form(formSettings);
+
+});
+
+$(document).on("change", "div[id^='referencefromproduct_']", function(e){
+    var productId = $(this).data("idproduct");
+    var $parent = $(this).closest(".item.produtoList");
+    var variationSelected = "";
+    var keep = false;
+    var idEventListFilter = $("#idEventListFilter").val();
+
+
+    if(idEventListFilter > 0){
+        $parent.find(".sku-options [id=referencefromproduct_" + productId + "]").each(function () {
+            let idVariation = $(this).dropdown("get value");
+            if (idVariation === "") {
+                keep = false;
+                return false;
+            }
+            else {
+                variationSelected += variationSelected !== "" ? "," + idVariation : idVariation;
+                keep = true;
+            }
+        });
+        if (keep) {
+            isLoading(".produtoList#Product_"+productId);
+            $.ajax({
+                method: "GET",
+                url: "/Product/GetQtdFromEventListProduct?idEventList="+idEventListFilter+"&idVariation="+variationSelected+"&productID="+productId,
+                success: function (response) {
+                    if (response.success === true) {
+                        var idProduct = response.idProduct;
+                        var quantityPurchased = response.quantityPurchased;
+                        var quantityRequest = response.quantityRequest;
+                        if(quantityPurchased != ""){
+                            $("#quantityPurchased_"+idProduct).html("<span>Quantidade Solicitada: "+quantityRequest+"</span>");
+                            $("#quantityBuyed_"+idProduct).html("<span>Quantidade Comprada: "+quantityPurchased+"</span>");
+                        }
+                        isLoading(".produtoList#Product_"+productId);
+                    }
+                },
+                onFailure: function (response) {
+                    isLoading(".produtoList#Product_"+productId);
+                    swal({
+                        title: "Mensagem",
+                        text: response.message,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+        }
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$(document).on("click", "#termoAceiteEventList", function () {
+    $(".modal-block").append("<div class='ui longer modal'><i class='close icon'></i><div class='header'>Termo de Aceite</div><div class='image content'><div class='scrolling content'><p>"+$("#termoEventList").html()+"</p></div></div><div class='actions'><div class='ui button approve'>OK</div></div></div>");
+    openLongModal($(this).attr("data-modal-open"));
+});
 
 $(document).on("click", "#product_manager .qtd_change", function(event) {
     $(".qtd_change").off("click");
@@ -21,7 +101,7 @@ $(document).on("click", "#product_manager .qtd_change", function(event) {
     }
 
     if(valorInput < 1){
-      valorInput = 1;
+        valorInput = 1;
     }
 
     if(valorInput <= valorStock && valorInput < 1000){
@@ -31,7 +111,7 @@ $(document).on("click", "#product_manager .qtd_change", function(event) {
         _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
         valorInput -= 1
     }
-     $("#qtd_product_"+idListCurrent).val(valorInput);
+    $("#qtd_product_"+idListCurrent).val(valorInput);
 });
 
 $(document).on("click", "#product_manager .removeItemEventList", function(e) {
@@ -39,8 +119,6 @@ $(document).on("click", "#product_manager .removeItemEventList", function(e) {
     DeleteProductEventList(idListCurrent);
     e.stopPropagation();
 });
-
-
 
 $(document).on("keyup", "#product_manager input[id^='qtd_product_']", function (e) {
     var valor_final = SomenteNumerosPositivos($(this).val());
@@ -56,7 +134,7 @@ $(document).on("keyup", "#product_manager input[id^='qtd_product_']", function (
 
 
     if(valorInput < 1){
-      valorInput = 1;
+        valorInput = 1;
     }
 
     if(valorInput <= valorStock && valorInput < 1000){
@@ -77,8 +155,153 @@ $(document).on("click", "button[id^='btnDeleteGuest_']", function(e){
     deleteGuest(idGuest);
 });
 
+
+$(document).on("click", "#view_invited_purchased", function(e){
+    var productID = $(this).attr("data-product-id");
+    var productSKU = $(this).attr("data-product-id-sku");
+    ShowModalEventListPurchased(productID, productSKU);
+});
+
+$(document).on("click", "#addGuest", function (e) {
+    let nameGuest = $("#NameGuest").val();
+    let emailGuest = $("#EmailGuest").val();
+
+    if (nameGuest === "") {
+        $("#divFieldNameGuest").addClass("error");
+        $("#divFieldNameGuest").append(`<div id="divMsgNameGuest" class="ui basic red pointing prompt label transition visible">Preencha o nome do convidado. (Ex: João Silva ou Maria Silva)</div></div>`);
+
+        return false;
+    }
+
+    if (emailGuest === "") {
+        $("#divFieldEmailGuest").addClass("error");
+        $("#divFieldEmailGuest").append(`<div id="divMsgEmailGuest" class="ui basic red pointing prompt label transition visible">Preencha o email do convidado. (Ex: email@dominio.com.br)</div></div>`);
+
+        return false;
+    }
+
+    addGuest(nameGuest, emailGuest);
+});
+
+$(document).on("blur", "#NameGuest", function(e){
+    $("#divFieldNameGuest").removeClass("error");
+    $("#divMsgNameGuest").remove();
+});
+
+$(document).on("blur", "#EmailGuest", function(e){
+    $("#divFieldEmailGuest").removeClass("error");
+    $("#divMsgEmailGuest").remove();
+});
+
+$(document).on("click", "button[id^='btnShareEventList_']", function (e) {
+    let listId = $(this).data("id");
+
+    shareEventList(listId);
+});
+
+$(document).on("click", "#btnSendToMyAddress", function (e) {
+    let listId = $(this).data("id");
+
+    sendToMyAddress(listId);
+});
+
+$(document).on("click", "#btnSendToGuestAddress", function (e) {
+    let listId = $(this).data("id");
+
+    sendToGuestAddress(listId);
+});
+
+$(document).on("click", "#btnSendInvitation", function (e) {
+    $.ajax({
+        method: "POST",
+        url: "/EventList/SendInvitation",
+        success: function (response) {
+            if (response.success === true) {
+                swal({
+                    title: "Mensagem",
+                    text: response.message,
+                    type: "success",
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }else {
+                swal({
+                    title: "Mensagem",
+                    text: response.message,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                })
+            }
+        },
+        onFailure: function (response) {
+            swal({
+                title: "Mensagem",
+                text: response.message,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+});
+
+$(document).on("change", "#fileInvitation", function(e){
+    let input = this;
+
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#imgInvitation').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+});
+$(document).on('click', '#uploadArea, #changeEventPicture', function () {
+    $("#fileInvitation, #filePicture").click();
+});
+
+$(document).on("change", "#filePicture", function(e){
+    let input = this;
+
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#imgPicture').attr('src', e.target.result);
+            $("#uploadArea").hide();
+            $("#changeEventPicture").show();
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+});
+
+$(document).on("click", "#pesquisar_lista", function(event) {
+    var tipo_lista = $("#tipo_lista").val();
+    var parametro = $("#parametro").val();
+    window.location.href = "/EventList/SeachListByType?type="+tipo_lista+"&parametro=" + parametro;
+});
+
+$(document).on("change", "#chkStatus", function(e) {
+    $(this).val($(this).prop("checked"));
+    $("#lblStatus").text($(this).prop("checked") ? "Ativo" : "Inativo");
+});
+
+$(document).on("click", "#adicionarMaisProd", function(e){
+    $(".carrinho").sidebar('toggle')
+})
+
 function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
-  isLoading("#product_manager");
+    isLoading("#product_manager");
     $.ajax({
         method: "POST",
         url: "/EventList/UpdateProductList",
@@ -90,15 +313,15 @@ function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
         },
         success: function(data){
             if(data.success === false){
-              swal({
-                  title: 'Mensagem',
-                  text: data.msg,
-                  type: 'warning',
-                  showCancelButton: false,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'OK'
-              });
+                swal({
+                    title: 'Mensagem',
+                    text: data.msg,
+                    type: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             }
             isLoading("#product_manager");
         },
@@ -110,33 +333,76 @@ function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
 }
 
 function DeleteProductEventList(eventListIDCurrent){
-  _confirm({
-      title: "Deseja realmente remover esse produto da Lista?",
-      text: "",
-      type: "warning",
-      confirm: {
-          text: "Remover"
-      },
-      cancel: {
-          text: "Cancelar"
-      },
-      callback: function () {
-          $.ajax({
-              method: "POST",
-              url: "/EventList/DeleteProductList",
-              data: {
-                  productEventListID: eventListIDCurrent
-              },
-              success: function (data) {
-                  if (data.success === false) {
-                      console.log("Erro ao excluir produto");
-                  }else {
-                      $("#"+ eventListIDCurrent).fadeOut( "slow" );
-                  }
-              }
-          });
-      }
-  });
+    _confirm({
+        title: "Deseja realmente remover esse produto da Lista?",
+        text: "",
+        type: "warning",
+        confirm: {
+            text: "Remover"
+        },
+        cancel: {
+            text: "Cancelar"
+        },
+        callback: function () {
+            $.ajax({
+                method: "POST",
+                url: "/EventList/DeleteProductList",
+                data: {
+                    productEventListID: eventListIDCurrent
+                },
+                success: function (data) {
+                    if (data.success === false) {
+                        console.log("Erro ao excluir produto");
+                    }else {
+                        $("#"+ eventListIDCurrent).fadeOut( "slow" );
+                    }
+                }
+            });
+        }
+    });
+}
+
+function addGuest(nameGuest, emailGuest) {
+    $.ajax({
+        method: "POST",
+        url: "/EventList/AddGuest",
+        data: {
+            nameGuest: nameGuest,
+            emailGuest: emailGuest
+        },
+        onBegin: function(){
+            isLoading("#divEventList");
+        },
+        success: function (response) {
+            $("#guestsList").html(response);
+            $("#NameGuest").val("");
+            $("#EmailGuest").val("");
+
+            swal({
+                title: "Mensagem",
+                text: "Convidado adicionado com sucesso!",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        },
+        onFailure: function (response) {
+            swal({
+                title: "Mensagem",
+                text: "Não foi possível adicionar o convidado!",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        },
+        onComplete: function(response) {
+            isLoading("#divEventList");
+        }
+    });
 }
 
 function deleteGuest(idGuest) {
@@ -146,17 +412,13 @@ function deleteGuest(idGuest) {
         data: {
             guestId: idGuest
         },
-        success: function (data) {
-            let typeMessage = "warning"
-            if (data.success === true) {
-                $("#guest_" & idGuest).remove();
-                typeMessage = "success";
-            }
+        success: function (response) {
+            $("#guestsList").html(response);
 
             swal({
-                titl: "Mensagem",
-                text: data.message,
-                type: typeMessage,
+                title: "Mensagem",
+                text: "Convidado excluído com sucesso!",
+                type: "success",
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -164,12 +426,141 @@ function deleteGuest(idGuest) {
             });
 
         },
-        onFailure: function (data) {
-            console.log("N�o foi poss�vel excluir o convidado!");
+        onFailure: function (response) {
+            swal({
+                title: "Mensagem",
+                text: "Não foi possível excluir este convidado!",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+}
 
+function shareEventList(listId) {
+    $.ajax({
+        method: "POST",
+        url: "/EventList/ShareEventList",
+        data: {
+            listId: listId
+        },
+        success: function (response) {
+            swal({
+                title: "Mensagem",
+                text: response.message,
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            }).then(function () {
+                //window.location = "/EventList/ManagerGuest";
+                location.reload();
+            })
+        },
+        onFailure: function (response) {
+            swal({
+                title: "Mensagem",
+                text: response.message,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+}
+
+function sendToMyAddress(lisId) {
+    $.ajax({
+        method: "POST",
+        url: "/EventList/UpdateDeliveryAddress",
+        data: {
+            listId: lisId,
+            sendToGuest: false
+        },
+        success: function (response) {
+            $("#divDeliveryMyAddress").removeClass("hideme");
+            $("#divDeliveryAddressGuest").addClass("hideme");
+        },
+        onFailure: function (response) {
+            swal({
+                title: "Mensagem",
+                text: response.message,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+}
+
+function sendToGuestAddress(listId) {
+    $.ajax({
+        method: "POST",
+        url: "/EventList/UpdateDeliveryAddress",
+        data: {
+            listId: listId,
+            sendToGuest: true
+        },
+        success: function (response) {
+            $("#divDeliveryMyAddress").addClass("hideme");
+            $("#divDeliveryAddressGuest").removeClass("hideme");
+        },
+        onFailure: function (response) {
+            swal({
+                title: "Mensagem",
+                text: response.message,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+}
+
+
+function ShowModalEventListPurchased(productID, skuID){
+    $.ajax({
+        method: "GET",
+        type: "JSON",
+        url: "/EventList/GetPurchasedProductbyInvited",
+        data: {
+            productID: productID,
+            skuID: skuID
+        },
+        success: function (response){
+            if(response.success === true){
+                let lista_cliente = "";
+                let obj_product = $.parseJSON(response.product);
+                let obj_customer = $.parseJSON(response.customer);
+
+                $("#imagem").attr("src", obj_product.ImageHome);
+                $("#titulo").html(obj_product.ProductName);
+
+                for (var i = 0; i < obj_customer.length; i++) {
+                    lista_cliente += "<td>"+obj_customer[i].Name+"</td>"
+                    lista_cliente += "<td>"+obj_customer[i].Email+"</td>"
+                }
+
+                $("#lista_cliente").html(lista_cliente);
+            }else{
+
+            }
+            $('#event_list_product.ui.longer.modal').modal('show');
+        },
+        onFailure: function (response) {
             swal({
                 titl: "Mensagem",
-                text: data.message,
+                text: response.message,
                 type: "error",
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',

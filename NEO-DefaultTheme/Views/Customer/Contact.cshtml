@@ -56,7 +56,7 @@
                                     <label>Email</label>
                                     <div class="ui left icon input">
                                         <i class="mail icon"></i>
-                                        <input type="email" maxlength="100" name="Email" placeholder="Seu Email"
+                                        <input type="text" maxlength="100" name="Email" placeholder="Seu Email"
                                                value="" data-validate="email">
                                     </div>
                                 </div>
@@ -73,10 +73,10 @@
                                                    data-validate="phone">
                                         </div>
                                     </div>
-                                    <div class="field">
+                                    <div class="field required">
                                         <label>Estado</label>
                                         <select class="ui dropdown search" id="estado_0"
-                                                name="State" data-validate="state">
+                                                name="State" data-validate="state" required>
                                             <option value="">Selecione</option>
                                             <option value="AC">Acre</option>
                                             <option value="AL">Alagoas</option>
@@ -107,11 +107,11 @@
                                             <option value="TO">Tocantins</option>
                                         </select>
                                     </div>
-                                    <div class="field">
+                                    <div class="field required">
                                         <label>Cidade</label>
                                         <div class="ui input">
                                             <input type="text" maxlength="100" name="City" placeholder="Cidade"
-                                                   data-validate="city">
+                                                   data-validate="city" required>
                                         </div>
                                     </div>
 

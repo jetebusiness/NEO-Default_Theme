@@ -62,12 +62,30 @@ $(document).on("keypress", ".prompt", function (e) {
     }
 });
 
-
-$(document).on("keypress", ".prompt_pedidos", function (e) {
+$(document).on("keypress", ".busca_lista", function (e) {
     if (e.which === 13) {
-        location.href = `/Order/Index?n=${$(".prompt_pedidos").val()}`;
+        location.href = `/EventList/ManagerProducts?n=${$(".busca_lista").val()}`;
     }
 });
+
+
+$(document).on("click", ".busca_lista_btn", function (e) {
+     location.href = `/EventList/ManagerProducts?n=${$(".busca_lista").val()}`; 
+});
+
+
+
+$(document).on("keypress", ".busca_convidado_lista", function (e) {
+    if (e.which === 13) {
+        location.href = `/EventList/ManagerGuest?n=${$(".busca_convidado_lista").val()}`;
+    }
+});
+
+
+$(document).on("click", ".btn_convidado_lista", function (e) {
+    location.href = `/EventList/ManagerGuest?n=${$(".busca_convidado_lista").val()}`;
+});
+
 
 
 $(document).ready(function () {
@@ -108,5 +126,3 @@ $(document).ready(function () {
     });
 
 });
-
-

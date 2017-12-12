@@ -1,10 +1,8 @@
 ﻿@model DomainCustomer.Entities.Customer
-
 @{
     ViewBag.Title = "Área do Cliente";
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
 }
-
 @section gtm {
     <script>
         dataLayer = [
@@ -14,7 +12,6 @@
         ];
     </script>
 }
-
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui one column grid stackable middle aligned">
@@ -27,12 +24,10 @@
                         <a class="section">Área do Cliente</a>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 }
-
 <div class="column">
     <div class="ui grid stackable">
         <h4>Olá, @Model.Name</h4>
@@ -61,17 +56,20 @@
                             </div>
                         </div>
                     </a>
-                    <a class="item" href="~/EventList/Index">
-                        <div class="ui small">
-                            <i class="ui icon big calendar outline purple"></i>
-                        </div>
-                        <div class="content">
-                            <div class="header">Criar Lista de Eventos</div>
-                            <div class="description">
-                                <p>Crie listas de presentes para diversos tipos de eventos.</p>
+                    @if (Model.User.idTablePrice == 0)
+                    {
+                        <a class="item" href="~/EventList/Index">
+                            <div class="ui small">
+                                <i class="ui icon big calendar outline purple"></i>
                             </div>
-                        </div>
-                    </a>                    
+                            <div class="content">
+                                <div class="header">Lista de Eventos</div>
+                                <div class="description">
+                                    <p>Crie listas de presentes para diversos tipos de eventos.</p>
+                                </div>
+                            </div>
+                        </a>
+                    }
                 </div>
             </div>
             <div class="column">

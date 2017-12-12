@@ -41,7 +41,9 @@
                     }
                     else
                     {
-                        <img src="@Model.ProductImages.FirstOrDefault().ImageDefault" class="ui image fluid"  onerror="imgError(this)"/>
+                        var imageDetails = Model.ProductImages != null ? Model.ProductImages.FirstOrDefault().ImageDefault : "";
+
+                        <img src="@imageDetails" class="ui image fluid"  onerror="imgError(this)"/>
                     }
 
                 </div>

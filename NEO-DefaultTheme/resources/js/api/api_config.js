@@ -15,6 +15,7 @@ $.fn.api.settings.api = {
     'alert me vw' : '/Product/AlertMeVw/',
     'form alert me' : '/Product/AlertMeForm/',
     'get sku' : '/product/GetSkuByIdProduct/{id}/{/variations}'
+
 };
 
 export function isLoading(seletor = ""){

@@ -2,19 +2,19 @@
     <div class="item produtoList" itemscope itemtype="http://schema.org/Product" data-exhausted="@Model.FlagExhausted" id="Product_@Model.IdProduct">
         <link itemprop="url" href="@Model.UrlFriendly" rel="author" />
         <div class="ui small image">
-            <a itemprop="url" href="@Model.UrlFriendly">
+            <a itemprop="url" href="@(Session["idEventList"] == null ? Model.UrlFriendly : "#")">
                 <img src="@Model.ImageHome" data-src="@Model.ImageHome" id="mainImageCard_@Model.IdProduct" onerror="imgError(this)">
             </a>
         </div>
         <div class="content">
-            <a class="header" href="@Model.UrlFriendly"><span itemprop="name">@Model.Name</span></a>
+            <a class="header" href="@(Session["idEventList"] == null ? Model.UrlFriendly : "#")" ><span itemprop="name">@Model.Name</span></a>
             <div class="meta">
                 <span>@Model.Code</span>
             </div>
             @*<div class="description">
                     <p>@Model.{{ produto.DetailSummary | truncatewords: 20 }}</p>
                 </div>*@
-            <div class="sku-options">
+            <div class="sku-options @(Session["segment"] != null && Session["segment"].ToString() == "b2b" ? "hideme" : string.Empty)">
                 <div class="ui grid horizontal divided middle aligned">
                     <div class="row two column stackable doubling">
                         @if (Model.AvailableReferences != null)
@@ -55,12 +55,12 @@
             <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 @if (Model.PricePromotion != null && Model.PricePromotion > 0)
             {
-                    <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por</span>
+                    <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span>
                     <span itemprop="preco" class="preco">@string.Format("{0:c}", Model.PricePromotion)</span>
                 }
                 else
                 {
-                    <span id="price_@Model.IdProduct" class="preco">@string.Format("{0:c}", Model.Price)</span>
+                    <span id="price_@Model.IdProduct" class="preco"><span class="precoBase">@(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span> @string.Format("{0:c}", Model.Price)</span>
                 }
 
                 @if (Model.InstallmentMax != null)

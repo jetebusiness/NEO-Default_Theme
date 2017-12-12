@@ -15,7 +15,8 @@
 		clear: both;
 		display: block;
 		&:last-child {
-		  margin-bottom: 15px;
+		  margin-bottom: 15px;  
+		  display: inline-flex;  
 		}
 	  }
 	  .precobase{

@@ -1,15 +1,17 @@
-﻿<div class="ui container fluid _header">
+﻿@{
+    string _classSearch = Session["idEventList"] == null ? "search" : "filterListEventsProducts";
+}
+<div class="ui container fluid _header">
     <div class="ui container">
         <div class="ui middle aligned three column centered grid">
             <div class="row">
                 <div class="ui ten wide mobile six wide tablet four wide computer column">
-                    <a href="/Home">
-                        <img class="ui middle aligned image" src="~/assets/image/logo/logo.png"
-                             alt="">
+                    <a href="@(Session["idEventList"] == null ? "/Home" : "#")">
+                        <img class="ui middle aligned image" src="/assets/image/logo/logo.png" alt="">
                     </a>
                 </div>
                 <div class="ui center aligned five wide tablet eight wide computer column searchcolumn">
-                    <div class="ui category search">
+                    <div class="ui category @_classSearch">
                         <div class="ui icon input fluid">
                             <input class="prompt" type="text" placeholder="Buscar...">
                             <i class="search icon"></i>
@@ -18,13 +20,22 @@
                     </div>
                 </div>
                 <div class="ui right aligned six wide mobile five wide tablet four wide computer column">
-                    <div class="ui labeled button cartbutton mini-cart no margin bottom" tabindex="0">
+                    <div id="cartButton" class="ui labeled button cartbutton mini-cart no margin bottom" tabindex="0" data-segment="@(Session["segment"] != null ? Session["segment"] : "b2c")">
                         <div class="ui basic primary button ">
                             <i class="cart icon"></i>
-                            <span>Meu Carrinho</span>
+                            <span>@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</span>
                         </div>
                         <a class="ui left pointing primary label" id="total_itens_card">
-                            @Html.Action("TotalItensCart", "Checkout")
+                            @{
+                                if (Session["EventList"] == null)
+                                {
+                                    @Html.Action("TotalItensCart", "Checkout")
+                                }else
+	                            {
+	                                @Html.Action("TotalItensList", "EventList")
+                                }
+                            }
+                            
                         </a>
                     </div>
                 </div>

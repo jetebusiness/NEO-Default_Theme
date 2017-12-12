@@ -1,0 +1,139 @@
+﻿@model DomainCustomer.Entities.EventList
+
+@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">@Model.Title</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui container margin bottom large">
+    <div id="divEventList" class="ui grid">
+        <div class="row stackable vertically divided">
+
+            @Html.Partial("~/Views/Shared/Parts/EventList/_EventListMenu.cshtml", new ViewDataDictionary() { { "option", "data" } })
+
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                @Html.Action("ShowEventListByType", "EventList", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="termoEventList" class="hideme">
+        @if (Model != null)
+        {
+            @Html.Raw(Model.Acceptance);
+        }
+</div>
+
+@section custom_js {
+    <script>
+        function onSuccess(response) {
+            if (response.success == true) {
+                if (response.urlRedirect != "") {
+                    document.location = response.urlRedirect;
+                }
+                else {
+
+                    swal({
+                        title: '',
+                        html: response.message,
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+            if (response.success == true) {
+                if (response.urlRedirect != "") {
+                    document.location = response.urlRedirect;
+                }
+                else {
+                    swal({
+                        title: '',
+                        html: response.message,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        };
+
+        $(document).on('submit', '#formEventList', function (event) {
+            event.preventDefault();
+
+            var dataString;
+            var action = $(this).attr('action');
+
+            if ($(this).attr("enctype") == "multipart/form-data") {
+                dataString = new FormData($(this)[0]);
+                contentType = false;
+                processData = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: dataString,
+                    contentType: contentType,
+                    processData: processData,
+                    success: function (response) {
+                        onSuccess(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        onFailure(jqXHR.responseText);
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+}

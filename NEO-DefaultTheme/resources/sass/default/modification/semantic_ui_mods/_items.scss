@@ -1,0 +1,22 @@
+.ui.items {
+  &.two {
+    & > .item {
+      border-top: 0px !important;
+      width: calc(50% - 20px);
+      margin-right: 10px !important;
+      margin-left: 10px !important;
+      float: left;
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+      &:first-child {
+        margin-top: 28px !important;
+        padding-bottom: 28px !important;
+      }
+      &:last-child {
+        padding-bottom: 28px !important;
+      }
+      @media screen and (max-width: $mobile-bp) {
+        width: 100%;
+      }
+    }
+  }
+}

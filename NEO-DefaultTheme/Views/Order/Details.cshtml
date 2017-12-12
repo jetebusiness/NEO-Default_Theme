@@ -150,7 +150,7 @@
             <div class="column">
                 <div class="ui fluid steps">
                     @if (Model.HistoryListOrderStatus != null && Model.HistoryListOrderStatus.Count() > 0)
-                {
+                    {
                     foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus)
                     {
                             <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
@@ -174,12 +174,11 @@
         </div>
         <div class="row one column">
             <div class="column">
-                <table class="ui large padded striped  table">
+                <table class="ui large padded striped  table" id="order_products_list_cart">
                     <thead class="full-width">
                         <tr>
                             <th>#</th>
                             <th>Produto</th>
-                            <th>Disponibilidade</th>
                             <th class="right aligned">Valor Un.</th>
                             <th class="right aligned">Quantidade</th>
                             <th class="right aligned">Valor Total.</th>
@@ -195,8 +194,7 @@
                                 <tr>
                                     <td>@counter.ToString().PadLeft(3, '0')</td>
                                     <td><a>@Html.Raw(orderProduct.Name)</a></td>
-                                    <td></td>
-                                    <td class="right aligned">@string.Format("{0:c}", orderProduct.Total)</td>
+                                    <td class="right aligned">@string.Format("{0:c}", orderProduct.UnitPrice)</td>
                                     <td class="right aligned">@orderProduct.Quantity</td>
                                     <td class="right aligned">
                                         <strong>@string.Format("{0:c}", orderProduct.Total)</strong>
@@ -209,19 +207,19 @@
                     </tbody>
                     <tfoot class="full-width">
                         <tr>
-                            <th colspan="5" class="right aligned">Valor</th>
+                            <th colspan="4" class="right aligned">Valor</th>
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalItens)</th>
                         </tr>
                         <tr>
-                            <th colspan="5" class="right aligned">Valor do Frete</th>
+                            <th colspan="4" class="right aligned">Valor do Frete</th>
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalShipping)</th>
                         </tr>
                         <tr>
-                            <th colspan="5" class="right aligned">Valor do Desconto</th>
+                            <th colspan="4" class="right aligned">Valor do Desconto</th>
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalDiscount)</th>
                         </tr>
                         <tr>
-                            <th colspan="5" class="right aligned"><h3>Total</h3></th>
+                            <th colspan="4" class="right aligned"><h3>Total</h3></th>
 
                             <th class="right aligned"><h3>@string.Format("{0:c}", Model.Total)</h3></th>
                         </tr>
