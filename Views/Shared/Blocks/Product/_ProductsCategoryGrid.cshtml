@@ -1,0 +1,30 @@
+﻿@model DomainProduct.Result
+
+<div class="type-grid">
+    <div class="ui three doubling cards centered">
+        @if (Model != null && Model.Products.Count() > 0)
+        {
+            foreach (var product in Model.Products)
+            {
+            <!-- Page: ~/Views/Shared/Object/Product/_ProductInCard.cshtml -->
+            @Html.Partial("~/Views/Shared/Object/Product/_ProductInCard.cshtml", product)
+            }
+        }
+        else
+        {
+            <div class="row">Nenhum produto encontrado nesta categoria!</div>
+        }
+    </div>
+
+    @if (Model.Settings.PageCount > 1)
+    {
+        <div class="ui centered grid ">
+            <div class="row">
+                <div class="center aligned column">
+                    <!-- Page: ~/Views/Shared/Parts/_NewPagination.cshtml -->
+                    @Html.Partial("~/Views/Shared/Parts/_NewPagination.cshtml", Model.Settings, new ViewDataDictionary() { { "parameters", ViewBag.parameters } } )
+                </div>
+            </div>
+        </div>
+    }
+</div>

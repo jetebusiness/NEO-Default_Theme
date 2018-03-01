@@ -1,0 +1,126 @@
+﻿@{
+    List<DomainSocialNetwork.Entities.SocialNetwork> redesSociais = Session["SocialNetworkLinks"] != null ? (List<DomainSocialNetwork.Entities.SocialNetwork>)Session["SocialNetworkLinks"] : new List<DomainSocialNetwork.Entities.SocialNetwork>();
+}
+
+<div class="ui container fluid inverted vertical segment footer">
+    <div class="ui container">
+        <div class="ui four column stackable inverted equal height grid">
+            <div class="ten wide table six wide computer column">
+                <div class="ui grid stackable">
+                    <div class="row two column no padding">
+                        @Html.Action("CustomPages", "Home")
+                    </div>
+                </div>
+            </div>
+
+            <div class="six wide tablet four wide computer column">
+
+                @Html.Action("GetList", "EventList")
+                <h4 class="ui inverted header">Central de Relacionamento</h4>
+                <p>Preparada para esclarecer suas dúvidas e problemas.</p>
+                <h5>SAC: @LojaCorp.Control.Company._Company.Phone1</h5>
+            </div>
+
+
+            <div class="six wide computer column left aligned">
+                <h4 class="ui inverted header">Siga nos</h4>
+                <div class="ui horizontal relaxed list social">
+
+                    @if (redesSociais.Find(f => f.Identifier == "facebook") != null)
+                    {
+                        <a class="ui facebook icon button" href="@redesSociais.Find(f => f.Identifier == "facebook").Content" target="_blank">
+                            <i class="facebook icon"></i>
+                        </a>
+                    }
+                    @if (redesSociais.Find(f => f.Identifier == "instagram") != null)
+                    {
+                        <a class="ui instagram icon button" href="@redesSociais.Find(f => f.Identifier == "instagram").Content" target="_blank">
+                            <i class="instagram icon"></i>
+                        </a>
+                    }
+                    @if (redesSociais.Find(f => f.Identifier == "twitter") != null)
+                    {
+                        <a class="ui twitter icon button" href="@redesSociais.Find(f => f.Identifier == "twitter").Content" target="_blank">
+                            <i class="twitter icon"></i>
+                        </a>
+                    }
+                    @if (redesSociais.Find(f => f.Identifier == "youtube") != null)
+                    {
+                        <a class="ui youtube icon button" href="@redesSociais.Find(f => f.Identifier == "youtube").Content" target="_blank">
+                            <i class="youtube icon"></i>
+                        </a>
+                    }
+                    @if (redesSociais.Find(f => f.Identifier == "google plus") != null)
+                    {
+                        <a class="ui google plus icon button" href="@redesSociais.Find(f => f.Identifier == "google plus").Content" target="_blank">
+                            <i class="google plus icon"></i>
+                        </a>
+                    }
+
+
+
+                </div>
+                <div class="ui divider"></div>
+                <h4>Newsletter</h4>
+                <p>Cadastre seu e-mail e receba novidades e promoções.</p>
+                <div class="ui form">
+                    <div class="inline field">
+                        <div class="ui left icon action input">
+                            <i class="mail icon"></i>
+                            <input type="text" placeholder="seu@email.com.br" id="email_news">
+                            <button class="ui button inverted basic white" id="btn_news">
+                                <i class="send outline icon"></i>Cadastrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="ui container fluid inverted vertical segment subFooter">
+    <div class="ui container">
+        <div class="ui two column grid">
+            <div class="row">
+                <div class="column text small">
+                    <p>@LojaCorp.Control.Company._Company.FantasyName</p>
+                    <address>
+                        @{
+                            string complementAddress = LojaCorp.Control.Company._Company.Complement != "" ? " " + LojaCorp.Control.Company._Company.Complement + ", " : "";
+                        }
+                        @string.Format("{0}, {1}{2}", LojaCorp.Control.Company._Company.Address, complementAddress, LojaCorp.Control.Company._Company.Neighbourhood)
+                        <br>
+                        @string.Format("{0}-{1}-{2}", LojaCorp.Control.Company._Company.CEP, LojaCorp.Control.Company._Company.City, LojaCorp.Control.Company._Company.State)
+                        <br />
+                        CNPJ: @LojaCorp.Control.Company._Company.CNPJ
+                    </address>
+                </div>
+                <div class="right aligned column">
+                    @* Page: ~/Views/Company/_EBit.cshtml *@
+                    <div class="ui horizontal list selos">
+                        <div class="item">
+                            @Html.Action("EBit", "Company")
+                        </div>
+                        <div class="item">
+                            <div class="ui tiny images">
+                                @Html.Action("GetCompanySeal", "Company")
+                            </div>
+                        </div>
+                    </div>
+                    @Html.Partial("~/Views/Shared/Common/_Payments_List.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui container fluid inverted vertical segment jetBrand">
+    <div class="ui container">
+        @Html.Partial("Common/_JetLogo")
+    </div>
+</div>
+
+<div class="modal-block">
+
+</div>

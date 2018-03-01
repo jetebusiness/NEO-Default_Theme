@@ -1,0 +1,30 @@
+.hideme {
+	display: none !important;
+  }
+
+.display {
+  &.block.mra.mla {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  &.grid {
+    display: grid !important;
+  }
+}
+
+.inline-flex {
+  display: inline-flex !important;
+}
+
+.no-pointer {
+  cursor: default !important;
+}
+
+.inline-block{
+    display:inline-block !important;
+}
+.both {
+  clear: both;
+}

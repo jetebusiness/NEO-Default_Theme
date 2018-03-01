@@ -1,0 +1,22 @@
+﻿@model DomainProduct.Settings
+
+<div class="ui pagination menu">
+    <a id="previousPage" class="@(Model.HasPreviousPage ? "" : "disabled") item" href="#" data-number="@(@Model.PageNumber - 1)">
+        <i class="angle left icon"></i>
+    </a>
+
+    @for (int i = 1; i <= Model.PageCount; i++)
+    {
+        if ((Model.PageCount <= 5) || (Model.PageCount > 5 && (i >= Model.PageNumber - 5 && i <= Model.PageNumber + 5)))
+        {
+            <a id="btnPageNumber" class="@((i) == Model.PageNumber ? "active" : "") item" data-number="@(i)" href="#">
+                @(i)
+            </a>
+        }
+    }
+
+    <a id="nextPage" class="@(Model.HasNextPage ? "" : "disabled") item" href="#" data-number="@(@Model.PageNumber + 1)">
+        <i class="angle right icon"></i>
+    </a>
+</div>
+
