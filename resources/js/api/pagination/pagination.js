@@ -1,7 +1,6 @@
 ﻿import {isLoading} from "../api_config";
 
 let urlBase = "/product/getproducts/";
-let urlBaseFilter = "/product/filtermenu/";
 
 let idEventListFilter = "";
 let genericPageFilter = "";
@@ -19,21 +18,27 @@ if($("#idEventListFilter").length > 0){
 }
 
 $(document).on("click", "#previousPage", function() {
-    let page = $(this).data("number");
-    window.filterManipulation.pageNumber = page;
+    var isdisabled =  $(this).hasClass("disabled");
+    if(!isdisabled){
+        let page = $(this).data("number");
+        window.filterManipulation.pageNumber = page;
 
-    loadData();
+        loadData();
 
-    getProducts(data);
+        getProducts(data);
+    }
 });
 
 $(document).on("click", "#nextPage", function() {
-    let page = $(this).data("number");
-    window.filterManipulation.pageNumber = page;
+    var isdisabled =  $(this).hasClass("disabled");
+        if(!isdisabled){
+        let page = $(this).data("number");
+        window.filterManipulation.pageNumber = page;
     
-    loadData();
+        loadData();
 
-    getProducts(data);
+        getProducts(data);
+    }
 });
 
 $(document).on("click", "#btnPageNumber", function() {
@@ -57,10 +62,10 @@ function getProducts(data) {
             $("#list").html(response);
         },
         onFailure: function onFailure(response) {
-            console.log("Falha ao acessar a página: " + response);
+            //console.log("Falha ao acessar a página: " + response);
         },
         onError: function onError(response) {
-            console.log("Erro ao acessar a página: " + response);
+            //console.log("Erro ao acessar a página: " + response);
         },
         complete: function (response) {
             uiReload();

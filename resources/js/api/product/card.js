@@ -135,7 +135,7 @@ $(document).on("click", ".button.avise-card", function () {
 
         },
         onFailure: function (response) {
-            console.log(response);
+            //console.log(response);
             loading(that);
         }
     });
@@ -160,7 +160,7 @@ $(document).ready(function () {
             openModalQuickView($(this).attr("data-modal-open"));
         },
         onError: function (errorMessage) {
-            console.log(errorMessage);
+            //console.log(errorMessage);
         }
     });
 
@@ -208,9 +208,11 @@ function callAjaxGetSku(element) {
         variationSelected = getVariationIds($parent, productId);
 
     if (variationSelected.status) {
+        /*
         console.warn("Buscando SKU de Produto por variação");
         console.log(`ID produto: ${productId}
             Variações: ${variationSelected.ids}`);
+        */
         $.ajax({
             url: "/product/GetSkuByIdProductJson",
             data: {id: productId, variations: variationSelected.ids},
@@ -283,10 +285,11 @@ function callAjaxGetSku(element) {
 }
 
 function callAjaxInsertItemInCart(idProduct, variations, quantity, element, showSidebar) {
-    console.warn("Adicionando Produto ao Carrinho");
+    /*console.warn("Adicionando Produto ao Carrinho");
     console.log(`ID produto: ${idProduct}
             Variações: ${variations}
             Quantidade: ${quantity}`);
+    */
     $.ajax({
         url: "/Checkout/InsertUniqueItemCart",
         method: "POST",
@@ -302,16 +305,17 @@ function callAjaxInsertItemInCart(idProduct, variations, quantity, element, show
             }
         },
         error: function (response) {
-            console.log(response);
+            //console.log(response);
         }
     });
 }
 
 function callAjaxInsertItemInList(idProduct, variations, quantity, element) {
-    console.warn("Adicionando Produto ao Carrinho");
+    /*console.warn("Adicionando Produto ao Carrinho");
     console.log(`ID produto: ${idProduct}
             Variações: ${variations}
             Quantidade: ${quantity}`);
+    */
     $.ajax({
         url: "/EventList/InsertProductInEventList",
         method: "POST",
@@ -327,7 +331,7 @@ function callAjaxInsertItemInList(idProduct, variations, quantity, element) {
             }
         },
         error: function (response) {
-            console.log(response);
+            //console.log(response);
             $(element).removeClass("loading");
         }
     });

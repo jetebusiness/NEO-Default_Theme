@@ -1,61 +1,214 @@
-﻿<div class="text big title color black">
+﻿@model DomainCheckout.Entities.PaymentMethod
+
+@{
+    string JsonPaymentMethod = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
+    var LstOneClick = (List<DomainPayment.Entities.MaxiPago.OneClickMaxiPago>)Session["LstOneClick"];
+    var temOneClickSalvo = LstOneClick.Count() > 0 ? true : false;
+}
+<div class="text big title color black" data-tipo="cardCredit" id="tipoCardCreditBlock">
     <i class="credit card alternative icon"></i>
     Cartão de Crédito
     <i class="ui icon dropdown floated right"></i>
 </div>
-<div class="content">
-    <form action="" method="post" class="jet checkout ui form credit-card" id="validCardCredit">
-        <div class="card-wrapper"></div>
-        <div class="ui divider hidden"></div>
-        <div class="field required">
-            <label class="labelCheckPayment">Número</label>
-            <div class="ui left icon input">
-                <i class="user icon"></i>
-                <input type="text" class="fieldCheckPayment" name="CreditCard" id="CreditCard" placeholder="Número do Cartão" data-type="number">
-            </div>
+<div class="content contentcartao">
+    @if (temOneClickSalvo)
+    {
+        <div class="ui top attached tabular menu">
+            <a class="item active" data-tab="oneclick">
+                OneClick
+            </a>
+            <a class="item" data-tab="cartaodecredito">
+                Cartão de Crédito
+            </a>
         </div>
-
-        <div class="field required">
-            <label class="labelCheckPayment">
-                Nome</label>
-                <div class="ui left icon input">
-                    <i class="user icon"></i>
-                    <input type="text" class="fieldCheckPayment" maxlength="100" name="Name" id="Name" placeholder="Nome Impresso no Cartão" data-type="name">
+        <div class="ui bottom attached tab segment active" data-tab="oneclick">
+            <form action="" method="post" class="jet checkout ui form oneclick" id="validOneClick" data-paymentmethod="@JsonPaymentMethod">
+                <div class="field required">
+                    <label class="labelCheckPayment">Cartões Salvos</label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <select class="fieldCheckPayment" name="OneClick" id="OneClick" placeholder="Selecione o cartão desejado." style="padding: 0.62em 2.5em !important;">
+                            <option value="0">Selecione o cartão desejado.</option>
+                            @{
+                                foreach (var item in LstOneClick)
+                                {
+                                    <option value="@item.IdOneClickMaxiPago" data-brand="@item.Bandeira">@item.NumeroCartao</option>
+                                }
+                            }
+                        </select>
+                    </div>
                 </div>
-        </div>
-        <div class="two fields">
-            <div class="field required">
-                <label class="labelCheckPayment">Data de Validade</label>
-                <div class="ui left icon input">
-                    <i class="user icon"></i>
-                    <input type="text" class="fieldCheckPayment" name="ExpDate" id="ExpDate" placeholder="00/0000" data-type="expiry">
+                <div class="field required">
+                    <label class="labelCheckPayment">CVV</label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" class="fieldCheckPayment" name="CVVOneClick" id="CVVOneClick" placeholder="Nº de Segurança" data-type="cvv">
+                    </div>
                 </div>
-            </div>
-            <div class="field required">
-                <label class="labelCheckPayment">CVV</label>
-                <div class="ui left icon input">
-                    <i class="user icon"></i>
-                    <input type="text" class="fieldCheckPayment" name="CVV" id="CVV" placeholder="Nº de Segurança" data-type="cvv">
+                <div class="field required">
+                    <label class="labelCheckPayment">Desejo Parcelar em:</label>
+                    <div class="ui left icon input">
+                        <select class="fieldCheckPayment" name="idInstallmentOneClick" id="parcCardOneClick">
+                            <option value="">Informe o numero do cartão primeiro</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+                <input type="hidden" name="brandOneClick" id="brandOneClick" value="" />
+                <div class="field">
+                    <button class="ui labeled icon green large fluid button GerarPedido" id="btnOneClick" data-idBrand="" data-Card="O">
+                        <i class="credit card alternative icon"></i>
+                        Pagar com OneClick
+                    </button>
+                </div>
+            </form>
         </div>
+        <div class="ui bottom attached tab segment" data-tab="cartaodecredito">
+            <form action="" method="post" class="jet checkout ui form credit-card" id="validCardCredit" data-paymentmethod="@JsonPaymentMethod">
+                <div class="card-wrapper"></div>
+                <div class="ui divider hidden"></div>
+                <div class="field required">
+                    <label class="labelCheckPayment">Número</label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" class="fieldCheckPayment" name="CreditCard" id="CreditCard" placeholder="Número do Cartão" data-type="number">
+                    </div>
+                </div>
+                <div class="field required">
+                    <label class="labelCheckPayment">
+                        Nome
+                    </label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" class="fieldCheckPayment" maxlength="100" name="Name" id="Name" placeholder="Nome Impresso no Cartão" data-type="name">
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field required">
+                        <label class="labelCheckPayment">Data de Validade</label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" name="ExpDate" id="ExpDate" placeholder="00/0000" data-type="expiry">
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label class="labelCheckPayment">CVV</label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" name="CVV" id="CVV" placeholder="Nº de Segurança" data-type="cvv">
+                        </div>
+                    </div>
+                </div>
+                <div class="field required" id="documentOneClick">
+                    <label class="labelCheckPayment">
+                        CPF
+                    </label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" class="fieldCheckPayment" maxlength="100" name="Document" id="Document" placeholder="Documento de identificação" data-type="cpf">
+                    </div>
+                </div>
+                <div class="field required">
+                    <label class="labelCheckPayment">Desejo Parcelar em:</label>
+                    <div class="ui left icon input">
+                        <select class="fieldCheckPayment" name="idInstallment" id="parcCard">
+                            <option value="">Informe o numero do cartão primeiro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field hidden" id="checkOneClickMaxiPago">
+                    <div class="ui left icon input">
+                        <input type="checkbox" class="fieldCheckPayment custom_oneClick" maxlength="100" name="SaveCard" id="SaveCard" value="true">
+                        <label class="labelCheckPayment" for="SaveCard">
+                            Deseja salvar este cartão para futuras compras?
+                        </label>
+                    </div>
+                </div>
+                <div class="ui divider hidden small"></div>
+                <input type="hidden" name="brandCard" id="brandCard" value="" />
+                <div class="field">
+                    <button class="ui labeled icon green large fluid button GerarPedido" id="btnCardCredit" data-idBrand="" data-Card="S">
+                        <i class="credit card alternative icon"></i>
+                        Pagar com Cartão de Crédito
+                    </button>
+                </div>
+            </form>
+        </div>
+                                }
+                                else
+                                {
+                                    <form action="" method="post" class="jet checkout ui form credit-card" id="validCardCredit" data-paymentmethod="@JsonPaymentMethod">
+                                        <div class="card-wrapper"></div>
+                                        <div class="ui divider hidden"></div>
+                                        <div class="field required">
+                                            <label class="labelCheckPayment">Número</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input type="text" class="fieldCheckPayment" name="CreditCard" id="CreditCard" placeholder="Número do Cartão" data-type="number">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label class="labelCheckPayment">
+                                                Nome
+                                            </label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input type="text" class="fieldCheckPayment" maxlength="100" name="Name" id="Name" placeholder="Nome Impresso no Cartão" data-type="name">
+                                            </div>
+                                        </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label class="labelCheckPayment">Data de Validade</label>
+                                                <div class="ui left icon input">
+                                                    <i class="user icon"></i>
+                                                    <input type="text" class="fieldCheckPayment" name="ExpDate" id="ExpDate" placeholder="00/0000" data-type="expiry">
+                                                </div>
+                                            </div>
+                                            <div class="field required">
+                                                <label class="labelCheckPayment">CVV</label>
+                                                <div class="ui left icon input">
+                                                    <i class="user icon"></i>
+                                                    <input type="text" class="fieldCheckPayment" name="CVV" id="CVV" placeholder="Nº de Segurança" data-type="cvv">
+                                                </div>
+                                            </div>
+                                        </div>
+                                  
+                                            <div class="field hidden required" id="documentOneClick">
+                                                <label class="labelCheckPayment">
+                                                    CPF
+                                                </label>
+                                                <div class="ui left icon input">
+                                                    <i class="user icon"></i>
+                                                    <input type="text" class="fieldCheckPayment" maxlength="100" name="Document" id="Document" placeholder="Documento de identificação" data-type="cpf">
+                                                </div>
+                                            </div>
+                                        
+                                        <div class="field required">
+                                            <label class="labelCheckPayment">Desejo Parcelar em:</label>
+                                            <div class="ui left icon input">
+                                                <select class="fieldCheckPayment" name="idInstallment" id="parcCard">
+                                                    <option value="">Informe o numero do cartão primeiro</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
-        <div class="field required">
-            <label class="labelCheckPayment">Desejo Parcelar em:</label>
-            <div class="ui left icon input">
-                <select class="fieldCheckPayment" name="idInstallment" id="parcCard">
-                    <option value="">Informe o numero do cartão primeiro</option>
-                </select>
-            </div>
-        </div>
+                                        @*OneClick aparece apenas para cartao de credito maxiPago*@
+                                        <div class="field hidden" id="checkOneClickMaxiPago">
+                                            <div class="ui left icon input">
+                                                <input type="checkbox" class="fieldCheckPayment custom_oneClick" maxlength="100" name="SaveCard" id="SaveCard" value="true">
+                                                <label class="labelCheckPayment" for="SaveCard">
+                                                    Deseja salvar este cartão para futuras compras?
+                                                </label>
+                                            </div>
+                                        </div>
 
-        <div class="ui divider hidden small"></div>
-        <input type="hidden" name="brandCard" id="brandCard" value="" />
-        <div class="field">
-            <button class="ui labeled icon green large fluid button GerarPedido" id="btnCardCredit" data-idBrand="" data-Card="S">
-                <i class="credit card alternative icon"></i>
-                Pagar com Cartão de Crédito
-            </button>
-        </div>
-    </form>
+                                        <div class="ui divider hidden small"></div>
+                                        <input type="hidden" name="brandCard" id="brandCard" value="" />
+                                        <div class="field">
+                                            <button class="ui labeled icon green large fluid button GerarPedido" id="btnCardCredit" data-idBrand="" data-Card="S">
+                                                <i class="credit card alternative icon"></i>
+                                                Pagar com Cartão de Crédito
+                                            </button>
+                                        </div>
+                                    </form>
+                                }
 </div>

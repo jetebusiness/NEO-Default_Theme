@@ -11,20 +11,20 @@
 }
 
 @section breadcrumbs {
-<div class="ui container">
-    <div class="ui one column grid stackable middle aligned">
-        <div class="row">
-            <div class="column">
-                <h1>@ViewBag.Title</h1>
-                <div class="ui breadcrumb text small">
-                    <a class="section" href="/">Home</a>
-                    <i class="right angle icon divider"></i>
-                    <a class="section">Acesse sua conta</a>
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Acesse sua conta</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 }
 
@@ -54,8 +54,7 @@
                                         <input type="password" name="password" maxlength="100" id="password" placeholder="Senha">
                                     </div>
                                 </div>
-                                <input type='hidden' id='googleResponse' name='googleResponse' value='' />
-                                <div id="gCaptcha" class="g-recaptcha" data-sitekey="6Lem5z8UAAAAAAtkHSjb8mf33ht_r7T8zG3op9xj"></div>
+                                @Html.Action("GetRecaptcha", "Company", null)
                                 <br />
                                 <button type="button" class="ui fluid large submit primary button" id="submitForm">
                                     Entrar
@@ -96,7 +95,6 @@
                                         </button>
                                     }
                                 }
-
                             </div>
                         </div>
                     </div>

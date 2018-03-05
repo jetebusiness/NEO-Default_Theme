@@ -1,25 +1,24 @@
 ﻿@model List<DomainCheckout.Entities.Shipping>
-
 <div class="ui fluid items divided card-checkout" id="GetShippping">
     @if (Model != null)
-    {
-        int _contador = 0;
-        string _checkFrete = "";
-        string _classCheckFrete = "";
-        foreach (var item in Model)
         {
-            _contador++;
-
-            if (Convert.ToInt32(TempData["IdShippingModeCart"]) == item.ShippingMode.IdShippingMode)
+            int _contador = 0;
+            string _checkFrete = "";
+            string _classCheckFrete = "";
+            foreach (var item in Model)
             {
-                _classCheckFrete = "checked";
-                _checkFrete = "checked='checked'";
-            }
-            else
-            {
-                _classCheckFrete = "";
-                _checkFrete = "";
-            }
+                _contador++;
+                int IdShippingModeCart = Convert.ToInt32(TempData["IdShippingModeCart"]);
+                if (IdShippingModeCart == item.ShippingMode.IdShippingMode && IdShippingModeCart != 0)
+                {
+                    _classCheckFrete = "checked";
+                    _checkFrete = "checked='checked'";
+                }
+                else
+                {
+                    _classCheckFrete = "";
+                    _checkFrete = "";
+                }
 
             <div class="item">
                 <div class="content">
@@ -45,11 +44,11 @@
                     </div>
                 </div>
             </div>
-        }
-    }
-    else
-    {
-        @Html.Raw("Nenhum Frete foi encontrado")
-    }
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.Raw("Nenhum Frete foi encontrado")
+                                }
 </div>
 @*<a href="">Dica de Frete Grátis</a>*@

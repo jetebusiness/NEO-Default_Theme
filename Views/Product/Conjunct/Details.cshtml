@@ -522,8 +522,7 @@
                                         <label>Mostrar Email?</label>
                                     </div>
                                 </div>
-                                <input type="hidden" name="Rate" id="Rate" value="" />
-                                <div id="gCaptchaDetail" class="g-recaptcha" data-sitekey="6Lem5z8UAAAAAAtkHSjb8mf33ht_r7T8zG3op9xj"></div>
+                                @Html.Action("GetRecaptcha", "Company", null)
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>

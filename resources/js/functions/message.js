@@ -7,12 +7,15 @@
  * Retorno: Monta menssagem de alerta na tela via SweetAlert 2
  */
 export function _alert(titulo, texto, tipo, allowOutsideClick = true) {
-    swal({
-        title: titulo,
-        text: texto,
-        type: tipo,
-        allowOutsideClick: allowOutsideClick
-    });
+    var modal_count = $("body").find(".swal2-show").length;
+        if(modal_count === 0){
+        swal({
+            title: titulo,
+            text: texto,
+            type: tipo,
+            allowOutsideClick: allowOutsideClick
+        });
+    }
 }
 /**
  *

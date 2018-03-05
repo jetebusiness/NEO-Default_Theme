@@ -90,7 +90,7 @@ function RemoveProductCart(){
                         idCartItem : new Number(idCurrent)
                     },
                     success: function(data){
-                        if(data.success == true){
+                        if(data.success === true){
                             $("#itemCartProduct_"+idCurrent).remove();
                             LoadCarrinho();
                         }
@@ -166,7 +166,7 @@ function LoadCarrinho(){
         contentType: "application/json; charset=utf-8",
         success: function(response){
             var objCarrinho;
-            if(response.success == true){
+            if(response.success === true){
                 objCarrinho = jQuery.parseJSON(response.cartJson);
 
                 for (var i = 0; i < objCarrinho.cartItems.length; i++) {
@@ -230,37 +230,6 @@ function ChangeFrete(){
     });
 }
 
-function LoadServiceShippingStart(){
-    $.ajax({
-        method: "POST",
-        url: "/Checkout/GetShippingValues",
-        data:{ zipCode: zipCode},
-        success: function(data){
-            $("#CallServiceShipping").removeClass("loading");
-            $(".description.frete").hide();
-            //Coloca as infoam��es no Bloco HMTL com os valores corretos
-            $(".description.resultado .valor").html(data);
-            //$(".tabela.frete").dropdown('refresh');
-            $(".description.resultado").show();
-
-            ChangeFrete();
-            var idCurrent = $("#GetShipping").val();
-            var zipCode = $("#shipping").inputmask('unmaskedvalue');
-            var idShippingMode = idCurrent;
-            var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-
-
-            $("#id_frete_selecionado").val(idShippingMode);
-            $("#cep_selecionado").val(zipCode);
-
-            ExibirDicadeFrete(idShippingMode, zipCode);
-
-            SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
-        }
-    });
-    event.stopPropagation();
-}
-
 function CancelarCalculoFreteCart(flagUpdate){
   var existeCep = $("#cep_selecionado").val();
   if(existeCep != ""){
@@ -274,14 +243,14 @@ function CancelarCalculoFreteCart(flagUpdate){
             data: {},
             success: function(data){
                 if(data.success === false){
-                    console.log("Erro ao excluir frete");
+                    //console.log("Erro ao excluir frete");
                 }
                 if(flagUpdate === 1){
                   UpdateCarrinho();
                 }
             },
             onFailure: function(data){
-                console.log("Erro ao excluir frete");
+                //console.log("Erro ao excluir frete");
             }
         });
     }
@@ -314,7 +283,7 @@ $(document).on("click", "#finalizePurchase", function(e){
                 _alert("Mensagem", data.message, "error")                
         },
         onFailure: function(data){
-            console.log("Erro ao excluir frete");
+            //console.log("Erro ao excluir frete");
         }
     })
 })

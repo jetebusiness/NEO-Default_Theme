@@ -1,9 +1,7 @@
 import { _alert } from '../../functions/message';
 import { isMobile } from '../../functions/mobile';
-import { removeProduct } from '../../functions/cart_manipulation';
 
 require("jetcheckout");
-
 require("card/dist/jquery.card");
 
 $(document).ready(function () {

@@ -1,16 +1,3 @@
-/**
- * Semantic-UI Modal
- * Abre Modal com ID Definido
- * @param modal
- */
-export function openModal(modal) {
-    "use strict";
-    console.log(`Abrindo Modal: ${modal}`);
-
-    $('.ui.modal[data-modal=' + modal + ']')
-        .modal('setting', 'transition', 'fade up')
-        .modal('show');
-}
 
 /**
  * Semantic-UI Modal

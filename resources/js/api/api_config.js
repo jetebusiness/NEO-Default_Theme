@@ -19,9 +19,7 @@ $.fn.api.settings.api = {
 };
 
 export function isLoading(seletor = ""){
-    let loadingDiv = `<div class="ui active dimmer inverted bluring loading-div">
-    <div class="ui indeterminate text loader">Carregando...</div>
-  </div>`;
+    let loadingDiv = '<div class="ui active dimmer inverted bluring loading-div"><div class="ui indeterminate text loader">Carregando...</div></div>';
     if ($(seletor).find(".loading-div").length === 1){
         $(".loading-div").remove();
     }

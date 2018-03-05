@@ -2,12 +2,11 @@ import {isLoading} from "../api_config";
 import {moneyPtBR} from "../../functions/money";
 import {ZoomReset} from '../../functions/zoom';
 import {_alert, _confirm} from "../../functions/message";
-import {openModalQuickView} from "../../functions/modal";
+import {openModalQuickView, openLongModal} from "../../functions/modal";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
-import {openLongModal} from "../../functions/modal";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
 import {LoadCarrinhoEventList} from "../../functions/mini_cart_generic";
-
+import {CarregarParcelamento} from "../../api/product/detail_b2b.js";
 
 $(document).ready(function () {
     "use strict";
@@ -45,10 +44,10 @@ $(document).ready(function () {
             });
         },
         onFailure: function (response) {
-            console.log(response);
+            //console.log(response);
         },
         onError: function (errorMessage) {
-            console.log(errorMessage);
+            //console.log(errorMessage);
         }
     });
 
@@ -69,12 +68,17 @@ $(document).ready(function () {
     });
 
     $(".btn-avaliar").click(function () {
-        if(grecaptcha.getResponse() != ""){
-            $("#googleResponse").val(grecaptcha.getResponse())
-            AvaliarProduto()
-        }else{
-            grecaptcha.reset()
+        var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false
+        if(googleRecaptchaStatus){
+            if(grecaptcha.getResponse() != ""){
+                $("#googleResponse").val(grecaptcha.getResponse())
+                AvaliarProduto()
+            }else{
+                grecaptcha.reset()
+            }
         }
+        else
+            AvaliarProduto()
     });
 
 
@@ -103,15 +107,44 @@ $(document).ready(function () {
             if (parseInt(totalVariations) > 0) {
                 //SE EXISTE, VALIDA SE FOI SELECIONADA
                 if (productSKU != null && productSKU != "" && resultado > 0) {
-                    AdicionarProdutoAjx(parseInt(productSKU), parseInt(productID), productQuantity)
-                    ApplyDiscountInCart()
+                    AdicionarProdutoAjx(parseInt(productSKU), parseInt(productID), productQuantity);
+                    ApplyDiscountInCart();
                 }else {
                     _alert("Grade indisponível, escolha outra combinação!", "Mensagem", "error");
                 }
             } else {
                 ///GRAVA PRODUTO SEM VARIACAO
-                AdicionarProdutoAjx(null, parseInt(productID), productQuantity)
-                ApplyDiscountInCart()
+                AdicionarProdutoAjx(null, parseInt(productID), productQuantity);
+                ApplyDiscountInCart();
+            }
+        }else {
+            _alert("Erro ao adicionar produto", "Mensagem", "error");
+        }
+    });
+
+    $(".detalhes.btn-comprar-oneclick").click(function () {
+        var resultado       = ValidarSkuProdutoPrincipal();
+        let productSKU      = $("#produto-sku").val(),
+            productID       = $("#produto-id").val(),
+            productQuantity = parseInt($("#quantidade").val()),
+            totalVariations = $("#principal-total-variacoes").val()
+
+        //PRODUTO DEVE SER DIFERENTE DE NULL
+        if (productID != null && productID != "") {
+            $(this).addClass("loading");
+            //SE FOR, VALIDA SE EXISTE VARIAÇÔES
+            if (parseInt(totalVariations) > 0) {
+                //SE EXISTE, VALIDA SE FOI SELECIONADA
+                if (productSKU != null && productSKU != "" && resultado > 0) {
+                    AdicionarProdutoAjx(parseInt(productSKU), parseInt(productID), productQuantity, true);
+                    ApplyDiscountInCart();
+                }else {
+                    _alert("Grade indisponível, escolha outra combinação!", "Mensagem", "error");
+                }
+            } else {
+                ///GRAVA PRODUTO SEM VARIACAO
+                AdicionarProdutoAjx(null, parseInt(productID), productQuantity, true);
+                ApplyDiscountInCart();
             }
         }else {
             _alert("Erro ao adicionar produto", "Mensagem", "error");
@@ -359,7 +392,7 @@ function BuscarVariacaoCor(valor_selecionado, order, idReferencia) {
         },
         error: function (request, error) {
             isLoading("body");
-            console.log('Erro ao buscar cores');
+            //console.log('Erro ao buscar cores');
         }
     });
 }
@@ -377,7 +410,7 @@ function AtualizarDicaCompreJunto(_productID, _skuID) {
             $("#dica_compra_partial").html(response)
         },
         error: function (request, error) {
-            console.log('Erro ao buscar dica promocional')
+            //console.log('Erro ao buscar dica promocional')
         }
     });
 }
@@ -389,7 +422,7 @@ function CarregarMaisAvaliacoes() {
 
         avaliacao_html += "<div class='comment'><div class='content'><a class='author'>" + lista_avaliacao_produto[i].Name + "</a><div class='metadata'><div class='rating'><div class='ui mini star rating' ";
         avaliacao_html += "data-rating=" + lista_avaliacao_produto[i].Rate + "></div></div><div class='date'></div>";
-        if (lista_avaliacao_produto[i].LeavePublicEmail == true) {
+        if (lista_avaliacao_produto[i].LeavePublicEmail === true) {
             avaliacao_html += "<div class='email'>" + lista_avaliacao_produto[i].Email + "</div>";
         } else {
             avaliacao_html += "<div class='email'></div>";
@@ -437,9 +470,11 @@ function ValidaVariacaoSelecionada(selecionada, seletor) {
 
 function AvaliarProduto() {
     var form = $('#avaliar');
+    var googleRecaptcha = $("#avaliar #gCaptcha").length > 0 ?  $("#avaliar #gCaptcha").val() : ""
+    var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false
 
     $.ajax({
-        url: '/Product/ProductRating?googleResponse=' + $("#googleResponse").val(),
+        url: '/Product/ProductRating?googleResponse=' + googleRecaptcha,
         type: 'POST',
         data: {
             form: form.serialize(),
@@ -447,7 +482,7 @@ function AvaliarProduto() {
         },
         dataType: 'json',
         success: function (response) {
-            if (response.Success == true) {
+            if (response.Success === true) {
                 swal({
                     title: 'Avaliação Realizada com Sucesso!',
                     text: response.Message,
@@ -477,12 +512,14 @@ function AvaliarProduto() {
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    grecaptcha.reset()
+                    if(googleRecaptchaStatus)
+                        grecaptcha.reset()
                 });
             }
         },
         error: function (request, error) {
-            grecaptcha.reset()
+            if(googleRecaptchaStatus)
+                grecaptcha.reset()
         }
     });
 }
@@ -514,7 +551,7 @@ function buscarSKU(seletor, produtoID) {
             dataType: 'json',
             success: function (data) {
                 if (typeof produtoID != 'undefined') {
-                    if (data.Visible == true && data.Stock > 0) {
+                    if (data.Visible === true && data.Stock > 0) {
                         AtualizarGradeCompreJunto(data, produtoID);
                     } else {
                         swal({
@@ -537,9 +574,10 @@ function buscarSKU(seletor, produtoID) {
                 }
 
                 AtualizarDicaCompreJunto($("#produto-id").val(), data.IdSku);
+                CarregarParcelamento(false);
             },
             error: function (request, error) {
-                console.log("erro ao buscar sku");
+                //console.log("erro ao buscar sku");
             }
         });
 
@@ -566,11 +604,10 @@ function AtualizarGradeCompreJunto(jsonSKU, productID) {
 
 function AtualizarGrade(jsonSKU) {
 
-    let quantidade     = parseInt($("#quantidade").val()),
+    let 
         estoque        = parseInt(jsonSKU.Stock),
-        avise          = "",
         html_price     = "",
-        price          = moneyPtBR(jsonSKU.Price),
+        price          = jsonSKU.Price,
         max_p          = jsonSKU.InstallmentMax.MaxNumber,
         max_v          = moneyPtBR(jsonSKU.InstallmentMax.Value),
         description    = jsonSKU.InstallmentMax.Description,
@@ -578,15 +615,27 @@ function AtualizarGrade(jsonSKU) {
         valorDesconto  = $("#desconto_boleto").val(),
         descontoBoleto = "";
 
-    if (valorDesconto > 0) {
-        descontoBoleto = `
+    if (parseFloat(valorDesconto.replace(',','.')) > 0) {
+        if(jsonSKU.PricePromotion <= 0){
+            descontoBoleto = `
             <br />
             <span>ou</span>
             <span>
-                <span id="preco_boleto">${moneyPtBR((price / 100) * valorDesconto)}</span>
+                <span id="preco_boleto">${moneyPtBR(price - ((price * parseFloat(valorDesconto.replace(',', '.'))) / 100))}</span>
                 no boleto bancário (${valorDesconto}% de desconto)
             </span>
             `
+        }
+        else{
+            descontoBoleto = `
+            <br />
+            <span>ou</span>
+            <span>
+                <span id="preco_boleto">${moneyPtBR(jsonSKU.PricePromotion - ((jsonSKU.PricePromotion * parseFloat(valorDesconto.replace(',', '.'))) / 100))}</span>
+                no boleto bancário (${valorDesconto}% de desconto)
+            </span>
+            `
+        }
     }
     if (jsonSKU.PricePromotion != "" && jsonSKU.PricePromotion != "0") {
         html_price = `<span class="precoAntigo">
@@ -594,7 +643,7 @@ function AtualizarGrade(jsonSKU) {
                         <span id="preco-antigo">${price}</span>
                         <span> por</span>
                       </span>
-                    <span itemprop="price" class="preco" id="preco">${pricePromotion}</span>
+                    <span itemprop="price" class="preco" id="preco" data-preco-inicial ="${jsonSKU.PricePromotion}">${pricePromotion}</span>
                     <span class="infoPreco">
                         <span>em</span>
                         <span id="max-p">${max_p}<span>X de </span></span>
@@ -603,7 +652,7 @@ function AtualizarGrade(jsonSKU) {
                         ${descontoBoleto}
                     </span>`;
     } else {
-        html_price = `<span itemprop="price" class="preco" id="preco">${price}</span>
+        html_price = `<span itemprop="price" class="preco" id="preco" data-preco-inicial ="${jsonSKU.Price}">${price}</span>
                                                     <span class="infoPreco">
                                                         <span>em</span>
                                                         <span id="max-p">
@@ -644,6 +693,7 @@ function AtualizarGrade(jsonSKU) {
     $("#pagamento-descricao").val(description);
     $("#produto-sku").val(jsonSKU.IdSku);
     AtualizarQuantidade();
+    $("#parcelamento_b2b").find(".active").removeClass("active");
 }
 
 function AtualizarQuantidade() {
@@ -671,13 +721,15 @@ function AtualizarQuantidade() {
     $("#description").text("(" + description+ ")");
 
 
-    if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) == false) {
+    if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) === false) {
         preco_final = quantidade * preco_promocao;
         $("#preco").text(moneyPtBR(quantidade * preco_promocao));
+        $("#preco").data("preco-inicial", quantidade * preco_promocao);
         $("#preco-antigo").text(moneyPtBR(quantidade * preco));
     } else {
         preco_final = quantidade * preco;
         $("#preco").text(moneyPtBR(quantidade * preco));
+        $("#preco").data("preco-inicial", quantidade * preco);
         $("#preco-antigo").text("");
     }
 
@@ -697,26 +749,11 @@ function AtualizarQuantidade() {
 
     AtualizarCompreJunto();
     isLoading("body");
+    $("#parcelamento_b2b").find(".active").removeClass("active");
 }
 
 function AtualizarParcelamento(preco) {
-    //
-    // $.ajax({
-    //     url: '/Product/Payment/',
-    //     type: 'GET',
-    //     data: {
-    //         valor: parseFloat(preco),
-    //         flagExibir: true
-    //     },
-    //     dataType: 'html',
-    //     success: function (response) {
-    //         $("#pagamento-calculado").html(response);
-    //         $('.ui.accordion').accordion();
-    //     },
-    //     error: function (request, error) {
-    //         console.log(error);
-    //     }
-    // });
+
 }
 
 function AtualizarCompreJunto() {
@@ -808,24 +845,6 @@ function AtualizarCarrinhoCompreJunto(valor, valorP, operador) {
     }
 }
 
-function AtualizarDicaPromocao() {
-    $.ajax({
-        url: '/Product/BuyingTips/',
-        type: 'GET',
-        data: {
-            productID: $("#produto-id").val(),
-            skuID: $("#produto-sku").val()
-        },
-        dataType: 'html',
-        success: function (response) {
-            $("#promocao").html(response);
-        },
-        error: function (request, error) {
-
-        }
-    });
-}
-
 function ApplyDiscountInCart() {
     $.ajax({
         url: '/Checkout/ApplyDiscountInCart',
@@ -833,7 +852,7 @@ function ApplyDiscountInCart() {
         contentType: 'application/json; charset=UTF-8',
         dataType: 'json',
         success: function (response) {
-            if (response.success == true) {
+            if (response.success === true) {
                 LoadCarrinho()
             } else {
                 console.warn(response.message)
@@ -860,7 +879,7 @@ function AdicionarProdutosCompreJuntoAjx() {
             data: JSON.stringify({productIDSKU: listaSkus}),
             dataType: 'json',
             success: function (response) {
-                if (response.success == true) {
+                if (response.success === true) {
                     //window.location.href = "/Checkout/Index";
                     LoadCarrinho();
                     $(".carrinho").sidebar('toggle');
@@ -893,7 +912,7 @@ function AdicionarProdutosCompreJuntoAjx() {
     }
 }
 
-function AdicionarProdutoAjx(productSKU, productID, quantity) {
+function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick) {
     var Cart    = [];
     var product = new Object();
 
@@ -902,6 +921,8 @@ function AdicionarProdutoAjx(productSKU, productID, quantity) {
     product.Quantity  = quantity;
     Cart.push(product);
 
+
+
     $.ajax({
         url: '/Checkout/InsertItemCart',
         type: 'POST',
@@ -909,12 +930,35 @@ function AdicionarProdutoAjx(productSKU, productID, quantity) {
         data: JSON.stringify({CartItem: Cart}),
         dataType: 'json',
         success: function (response) {
-            if (response.success == true) {
-                $(document).find(".loading").removeClass("loading");
-                LoadCarrinho();
-                $(".carrinho").sidebar('toggle');
+            if (response.success === true)
+            {
+                if(typeof(oneclick) != undefined && oneclick === true)
+                {
+                    $.ajax({
+                        method: "GET",
+                        url: "/Checkout/CheckoutNext",
+                        data: {},
+                        success: function(data){
+                            if(data.success === true)
+                                window.location.href = "/" + data.redirect
+                            else
+                                _alert("Mensagem", data.message, "error")
+                        },
+                        onFailure: function(data){
+                            //console.log("Erro ao excluir frete");
+                        }
+                    });
+                }
+                else
+                {
+                    $(document).find(".loading").removeClass("loading");
+                    LoadCarrinho();
+                    $(".carrinho").sidebar('toggle');
+                }
                 //window.location.href = "/Checkout/Index";
-            } else {
+            }
+            else
+            {
                 swal({
                     title: '',
                     text: response.msg,
@@ -948,7 +992,7 @@ function AdicionarProdutoAjxEventList(productSKU, productID, quantity){
         },
         dataType:'json',
         success : function(response) {
-            if(response.success == true){
+            if(response.success === true){
                 $(document).find(".loading").removeClass("loading");
                 LoadCarrinhoEventList(true);
             }else {
@@ -958,7 +1002,7 @@ function AdicionarProdutoAjxEventList(productSKU, productID, quantity){
         error : function(request,error)
         {
             _alert("Erro ao adicionar produto.", "", "error");
-            console.log("Erro ao adicionar produto a lista de eventos");
+            //console.log("Erro ao adicionar produto a lista de eventos");
         }
     });
 }
@@ -993,9 +1037,9 @@ function CarregarVariacoes(seletor, valorSelecionado, ordem, idReferencia) {
             AtualizaVariacoes(response, ordem, valorSelecionado, seletor, idReferencia);
         },
         error: function (request, error) {
-            console.log(request);
-            console.log(error);
-            console.log("Erro Variacao");
+            //console.log(request);
+            //console.log(error);
+            //console.log("Erro Variacao");
         }
     });
 }
@@ -1058,7 +1102,7 @@ function MontarHtmlVariacao(seletor, posicao, ListaReferenciaJson, listaReferenc
                 for (var j = 0; j < ListaReferenciaJson[i].Variations.length; j++) {
                     var skU = "";
 
-                    if (flag_buscar_sku == true) {
+                    if (flag_buscar_sku === true) {
                         skU = ValidaVariacao(ListaReferenciaJson[i].Variations[j].IdVariation, listaReferenciaSkuJson, ListaReferenciaJson[i].IdReference);
                     }
 
@@ -1101,12 +1145,12 @@ function MontaTipoCor(skU, seletor_produto, reference, variation, variacoes_sele
     var html      = "";
     var classeBtn = "ui basic button radio variacao cor";
 
-    if (flag_buscar_sku == true) {
-        if (skU.stock <= 0 || skU.visible == false) {
+    if (flag_buscar_sku === true) {
+        if (skU.stock <= 0 || skU.visible === false) {
             if (skU.stock <= 0) {
                 classeBtn += " disabled";
             }
-            else if (skU.visible == false) {
+            else if (skU.visible === false) {
                 classeBtn += " hideme";
             }
         }
@@ -1125,12 +1169,12 @@ function MontaTipoCheckBox(skU, seletor_produto, reference, variation, variacoes
     var classeBtn = "ui basic primary button radio tiny variacao-radio";
     var classeDiv = "ui checkbox hideme";
 
-    if (skU.stock <= 0 || skU.visible == false) {
+    if (skU.stock <= 0 || skU.visible === false) {
         if (skU.stock <= 0) {
             //classeBtn += "disabled"; mesmo que stock = 0 o mesmo deve ser exibido
             classeBtn += "";
         }
-        else if (skU.visible == false) {
+        else if (skU.visible === false) {
             classeBtn += " hideme";
         }
     }
@@ -1156,11 +1200,11 @@ function MontaTipoImagem(skU, seletor_produto, reference, variation, variacoes_s
     var classeBtn = "ui variacao image";
     var classeDiv = "ui checkbox hideme";
 
-    if (skU.stock <= 0 || skU.visible == false) {
+    if (skU.stock <= 0 || skU.visible === false) {
         if (skU.stock <= 0) {
             classeBtn += " disabled";
         }
-        else if (skU.visible == false) {
+        else if (skU.visible === false) {
             classeBtn += " hideme";
         }
     }
@@ -1194,8 +1238,8 @@ function MontaTipoDropdown(skU, seletor_produto, reference, variation, variacoes
         selecionar += reference.idReferencia + "-" + variation.IdVariation;
     }
 
-    if (flag_buscar_sku == true) {
-        if (skU.stock <= 0 || skU.visible == false) {
+    if (flag_buscar_sku === true) {
+        if (skU.stock <= 0 || skU.visible === false) {
             if (skU.stock <= 0) {
                 if (lista_desabilitar != "") {
                     lista_desabilitar += "," + reference.IdReference + "-" + variation.IdVariation;
@@ -1203,7 +1247,7 @@ function MontaTipoDropdown(skU, seletor_produto, reference, variation, variacoes
                     lista_desabilitar += reference.IdReference + "-" + variation.IdVariation;
                 }
             }
-            else if (skU.visible == false) {
+            else if (skU.visible === false) {
                 if (lista_esconder != "") {
                     lista_esconder += "," + reference.IdReference + "-" + variation.IdVariation;
                 } else {
@@ -1281,7 +1325,7 @@ function ValidaVariacao(variacao, listaSkuVariacao, idReferencia) {
     }
 
     for (var i = 0; i < SKU.length; i++) {
-        if (SKU[i].stock > 0 && SKU[i].visible == true) {
+        if (SKU[i].stock > 0 && SKU[i].visible === true) {
             variacaoSKU = SKU[i];
             break;
         }
@@ -1289,7 +1333,7 @@ function ValidaVariacao(variacao, listaSkuVariacao, idReferencia) {
 
     if (variacaoSKU == "") {
         for (var i = 0; i < SKU.length; i++) {
-            if (SKU[i].visible == true) {
+            if (SKU[i].visible === true) {
                 variacaoSKU = SKU[i];
                 break;
             }

@@ -39,14 +39,14 @@ export function completaCEP(cep, fieldEndereco, fieldBairro, fieldCidade, fieldE
 
             axios.get("//viacep.com.br/ws/" + cep + "/json/?callback=?")
                 .then(response => {
-                    console.log(response);
+                    //console.log(response);
                         $(fieldEndereco).val(response.logradouro).focus();
                         $(fieldBairro).val(response.bairro).focus();
                         $(fieldCidade).val(response.localidade).focus();
                         $(fieldEstado).dropdown("set selected", response.uf);
                     })
                 .catch(error => {
-                    console.log(error);
+                    //console.log(error);
                     limpa_formulario_cep();
                     _alert('Erro', 'CEP não encontrado!', 'error');
                 });

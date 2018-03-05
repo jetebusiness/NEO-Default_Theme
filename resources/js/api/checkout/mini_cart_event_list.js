@@ -34,7 +34,6 @@ $(document).on("click", ".qtdActionEventList", function(event) {
 });
 
 $(document).on("click", "#miniCarrinho .removeItemEventList", function(e) {
-    var flag = 0;
     var eventListIDCurrent = $(this).attr("data-id");
     excluirProdutoCarrinhoList(eventListIDCurrent);
     e.stopPropagation();

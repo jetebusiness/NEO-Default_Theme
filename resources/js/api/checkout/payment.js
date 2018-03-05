@@ -8,7 +8,8 @@ function clickShipping(){
     var idFrete = "";
     var correiosEntrega = "";
     $("#GetShippping .item .checkbox").click(function(){
-        if(cancelarCalculoFrete()){
+        if(cancelarCalculoFrete())
+        {
             var ponteiroCurrent = $(".shippingGet", this);
             $(".shippingGet").attr("checked", false);
             $(ponteiroCurrent).attr("checked",true);
@@ -18,7 +19,8 @@ function clickShipping(){
             correiosEntrega = $(ponteiroCurrent).attr("data-correios");
         }
 
-        if ((valorFrete != "") && (idFrete != "") && (correiosEntrega != "") && (zipcode != "")){
+        if ((valorFrete != "") && (idFrete != "") && (correiosEntrega != "") && (zipcode != ""))
+        {
             $('#goToPayment').attr("disabled", false);
             disparaAjaxShipping(zipcode, idFrete, correiosEntrega);
         }
@@ -64,30 +66,58 @@ function OrderCreate() {
         var expDateCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitExpDate").val() : $("#ExpDate").val();
         var validaMes = expDateCard != "" && expDateCard !== undefined ? new Number(expDateCard.split("/")[0]) : "";
         var validaAno = expDateCard != "" && expDateCard !== undefined ? new Number(expDateCard.split("/")[1]) : "";
-        var cvvCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitCVV").val() : $("#CVV").val();
+        var cvvCard = $("#CVV").val();
         var brandCard = $(this).prop("id") == "btnCardDebit" ? $("#debitBrandCard").val() : $("#brandCard").val();
-        var kind = $(this).prop("id") == "btnCardDebit" ? "debit" : "credit";
+        var document = $("#Document").val();
+        var kind = "credit";
+        var idOneClick = $("#OneClick").val();
+        var saveCardOneClick = $('#SaveCard').is(":checked");
         var userAgent = navigator.userAgent;
         var msgErrors = "";
 
         var validaFrete = "";
 
+        switch($(this).prop("id"))
+        {
+            case "btnCardDebit":
+                kind = "debit";
+                cvvCard = $("#DebitCVV").val();
+                break;
+            case "btnOneClick":
+                kind = "oneclick";
+                cvvCard = $("#CVVOneClick").val();
+                break;
+            case "btnDebitRedirect":
+                kind = "debit";
+                break;
+            default:
+                if($(this).data("card") == "N")
+                {
+                    kind = "boleto";
+                }
+                break;
+        }
+
         $("#GetShippping .item .description").each(function (index, value) {
             var ponteiroCurrent = $(this);
 
-            if($(ponteiroCurrent).find(".checked").length > 0){
+            if($(ponteiroCurrent).find(".checked").length > 0)
+            {
                 validaFrete = "S";
                 return (false);
             }
-            else{
-                if($(ponteiroCurrent).find(":checked").length > 0){
+            else
+            {
+                if($(ponteiroCurrent).find(":checked").length > 0)
+                {
                     validaFrete = "S";
                     return (false);
                 }
             }
         });
 
-        if(tipoVerificacao == "S"){
+        if(tipoVerificacao == "S")
+        {
             idInstallment = $("#parcCard").val();
             installmentNumber = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
 
@@ -95,23 +125,27 @@ function OrderCreate() {
             var anoCurrent = new Number(dataCurrent.getFullYear());
             var mesCurrent = new Number(dataCurrent.getMonth()+1);
 
-            if(validaMes > 12){
+            if(validaMes > 12)
+            {
                 msgErrors+= "<br />O campo Data de Validade está com o mês inválido!";
             }
 
-            if(validaAno < anoCurrent){
+            if(validaAno < anoCurrent)
+            {
                 msgErrors+= "<br />O campo Data de Validade está com o ano inválido!";
             }
-            else{
-                if(validaAno == anoCurrent){
-                    if(validaMes < mesCurrent){
+            else
+            {
+                if(validaAno == anoCurrent)
+                {
+                    if(validaMes < mesCurrent)
+                    {
                         msgErrors+= "<br />O campo Data de Validade está com o mês inválido!";
                     }
                 }
             }
 
             $("#validCardCredit").find(".required").each(function(){
-                var ponteiroCurrent = $(this);
                 var labelCurrent = $(".labelCheckPayment", this).text();
                 var valorCurrent = $(".fieldCheckPayment", this).val();
 
@@ -121,7 +155,23 @@ function OrderCreate() {
             });
         }
 
-        if(tipoVerificacao == "D"){
+        if(tipoVerificacao == "O")
+        {
+            idInstallment = $("#parcCardOneClick").val();
+            installmentNumber = $("#parcCardOneClick").find(':selected').attr("data-InstallmentNumber");
+
+            $("#validOneClick").find(".required").each(function(){
+                var labelCurrent = $(".labelCheckPayment", this).text();
+                var valorCurrent = $(".fieldCheckPayment", this).val();
+
+                if((valorCurrent == "") || (valorCurrent.length < 3 && labelCurrent != "Cartões Salvos")){
+                    msgErrors+= "<br />O campo "+labelCurrent+ " está inválido!";
+                }
+            });
+        }
+
+        if(tipoVerificacao == "D")
+        {
             idInstallment = $("#parcCard").val();
             installmentNumber = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
 
@@ -129,23 +179,26 @@ function OrderCreate() {
             var anoCurrent = new Number(dataCurrent.getFullYear());
             var mesCurrent = new Number(dataCurrent.getMonth()+1);
 
-            if(validaMes > 12){
+            if(validaMes > 12)
+            {
                 msgErrors+= "<br />O campo Data de Validade está com o mês inválido!";
             }
 
             if(validaAno < anoCurrent){
                 msgErrors+= "<br />O campo Data de Validade está com o ano inválido!";
             }
-            else{
-                if(validaAno == anoCurrent){
-                    if(validaMes < mesCurrent){
+            else
+            {
+                if(validaAno == anoCurrent)
+                {
+                    if(validaMes < mesCurrent)
+                    {
                         msgErrors+= "<br />O campo Data de Validade está com o mês inválido!";
                     }
                 }
             }
 
             $("#validCardDebit").find(".required").each(function(){
-                var ponteiroCurrent = $(this);
                 var labelCurrent = $(".labelCheckPayment", this).text();
                 var valorCurrent = $(".fieldCheckPayment", this).val();
 
@@ -155,7 +208,8 @@ function OrderCreate() {
             });
         }
 
-        if(msgErrors != ""){
+        if(msgErrors != "")
+        {
             swal({
                 title: 'Ops! Encontramos um problema ..',
                 html: msgErrors,
@@ -168,8 +222,10 @@ function OrderCreate() {
             $(".GerarPedido").removeClass("loading");
             $(".GerarPedido").removeClass("disabled")
         }
-        else{
-            if (validaFrete == "S") {
+        else
+        {
+            if (validaFrete == "S") 
+            {
                 $.ajax({
                     method: "POST",
                     url: "GerarPedidoCompleto",
@@ -187,22 +243,62 @@ function OrderCreate() {
                         brandCard         : brandCard,
                         installmentNumber : new Number(installmentNumber),
                         kind              : kind,
+                        document          : document,
+                        idOneClick        : idOneClick,
+                        saveCardOneClick  : saveCardOneClick,
                         userAgent         : userAgent
                     },
                     success: function (response) {
-                        if (response.success == true) {
-                            if (response.urlRedirect != "") {
-                                window.location.href = response.urlRedirect;
+                        if (response.success === true) 
+                        {
+                            if(response.errorMsg != ""){
+                                _alert("Ops! Encontramos um problema ..", response.errorMsg, "warning");
+                                $(".GerarPedido").removeClass("loading");
+                                $(".GerarPedido").removeClass("disabled");
+                            }
+                            else{
+                                if (response.urlRedirect != "") 
+                                {
+                                    window.location.href = response.urlRedirect;
+                                }
+                                else 
+                                {
+                                    if(response.urlBoleto != "")
+                                    {
+                                        window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                        //window.location.href = "Success?orderId=" + response.idPedido;
+                                    }
+                                    else{
+                                        window.location.href = "Success?orderId=" + response.idPedido;
+                                    }
+                                }
+                            }
+                        } 
+                        else 
+                        {
+                            if (response.showMessage) {
+                                swal({
+                                    title: '',
+                                    html: response.msg,
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+
+                                $(".GerarPedido").removeClass("loading");
+                                $(".GerarPedido").removeClass("disabled")
                             }
                             else {
-                                window.location.href = "Success?orderId=" + response.idPedido;
+                                window.location.href = "Success?orderId=" + response.idPedido + "&s="+response.success+"&m="+response.msgEncrypt;
                             }
-                        } else {
-                            window.location.href = "Success?orderId=" + response.idPedido + "&s="+response.success+"&m="+response.msgEncrypt;
                         }
                     }
                 });
-            } else {
+            } 
+            else 
+            {
                 _alert("Ops! Encontramos um problema ..", "Escolha o frete antes de fechar o pedido!", "warning");
                 $(".GerarPedido").removeClass("loading");
                 $(".GerarPedido").removeClass("disabled");
@@ -229,11 +325,13 @@ function onChangeCheckBox(){
 function verificaPresente(){
     //$("#embrulhaPresente").click(function(){
     $("#exibeMsg").removeAttr("style");
-    if($('#checkPresente').checkbox('is checked')) {
+    if($('#checkPresente').checkbox('is checked')) 
+    {
         $("#exibeMsg > label").show();
         $("#exibeMsg > #mensagem").show();
     }
-    else {
+    else 
+    {
         $("#exibeMsg > label").hide();
         $("#exibeMsg > #mensagem").hide();
     }
@@ -247,85 +345,93 @@ function onChangeParcelamento(){
         var parcela_selecionada = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
         var id_tipo = 1;
 
-        if(codigoBandeira != "" && id_tipo != "" && parcela_selecionada != ""){
+        if(codigoBandeira != "" && parcela_selecionada != ""){
+            AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
+        }
+    });
+
+    $('#parcCardOneClick').on('change', function() {
+        var codigoBandeira = $("#btnOneClick").attr("data-idBrand");
+        var parcela_selecionada = $("#parcCardOneClick").find(':selected').attr("data-InstallmentNumber");
+        var id_tipo = 1;
+
+        if(codigoBandeira != "" && parcela_selecionada != ""){
             AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
         }
     });
 }
-function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, codigoPaymentMethod, parcela_selecionada){
-    var backSpace = $.Event( "keypress", { which: 127 } );
 
-    $(idOnBlur).on("blur", function(){
+function GetPaymentGateway(nameBrand){
+    var objPaymentMethod = $('#validCardCredit').data('paymentmethod'); //jQuery.parseJSON($('#validCardCredit').data('paymentgateway'));
+    //console.log(objPaymentGateway);
+    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++) 
+    {
+        var auxNameBrand = objPaymentMethod.PaymentBrands[i].Name.toLowerCase();
+        if(auxNameBrand == nameBrand) 
+        {
+            var IdPaymentBrand = Number.parseInt(objPaymentMethod.PaymentBrands[i].IdPaymentBrand, 10);
+            return IdPaymentBrand;
+        }
+    }
+    return 0;
+}
+
+function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, codigoPaymentMethod, parcela_selecionada, _event){
+    $(idOnBlur).on(_event, function(event){
         $(btnCard).removeAttr("data-idBrand");
-        var cartoes = {
-            elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
-            dinners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
-            discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
-            dinersClub: /^3(?:0[0-5]|[68][0-9])[0-9]{11}/,
-            hipercard: /^(38[0-9]{17}|60[0-9]{14})$/,
-            amex: /^3[47][0-9]{13}$/,
-            aura: /^50[0-9]{14,17}$/,
-            mastercard: /^5[1-5][0-9]{14}$/,
-            visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
-            jcb: /^(?:2131|1800|35\d{3})\d{11}/
-        };
-
-        var numeroCartao = $(this).val().replace(/\s/g, '' );
+        var numeroCartao;
         var codigoBandeira = 0;
-        for (var cartao in cartoes){
-            if (numeroCartao.match(cartoes[cartao])){
-                switch(cartao) {
-                    case "elo":
-                        codigoBandeira = 0;
-                        break;
+        var oneclick = false;
 
-                    case "dinners":
-                        codigoBandeira = 210;
-                        break;
+        if(event.type == "change")
+        {
+            numeroCartao = $(this).find("option:selected").text().substring(0,4);
+            cartao = $(this).find("option:selected").data("brand").toLowerCase();
+            codigoBandeira = GetPaymentGateway(cartao);
+            $(btnCard).attr("data-idBrand",codigoBandeira);
+            $(updateBrand).val(cartao);
+            oneclick = true;
+        } 
+        else 
+        {
+            numeroCartao = $(this).val().replace(/\s/g, '' );
 
-                    case "discover":
-                        codigoBandeira = 0;
-                        break;
+            var cartoes = {
+                elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
+                diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
+                discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
+                dinersClub: /^3(?:0[0-5]|[68][0-9])[0-9]{11}/,
+                hipercard: /^(38[0-9]{17}|60[0-9]{14})$/,
+                amex: /^3[47][0-9]{13}$/,
+                aura: /^50[0-9]{14,17}$/,
+                mastercard: /^5[1-5][0-9]{14}$/,
+                visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
+                jcb: /^(?:2131|1800|35\d{3})\d{11}/
+            };
 
-                    case "dinersClub":
-                        codigoBandeira = 210;
-                        break;
-
-                    case "hipercard":
-                        codigoBandeira = 212;
-                        break;
-
-                    case "amex":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "aura":
-                        codigoBandeira = 0;
-                        break;
-
-                    case "mastercard":
-                        codigoBandeira = typeForm == "C" ? 208 : 215;
-                        break;
-
-                    case "visa":
-                        codigoBandeira = typeForm == "C" ? 209 : 216;
-                        break;
-
-                    case "jcb":
-                        codigoBandeira = 213;
-                        break;
+            for (var cartao in cartoes)
+            {
+                if (numeroCartao.match(cartoes[cartao]))
+                {
+                    codigoBandeira = GetPaymentGateway(cartao);
+                    $(btnCard).attr("data-idBrand",codigoBandeira);
+                    $(updateBrand).val(cartao);
+                    break;
                 }
-                $(btnCard).attr("data-idBrand",codigoBandeira);
-                $(updateBrand).val(cartao);
             }
         }
-        if(numeroCartao != "" && codigoBandeira == 0){
-            if(typeForm == "C"){
-                $("#parcCard").html("<option value=''>Informe o numero do cartão primeiro</option>");
+        if(numeroCartao != "" && codigoBandeira == 0)
+        {
+            if(typeForm == "C")
+            {
+                $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
             }
             _alert("Ops! Encontramos um problema ..", "A loja pode não aceitar essa bandeira ou o cartão está incorreto", "warning");
-        }else{
-            if($(idOnBlur).val() != ""){
+        }
+        else
+        {
+            if($(idOnBlur).val() != "")
+            {
                 $.ajax({
                     method: "POST",
                     url: "VerificaStatusBandeira",
@@ -334,13 +440,28 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
                         idPaymentBrand  : new Number(codigoBandeira)
                     },
                     success: function (response) {
-                        if(response.success){
+                        if(response.success)
+                        {
                             if(typeForm == "C"){
-                                atualizaParcelamento(codigoBandeira);
+                                if(!oneclick){
+                                    $("#btnCardCredit").attr("disabled", false);
+                                    $("#btnOneClick").attr("data-idbrand","");
+                                    $("#btnOneClick").attr("disabled", true);
+                                    $("#parcCardOneClick").html("<option value='0'>Informe o numero do cartão primeiro</option>");
+                                }else{
+                                    $("#btnOneClick").attr("disabled", false);
+                                    $("#btnCardCredit").attr("data-idbrand","");
+                                    $("#btnCardCredit").attr("disabled", true);
+                                    $("#CreditCard").val('');
+                                    $("#CreditCard").empty();
+                                    $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
+                                }
+
+                                atualizaParcelamento(codigoBandeira, oneclick);
                             }
-                            atualizaResumoCarrinho();
-                            AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
-                        }else{
+                        }
+                        else
+                        {
                             $(btnCard).attr("data-idBrand",0);
                             $(updateBrand).val("");
                             $(idOnBlur).val("");
@@ -353,8 +474,7 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
     });
 }
 
-function atualizaParcelamento(codigoBandeira){
-    isLoading("#validCardCredit");
+function atualizaParcelamento(codigoBandeira, oneclick){
     var option = "";
     if(codigoBandeira > 0){
         $.ajax({
@@ -362,34 +482,79 @@ function atualizaParcelamento(codigoBandeira){
             url: "LoadInstallment",
             data: {
                 idPaymentBrand: new Number(codigoBandeira),
-                idPaymentMethod: new Number(1)
+                idPaymentMethod: new Number(1),
+                numberCard: $('#CreditCard').val()
             },
             success: function (response) {
+                var objOneClick = response.OneClick;
+                var objMsgError = response.ErrorMsg;
                 var objParcelamento = response.ListInstallment;
-                for (var i = 0; i < objParcelamento.length; i++) {
-                    var IdInstallment = objParcelamento[i].IdInstallment;
-                    var InstallmentNumber = objParcelamento[i].InstallmentNumber;
-                    var Description = objParcelamento[i].Description;
-                    var Value = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(objParcelamento[i].Value);
 
-                    option += "<option value='"+IdInstallment+"' data-InstallmentNumber='"+InstallmentNumber+"'>"+InstallmentNumber+"x de "+Value+"("+Description+")</option>";
-                    $("#parcCard").html(option);
+                if(objMsgError == "" || typeof(objMsgError) == "undefined")
+                {
+                    if(objOneClick != "" && typeof(objOneClick) != "undefined")
+                    {
+                        $("#checkOneClickMaxiPago").show();
+                        $("#documentOneClick").show();
+                        $("#documentOneClick").addClass("required");
+                    }
+                    else
+                    {
+                        $("#checkOneClickMaxiPago").hide();
+                        $("#documentOneClick").hide();
+                        $("#documentOneClick").removeClass("required");
+                    }
+
+                    if(!oneclick)
+                    {
+                        for (var i = 0; i < objParcelamento.length; i++)
+                        {
+                            var IdInstallment = objParcelamento[i].IdInstallment;
+                            var InstallmentNumber = objParcelamento[i].InstallmentNumber;
+                            var Description = objParcelamento[i].Description;
+                            var Value = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(objParcelamento[i].Value);
+
+                            option += "<option value='"+IdInstallment+"' data-InstallmentNumber='"+InstallmentNumber+"'>"+InstallmentNumber+"x de "+Value+"("+Description+")</option>";
+                            $("#parcCard").html(option);
+
+                            var installmentNumber = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+                            AtualizaResumoCarrinhocomDesconto(codigoBandeira, 1, installmentNumber);
+                        }
+                    }
+                    else
+                    {
+                        for (var i = 0; i < objParcelamento.length; i++) 
+                        {
+                            var IdInstallment = objParcelamento[i].IdInstallment;
+                            var InstallmentNumber = objParcelamento[i].InstallmentNumber;
+                            var Description = objParcelamento[i].Description;
+                            var Value = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(objParcelamento[i].Value);
+
+                            option += "<option value='"+IdInstallment+"' data-InstallmentNumber='"+InstallmentNumber+"'>"+InstallmentNumber+"x de "+Value+"("+Description+")</option>";
+                            $("#parcCardOneClick").html(option);
+                        }
+
+                        var installmentNumber = $("#parcCardOneClick").find(':selected').attr("data-InstallmentNumber");
+                        AtualizaResumoCarrinhocomDesconto(codigoBandeira, 1, installmentNumber);
+                    }
                 }
-                isLoading("#validCardCredit");
-            },
-            error : function(request,error)
-            {
-                isLoading("#validCardCredit");
-                console.log(request);
+                else
+                {
+                    $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
+                    _alert("Ops! Encontramos um problema ..", objMsgError, "warning");
+                }
             }
         });
-    }else
-        isLoading("#validCardCredit")    
+    }
+    else{
+        $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
+    }
 }
 
 function buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada){
     var valor = {};
-    if(codigoBandeira > 0){
+    if(codigoBandeira > 0)
+    {
         $.ajax({
             method: "POST",
             url: "LoadInstallmentJson",
@@ -400,38 +565,24 @@ function buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_sel
                 _parcela_selecionada: new Number(parcela_selecionada)
             },
             success: function (response) {
-                if(response.success === true){
+                if(response.success === true)
+                {
                     valor = response;
-                }else{
+                }
+                else
+                {
+                    $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
                     _alert("Ops! Encontramos um problema ..", response.result, "warning", false);
                 }
-
             }
         });
     }
     return valor;
 }
 
-function buscaValorFinalCarrinho(){
-    var total = {};
-    $.ajax({
-        method: "POST",
-        url: "LoadTotalValueCart",
-        data: {},
-        async: false,
-        success: function (response) {
-            if(response.success === true){
-                total = response;
-            }
-        }
-    });
-    return total;
-}
-
 function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, parcela_selecionada){
     var obj_parcelamento = buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
-    var obj_carrinho = buscaValorFinalCarrinho();
-
+    //var obj_carrinho = buscaValorFinalCarrinho();
     if(Object.keys(obj_parcelamento).length > 0){
         var desconto_inicial = $("#desconto_checkout").attr("data-discount-initial");
 
@@ -479,16 +630,19 @@ function showAddressPayment(){
                 url: "CreateAddress",
                 data: jsonArray,
                 success: function(responseDefault){
-                    if(responseDefault.success){
+                    if(responseDefault.success)
+                    {
                         atualizaEnderecos(responseDefault);
                     }
-                    else{
+                    else
+                    {
                         _alert("Ops! Encontramos um problema ..", responseDefault.msg, "warning");
                     }
                 }
             });
         }
-        else{
+        else
+        {
             $("#listAddressData").hide();
             $("#registerAddressPayment").show();
             $(this).addClass("addAddress");
@@ -500,8 +654,6 @@ function showAddressPayment(){
 
 function changeAddressPayment(){
     $(".utilAddress").click(function(){
-        var zipCodeCart = $("#zipcode").val();
-        var idShippingModeCart = new Number($("#idShipping").val());
         var idAddressChange = $(this).attr("data-id");
         $("#registerAddressPayment").hide();
 
@@ -517,10 +669,12 @@ function changeAddressPayment(){
                         idAddressCurrent : idAddressChange
                     },
                     success: function(responseChange){
-                        if(responseChange.success){
+                        if(responseChange.success)
+                        {
                             atualizaEnderecos(responseChange);
                         }
-                        else{
+                        else
+                        {
                             _alert("Ops! Encontramos um problema ..", responseChange.msg, "warning");
                         }
                     }
@@ -531,11 +685,18 @@ function changeAddressPayment(){
 }
 
 function cancelarCalculoFrete(){
-    atualizaResumoCarrinho();
+    if($('.contentcartao .menu.tabular .item.active').data('tab') == "oneclick")
+    {
+        atualizaResumoCarrinho(true);
+    }
+    else
+    {
+        atualizaResumoCarrinho(false);
+    }
     return(true);
 }
 
-function atualizaResumoCarrinho(){
+function atualizaResumoCarrinho(oneclick){
     $.ajax({
         method: "POST",
         url: "LoadResumoPayment",
@@ -544,13 +705,23 @@ function atualizaResumoCarrinho(){
             $("#resumoCheckout .resumo .title").addClass("active");
             $("#resumoCheckout .resumo .content").addClass("active");
             $("#resumoCheckout .resumo .content").stop(false, true).slideDown();
+            
             var codigoBandeira = $("#btnCardCredit").attr("data-idBrand");
-            if(typeof(codigoBandeira) != "undefined"){
+            if($("#btnOneClick").length > 0){
+                codigoBandeira = $("#btnCardCredit").attr("data-idBrand") != "" ? $("#btnCardCredit").attr("data-idBrand") : $("#btnOneClick").attr("data-idBrand");
+            }
+
+            if(typeof(codigoBandeira) != "undefined")
+            {
                 atualizaParcelamento(codigoBandeira);
                 var _parcela = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+                if(oneclick || $("#btnOneClick").attr("data-idBrand") != "") 
+                {
+                    _parcela = $("#parcCardOneClick").find(':selected').attr("data-InstallmentNumber");
+                }
                 var parcela_selecionada = _parcela != undefined ? _parcela : "1";
                 var id_tipo = 1;
-                if(codigoBandeira != "" && id_tipo != "" && parcela_selecionada != ""){
+                if(codigoBandeira != "" && parcela_selecionada != ""){
                     AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
                 }
             }
@@ -576,7 +747,8 @@ function atualizaEnderecos(responseChange){
         url: "ListaFretePagamento",
         success: function success(data) {
             $("#updateShippingPayment").html(data);
-            if(cancelarCalculoFrete()){
+            if(cancelarCalculoFrete())
+            {
                 clickShipping();
             }
             HabilitarButtonIrParaPagamento();
@@ -591,7 +763,8 @@ function applyDiscount(){
         var key = $("#key").val();
         var customerId = $("#idCustomer").val();
 
-        if((key != "") && (customerId != "")){
+        if((key != "") && (customerId != ""))
+        {
             $.ajax({
                 method: "POST",
                 url: "AplicaDescontoCheckout",
@@ -600,16 +773,21 @@ function applyDiscount(){
                     customerId  : customerId
                 },
                 success: function success(response) {
-                    if(response.success){
+                    if(response.success)
+                    {
                         atualizaResumoCarrinho();
                         _alert("Cupom de Desconto!", response.msg, "success");
-                    }else{
+                    }
+                    else
+                    {
                         $("#key").val("");
                         _alert("Ops! Encontramos um problema ..", response.msg, "warning");
                     }
                 }
             });
-        }else{
+        }
+        else
+        {
             _alert("Ops! Encontramos um problema ..", "Você não informou uma chave de desconto!", "warning");
         }
     });
@@ -659,7 +837,8 @@ function calculaFreteUpdate(){
     $("#zipCode").keyup(function (event) {
         var cep = $("#zipCode").val()
         cep = cep.replace("-", "")
-        if (cep.length == 8) {
+        if (cep.length == 8) 
+        {
             buscaCep(cep)
         }
     });
@@ -694,26 +873,19 @@ function CheckAccessKey(){
                     KeyAccess : codeTokkenPayment
                 },
                 success: function success(response){
-                    if(response.Success){
+                    if(response.Success)
+                    {
                         viewNewPassword();
                         $('.ui.modal').modal('refresh');
-                    }else{
+                    }
+                    else
+                    {
                         _alert("Ops! Encontramos um problema ..", response.Message, "warning");
                     }
                 }
             });
         }else{
             _alert("Ops! Encontramos um problema ..", "Informe a Chave de Acesso!", "warning");
-        }
-    });
-}
-
-function viewRecive_Code(){
-    $.ajax({
-        method: "POST",
-        url: "Recive_Code",
-        success: function success(response){
-            $("#ListaEnderecosCliente").html(response);
         }
     });
 }
@@ -753,16 +925,21 @@ function accessUser(){
                     pwdUserConfirm : pwdUserConfirm
                 },
                 success: function success(response){
-                    if(response.success){
+                    if(response.success)
+                    {
                         updateAddress();
                         updateDadosUsuario();
                         calculaFreteUpdate();
-                    }else{
+                    }
+                    else
+                    {
                         _alert("Ops! Encontramos um problema .. 1", response.message, "warning");
                     }
                 }
             });
-        }else{
+        }
+        else
+        {
             _alert("Ops! Encontramos um problema ..", "Informe a senha", "warning");
         }
     });
@@ -774,9 +951,12 @@ function ReEnviarCodigoEmail(){
             method: "POST",
             url: "ReEnviarCodigoEmail",
             success: function success(response){
-                if(!response.success){
+                if(!response.success)
+                {
                     _alert("Ops! Encontramos um problema ..", response.message, "warning");
-                }else{
+                }
+                else
+                {
                     _alert("Por favor Aguarde!", "Em instantes você receberá no seu e-mail, as instruções para obter seu código de acesso.", "warning");
                 }
             }
@@ -793,9 +973,12 @@ function RecoverPasswordByEmail(){
                 email : $("#UserName").val()
             },
             success: function success(response){
-                if(response.Success){
+                if(response.Success)
+                {
                     _alert("Por favor Aguarde!", response.Message, "warning");
-                }else{
+                }
+                else
+                {
                     _alert("Ops! Encontramos um problema ..", response.Message, "warning");
                 }
             }
@@ -812,11 +995,58 @@ function HabilitarButtonIrParaPagamento(){
     });
 }
 
+function TestaCPF(strCPF) {
+    var Soma;
+    var Resto;
+    Soma = 0;
+    if (strCPF == "00000000000") return false;
+    
+    for (var i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+    Resto = (Soma * 10) % 11;
+ 
+    if ((Resto == 10) || (Resto == 11))  Resto = 0;
+    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+ 
+    Soma = 0;
+    for (var i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+    Resto = (Soma * 10) % 11;
+ 
+    if ((Resto == 10) || (Resto == 11))  Resto = 0;
+    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+    return true;
+}
+
+function onlyNumbers(evt) {
+    var event = evt || window.event;
+    var val = event.target.value;
+    var filtered = val.replace(/[^0-9]/g, '');
+
+    if (filtered !== val) {
+        event.target.value = filtered;
+    }
+}
+
+
 $(document).ready(function () {
+
+    $('#Document').keyup(function (event) {
+        return onlyNumbers(event);
+    });
+
+    $('#Document').blur(function(){
+        if(!TestaCPF($(this).val())) {
+            _alert("Ops! Encontramos um problema ..", "Número de CPF inválido.", "warning");
+            $(this).val('');
+        }
+        return false;
+    });
+
     //$.jetRoute("checkout", function (){
-    if($("#idAddress").val() != ""){
+    if($("#idAddress").val() != "")
+    {
         clickShipping();
-        if ($(".GerarPedido").length > 0) {
+        if ($(".GerarPedido").length > 0) 
+        {
             OrderCreate();
         }
         onChangeCheckBox();
@@ -824,10 +1054,16 @@ $(document).ready(function () {
 
 
         //Cartão de Crédito
-        validaCartaoCreditoBandeira("#CreditCard", "#btnCardCredit", "#brandCard", "C", 1, 1);
+        validaCartaoCreditoBandeira("#CreditCard", "#btnCardCredit", "#brandCard", "C", 1, 1, "blur");
 
         //Cartão de Débito
-        validaCartaoCreditoBandeira("#DebitCard", "#btnCardDebit", "#debitBrandCard", "D", 14, 0);
+        validaCartaoCreditoBandeira("#DebitCard", "#btnCardDebit", "#debitBrandCard", "D", 14, 0, "blur");
+
+        //OneClick
+        validaCartaoCreditoBandeira("#OneClick", "#btnOneClick", "#brandOneClick", "C", 1, 0, "change");
+        $("#checkOneClickMaxiPago").hide();
+        $("#documentOneClick").hide();
+        $("#documentOneClick").removeClass("required");
 
         listAddressPayment();
         changeAddressPayment();
@@ -838,8 +1074,19 @@ $(document).ready(function () {
         onChangeParcelamento();
         HabilitarButtonIrParaPagamento();
     }
-    else{
+    else
+    {
         _alert("Ops! Encontramos um problema ..", "Você não pode fechar um pedido sem um endereço de entrega!", "warning");
     }
     //});
+    if($('.contentcartao').length > 0)
+    {
+        $('.ui.accordion').accordion({
+            exclusive: true,
+            animateChildren: false,
+            onOpening: function(){
+                $('.contentcartao .segment').removeClass('visible').removeAttr('style');
+            }
+        });
+    }
 });

@@ -38,6 +38,23 @@ $(document).ready(function () {
         })
     })
 
+    $(document).on("click", "#reprintBankSlipMaxiPago", function () {
+        $.ajax({
+            method: "GET",
+            url: "/Checkout/ReturnUrlBankSlipMaxiPago",
+            data: {
+                idOrder: $("#idOrderMaxiPago").val()
+            },
+            success: function (data) {
+                $("#bankSlipMaxiPago").attr("src", data.urlBoleto)
+                $('.ui.modal.maxiPago').modal('show')
+            },
+            error: function (data) {
+
+            }
+        })
+    })
+
     $(document).on("keypress", ".prompt_pedidos", function (event) {
         var val = event.target.value;
         var filtered = val.replace(/[^0-9]/g, '');
@@ -46,7 +63,7 @@ $(document).ready(function () {
             event.target.value = filtered;
         }
 
-        console.log("prompt_pedidos: " + $(".prompt_pedidos").val());
+        //console.log("prompt_pedidos: " + $(".prompt_pedidos").val());
 
         if (filtered != "") {
             if (event.which === 13) {

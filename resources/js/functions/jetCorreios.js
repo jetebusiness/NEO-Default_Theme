@@ -37,6 +37,8 @@
                     else {
                         $(sel[key]).val(dados[key]).change();
                     }
+
+
                 }
             }
 
@@ -78,8 +80,8 @@
                     }
                 })
                 .catch(error => {
-                    console.log("JET CORREIOS - Chamada AJAX");
-                    console.log(error);
+                    //console.log("JET CORREIOS - Chamada AJAX");
+                    //console.log(error);
                     if (window.swal) {
                         window.swal('Erro', 'CEP não encontrado!', 'error');
                         limpaForm();

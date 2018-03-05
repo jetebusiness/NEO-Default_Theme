@@ -123,14 +123,11 @@ $(document).on("keyup", "#product_manager input[id^='qtd_product_']", function (
     var valor_final = SomenteNumerosPositivos($(this).val());
     $(this).val(valor_final);
 
-
     var productID = $(this).attr("data-id-product");
     var idListCurrent = $(this).attr("data-id-event-list");
-    var action = $(this).attr("data-action");
     var skuCurrent = $(this).attr("data-id-sku");
     var valorInput = new Number($("#qtd_product_"+idListCurrent).val());
     var valorStock = new Number($(this).attr("data-id-stock"));
-
 
     if(valorInput < 1){
         valorInput = 1;
@@ -322,7 +319,7 @@ function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
         },
         onFailure: function(data){
             isLoading("#product_manager");
-            console.log('Erro ao atualizar lista de evento');
+            //console.log('Erro ao atualizar lista de evento');
         }
     });
 }
@@ -347,7 +344,7 @@ function DeleteProductEventList(eventListIDCurrent){
                 },
                 success: function (data) {
                     if (data.success === false) {
-                        console.log("Erro ao excluir produto");
+                        //console.log("Erro ao excluir produto");
                     }else {
                         $("#"+ eventListIDCurrent).fadeOut( "slow" );
                     }

@@ -1,6 +1,4 @@
 ﻿import {isLoading} from "../api_config";
-import {urlParam} from "../../functions/urlManipulation";
-import {getFilter} from "../../functions/filter";
 import {_alert, _confirm} from "../../functions/message";
 
 var genericoPageFilter = "";
@@ -8,15 +6,12 @@ var idEventListFilter = "";
 var viewListGlobal = "g";
 var urlBase = "/product/getproducts/";
 $(document).ready(function () {
-
     let filters = window.filterManipulation;
-
     if($("#GenericPageFilter").length > 0){
         genericoPageFilter = $("#GenericPageFilter").val();
     }
 
     if(window.pageNumber > 1){
-        let filters = window.filterManipulation;
         let data = {
             viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
             pageNumber: window.pageNumber === undefined ? "" : window.pageNumber,
@@ -180,10 +175,10 @@ function updateAjax(data){
             });
         },
         onFailure: function onFailure(response) {
-            console.log("Falha aplicar filtro: " + response);
+            //console.log("Falha aplicar filtro: " + response);
         },
         onError: function onError(response) {
-            console.log("Erro aplicar filtro: " + response);
+            //console.log("Erro aplicar filtro: " + response);
         }
     });
 }

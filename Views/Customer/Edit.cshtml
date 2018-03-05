@@ -53,100 +53,146 @@
                             <div class="column">
                                 <div class="ui form">
                                     <h4 class="ui dividing header">Informações Pessoais</h4>
-                                    <div class="field required">
-                                        <label>Nome</label>
-                                        <div class="ui left icon input">
-                                            <i class="user icon"></i>
-                                            <input type="text" name="name" placeholder="Seu Nome"
-                                                   value="@Model.Name">
+                                    @if (Model.TypeCustomer == DomainCustomer.Entities.Customer.enumTypeCustomer.fisica)
+                                    {
+                                        <div class="field required">
+                                            <label>Nome</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input type="text" name="name" placeholder="Seu Nome"
+                                                       value="@Model.Name">
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label>CPF</label>
+                                                <div class="ui left icon input">
+                                                    <i class="certificate icon"></i>
+                                                    <input type="text" name="Cpf_cnpj" class="masked"
+                                                           placeholder="000.000.000-00"
+                                                           data-inputmask="'mask': '999.999.999-99'"
+                                                           value="@Model.Cpf_cnpj">
+                                                </div>
+                                            </div>
+                                            <div class="field required">
+                                                <label>RG</label>
+                                                <div class="ui left icon input">
+                                                    <i class="certificate icon"></i>
+                                                    <input type="text" name="Rg_ie" placeholder="" value="@Model.Rg_ie">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="three fields">
+                                            <div class="field required">
+                                                <label>Data de Nascimento</label>
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input type="text" placeholder="DD/MM/YYYY" class="masked"
+                                                           id="inputDateBirthEdit"
+                                                           data-inputmask="'alias': 'dd/mm/yyyy'"
+                                                           value="@Model.DateBirth"
+                                                           name="DateBirth">
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label>Sexo</label>
+                                                <select class="ui dropdown" name="Gender">
+                                                    <option value="">Selecione</option>
+                                                    @if (Model.Gender != null)
+                                                    {
+                                                        <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.masculino)" value="0">
+                                                            <i class="male icon"></i>Masculino
+                                                        </option>
+                                                        <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.feminino)" value="@Model.Gender.Value">
+                                                            <i class="female icon"></i>Feminino
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="0">
+                                                            <i class="male icon"></i>Masculino
+                                                        </option>
+                                                        <option value="1">
+                                                            <i class="female icon"></i>Feminino
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label>Estado Civil</label>
+                                                <select class="ui dropdown" name="MaritalStatus">
+                                                    <option value="">Selecione</option>
+                                                    @if (Model.MaritalStatus != null)
+                                                    {
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.solteiro)" value="1">Solteiro(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.casado)" value="0">Casado(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.viúvo)" value="3">Viúvo(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.desquitado)" value="2">Desquitado(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.separado)" value="4">Separado(a)</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="0">Solteiro(a)</option>
+                                                        <option value="1">Casado(a)</option>
+                                                        <option value="2">Viúvo(a)</option>
+                                                        <option value="3">Desquitado(a)</option>
+                                                        <option value="4">Separado(a)</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="field required">
+                                            <label>Responsável</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input type="text" name="contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant">
+                                            </div>
+                                        </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label>Razão Social</label>
+                                                <div class="ui left icon input">
+                                                    <i class="suitcase icon"></i>
+                                                    <input type="text" name="name" placeholder="Razão Social da Empresa"
+                                                           value="" data-validate="businessName">
+                                                </div>
+                                            </div>
+                                            <div class="field required">
+                                                <label>Nome Fantasia</label>
+                                                <div class="ui left icon input">
+                                                    <i class="suitcase icon"></i>
+                                                    <input type="text" data-validate="fantasyName" name="FantasyName" placeholder="Nome Fantasia da Empresa"
+                                                           value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label>CNPJ</label>
+                                                <div class="ui left input">
+                                                    <input type="text" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked"
+                                                           placeholder="00.000.000/0000-00"
+                                                           data-inputmask="'mask': '99.999.999/9999-99'" data-validate="cnpj">
+                                                </div>
+                                            </div>
+                                            <div class="field required">
+                                                <label>IE</label>
+                                                <div class="ui left input">
+                                                    <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="ie">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
                                     <div class="field required">
                                         <label>E-mail</label>
                                         <div class="ui left icon input">
                                             <i class="mail icon"></i>
                                             <input readonly type="text" name="Email" placeholder="Seu Email"
                                                    value="@Model.User.UserName">
-                                        </div>
-                                    </div>
-
-                                    <div class="two fields">
-                                        <div class="field required">
-                                            <label>CPF</label>
-                                            <div class="ui left icon input">
-                                                <i class="certificate icon"></i>
-                                                <input type="text" name="Cpf_cnpj" class="masked"
-                                                       placeholder="000.000.000-00"
-                                                       data-inputmask="'mask': '999.999.999-99'"
-                                                       value="@Model.Cpf_cnpj">
-                                            </div>
-                                        </div>
-                                        <div class="field required">
-                                            <label>RG</label>
-                                            <div class="ui left icon input">
-                                                <i class="certificate icon"></i>
-                                                <input type="text" name="Rg_ie" placeholder="" value="@Model.Rg_ie">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="three fields">
-                                        <div class="field required">
-                                            <label>Data de Nascimento</label>
-                                            <div class="ui input left icon">
-                                                <i class="calendar icon"></i>
-                                                <input type="text" placeholder="DD/MM/YYYY" class="masked"
-                                                       id="inputDateBirthEdit"
-                                                       data-inputmask="'alias': 'dd/mm/yyyy'"
-                                                       value="@Model.DateBirth"
-                                                       name="DateBirth">
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label>Sexo</label>
-                                            <select class="ui dropdown" name="Gender">
-                                                <option value="">Selecione</option>
-                                                @if (Model.Gender != null)
-                                                {
-                                                    <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.masculino)" value="0">
-                                                        <i class="male icon"></i>Masculino
-                                                    </option>
-                                                    <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.feminino)" value="@Model.Gender.Value">
-                                                        <i class="female icon"></i>Feminino
-                                                    </option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="0">
-                                                        <i class="male icon"></i>Masculino
-                                                    </option>
-                                                    <option value="1">
-                                                        <i class="female icon"></i>Feminino
-                                                    </option>
-                                                }
-                                            </select>
-                                        </div>
-                                        <div class="field">
-                                            <label>Estado Civil</label>
-                                            <select class="ui dropdown" name="MaritalStatus">
-                                                <option value="">Selecione</option>
-                                                @if (Model.MaritalStatus != null)
-                                                {
-                                                    <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.solteiro)" value="1">Solteiro(a)</option>
-                                                    <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.casado)" value="0">Casado(a)</option>
-                                                    <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.viúvo)" value="3">Viúvo(a)</option>
-                                                    <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.desquitado)" value="2">Desquitado(a)</option>
-                                                    <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.separado)" value="4">Separado(a)</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="0">Solteiro(a)</option>
-                                                    <option value="1">Casado(a)</option>
-                                                    <option value="2">Viúvo(a)</option>
-                                                    <option value="3">Desquitado(a)</option>
-                                                    <option value="4">Separado(a)</option>
-                                                }
-                                            </select>
                                         </div>
                                     </div>
                                     <div class="two fields">
@@ -315,7 +361,7 @@
                                                 else
                                                 {
                                                     <option value="AC">Acre</option>
-                                                                <option value="AL">Alagoas</option>
+                                                    <option value="AL">Alagoas</option>
                                                                 <option value="AP">Amapá</option>
                                                                 <option value="AM">Amazonas</option>
                                                                 <option value="BA">Bahia</option>

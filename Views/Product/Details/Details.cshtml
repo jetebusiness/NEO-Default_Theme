@@ -401,14 +401,23 @@
                                         {
                                             <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                                         }
-
-                                        <a class="@(Model.Stock == 0 || Model.FlagExhausted ? "disabled " : "")ui animated big green button fluid detalhes @(Session["EventList"] != null ? "btn-add-event-list" :"btn-comprar")  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
-                                            <div class="visible content">@(Session["EventList"] != null ? "Adicionar à Lista" : "Adicionar ao Carrinho")</div>
-                                            <div class="hidden content">
-                                                <i class="add to cart icon"></i>
-                                            </div>
-                                        </a>
-
+                                        
+                                            <a class="@(Model.Stock == 0 || Model.FlagExhausted ? "disabled " : "")ui animated big green button fluid detalhes @(Session["EventList"] != null ? "btn-add-event-list" :"btn-comprar")  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0)  ? "disabled" : "")">
+                                                <div class="visible content">@(Session["EventList"] != null ? "Adicionar à Lista" : "Adicionar ao Carrinho")</div>
+                                                <div class="hidden content">
+                                                    <i class="add to cart icon"></i>
+                                                </div>
+                                            </a>
+                                            <br />
+                                            @if (ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago)
+                                            {
+                                                <a class="@(Model.Stock == 0 || Model.FlagExhausted ? "disabled " : "")ui animated big green button fluid detalhes btn-comprar-oneclick  @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0) ? "disabled" : "")">
+                                                    <div class="visible content">Comprar com 1-Click</div>
+                                                    <div class="hidden content">
+                                                        <i class="add to cart icon"></i>
+                                                    </div>
+                                                </a>
+                                            }
                                     </div>
                                 </div>
                                 <!--FIM DISPONIBILIDADE / CARRINHO-->
@@ -645,8 +654,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="" />
-                                <input type='hidden' id='googleResponse' name='googleResponse' value='' />
-                                <div id="gCaptchaDetail" class="g-recaptcha" data-sitekey="6Lem5z8UAAAAAAtkHSjb8mf33ht_r7T8zG3op9xj"></div>
+                                  @Html.Action("GetRecaptcha", "Company", null)
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>

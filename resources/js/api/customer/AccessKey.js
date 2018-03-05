@@ -32,7 +32,7 @@ $(document).ready(function(){
                     Password: password
                 },
                 success: function (data) {
-                    if (data.success == true) {
+                    if (data.success === true) {
                         window.location = data.redirectUrl
                     } else {
                         _alert("", data.message, "error")

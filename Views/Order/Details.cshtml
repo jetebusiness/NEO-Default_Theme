@@ -1,10 +1,8 @@
 ﻿@model DomainOrder.Entities.Order
-
 @{
     ViewBag.Title = "Detalhes do Pedido";
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
 }
-
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui one column grid stackable middle aligned">
@@ -21,12 +19,10 @@
                         <a class="section">Informação do Pedido</a>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 }
-
 <div id="pagePrint" class="ui grid left aligned">
     @if (Model == null)
     {
@@ -68,25 +64,38 @@
                                 }
                                 @{
                                     @* Forma de pagamento com boleto Itaú *@
-                                    if (Model.IdPaymentBrand == 207)
-                                    {
-                                        <input type="hidden" id="idOrder" value="@Model.IdOrder" />
-                                        <span>(<a href="javascript:void(0)" id="reprintBankSlip">Reimprimir boleto</a>)</span>
+                                if (Model.IdPaymentBrand == 207)
+                                {
+                                    <input type="hidden" id="idOrder" value="@Model.IdOrder" />
+                                    <span>(<a href="javascript:void(0)" id="reprintBankSlip">Reimprimir boleto</a>)</span>
 
-                                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
-                                              method="post"
-                                              name="itauShopline"
-                                              id="itauShopline"
-                                              target="openShopline">
-                                            <input type="hidden" name="DC" id="tokenBankSlip" value="" />                        
-                                        </form>
+                                    <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                                          method="post"
+                                          name="itauShopline"
+                                          id="itauShopline"
+                                          target="openShopline">
+                                        <input type="hidden" name="DC" id="tokenBankSlip" value="" />
+                                    </form>
 
-                                        <div class="ui modal">      
-                                            <i class="close icon"></i>                                      
-                                            <div class="content">                                                
-                                                <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>                                              
-                                            </div>
+                                    <div class="ui modal">
+                                        <i class="close icon"></i>
+                                        <div class="content">
+                                            <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
                                         </div>
+                                    </div>
+                                }
+                                @* Forma de pagamento com boleto MaxiPago*@
+                                else if (Model.IdPaymentBrand == 238)
+                                {
+                                    <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
+                                    <span>(<a href="javascript:void(0)" id="reprintBankSlipMaxiPago">Reimprimir boleto</a>)</span>
+
+                                    <div class="ui modal maxiPago">
+                                        <i class="close icon"></i>
+                                        <div class="content">
+                                            <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
+                                        </div>
+                                    </div>
                                 }
                                 }
                             </div>
@@ -105,10 +114,8 @@
                                 <strong>@Model.NameStatus</strong>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
 
             </div>
             <div class="column">
@@ -132,27 +139,33 @@
                         <div class="item">
                             <i class="map icon"></i>
                             <div class="content">
-                                @Model.Address.State
+                                @Model.Address.City - @Model.Address.State
                             </div>
                         </div>
                         <div class="item">
                             <i class="phone icon"></i>
                             <div class="content">
-
+                                @Model.Address.PhoneContact
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="row one column">
             <div class="column">
                 <div class="ui fluid steps">
                     @if (Model.HistoryListOrderStatus != null && Model.HistoryListOrderStatus.Count() > 0)
                     {
-                    foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus)
-                    {
+                        var count = 0;
+                        foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus)
+                        {
+                            count++;
+                            if (count > 3)
+                            {
+                                @Html.Raw("</div> <div class='ui fluid steps'>")
+                                count = 0;
+                            }
                             <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
                                 <i class="@status.Icon icon"></i>
                                 <div class="content">
@@ -220,7 +233,6 @@
                         </tr>
                         <tr>
                             <th colspan="4" class="right aligned"><h3>Total</h3></th>
-
                             <th class="right aligned"><h3>@string.Format("{0:c}", Model.Total)</h3></th>
                         </tr>
                     </tfoot>
@@ -240,5 +252,4 @@
         </button>
     </div>
 </div>
-
 

@@ -53,7 +53,7 @@ $(document).ready(function(){
                 success: function(data){
                     $("#CallServiceShippingMiniCart").removeClass("loading");
                     $(".description.frete").hide();
-                    //Coloca as infoam��es no Bloco HMTL com os valores corretos
+                    //Coloca as infoamções no Bloco HMTL com os valores corretos
                     $(".description.resultado .valor").html(data);
                     //$(".tabela.frete").dropdown('refresh');
                     $(".description.resultado").show();
@@ -139,7 +139,6 @@ $(document).ready(function(){
 
 
     $(document).on("click", "#miniCarrinho .removeCartItem", function(e) {
-        var flag = 0;
         var idCurrent = new Number($(this).attr("data-id"));
         excluirProdutoCarrinho(idCurrent);
         e.stopPropagation();
@@ -158,7 +157,7 @@ $(document).ready(function(){
         var valorInput = new Number($("#qtd_"+idCurrent).val());
         var valorStock = new Number($("#stock_"+idCurrent).val());
 
-        console.log(e);
+        //console.log(e);
 
         if(valorInput <= valorStock && valorInput < 1000){
             disparaAjaxUpdate(idCurrent, valorInput, action);
@@ -234,7 +233,7 @@ function excluirProdutoCarrinho(idCurrent){
                 },
                 success: function (data) {
                     if (data.success === false) {
-                        console.log("Erro ao excluir produto");
+                        //console.log("Erro ao excluir produto");
                     }else {
                         LoadCarrinho();
                     }
@@ -248,7 +247,7 @@ function excluirProdutoCarrinho(idCurrent){
 export function CancelarCalculoFreteCart(flagUpdate){
     var existeCep = $("#cep_selecionado").val();
     if(existeCep != "" && existeCep != "0"){
-        console.log("cancelando o frete");
+        //console.log("cancelando o frete");
         $("#id_frete_selecionado").val("");
         $("#cep_selecionado").val("");
         $(".description.frete").css("display", "block");
@@ -259,14 +258,14 @@ export function CancelarCalculoFreteCart(flagUpdate){
             data: {},
             success: function(data){
                 if(data.success === false){
-                    console.log("Erro ao excluir frete");
+                    //console.log("Erro ao excluir frete");
                 }
                 if(flagUpdate === 1){
                     UpdateCarrinho();
                 }
             },
             onFailure: function(data){
-                console.log("Erro ao excluir frete");
+                //console.log("Erro ao excluir frete");
             }
         });
     }
@@ -321,7 +320,6 @@ export function disparaAjaxUpdate(idCurrent, valorInput, action){
     });    
 }
 
-
 function ChangeFrete(){
     $("#GetShipping").change(function(){
         var ponteiroCurrent = $(this);
@@ -350,36 +348,6 @@ function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService){
         }
     });
 }
-
-
-
-
-
-function LoadServiceShippingStart(){
-    $.ajax({
-        method: "POST",
-        url: "/Checkout/GetShippingValues",
-        data:{ zipCode: zipCode},
-        success: function(data){
-            $("#CallServiceShipping").removeClass("loading");
-            $(".description.frete").hide();
-            //Coloca as infoam��es no Bloco HMTL com os valores corretos
-            $(".description.resultado .valor").html(data);
-            //$(".tabela.frete").dropdown('refresh');
-            $(".description.resultado").show();
-
-            ChangeFrete();
-            var idCurrent = $("#GetShipping").val();
-            var zipCode = $("#shipping").inputmask('unmaskedvalue');
-            var idShippingMode = idCurrent;
-            var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-
-            SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
-        }
-    });
-    event.stopPropagation();
-}
-
 
 export function RecalcularFrete(zipCode){
     if(zipCode != ""){
@@ -420,7 +388,7 @@ export function ExibirDicadeFrete(shippingID, zipcode){
         },
         success: function (data) {
             //EXIBE LINHA FRETE
-            if(data.success == true){
+            if(data.success === true){
                 $("#dica_frete").removeClass("hideme");
                 $("#descricao_dica").text(data.msg);
             }else {
@@ -430,7 +398,7 @@ export function ExibirDicadeFrete(shippingID, zipcode){
             montaListaProdutos();
         },
         onFailure: function (data) {
-            console.log("Erro ao buscar dica de frete");
+            //console.log("Erro ao buscar dica de frete");
         }
     });
 }

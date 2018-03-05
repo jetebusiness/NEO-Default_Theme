@@ -12,19 +12,3 @@ let MobileDetect = require('mobile-detect'),
 export function isMobile() {
     return md.mobile();
 }
-
-/**
- * Função: isTablet()
- * Retorno: Boolean para se o navegador está em dispositívo tablet
- */
-export function isTablet(){
-    return md.tablet();
-}
-
-/**
- * Função: isPhone()
- * Retorno: Boolean para se o navegador está em dispositívo celular
- */
-export function isPhone() {
-    return md.phone();
-}

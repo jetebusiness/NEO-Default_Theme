@@ -1,5 +1,5 @@
 ﻿import {_alert, _confirm} from "../../functions/message";
-var widgetgCaptchaFooter
+
 function RegisterNews() {
     $.ajax({
         url: '/Customer/RegisterNewsletter/',
@@ -35,7 +35,7 @@ function RegisterNews() {
             }
         },
         error: function (request, error) {
-            console.log("Erro ao realizar cadastro de news letter");
+            //console.log("Erro ao realizar cadastro de news letter");
         }
     });
 }

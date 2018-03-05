@@ -57,46 +57,55 @@ $(document).ready(function () {
     $('#parcelamento_b2b.accordion').accordion({
         onOpening: function() {
             if($(this).hasClass('first-b2b-payment')){
-                CarregarParcelamento();
+                CarregarParcelamento(true);
             }
         }
     });
 });
 
-function CarregarParcelamento(){
+export function CarregarParcelamento(isB2b){
     let json = "",
         html = "",
         json_string = "",
         json_content = "";
 
-    json_string = BuscarJsonParcelamento();
+    json_string = BuscarJsonParcelamento(isB2b);
     if(json_string != "0"){
         json = JSON.parse(json_string);
         json_content = JSON.parse(json.Content);
         var total_parcelas_exibidas = 0;
-        for (var i = 0; i < json_content[0].paymentMethods[0].paymentBrands.length; i++) {
-            var total_parcelas = json_content[0].paymentMethods[0].paymentBrands[i].installments.length;
-
-            if(total_parcelas > 0){
-                total_parcelas_exibidas++;
-                html += `         <div class="title">
-                                <i class="dropdown icon"></i>
-                                ${json_content[0].paymentMethods[0].paymentBrands[i].name}
-                            </div>
-                            <div class="content">
-                                <div class="ui list">`
-                for (var j = 0; j < json_content[0].paymentMethods[0].paymentBrands[i].installments.length; j++) {
-                    html += `<span class="item parcelamentos">
-                                            <span class="parcelas">${json_content[0].paymentMethods[0].paymentBrands[i].installments[j].installmentNumber} x</span>
-                                            <span class="valor"> ${moneyPtBR(json_content[0].paymentMethods[0].paymentBrands[i].installments[j].value)} </span>
-                                            <span class="modelo">(${json_content[0].paymentMethods[0].paymentBrands[i].installments[j].description})</span>
-                                            <span class="total">Total Parcelado: ${moneyPtBR(json_content[0].paymentMethods[0].paymentBrands[i].installments[j].total)}</span>
-                                        </span>`
-                }
-                html += `</div>
-                            </div>`
+        //GATEWAY
+        for (var i = 0; i < json_content.length; i++) {
+          //METHODS
+          for (var j = 0; j < json_content[i].paymentMethods.length; j++) {
+            //BRANDS
+            if(json_content[i].paymentMethods[j].status === true){
+              for (var k = 0; k < json_content[i].paymentMethods[j].paymentBrands.length; k++) {
+                  var total_parcelas = json_content[i].paymentMethods[j].paymentBrands[k].installments.length;
+                  if(total_parcelas > 0){
+                      total_parcelas_exibidas++;
+                      html += `         <div class="title">
+                                      <i class="dropdown icon"></i>
+                                      ${json_content[i].paymentMethods[j].paymentBrands[k].name}
+                                  </div>
+                                  <div class="content">
+                                      <div class="ui list">`
+                      for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+                          html += `<span class="item parcelamentos">
+                                                  <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
+                                                  <span class="valor"> ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
+                                                  <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
+                                                  <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
+                                              </span>`
+                      }
+                      html += `</div>
+                                  </div>`
+                  }
+              }
             }
+          }
         }
+
     }else {
         html += `<div class="title">
               <span>Não existem produtos selecionados</span>
@@ -109,7 +118,8 @@ function CarregarParcelamento(){
     }
     $("#parcelamento_info").html(html);
 }
-function BuscarJsonParcelamento(){
+
+function BuscarJsonParcelamento(isB2b){
     var total = "";
     if(typeof $("#total_geral").data("total-geral") != "undefined"){
         total = $("#total_geral").data("total-geral");
@@ -117,6 +127,7 @@ function BuscarJsonParcelamento(){
         total = $("#preco").data("preco-inicial");
     }
     var retorno = "0";
+    total = total.toString();
     total = parseFloat(total.replace(",","."))
     if(total > 0){
         $.ajax({
@@ -125,7 +136,7 @@ function BuscarJsonParcelamento(){
             async: false,
             data: {
                 Valor : total,
-                isB2b : true
+                isB2b : isB2b
             },
             dataType: 'json',
             success: function (response) {
@@ -211,7 +222,7 @@ function AviseMe (produtoID, skuID){
         },
         dataType: 'json',
         success: function (response) {
-            if (response.success == true) {
+            if (response.success === true) {
                 _alert("", "Alerta criado com sucesso", "success");
             } else {
                 _alert("", "Não foi possível criar o alerta: "+response.message, "warning");
@@ -243,7 +254,7 @@ function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
         data: JSON.stringify(Cart),
         dataType: 'json',
         success: function (response) {
-            if (response.success == true) {
+            if (response.success === true) {
                 $(document).find(".loading").removeClass("loading");
                 toastr.success("Produto adicionado ao carrinho com sucesso!");
                 LoadCarrinho(exibeMiniCarrinho);

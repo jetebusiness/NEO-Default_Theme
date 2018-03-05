@@ -11,7 +11,7 @@ export function montaListaProdutos() {
     //Pega a altura dos elementos sem os items
     let elementos   = cartElement.height() - listaItems.height();
     //Pega nova altura da lista de items
-    let novaAltura  = $(window).height() - elementos;
+    let novaAltura  = ($(window).height() - elementos) - 30;
     //Atualiza altura da lista de items e inicia comando de update no PS
     listaItems.height(novaAltura)
         .perfectScrollbar("update");

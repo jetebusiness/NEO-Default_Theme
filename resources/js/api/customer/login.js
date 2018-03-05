@@ -9,6 +9,7 @@ function gettoken() {
 
 function Login() {
     var form = $("#formLogin");
+    var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
     $.ajax({
         type: "POST",
         url: "/Customer/Login",
@@ -16,7 +17,8 @@ function Login() {
         dataType: "json",
         success: function (response) {
             if (response.success == false) {
-                grecaptcha.reset()
+                if(googleRecaptchaStatus)
+                    grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
             }
@@ -27,7 +29,8 @@ function Login() {
         },
         error: function () {
             if (response.success == false) {
-                grecaptcha.reset()
+                if(googleRecaptchaStatus)
+                    grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
             }
@@ -40,6 +43,7 @@ function Login() {
 
 function LoginB2B() {
     var form = $("#formLogin");
+    var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
     $.ajax({
         type: "POST",
         url: "/Customer/LoginB2B",
@@ -47,7 +51,8 @@ function LoginB2B() {
         dataType: "json",
         success: function (response) {
             if (response.success == false) {
-                grecaptcha.reset()
+                if(googleRecaptchaStatus)
+                    grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
             }
@@ -68,7 +73,8 @@ function LoginB2B() {
         },
         error: function () {
             if (response.success == false) {
-                grecaptcha.reset()
+                if(googleRecaptchaStatus)
+                    grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
             }
@@ -80,16 +86,18 @@ function LoginB2B() {
 }
 
 $(document).ready(function () {
-    $("#gCaptcha").hide()
+    $("#formLogin #gCaptcha").hide()
     $(document).on("click", "#submitForm", function () {
+        var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
+
         if ($("#email").val().length > 0 && $("#password").val().length > 0) {
             $("#submitForm").addClass("loading");
             count++
             if (count == 3) {
                 $("#submitForm").removeClass("loading");
-                $("#gCaptcha").show()
+                $("#formLogin #gCaptcha").show()
             }
-            else if (count > 3) {
+            else if (count > 3 && googleRecaptchaStatus) {
                 if(grecaptcha.getResponse() != ""){
                     $("#googleResponse").val(grecaptcha.getResponse())
                     Login()
@@ -102,21 +110,24 @@ $(document).ready(function () {
             }
         }
         else {
-            grecaptcha.reset()
+            if(googleRecaptchaStatus)
+                grecaptcha.reset()
             $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
             $(".ui.message.form-message").show();
         }
     })
 
     $(document).on("click", "#loginB2B", function () {
+        var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
+
         if ($("#userName").val().length > 0 && $("#passwordb2b").val().length > 0) {
             $("#loginB2B").addClass("loading");
             count++
             if (count == 3) {
                 $("#loginB2B").removeClass("loading");
-                $("#gCaptcha").show()
+                $("#formLogin #gCaptcha").show()
             }
-            else if (count > 3) {
+            else if (count > 3 && googleRecaptchaStatus) {
                 if(grecaptcha.getResponse() != ""){
                     $("#googleResponse").val(grecaptcha.getResponse())
                     LoginB2B()
@@ -129,7 +140,8 @@ $(document).ready(function () {
             }
         }
         else {
-            grecaptcha.reset()
+            if(googleRecaptchaStatus)
+                grecaptcha.reset()
             $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
             $(".ui.message.form-message").show();
         }
@@ -159,7 +171,7 @@ $(document).ready(function () {
                     }
                 },
                 error: function (response) {
-                    if (response.success == false) {                    
+                    if (response.success === false) {                    
                         $(".ui.message.form-message p").text(response.message);
                         $(".ui.message.form-message").show();
                     }
@@ -186,14 +198,16 @@ $(document).ready(function () {
     })
     $(document).on("keypress", "#password", function (e) {
         if(e.which == 13) {
+            var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
+
             if ($("#email").val().length > 0 && $("#password").val().length > 0) {
                 $("#submitForm").addClass("loading");
                 count++
                 if (count == 3) {
                     $("#submitForm").removeClass("loading");
-                    $("#gCaptcha").show()
+                    $("#formLogin #gCaptcha").show()
                 }
-                else if (count > 3) {
+                else if (count > 3 && googleRecaptchaStatus) {
                     var response = grecaptcha.getResponse()
                     if (response.length > 0) {
                         Login()
@@ -207,7 +221,8 @@ $(document).ready(function () {
                 }
             }
             else {
-                grecaptcha.reset()
+                if(googleRecaptchaStatus)
+                    grecaptcha.reset()
                 $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
                 $(".ui.message.form-message").show();
             }
@@ -216,14 +231,16 @@ $(document).ready(function () {
 
     $(document).on("keypress", "#passwordb2b", function (e) {
         if(e.which == 13) {
+            var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
+
             if ($("#userName").val().length > 0 && $("#passwordb2b").val().length > 0) {
                 $("#loginB2B").addClass("loading");
                 count++
                 if (count == 3) {
                     $("#loginB2B").removeClass("loading");
-                    $("#gCaptcha").show()
+                    $("#formLogin #gCaptcha").show()
                 }
-                else if (count > 3) {
+                else if (count > 3 && googleRecaptchaStatus) {
                     var response = grecaptcha.getResponse()
                     if (response.length > 0) {
                         LoginB2B()
@@ -237,7 +254,8 @@ $(document).ready(function () {
                 }
             }
             else {
-                grecaptcha.reset()
+                if(googleRecaptchaStatus)
+                    grecaptcha.reset()
                 $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
                 $(".ui.message.form-message").show();
             }
@@ -253,7 +271,7 @@ $(document).ready(function () {
                 provider: $(this).val()},
             dataType: "json",
             success: function (response) {
-                if (response.success == true) {
+                if (response.success === true) {
                     window.location = response.redirectUrl
                 }                
             },
@@ -273,7 +291,7 @@ $(document).ready(function () {
                 provider: $(this).val()},
             dataType: "json",
             success: function (response) {
-                if (response.success == true) {
+                if (response.success === true) {
                     window.location = response.redirectUrl
                 }                
             },

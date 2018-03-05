@@ -12,6 +12,8 @@
     {
         ViewBag.ViewBoleto = false;
     }
+
+    string bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
 }
 
 @section gtm {
@@ -47,7 +49,7 @@
     </div>
 }
 <input type="hidden" name="idOrderCurrent" id="idOrderCurrent" value="@Model.IdOrder" />
-<div class="ui container fluid bg-green">
+<div class="ui container fluid @bgColor">
     <div class="ui container">
         <div class="ui grid">
             <div class="ui divider small hidden"></div>
@@ -204,6 +206,15 @@
                                         <input type="hidden" name="DC" id="DC" value="@ViewBag.ItauShoplineKey" />
                                         <input class="ui large green button floated right" id="itauShoplineBoleto" type="submit" value="Imprimir Boleto" />
                                     </form>
+                                </div>
+                            }
+
+                            @if (!String.IsNullOrEmpty(Request.QueryString["b"]))
+                            {
+                                <div class="column">
+                                    <a class="ui large green button floated right" href="@LojaCorp.Control.Static.DecryptData(Request.QueryString["b"].ToString())" title="Boleto" target="_blank">
+                                        Imprimir Boleto
+                                    </a>
                                 </div>
                             }
                         </div>
