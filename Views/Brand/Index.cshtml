@@ -5,6 +5,15 @@
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
 }
 
+@section CustomSeo {
+    @{
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+        }
+    }
+}
+
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui two column grid stackable middle aligned">
@@ -23,16 +32,17 @@
         </div>
     </div>
 }
-@*
+
     @section banner {
         @if (Model != null)
         {
             <div class="sixteen wide column">
+                <!-- ~/Views/Shared/Blocks/Banner/_FullBanner.cshtml -->
                 @Html.Action("CentralHalfBannerBrand", "Banner", new { brandID = Model.IdBrand })
             </div>
         }
     }
-*@
+
 
 @section filters {
     <div class="four wide column filterColumn">
@@ -120,10 +130,6 @@
 </div>
 <!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
 @Html.Action("Brand", "Product")
-
-@section gtm {
-    @Html.Action("GoogleTagManager", "Common", new {origin = ViewContext.RouteData.Values["controller"]})
-}
 
 @section custom_js{
     <script>

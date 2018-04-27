@@ -200,6 +200,7 @@
     &.compra {
         max-height: 235px;
         position: relative;
+        overflow-y: scroll;
     }
 }
 
@@ -266,4 +267,10 @@
     padding: 0;
     max-width: 25px;
     margin: 4px;
+}
+
+@media only screen and (max-width: 768px) {
+    #ListProductsCheckout {
+        height: 100% !important;
+    }
 }

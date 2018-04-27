@@ -9,7 +9,6 @@
                 <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
                 <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)">
 
-                <!--REMOVER && Model.SealStatus.Name != "Normal" ASSIM QUE CORRIGIR PAINEL-->
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
                     <div class="ui bottom right attached label massive imagetag">
@@ -41,6 +40,7 @@
 
                 @if (Model.AvailableReferences != null)
                 {
+                    <input type="hidden" name="produto-sku" id="produto-sku" value="" />
                     foreach (var reference in Model.AvailableReferences)
                     {
                         <div id="referencefromproduct_@Model.IdProduct" class="ui fluid selection dropdown dropdownreference" data-total-referencia="@(Model.AvailableReferences != null ? Model.AvailableReferences.Count() : 0)" data-idproduct="@Model.IdProduct">

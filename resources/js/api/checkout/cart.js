@@ -104,7 +104,7 @@ function RemoveProductCart(){
 function LoadServiceShipping(){
     $("#CallServiceShipping").click(function(event){
         $(this).addClass("loading");
-        var zipCode = $(this).prev('input').inputmask('unmaskedvalue');
+        var zipCode = $("#shipping").val();
         $.ajax({
             method: "POST",
             url: "/Checkout/GetShippingValues",
@@ -119,15 +119,17 @@ function LoadServiceShipping(){
 
                 ChangeFrete();
                 var idCurrent = $("#GetShipping").val();
-                var zipCode = $("#shipping").inputmask('unmaskedvalue');
+                var zipCode = $("#shipping").val();
                 var idShippingMode = idCurrent;
                 var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-
+                var carrier = $("#ship_"+idCurrent).data("carrier");
+                var mode = $("#ship_"+idCurrent).data("mode");
+                var hub =  $("#ship_"+idCurrent).data("hub");
 
                 $("#id_frete_selecionado").val(idShippingMode);
                 $("#cep_selecionado").val(zipCode);
                 ExibirDicadeFrete(idShippingMode, zipCode);
-                SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+                SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
             }
         });
         event.stopPropagation();
@@ -202,14 +204,17 @@ function UpdateCabecalhoCarrinho(descontoCarrinho, subTotalCarrinho, totalCarrin
     $("#totalCarrinho").text(totalCarrinho);
 }
 
-function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService){
+function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub){
     $.ajax({
         method: "POST",
         url: "/Checkout/SaveFrete",
         data:{
             zipCode                         : zipCode,
             idShippingMode                  : idShippingMode,
-            deliveredByTheCorreiosService   : deliveredByTheCorreiosService
+            deliveredByTheCorreiosService   : deliveredByTheCorreiosService,
+            carrier                         : carrier,
+            mode                            : mode,
+            hub                             : hub
         },
         success: function(data){
             LoadCarrinho();
@@ -222,10 +227,14 @@ function ChangeFrete(){
         var ponteiroCurrent = $(this);
         var idCurrent = $(ponteiroCurrent).val();
 
-        var zipCode = $("#shipping").inputmask('unmaskedvalue');
+        var zipCode = $("#shipping").val();
         var idShippingMode = idCurrent;
         var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-        SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+        var carrier = $("#ship_"+idCurrent).data("carrier");
+        var mode = $("#ship_"+idCurrent).data("mode");
+        var hub =  $("#ship_"+idCurrent).data("hub");
+
+        SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
         ExibirDicadeFrete(idShippingMode, zipCode);
     });
 }

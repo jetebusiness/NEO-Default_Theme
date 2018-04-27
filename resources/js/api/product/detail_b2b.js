@@ -27,8 +27,8 @@ $(document).ready(function () {
         });
     });
 
-    $("#btn_comprar_b2b, #btn_comprar_continuar").click(function () {
-        var exibeMiniCarrinho = $(this)[0].id === "btn_comprar_continuar" ? false : true;
+    $("#btn_comprar_b2b, #btn_comprar_continuar, #btn_comprar_oneclick_b2b").click(function () {
+        var exibeMiniCarrinho = $(this)[0].id === "btn_comprar_b2b" ? true : false;
 
         $(this).addClass(".loading");
         let Cart = [];
@@ -43,6 +43,23 @@ $(document).ready(function () {
         });
 
         AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho);
+
+        if($(this)[0].id == "btn_comprar_oneclick_b2b") {
+            $.ajax({
+                method: "GET",
+                url: "/Checkout/CheckoutNext",
+                data: {},
+                success: function(data){
+                    if(data.success === true)
+                        window.location.href = "/" + data.redirect
+                    else
+                        _alert("Mensagem", data.message, "error")
+                },
+                onFailure: function(data){
+                    //console.log("Erro ao excluir frete");
+                }
+            });
+        }
     });
 
     $(".avise_b2b").click(function () {

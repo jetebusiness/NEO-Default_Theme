@@ -45,6 +45,23 @@
         }
 </div>
 
+<script>
+    $(document).ready(function () {
+        //Style criado para bloquear o clique das abas de endereço, produto, convidado e convite.
+        //Obrigando o usuario a preencher e salvar os dados principais da lista antes de adicionar qualquer coisa nela.
+        if('@Model.IdEventList' == 0){
+            $("#address ").css("color", "darkgray");
+            $("#address ").css("pointer-events", "none");
+            $("#product ").css("color", "darkgray");
+            $("#product ").css("pointer-events", "none");
+            $("#guest ").css("color", "darkgray");
+            $("#guest ").css("pointer-events", "none");
+            $("#invitation ").css("color", "darkgray");
+            $("#invitation ").css("pointer-events", "none");
+        }
+    });
+</script>
+
 @section custom_js {
     <script>
         function onSuccess(response) {
@@ -126,6 +143,12 @@
                     contentType: contentType,
                     processData: processData,
                     success: function (response) {
+                        //Após o preenchimento dos dados principais da lista liberamos o clique das demais abas bloqueadas no document ready.
+                        $("address").removeAttr("style");
+                        $("product").removeAttr("style");
+                        $("guest").removeAttr("style");
+                        $("invitation").removeAttr("style");
+
                         onSuccess(response);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

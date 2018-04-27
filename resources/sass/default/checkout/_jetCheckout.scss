@@ -1,4 +1,11 @@
-
+@media screen and (max-width: $mobile-bp) {
+      .input-datepicker .agendar{
+            width:12.5em!important;
+        }
+    }
+.input-datepicker .agendar{
+    width:10.3em;
+}
 .jetBg {
   background: rgb(248, 248, 248) !important;
 }

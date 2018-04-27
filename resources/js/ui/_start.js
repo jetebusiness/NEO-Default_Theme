@@ -29,6 +29,11 @@ require('./modules/slideshow');
 require('./modules/register');
 //--------------------[ Client Edit ]--------------------//
 require('./modules/editCustomer');
+//--------------------[ Client Mascára ]--------------------//
+require('./modules/mask');
+require('./modules/jquery-ui.min');
+
+
 //--------------------[ Start Document ]--------------------//
 
 $(document).ready(function(){

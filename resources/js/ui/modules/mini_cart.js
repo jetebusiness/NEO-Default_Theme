@@ -13,8 +13,6 @@ export function montaListaProdutos() {
     //Pega nova altura da lista de items
     let novaAltura  = ($(window).height() - elementos) - 30;
     //Atualiza altura da lista de items e inicia comando de update no PS
-    listaItems.height(novaAltura)
-        .perfectScrollbar("update");
 }
 
 $(window).resize(function () {
@@ -59,6 +57,6 @@ $(document).ready(function () {
 
     //Inicializa o PS
     montaListaProdutos();
-    $(".listaItems").perfectScrollbar();
+   
 
 });

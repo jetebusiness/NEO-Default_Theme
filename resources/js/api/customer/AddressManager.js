@@ -10,12 +10,12 @@ export function atualizaCampos(dados) {
 }
 
 export function buscaCep(cep) {
-    $("#zipCode").inputmask("99999-999", {
-        greedy: false,
-        oncomplete: function oncomplete() {
-            buscaCep($(this), 0);
-        }
+    $("#zipCode").mask("00000-000");
+
+    $("#zipCode").focusout(function() {
+        buscaCep($(this), 0);
     });
+
     $.getJSON("//viacep.com.br/ws/" + cep + "/json/unicode", function (dados) {
         if (dados.erro) {
             if (window.swal) {

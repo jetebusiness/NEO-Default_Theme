@@ -95,12 +95,8 @@
 <!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
 @Html.Action("Brand", "Product")
 
-@section gtm {
-    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
-}
-
 @section custom_js {
     <script>
-        window.filterManipulation = { keyWord: "@(Request.QueryString["n"] != null ? Request.QueryString["n"] : "")" };
+        window.filterManipulation = { keyWord: "@(Request.QueryString["n"] != null ? Server.UrlEncode(Request.QueryString["n"]) : "")" };
     </script>    
 }

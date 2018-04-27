@@ -10,11 +10,8 @@
 // -----[SweetAlert 2 - https://limonte.github.io/sweetalert2/]----- //
 @import "node_modules/sweetalert2/src/sweetalert2";
 
-// -----[Perfect Scroll - https://noraesae.github.io/perfect-scrollbar/]----- //
-@import "node_modules/perfect-scrollbar/src/css/main";
-
 // -----[InputMask - https://github.com/RobinHerbots/Inputmask]----- //
-@import "node_modules/inputmask/css/inputmask";
+/*@import "node_modules/inputmask/css/inputmask";*/
 
 // -----[SlickCarousel - http://kenwheeler.github.io/slick/]----- //
 @import "node_modules/slick-carousel/slick/slick.scss";
@@ -22,4 +19,3 @@
 
 // -----[Default Theme]----- //
 @import "default/theme";
-

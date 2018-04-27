@@ -6,6 +6,7 @@ import {CancelarCalculoFreteCart} from "../checkout/mini_cart";
 import {moneyPtBR} from "../../functions/money";
 ﻿import {isLoading} from "../api_config";
 import {updateProductConjunctTable} from "./detail";
+import {getAllMask} from "../../ui/modules/mask";
 
 function isExhausted(productId) {
     return !($("#Product_" + productId).data("exhausted").toLowerCase() === "false");
@@ -112,6 +113,42 @@ $(document).on("click", "#btn_compre_conjunto_selecionado", function (e) {
     }
 });
 
+$(document).on("click", "#btn_compre_oneclick_conjunto_selecionado", function (e) {
+    let $product_selected = $(".conjunct_product:checked");
+    if ($product_selected.length > 0) {
+        $(this).addClass("loading");
+        CancelarCalculoFreteCart(1);
+        $product_selected.each(function () {
+            insertItemInCart($(this).val(), $(this), false);
+        });
+
+        $.ajax({
+            method: "GET",
+            url: "/Checkout/CheckoutNext",
+            data: {},
+            success: function(data){
+                if(data.success === true)
+                {
+                    window.location.href = "/" + data.redirect;
+                }
+                else
+                {
+                    _alert("Mensagem", data.message, "error");
+                }
+            },
+            onFailure: function(data){
+                //console.log("Erro ao excluir frete");
+            }
+        });
+        // LoadCarrinho(true)
+    }else if($(".conjunct_product").length == 0){
+        _alert('', 'Conjunto indisponível!', 'error');
+    }
+    else {
+        _alert('', 'Selecione ao menos um produto, antes de adicionar ao carrinho.', 'error');
+    }
+});
+
 $(document).on("click", ".button.avise-card", function () {
     var that = $(this);
     loading(that);
@@ -129,7 +166,7 @@ $(document).on("click", ".button.avise-card", function () {
         success: function (response) {
             $(".modal-block").append(response);
             openModalQuickView($(this).attr("data-modal-open"), callback => {
-                $("input.masked").inputmask();
+                getAllMask();
                 loading(that);
             });
 
@@ -276,6 +313,8 @@ function callAjaxGetSku(element) {
                     updateStockConjunct($parent);
                     updateProductConjunctTable();
                 }
+
+                $("#produto-sku").val(variationSelected.ids);
             },
             error: function (response) {
                 console.error("Response Error: " + response);

@@ -260,13 +260,7 @@ export const formSettings = {
 };
 
 $(document).ready(function () {
-    /**
-     * InputMask Call
-     */
-    $(".masked:input").inputmask({
-        greedy: false,
-        jitMasking: true,
-    });
+
     /**
      * Semantic-UI Calendar Call
      */

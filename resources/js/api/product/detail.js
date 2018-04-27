@@ -7,6 +7,7 @@ import {LoadCarrinho} from "../../functions/mini_cart_generic";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
 import {LoadCarrinhoEventList} from "../../functions/mini_cart_generic";
 import {CarregarParcelamento} from "../../api/product/detail_b2b.js";
+import {getAllMask} from "../../ui/modules/mask";
 
 $(document).ready(function () {
     "use strict";
@@ -27,7 +28,7 @@ $(document).ready(function () {
         beforeSend: function (settings) {
             settings.data = {
                 produtoID: $("#produto-id").val(),
-                sku: $("#produto-sku").val(),
+                sku: $("#variacoesSelecionadas").val(),
                 titulo: $("#produto-nome").text() !== "" ? $("#produto-nome").text() : $(this).data("name"),
                 imagem: $('#imagem-padrao').attr('src') !== undefined ? $('#imagem-padrao').attr('src') : $('#mainImageCard_' + $(this).data("id")).attr('src'),
                 codigo: $("#produto-codigo").val()
@@ -40,7 +41,7 @@ $(document).ready(function () {
         onSuccess: function (response) {
             $(".modal-block").append(response);
             openModalQuickView($(this).attr("data-modal-open"), callback => {
-                $("input.masked").inputmask();
+                getAllMask();
             });
         },
         onFailure: function (response) {
@@ -387,6 +388,9 @@ function BuscarVariacaoCor(valor_selecionado, order, idReferencia) {
         dataType: 'html',
         success: function (response) {
             $("#exibePartial").html(response);
+            if(document.getElementById("buy-together").getElementsByClassName("ui image medium").length > 0){
+                document.getElementById("buy-together").getElementsByClassName("ui image medium")[0].children[0].src = $("#imagem-padrao")[0].src
+            }
             ZoomReset();
             isLoading("body");
         },
@@ -537,7 +541,6 @@ function buscarSKU(seletor, produtoID) {
     var qtdParcelaMaximaUnidade      = $("#qtd-parcela-maxima-unidade").val();
     var pagamentoDescricao           = $("#pagamento-descricao").val();
 
-    if (parseInt(totalVariacoes) == ArrReferenciasJaSelecionadas.length) {
         $.ajax({
             url: '/Product/GetSku/',
             type: 'POST',
@@ -552,7 +555,7 @@ function buscarSKU(seletor, produtoID) {
             success: function (data) {
                 if (typeof produtoID != 'undefined') {
                     if (data.Visible === true && data.Stock > 0) {
-                        AtualizarGradeCompreJunto(data, produtoID);
+                        AtualizarGradeCompreJunto(data, produtoID, referenciasJaSelecionadas);
                     } else {
                         swal({
                             title: '',
@@ -580,11 +583,27 @@ function buscarSKU(seletor, produtoID) {
                 //console.log("erro ao buscar sku");
             }
         });
-
-    }
 }
 
-function AtualizarGradeCompreJunto(jsonSKU, productID) {
+function AtualizarGradeCompreJunto(jsonSKU, productID, referencias) {
+    var id = productID;
+
+    $.ajax({
+        url: '/Product/GetProductImages?id=' + productID + '&referencias=' + referencias,
+        type: 'GET',
+        success: function (result) 
+        {
+            var listProducts = document.getElementById("buy-together").getElementsByClassName("item buy-together");
+            for (var i = 0; i < listProducts.length; i++) 
+            {
+                if(listProducts[i].dataset.id == id)
+                {
+                    document.getElementById("buy-together").getElementsByClassName("ui image small")[i].children[0].children[0].src = result.lista[0].ImageDefault;
+                }
+            }
+        }
+    });
+
     var existeCompreJunto = parseInt($('#buy-together .ui.container').length);
     if (existeCompreJunto > 0) {
         let pricePromotion = jsonSKU.PricePromotion,
@@ -670,15 +689,16 @@ function AtualizarGrade(jsonSKU) {
         $("#avise_me").removeClass("detalhes hideme");
         $("#btn_comprejunto").addClass("disabled");
         $(".btn-comprar").addClass("disabled");
+        $(".btn-comprar-oneclick").addClass("disabled");
         $(".btn-add-event-list").addClass("disabled");
         $("#calculo-frete").addClass("detalhes hideme");
         $("#calculo-parcelamento").addClass("detalhes hideme");
     } else {
         $("#btn_comprejunto").removeClass("disabled");
-        $(".btn-comprar").removeClass("disabled");
         //$("#pagamento-calculado").removeClass("detalhes hideme");
         $("#avise_me").addClass("detalhes hideme");
-        $("#btn-comprar").removeClass("disabled");
+        $(".btn-comprar").removeClass("disabled");
+        $(".btn-comprar-oneclick").removeClass("disabled");
         $("#calculo-frete").removeClass("detalhes hideme");
         $("#calculo-parcelamento").removeClass("detalhes hideme");
     }
@@ -691,7 +711,16 @@ function AtualizarGrade(jsonSKU) {
     $("#parcela-maxima-unidade").val(max_v);
     $("#qtd-parcela-maxima-unidade").val(max_p);
     $("#pagamento-descricao").val(description);
+    
+    let referenciasvariacoes = $("#principal-referencias-selecionadas").val().split(",");
+    let variacoesSelecionadas = "";
+    for (var i = 0; i < referenciasvariacoes.length; i++) {
+        variacoesSelecionadas += variacoesSelecionadas !== "" ? "," + referenciasvariacoes[i].split("-")[1] : referenciasvariacoes[i].split("-")[1];
+    }
+
+    $("#variacoesSelecionadas").val(variacoesSelecionadas);
     $("#produto-sku").val(jsonSKU.IdSku);
+
     AtualizarQuantidade();
     $("#parcelamento_b2b").find(".active").removeClass("active");
 }
@@ -1395,6 +1424,7 @@ export function updateProductConjunctTable() {
         } else {
             preco_base = preco;
         }
+
         /*console.log(`
             Buscando Informações do Produto.
             Produto: ${$card.find('h1').text()}
@@ -1403,6 +1433,7 @@ export function updateProductConjunctTable() {
             Preço: ${preco}
             Preço Base: ${preco_base}
         `);*/
+
         valor_total = parseFloat(valor_total) + parseFloat(preco);
         valor_base  = parseFloat(valor_base) + parseFloat(preco_base);
         desconto = parseFloat((parseFloat(valor_total) - parseFloat(valor_base)));

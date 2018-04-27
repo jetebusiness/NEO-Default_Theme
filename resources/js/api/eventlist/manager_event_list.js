@@ -12,6 +12,16 @@ $(document).ready(function () {
 
 });
 
+$(document).on("keydown", "input[name=EventDate]", function(e){
+    var keyCodeEntered = e.keyCode ? e.keyCode : e.charCode;
+    if (keyCodeEntered == 8) {
+        $(this).blur();
+        $(this).val("");
+        return false;
+    }
+    return false;
+});
+
 $(document).on("change", "div[id^='referencefromproduct_']", function(e){
     var productId = $(this).data("idproduct");
     var $parent = $(this).closest(".item.produtoList");
@@ -373,6 +383,16 @@ function addGuest(nameGuest, emailGuest) {
             swal({            
                 text: "Convidado adicionado com sucesso!",
                 type: "success",
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        },
+        error: function (response) {
+            swal({        
+                text: "Não foi possível adicionar o convidado!",
+                type: "error",
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',

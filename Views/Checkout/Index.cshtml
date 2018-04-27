@@ -66,7 +66,6 @@
                                                     <div class="ui action input">
                                                         <input type="text" placeholder="00000-000"
                                                                class="masked" size="9" name="shipping"
-                                                               data-inputmask="'mask': '99999-999'"
                                                                value="@Model.ZipCode"
                                                                id="shipping">
                                                         <button class="ui yellow right labeled icon button frete calcular" id="CallServiceShipping">
@@ -142,7 +141,9 @@
     </div>
 </div>
 
-@section gtm {
-    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+@section remarketing {
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+    <!-- End Google Remarketing -->
 }
 

@@ -87,9 +87,9 @@
                                         <div class="field required pessoa fisica">
                                             <label>CPF</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@Model.Cpf_cnpj" name="Cpf_cnpj" class="masked"
+                                                <input type="text" value="@Model.Cpf_cnpj" name="Cpf_cnpj" class="masked mask_cpf"
                                                        placeholder="000.000.000-00"
-                                                       data-inputmask="'mask': '999.999.999-99'" data-validate="cpf">
+                                                       data-validate="cpf">
                                             </div>
                                         </div>
                                         <div class="field required pessoa fisica">
@@ -101,9 +101,9 @@
                                         <div class="field required pessoa juridica">
                                             <label>CNPJ</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@Model.Cpf_cnpj" name="Cpf_cnpj" class="masked"
+                                                <input type="text" value="@Model.Cpf_cnpj" name="Cpf_cnpj" class="masked mask_cnpj"
                                                        placeholder="00.000.000/0000-00"
-                                                       data-inputmask="'mask': '99.999.999/9999-99'" data-validate="cnpj">
+                                                       data-validate="cnpj">
                                             </div>
                                         </div>
                                         <div class="field required pessoa juridica">
@@ -118,8 +118,8 @@
                                             <label>Data de Nascimento</label>
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
-                                                <input type="text" value="@Model.DateBirth" placeholder="DD/MM/YYYY" class="masked"
-                                                       data-inputmask="'alias': 'dd/mm/yyyy'" name="DateBirth" data-validate="birthday">
+                                                <input type="text" value="@Model.DateBirth" placeholder="DD/MM/YYYY" class="masked mask_date"
+                                                 name="DateBirth" data-validate="birthday">
                                             </div>
                                         </div>
                                         <div class="field">
@@ -151,8 +151,8 @@
                                             <div class="ui left icon input">
                                                 <i class="phone icon"></i>
                                                 <input type="text" name="Phone.Phone1" value="@Model.Phone.Phone1"
-                                                       placeholder="(00) 00000-0000" class="masked"
-                                                       data-inputmask="'mask': ['(99) 9999-9999', '(99) 99999-9999']" data-validate="phone">
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       data-validate="phone">
                                             </div>
                                         </div>
                                         <div class="field">
@@ -160,8 +160,8 @@
                                             <div class="ui left icon input">
                                                 <i class="mobile icon"></i>
                                                 <input type="text" name="Phone.Phone2" value="@Model.Phone.Phone2"
-                                                       placeholder="(00) 00000-0000" class="masked"
-                                                       data-inputmask="'mask': ['(99) 9999-9999', '(99) 99999-9999']" data-validate="mobile">
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       data-validate="mobile">
                                             </div>
                                         </div>
                                     </div>

@@ -21,14 +21,6 @@
     </div>
 }
 
-@section gtm {
-    <script>
-        dataLayer = [{
-            'pageType': 'other'
-        }];
-    </script>
-}
-
 @{ 
     List<DomainCustomer.Entities.ContactTopic> ListContactTopics = (List<DomainCustomer.Entities.ContactTopic>)ViewBag.ContactTopics;
 }
@@ -68,8 +60,7 @@
                                         <div class="ui left icon input">
                                             <i class="phone icon"></i>
                                             <input type="text" name="Phone"
-                                                   placeholder="(00) 00000-0000" class="masked"
-                                                   data-inputmask="'mask': ['(99) 9999-9999', '(99) 99999-9999']"
+                                                   placeholder="(00) 00000-0000" class="masked mask_phone"
                                                    data-validate="phone">
                                         </div>
                                     </div>

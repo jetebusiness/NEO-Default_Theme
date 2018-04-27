@@ -60,6 +60,10 @@ function getProducts(data) {
         data: data,
         success: function (response) {
             $("#list").html(response);
+            $(".ui.rating").rating({ 
+                maxRating: 5, 
+                interactive: false 
+            });
         },
         onFailure: function onFailure(response) {
             //console.log("Falha ao acessar a página: " + response);

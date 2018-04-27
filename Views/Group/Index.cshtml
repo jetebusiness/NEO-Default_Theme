@@ -5,6 +5,15 @@
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
 }
 
+@section CustomSeo {
+    @{
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+        }
+    }
+}
+
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui two column grid stackable middle aligned">
@@ -23,13 +32,22 @@
         </div>
     </div>
 }
-
+@section banner {
+    @if (Model != null)
+    {
+        <div class="sixteen wide column">
+            <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
+            @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'F' })
+        </div>
+    }
+}
 @section filters {
     <div class="four wide column filterColumn">
         <div class="row one column">
-
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @Html.Action("FilterMenu", "Product")
+            <div class="ui divider hidden"></div>
+            @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'L' })
         </div>
     </div>
 }
@@ -92,12 +110,13 @@
         }
     </div>
 </div>
+<div class="sixteen wide column">
+    <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
+    @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'R' })
+</div>
+
 <!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
 @Html.Action("Brand", "Product")
-
-@section gtm {
-    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
-}
 
 @section custom_js{
     <script>

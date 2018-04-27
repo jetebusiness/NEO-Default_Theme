@@ -5,14 +5,6 @@
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
 }
 
-@section gtm {
-    <script>
-        dataLayer = [{
-            'pageType': 'other'
-        }];
-    </script>
-}
-
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui one column grid stackable middle aligned">
@@ -68,13 +60,12 @@
                                                 <label>CPF</label>
                                                 <div class="ui left icon input">
                                                     <i class="certificate icon"></i>
-                                                    <input type="text" name="Cpf_cnpj" class="masked"
+                                                    <input type="text" name="Cpf_cnpj" class="masked mask_cnpj"
                                                            placeholder="000.000.000-00"
-                                                           data-inputmask="'mask': '999.999.999-99'"
                                                            value="@Model.Cpf_cnpj">
                                                 </div>
                                             </div>
-                                            <div class="field required">
+                                            <div class="field">
                                                 <label>RG</label>
                                                 <div class="ui left icon input">
                                                     <i class="certificate icon"></i>
@@ -87,9 +78,8 @@
                                                 <label>Data de Nascimento</label>
                                                 <div class="ui input left icon">
                                                     <i class="calendar icon"></i>
-                                                    <input type="text" placeholder="DD/MM/YYYY" class="masked"
+                                                    <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date"
                                                            id="inputDateBirthEdit"
-                                                           data-inputmask="'alias': 'dd/mm/yyyy'"
                                                            value="@Model.DateBirth"
                                                            name="DateBirth">
                                                 </div>
@@ -148,7 +138,8 @@
                                             <label>Responsável</label>
                                             <div class="ui left icon input">
                                                 <i class="user icon"></i>
-                                                <input type="text" name="contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant">
+                                                <input type="text" name="contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant"
+                                                            value="@(Model.Contact != "" ? Model.Contact : "")" >
                                             </div>
                                         </div>
                                         <div class="two fields">
@@ -157,7 +148,7 @@
                                                 <div class="ui left icon input">
                                                     <i class="suitcase icon"></i>
                                                     <input type="text" name="name" placeholder="Razão Social da Empresa"
-                                                           value="" data-validate="businessName">
+                                                           value="@(Model.Name != "" ? Model.Name : "")" data-validate="businessName">
                                                 </div>
                                             </div>
                                             <div class="field required">
@@ -165,7 +156,7 @@
                                                 <div class="ui left icon input">
                                                     <i class="suitcase icon"></i>
                                                     <input type="text" data-validate="fantasyName" name="FantasyName" placeholder="Nome Fantasia da Empresa"
-                                                           value="">
+                                                           value="@(Model.FantasyName != "" ? Model.FantasyName : "")">
                                                 </div>
                                             </div>
                                         </div>
@@ -173,15 +164,15 @@
                                             <div class="field required">
                                                 <label>CNPJ</label>
                                                 <div class="ui left input">
-                                                    <input type="text" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked"
+                                                    <input type="text" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked mask_cnpj"
                                                            placeholder="00.000.000/0000-00"
-                                                           data-inputmask="'mask': '99.999.999/9999-99'" data-validate="cnpj">
+                                                           data-validate="cnpj">
                                                 </div>
                                             </div>
-                                            <div class="field required">
+                                            <div class="field">
                                                 <label>IE</label>
                                                 <div class="ui left input">
-                                                    <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="ie">
+                                                    <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -201,8 +192,7 @@
                                             <div class="ui left icon input">
                                                 <i class="phone icon"></i>
                                                 <input type="text" name="Phone.Phone1"
-                                                       placeholder="(00) 00000-0000" class="masked"
-                                                       data-inputmask="'mask': '(99) 99999-9999'"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
                                                        value="@Model.Phone.Phone1">
                                             </div>
                                         </div>
@@ -211,8 +201,7 @@
                                             <div class="ui left icon input">
                                                 <i class="mobile icon"></i>
                                                 <input type="text" name="Phone.Phone2"
-                                                       placeholder="(00) 00000-0000" class="masked"
-                                                       data-inputmask="'mask': '(99) 99999-9999'"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
                                                        value="@Model.Phone.Phone2">
                                             </div>
                                         </div>

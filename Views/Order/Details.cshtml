@@ -148,6 +148,12 @@
                                 @Model.Address.PhoneContact
                             </div>
                         </div>
+                        <div class="item">
+                            <i class="shipping icon"></i>
+                            <div class="content">
+                                @Model.NameShipping<br>@Model.DeliveryShipping
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,15 +247,30 @@
         </div>
                                     }
 </div>
-<br />
-<div class="row">
-    <div class="column">
-        <button id="print" class="ui animated button right floated" tabindex="0">
-            <div class="visible content">Imprimir</div>
-            <div class="hidden content">
-                <i class="print icon"></i>
-            </div>
-        </button>
-    </div>
-</div>
 
+@if (Model != null)
+{
+    @Html.Action("StatusOrder", "Order", new { orderId = Model.IdOrder })
+
+    <br />
+    <div class="row">
+        <div class="column">
+            <button id="print" class="ui animated button right floated" tabindex="0">
+                <div class="visible content">Imprimir</div>
+                <div class="hidden content">
+                    <i class="print icon"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+}
+
+
+
+<script>
+    $('.ui.accordion').accordion({
+        selector: {
+            trigger: '.title .qus_label'
+        }
+    });
+</script>

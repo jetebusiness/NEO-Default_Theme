@@ -63,7 +63,7 @@ mix.options({
 
 mix.js('resources/js/app.js', 'assets/js')
     .sourceMaps()
-    .extract(['jquery', 'slick-carousel', 'perfect-scrollbar', 'inputmask', 'sweetalert2', 'easyzoom'])
+    .extract(['jquery', 'slick-carousel', 'sweetalert2', 'easyzoom', 'jquery-datepicker'])
     .version();
 
 mix.sass('resources/sass/style.scss', 'assets/css')

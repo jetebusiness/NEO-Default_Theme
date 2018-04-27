@@ -1,0 +1,31 @@
+﻿@model List<ViewModels.ViewModelStore.Pedido.RecordedEvents>
+
+<div class="row">
+    <div class="column">
+        <div class="ui accordion">
+            @if (Model != null)
+            {
+                foreach (var item in Model.Select(m => m.dateEvent.ToShortDateString()).Distinct())
+                {
+                    <div class="title">
+                        <a class="ui circular label circular-delivery"><i class="calendar icon icon-delivery"></i></a>
+                        <span class="data-status"><b>@item</b><i class="dropdown icon"></i></span>
+                        <span class="divider-delivery-item"></span>
+                    </div>
+
+                    <div class="content status-entrega">
+                        <div class="transition hidden">
+                            <ul>
+                                @foreach (var eventStatus in Model.Where(m => m.dateEvent.ToShortDateString() == item))
+                                {
+                                    <li class="divider-delivery-item"></li>
+                                    <li><a class="ui circular label circular-delivery-item"><i class="clock outline icon icon-delivery-item"></i></a><b class="green-delivery">@eventStatus.dateEvent.ToShortTimeString() </b>@eventStatus.description</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

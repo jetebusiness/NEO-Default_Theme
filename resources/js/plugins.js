@@ -1,14 +1,14 @@
 /**
- * PerfectScrollbar
- * http://noraesae.github.io/perfect-scrollbar/
- */
-require("perfect-scrollbar/jquery")($);
-
-/**
  * Slick Carousel
  * kenwheeler.github.io/slick/
  */
 require("slick-carousel");
+
+/**
+ * Date Picker
+ */
+//require("jquery-datepicker");
+
 
 /**
  * SweetAlert 2
@@ -20,13 +20,24 @@ window.swal = require("sweetalert2");
  * jQuery InputMask
  * http://robinherbots.github.io/Inputmask/
  */
-require("inputmask/dist/inputmask/jquery.inputmask.js")($);
+//require("inputmask/dist/inputmask/jquery.inputmask.js")($);
+
+/**
+ * jQuery Mask Plugin
+ * https://github.com/igorescobar/jQuery-Mask-Plugin
+ */
+require("jquery-mask-plugin/dist/jquery.mask.min");
+
 
 /**
  * Semantic-UI Calendar
  * https://github.com/mdehoog/Semantic-UI-Calendar
  */
 require("semantic-ui-calendar/src/definitions/modules/calendar");
+
+
+
+
 
 /**
  * jQuery Easy Zoom

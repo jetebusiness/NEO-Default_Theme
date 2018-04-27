@@ -44,7 +44,7 @@ $(document).ready(function(){
 
     $(document).on("click", "#CallServiceShippingMiniCart", function(event) {
         $(this).addClass("loading");
-        var zipCode = $(this).prev('input').inputmask('unmaskedvalue');
+        var zipCode = $(this).prev('input').cleanVal();
         if(zipCode != ""){
             $.ajax({
                 method: "POST",
@@ -62,12 +62,15 @@ $(document).ready(function(){
                     var idCurrent = $("#GetShipping").val();
                     var idShippingMode = idCurrent;
                     var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
+                    var carrier = $("#ship_"+idCurrent).data("carrier");
+                    var mode = $("#ship_"+idCurrent).data("mode");
+                    var hub =  $("#ship_"+idCurrent).data("hub");
 
                     $("#id_frete_selecionado").val(idShippingMode);
                     $("#cep_selecionado").val(zipCode);
 
                     ExibirDicadeFrete(idShippingMode, zipCode);
-                    SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+                    SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
                 }
             });
         }else {
@@ -90,11 +93,14 @@ $(document).ready(function(){
         var ponteiroCurrent = $(this);
         var idCurrent = $(ponteiroCurrent).val();
 
-        var zipCode = $("#shipping").inputmask('unmaskedvalue');
+        var zipCode = $("#shipping").cleanVal();
         var idShippingMode = idCurrent;
         var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
+        var carrier = $("#ship_"+idCurrent).data("carrier");
+        var mode = $("#ship_"+idCurrent).data("mode");
+        var hub =  $("#ship_"+idCurrent).data("hub");
 
-        SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+        SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
         ExibirDicadeFrete(idShippingMode, zipCode);
     });
 
@@ -325,23 +331,29 @@ function ChangeFrete(){
         var ponteiroCurrent = $(this);
         var idCurrent = $(ponteiroCurrent).val();
 
-        var zipCode = $("#shipping").inputmask('unmaskedvalue');
+        var zipCode = $("#shipping").cleanVal();
         var idShippingMode = idCurrent;
         var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
+        var carrier = $("#ship_"+idCurrent).data("carrier");
+        var mode = $("#ship_"+idCurrent).data("mode");
+        var hub =  $("#ship_"+idCurrent).data("hub");
 
-        SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+        SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
     });
 }
 
 
-function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService){
+function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub){
     $.ajax({
         method: "POST",
         url: "/Checkout/SaveFrete",
         data:{
             zipCode                         : zipCode,
             idShippingMode                  : idShippingMode,
-            deliveredByTheCorreiosService   : deliveredByTheCorreiosService
+            deliveredByTheCorreiosService   : deliveredByTheCorreiosService,
+            carrier                         : carrier,
+            mode                            : mode,
+            hub                             : hub
         },
         success: function(data){
             UpdateCarrinho();
@@ -367,12 +379,15 @@ export function RecalcularFrete(zipCode){
                 var idCurrent = $("#GetShipping").val();
                 var idShippingMode = idCurrent;
                 var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
+                var carrier = $("#ship_"+idCurrent).data("carrier");
+                var mode = $("#ship_"+idCurrent).data("mode");
+                var hub =  $("#ship_"+idCurrent).data("hub");
 
                 $("#id_frete_selecionado").val(idShippingMode);
                 $("#cep_selecionado").val(zipCode);
 
                 ExibirDicadeFrete(idShippingMode, zipCode);
-                SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService);
+                SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
             }
         });
     }

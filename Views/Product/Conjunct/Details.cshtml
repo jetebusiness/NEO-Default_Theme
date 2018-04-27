@@ -7,6 +7,7 @@
         lista_avaliacoes_completa.RemoveRange(0, 5);
     }
 }
+
 <script>
     var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
     var lista_avaliacao_produto =
@@ -17,16 +18,20 @@
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
-@section gtm {
-    <script>
-        dataLayer = [
-            {
-                'pageType': 'product',
-                'productId': '@Model.IdProduct'
-            }
-        ];
-    </script>
+@section CustomSeo {
+    @{
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+        }
+
+        if (!String.IsNullOrEmpty(Model.MetaKeyWords))
+        {
+            <meta name="Keywords" content="@Model.MetaKeyWords">
+        }
+    }
 }
+
 @section breadcrumbs {
 }
 @{
@@ -112,6 +117,7 @@
 <input type="hidden" id="principal-total-variacoes" name="principal-total-variacoes" value="@(Model.AvailableReferences != null ? Model.AvailableReferences.Count() : 0) " />
 <input type="hidden" id="principal-lista-sku" name="principal-lista-sku" value="@ListaSKU" />
 <input type="hidden" id="principal-referencias-selecionadas" name="principal-referencias-selecionadas" value="@variacaoSelecionada" />
+<input type="hidden" id="variacoesSelecionadas" value="" />
 <!-- FIM - Váriaveis Produto Principal-->
 <!-- COMEÇO - Váriaveis Produto Unitário-->
 <input type="hidden" value="@Model.Price" id="preco-unidade" name="preco-unidade" />
@@ -315,8 +321,22 @@
                                         </a>
                                     </div>
                                 </div>
-                                <!--FIM DISPONIBILIDADE / CARRINHO-->
+                                @if (ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago)
+                                {
+                                <br />
+                                <div class="row">
+                                    <div class="column" id="btn_compre_oneclick_conjunto_selecionado">
+                                        <a href="" class="ui animated big green button fluid buy-conjunct" onclick="return false">
+                                            <div class="visible content">Comprar com 1-Click</div>
+                                            <div id="iconCart" class="hidden content">
+                                                <i class="add to cart icon"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                }
                             </div>
+                            <!--FIM DISPONIBILIDADE / CARRINHO-->
                             @if (!Model.FlagExhausted)
                             {
                 

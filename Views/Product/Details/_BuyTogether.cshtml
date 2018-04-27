@@ -75,6 +75,36 @@
 
                     @foreach (var item in Model.BuyTogether)
                     {
+                        string variacaoSelecionada = string.Empty;
+
+                        if (item.SKUs != null && item.SKUs.Any())
+                        {
+                            var skuPadraoByTogether = item.SKUs.FirstOrDefault(m => m.Standard == true) != null ? item.SKUs.FirstOrDefault(m => m.Standard == true) : item.SKUs.FirstOrDefault(m => m.Stock > 0);
+                            if (skuPadraoByTogether != null)
+                            {
+                                if (item.AvailableReferences != null && item.AvailableReferences.Count > 0)
+                                {
+                                    foreach (var referencias in item.AvailableReferences.OrderBy(o => o.OrdinationOfReferences).ToList())
+                                    {
+                                        foreach (var variacoes in referencias.Variations)
+                                        {
+                                            if (skuPadraoByTogether.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation).Count > 0)
+                                            {
+                                                var referencia_selecionada = skuPadraoByTogether.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation);
+                                                variacaoSelecionada += referencias.IdReference.ToString() + '-' + referencia_selecionada.FirstOrDefault().IdVariation.ToString() + ',';
+                                            }
+                                        }
+                                    }
+
+                                    string character = variacaoSelecionada.Substring(variacaoSelecionada.Length - 1);
+                                    if (character == ",")
+                                    {
+                                        variacaoSelecionada = variacaoSelecionada.Remove(variacaoSelecionada.Length - 1);
+                                    }
+                                }
+                            }
+                        }
+
                         int total_variacoes = item.AvailableReferences != null ? item.AvailableReferences.Count() : 0;
 
                         <div class="item buy-together" id="buy-together" data-id="@item.IdProduct" data-variacoes="@total_variacoes">
@@ -139,7 +169,7 @@
                             <input type="hidden" name="@item.IdProduct-buy-together-preco" id="@item.IdProduct-buy-together-preco" value="@item.Price" class="compre-junto-preco" />
                             <input type="hidden" name="@item.IdProduct-buy-together-preco-promocao" id="@item.IdProduct-buy-together-preco-promocao" value="@item.PricePromotion" class="compre-junto-preco-promocao" />
                             <input type="hidden" name="@item.IdProduct-buy-together-total-variacoes" id="@item.IdProduct-buy-together-total-variacoes" value="@total_variacoes" class="compre-junto-total-varicao" />
-                            <input type="hidden" name="@item.IdProduct-buy-together-referencias-selecionadas" id="@item.IdProduct-buy-together-referencias-selecionadas" value="" class="compre-junto-variacao-selecionada" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-referencias-selecionadas" id="@item.IdProduct-buy-together-referencias-selecionadas" value="@variacaoSelecionada" class="compre-junto-variacao-selecionada" />
                             <!-- FIM VARIÁVEIS PRODUTO - COMPRE JUNTO-->
 
                         </div>

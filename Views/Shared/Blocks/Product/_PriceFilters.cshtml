@@ -26,16 +26,5 @@
 </div>
 
 <script>
-    $("#initialPrice, #finalPrice").inputmask('decimal', {
-        radixPoint: ",",
-        groupSeparator: ".",
-        autoGroup: true,
-        digits: 2,
-        digitsOptional: false,
-        placeholder: '0',
-        rightAlign: false,
-        onBeforeMask: function (value, opts) {
-            return value;
-        }
-    });
+    $("#initialPrice, #finalPrice").mask("#.##0,00", { reverse: true });
 </script>

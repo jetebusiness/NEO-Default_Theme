@@ -4,6 +4,16 @@
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
     var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
+
+@section CustomSeo {
+    @{
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+        }
+    }
+}
+
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui two column grid stackable middle aligned">
@@ -112,44 +122,9 @@
     </div>
 </div>
 <input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdCategory" />
-@section gtm {
-    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
-}
+
 @section custom_js{
     <script>
-        @*@{
-            string json_ = "";
-            string labelFilters = "";
-            string pageNumberCurrent = "";
-            string brands = Request.QueryString["brand"] != null ? Request.QueryString["brand"].ToString() : "";
-            if (Request.QueryString["pageNumber"] != null)
-            {
-                pageNumberCurrent = Request.QueryString["pageNumber"].ToString();
-                @:window.pageNumber = "@pageNumberCurrent";
-                        if (Request.QueryString["pageNumber"].ToString() != "1") {
-                    labelFilters = HttpUtility.HtmlDecode(Request.QueryString["labelFilter"]) ?? "";
-                }
-            }
-
-            var dict = HttpUtility.ParseQueryString(Request.QueryString.ToString());
-            dict.Remove("labelFilter");
-            dict.Remove("pageNumber");
-
-            if(dict.Count == 0)
-            {
-                dict.Add("idCategory", @Model.IdCategory.ToString());
-            }
-
-            json_ = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(dict.AllKeys.ToDictionary(k => k, k => dict[k]));
-
-        }*@
-
         window.filterManipulation = { idCategory: @Model.IdCategory };
-
-
-        @*@if(labelFilters != "") {
-            @:window.filterManipulation.labelFilter = JSON.parse("@labelFilters".replace(/&quot;/g,'"'));
-        }*@
-
     </script>
 }

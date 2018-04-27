@@ -62,7 +62,7 @@ $(document).ready(function () {
 
 
     $(document).on("click", "#termo_aceite", function () {
-        $(".modal-block").append("<div class='ui longer modal'><i class='close icon'></i><div class='header'>Termo de Aceite</div><div class='image content'><div class='description'>"+$("#termo").html()+"</div></div><div class='actions'><div class='ui button approve'>OK</div></div></div>");
+        $(".modal-block").append("<div class='ui longer modal register'><i class='close icon'></i><div class='header'>Termo de Aceite</div><div class='image content'><div class='description'>"+$("#termo").html()+"</div></div><div class='actions'><div class='ui button approve'>OK</div></div></div>");
         openLongModal($(this).attr("data-modal-open"));
     });
     

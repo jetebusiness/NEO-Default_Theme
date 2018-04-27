@@ -11,14 +11,6 @@
     }
 }
 
-@section gtm {
-    <script>
-        dataLayer = [{
-            'pageType': 'other'
-        }];
-    </script>
-}
-
 @section breadcrumbs {
 <div class="ui container">
     <div class="ui grid stackable middle aligned">
@@ -111,29 +103,28 @@
                                         <div class="field required pessoa fisica">
                                             <label>CPF</label>
                                             <div class="ui left input">
-                                                <input type="text" value="" name="Cpf_cnpj" class="masked"
+                                                <input type="tel" value="" name="Cpf_cnpj" class="masked mask_cpf"
                                                        placeholder="000.000.000-00"
-                                                       data-inputmask="'mask': '999.999.999-99'" data-validate="cpf">
+                                                       data-validate="cpf" id="_cpf">
                                             </div>
                                         </div>
-                                        <div class="field required pessoa fisica">
+                                        <div class="field pessoa fisica">
                                             <label>RG</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="rg">
+                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="">
                                             </div>
                                         </div>
                                         <div class="field required pessoa juridica">
                                             <label>CNPJ</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked"
-                                                       placeholder="00.000.000/0000-00"
-                                                       data-inputmask="'mask': '99.999.999/9999-99'" data-validate="cnpj">
+                                                <input type="tel" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked mask_cnpj"
+                                                       placeholder="00.000.000/0000-00" data-validate="cnpj" id="_cnpj">
                                             </div>
                                         </div>
-                                        <div class="field required pessoa juridica">
+                                        <div class="field pessoa juridica">
                                             <label>IE</label>
                                             <div class="ui left input">
-                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="" data-validate="ie">
+                                                <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="">
                                             </div>
                                         </div>
                                     </div>
@@ -142,8 +133,8 @@
                                             <label>Data de Nascimento</label>
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
-                                                <input type="text" placeholder="DD/MM/YYYY" class="masked" id="inputDateBirthRegister"
-                                                       data-inputmask="'alias': 'dd/mm/yyyy'" name="DateBirth" data-validate="birthdate">
+                                                <input type="tel" placeholder="DD/MM/YYYY" class="masked mask_date" id="inputDateBirthRegister"
+                                                       name="DateBirth" data-validate="birthdate">
                                             </div>
                                         </div>
                                         <div class="field">
@@ -175,18 +166,19 @@
                                             <label>Telefone</label>
                                             <div class="ui left icon input">
                                                 <i class="phone icon"></i>
-                                                <input type="text" name="Phone.Phone1"
-                                                       placeholder="(00) 00000-0000" class="masked"
-                                                       data-inputmask="'mask': ['(99) 9999-9999', '(99) 99999-9999']" data-validate="phone">
+                                                <input type="tel" name="Phone.Phone1"
+                                                       placeholder="(00) 00000-0000" 
+                                                       class="masked mask_phone"
+                                                       data-validate="phone">
                                             </div>
                                         </div>
                                         <div class="field">
                                             <label>Celular</label>
                                             <div class="ui left icon input">
                                                 <i class="mobile icon"></i>
-                                                <input type="text" name="Phone.Phone2"
-                                                       placeholder="(00) 00000-0000" class="masked"
-                                                       data-inputmask="'mask': ['(99) 9999-9999', '(99) 99999-9999']" data-validate="mobile">
+                                                <input type="tel" name="Phone.Phone2"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       data-validate="mobile">
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +249,7 @@
                                                 <i class="marker icon"></i>
                                                 <input type="text" name="Address[0].ZipCode"
                                                        placeholder="00000-000"
-                                                       class="masked" data-validate="zipcode">
+                                                       class="masked mask_zipcode" data-validate="zipcode">
                                             </div>
                                         </div>
                                         <div class="field">
@@ -360,7 +352,7 @@
                                                     <i class="marker icon"></i>
                                                     <input type="text" name="Address[1].ZipCode"
                                                            placeholder="00000-000"
-                                                           class="masked" data-validate="zipcode1">
+                                                           class="masked mask_zipcode" data-validate="zipcode1">
                                                 </div>
                                             </div>
                                             <div class="field">

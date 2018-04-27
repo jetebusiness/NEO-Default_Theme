@@ -51,19 +51,13 @@ $(document).ready(function () {
         $(element).buscaCep(options);
     }
 
-    $("input[name='Address[0].ZipCode']").inputmask("99999-999", {
-        greedy: false,
-        oncomplete: function () {
-            buscaCep($(this), 0);
-        }
+    $("input[name='Address[0].ZipCode']").focusout(function() {
+        buscaCep($(this), 0);
+    });
+    $("input[name='Address[1].ZipCode']").focusout(function() {
+        buscaCep($(this), 1);
     });
 
-    $("input[name='Address[1].ZipCode']").inputmask("99999-999", {
-        greedy: false,
-        oncomplete: function () {
-            buscaCep($(this), 1);
-        }
-    });
 
     $("#registro_cliente .endereco.igual").checkbox({
         onChecked: function () {

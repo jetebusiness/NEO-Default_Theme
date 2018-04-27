@@ -38,7 +38,7 @@
                                             <label>Data do Evento</label>
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
-                                                <input type="text" class="masked" name="EventDate" placeholder="DD/MM/YYYY" data-inputmask="'alias': 'dd/mm/yyyy'" value="@(Model != null && Model.IdEventList > 0 ? Model.EventDate.ToString() : "")" data-validate="eventdate">
+                                                <input type="text" class="masked mask_date" name="EventDate" placeholder="DD/MM/YYYY" value="@(Model != null && Model.IdEventList > 0 ? Model.EventDate.ToString() : "")" data-validate="eventdate">
                                             </div>
                                         </div>
                                         <div class="field required">

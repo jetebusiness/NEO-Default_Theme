@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Identificação";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
-
 }
 @section steps{
     <div class="jet checkout jBreadCrumb ">
@@ -69,22 +68,19 @@
                                             <label>CPF / CNPJ</label>
                                             <div class="ui left icon input">
                                                 <i class="icon id card"></i>
-                                                <input type="text" name="Cpf_cnpj" class="masked"
+                                                <input type="text" name="Cpf_cnpj" class="masked mask_document cnpj_checkout"
                                                        placeholder="CPF / CNPJ"
-                                                       data-inputmask="'mask': ['999.999.999-99', '99.999.999/9999-99']"
-                                                       data-inputmask-keepStatic="true"
                                                        data-jet-validate="cpfCnpj"
                                                        data-jet-type="profileChanger"
                                                        tabindex="1"
                                                        autocomplete="off">
                                             </div>
                                         </div>
-                                        <div class="field required pessoa fisica">
+                                        <div class="field pessoa fisica">
                                             <label>RG</label>
                                             <div class="ui left icon input">
                                                 <i class="icon id card"></i>
-                                                <input type="text" name="Rg_ie" placeholder=""
-                                                       data-jet-validate="empty"
+                                                <input class="rg_checkout" type="text" name="Rg_ie" placeholder=""
                                                        maxlength="15"
                                                        tabindex="2"
                                                        autocomplete="off">
@@ -94,20 +90,18 @@
                                             <label>Data de Nascimento</label>
                                             <div class="ui input left icon">
                                                 <i class="calendar icon"></i>
-                                                <input type="text" placeholder="DD/MM/YYYY" class="masked"
-                                                       data-inputmask="'mask': '99/99/9999'"
+                                                <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date"
                                                        name="DateBirth"
                                                        data-jet-validate="date"
                                                        tabindex="3">
                                             </div>
                                         </div>
-                                        <div class="field required pessoa juridica">
+                                        <div class="field pessoa juridica">
                                             <label>IE</label>
                                             <div class="ui left icon input">
                                                 <i class="icon id card"></i>
-                                                <input type="text" name="Rg_ie" placeholder="Instrição Estadual"
-                                                       data-jet-validate="empty"
-                                                       tabindex="4"
+                                                <input class="ie_checkout" type="text" name="Rg_ie" placeholder="Instrição Estadual"
+                                                       tabindex="4" 
                                                        autocomplete="off">
                                             </div>
                                         </div>
@@ -149,8 +143,7 @@
                                             <div class="ui left icon input">
                                                 <i class="phone icon"></i>
                                                 <input type="text" name="Phone.Phone1"
-                                                       placeholder="(00) 0000-0000" class="masked"
-                                                       data-inputmask="'mask': ['(99) 9999-9999', '(99) 99999-9999']"
+                                                       placeholder="(00) 0000-0000" class="masked mask_phone"
                                                        data-jet-validate="phone"
                                                        tabindex="8">
                                             </div>
@@ -164,7 +157,7 @@
                                                 <i class="icon marker"></i>
                                                 <input type="text" name="Address[0].ZipCode"
                                                        placeholder="00000-000"
-                                                       class="masked"
+                                                       class="masked mask_zipcode"
                                                        data-jet-validate="zipcode"
                                                        data-jet-type="clearAllNext"
                                                        tabindex="9">

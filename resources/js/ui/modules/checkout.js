@@ -96,8 +96,14 @@ $(document).ready(function () {
         // if true, will log helpful messages for setting up Card
         debug: false // optional - default false
     });
-
-    $(".ui.items.compra").perfectScrollbar();
+    
+    $('.title').click(function () {
+        if ($(this).hasClass('active')) {
+            $(this).find('.icon-delivery').removeClass('green-delivery');
+        } else {
+            $(this).find('.icon-delivery').addClass('green-delivery');
+        }
+    });	
 
     $(".termo.aceite").checkbox({
         onChecked:   function () {
@@ -113,6 +119,7 @@ $(document).ready(function () {
         }
     });
     if (!isMobile()) {
+        $('.dadosCliente').addClass('active');
         /**
          * Semantic-UI Sticky
          * Box Detalhes da Compra

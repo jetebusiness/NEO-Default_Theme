@@ -2,15 +2,15 @@
 	background: #ffffff;
 	box-shadow: rgba(0,0,0,.3) 0 0 10px 0;
 	bottom: 0 !important;
-	opacity: 0;
+	display: none;
 	position: fixed;
 	right: 0 !important;
 	transition: opacity .3s ease-in-out;
-	z-index: 9;
+	z-index: 9; 
 	padding-bottom: 1em;
-
+     
 	&.ativo {
-	  opacity: 1;
+	  display: block; 
 	}
 
 	.column[itemprop="offers"]{

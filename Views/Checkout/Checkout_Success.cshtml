@@ -16,8 +16,10 @@
     string bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
 }
 
-@section gtm {
-    @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+@section GoogleAdwords{
+    <!-- Google Adwords-->
+    @Html.Action("GetGoogleAdwords", "Company", new { controller = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"], idOrder = Model.IdOrder })
+    <!-- Google Adwords-->
 }
 
 @section steps{
@@ -231,3 +233,52 @@
         </div>
     </div>
 </div>
+@{
+    @section remarketing {
+        <!-- Google Remarketing -->
+        @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
+        <!-- End Google Remarketing -->
+    }
+
+    if (@LojaCorp.Control.Company._Company.UtilizaGoogleEcommerce && !LojaCorp.Control.Company._Company.StatusGTM)
+    {
+        <!-- GOOGLE E-COMMERCE -->
+        <script type="text/javascript">
+            ga('require', 'ecommerce');
+            ga('ecommerce:addTransaction', {
+                'id': '@Model.IdOrder', // Transaction ID. Required.
+                'affiliation': '@LojaCorp.Control.Company._Company.NameStore', // Affiliation or store name.
+                'revenue': '@Model.Total.ToString().Replace(",", ".")', // Grand Total.
+                'shipping': '@Model.TotalShipping.ToString().Replace(",", ".")', // Shipping.
+                'tax': '', // Tax.
+                'currency': 'BRL' // Local currency code.
+            });
+        </script>
+
+        if (Model != null && Model.OrderItems != null)
+        {
+            foreach (var item in Model.OrderItems)
+            {
+                var sku = String.IsNullOrEmpty(@item.IdSku.ToString()) ? item.IdProduct.ToString() : item.IdSku.ToString();
+                var name_gacommerce = System.Text.RegularExpressions.Regex.Replace(item.Name, "<.*?>", string.Empty);
+
+                <script type="text/javascript">
+                    ga('ecommerce:addItem', {
+                        'id': '@Model.IdOrder', // Transaction ID. Required.
+                        'name': '@Html.Raw(name_gacommerce)', // Product name. Required.
+                        'sku': '@sku', // SKU/code.
+                        'category': '@Html.Raw(item.Category)', // Category or variation.
+                        'price': '@item.UnitPrice.ToString().Replace(",", ".")', // Unit price.
+                        'quantity': '@item.Quantity', // Quantity.
+                        'currency': 'BRL' // Local currency code.
+                    });
+                </script>
+            }
+        }
+
+        <script type="text/javascript">
+            ga('ecommerce:send');
+        </script>
+        <!-- FIM - GOOGLE E-COMMERCE -->
+    }
+}

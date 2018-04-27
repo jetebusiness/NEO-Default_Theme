@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+    $(".cnpj_checkout").change(function () {
+        $('.rg_checkout').trigger({ type: 'keypress', which: 13, keyCode: 13 });
+    });
+
     $.jetRoute("checkout", function () {
         $("#checkoutRegister input").keypress(function (e) {
             var code = null;

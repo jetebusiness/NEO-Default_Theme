@@ -19,7 +19,7 @@
     List<DomainCompany.Entities.Banner> bannerRandom = Model.Where(b => b.Random == true).ToList();
     List<DomainCompany.Entities.Banner> bannerNoRandom = Model.Where(b => b.Random == false).ToList();
 
-    if (bannerRandom.Any() && !bannerNoRandom.Any())
+    if (bannerRandom.Any())
     {
 
         <div class="ui fluid container car-banners no-margin">
@@ -31,7 +31,6 @@
                             <img src="@randombanner.NameFileImage" class="ui fluid image" alt="@randombanner.Name" onerror="imgError(this)"/>
                         </a>
                     </div>
-                    @*<div style="height:60px; padding-top:8px; padding-left:100px; z-index:1000; position:relative">*@
                     <div style="width: 45%;  height: 70px;  position: relative;  margin-top: -100px;  margin-left: 120px;">
                         <label class="ui fluid" style="font-size:30px; color: white;">@randombanner.Description</label>
                     </div>
@@ -39,8 +38,9 @@
             }
         </div>
     }
-    if (bannerNoRandom.Any() && !bannerRandom.Any())
+    if (bannerNoRandom.Any())
     {
+        <div class="ui divider hidden"></div>
         <div class="ui images middle aligned center aligned">
             @foreach (var banner in bannerNoRandom)
             {

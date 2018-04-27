@@ -1,29 +1,23 @@
-﻿@*<meta name="distribution" content="Global">
-<meta name="Robots" content="INDEX,FOLLOW">
-{% if site.copyright %}
-<meta name="Copyright" content="{{ site.copyright }}">
-    {% elsif site.designer %}
-<meta name="Designer" content="{{ site.designer }}">
-    {% elsif site.publisher %}
-<meta name="Publisher" content="{{ site.publisher }}">
-    {% elsif seo.author %}
-<meta name="author" content="{{ seo.author }}">
-    {% elsif seo.subject %}
-<meta name="subject" content="{{ seo.subject }}">
-    {% elsif seo.description %}
-<meta name="Description" content="{{ seo.description }}">
-    {% elsif seo.classification %}
-<meta name="Classification" content="{{ seo.classification }}">
-    {% elsif seo.keywords %}
-<meta name="Keywords" content="{{ seo.keywords }}">
-    {% elsif store.address %}
-<meta name="Geography" content="{{ store.address }}">
-    {% elsif store.language %}
-<meta name="Language" content="{{ store.language }}">
-    {% elsif store.zipCode %}
-<meta name="zipcode" content="{{ store.zipCode }}">
-    {% elsif store.city %}
-<meta name="city" content="{{ store.city }}">
-    {% elsif store.country %}
-<meta name="country" content="{{ store.country }}">
-{% endif %}*@
+﻿@{
+    List<string> arrCustomSEOIgnore = new List<string>() { "Home-Index", "Search-Index" };
+    string currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+    string currentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+
+    if (arrCustomSEOIgnore.Contains(String.Format("{0}-{1}", currentController, currentAction)))
+    {
+        <meta name="distribution" content="Global">
+        if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaDescription))
+        {
+            <meta name="Description" content="@LojaCorp.Control.Company._Company.MetaDescription">
+        }
+        if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaKey))
+        {
+            <meta name="Keywords" content="@LojaCorp.Control.Company._Company.MetaKey">
+        }
+    }
+
+    if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.Robots))
+    {
+        <meta name="Robots" content="INDEX,FOLLOW">
+    }
+}

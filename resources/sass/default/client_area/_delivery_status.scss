@@ -1,0 +1,63 @@
+﻿.status-entrega ul li {
+    list-style: none;
+    padding-top: 0px;
+    margin-top: -3px;
+    margin-bottom: 3px;
+}
+
+.status-entrega {
+    margin-top: -25px;
+    margin-left: -35px;
+    padding-top: 10px;
+}
+.green-delivery{
+    color:#00b955!important;
+}
+.green-border-delivery{
+    border-color:#00b955!important;
+}
+.data-status {
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    margin-left: -9px;
+    border-bottom: solid 1px #cccccc;
+    border-right: solid 1px #cccccc;
+    border-top: solid 1px #cccccc;
+    z-index: 0;
+}
+
+.icon-delivery {
+    padding: 7px 0px 0px 6px;
+    font-size: 15px !important;
+    color: #000000;
+}
+
+.circular-delivery {
+    background-color: transparent !important;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #cccccc !important;
+    z-index: 2;
+}
+
+.circular-delivery-item {
+    background-color: transparent !important;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #cccccc !important;
+    z-index: 2;
+}
+
+.icon-delivery-item {
+    padding: 2px 0px 0px 1px;
+    font-size: 15px !important;
+    color: #000000;
+}
+
+.divider-delivery-item {
+    width: 5px;
+    height: 10px;
+    background-color: #cccccc;
+    margin-left: 12px;
+}

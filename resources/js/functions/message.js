@@ -8,7 +8,7 @@
  */
 export function _alert(titulo, texto, tipo, allowOutsideClick = true) {
     var modal_count = $("body").find(".swal2-show").length;
-        if(modal_count === 0){
+    if(modal_count === 0){
         swal({
             title: titulo,
             text: texto,
@@ -17,24 +17,25 @@ export function _alert(titulo, texto, tipo, allowOutsideClick = true) {
         });
     }
 }
-/**
- *
- * @object params
- * {
- * title: @string,
- * text: @string,
- * type: @string,
- * confirm:{
- * color:@hexcolor
- * text: @string
- * },
- * cancel:{
- * color:@hexcolor,
- * text:@string
- * }
- * callback: function(){}
- * @private
- */
+    /**
+     *
+     * @object params
+     * {
+     * title: @string,
+     * text: @string,
+     * type: @string,
+     * confirm:{
+     * color:@hexcolor
+     * text: @string
+     * },
+     * cancel:{
+     * color:@hexcolor,
+     * text:@string
+     * }
+     * callback: function(){}
+     * @private
+     */
+
 export function _confirm(params){
     "use strict";
     swal({
@@ -47,8 +48,8 @@ export function _confirm(params){
         confirmButtonText: params.confirm.text || "Remover",
         cancelButtonText: params.cancel.text || "Cancelar"
     }).then(function () {
-            if (params.callback && typeof(params.callback) === "function") {
-                params.callback();
-            }
+        if (params.callback && typeof(params.callback) === "function") {
+            params.callback();
+        }
     });
 }
