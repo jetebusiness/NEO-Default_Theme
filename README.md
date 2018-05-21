@@ -7,24 +7,7 @@ Tema padrão para as novas lojas criadas na plataforma NEO.
 
 ## Requisitos
 
-- [Node.JS](https://nodejs.org/en/) (v8.0+)
-- [NPM](https://nodejs.org/en/)
-- [Node-Gyp](https://github.com/nodejs/node-gyp)
-
-##### Windows
-- [Python](https://www.python.org/) (v2.7 *A versão 3.0 ainda não é suportada pelos compiladores*)
-- [Windows-Build-Tools](https://github.com/felixrieseberg/windows-build-tools)
-
-##### Mac OS
-- [HomeBew](https://brew.sh/)
-- Ruby
-- Python
-- [Xcode Command Line Tools](http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)
-
-##### Linux
-- Python
-- make
-- [C/C++ compiler toolchain](https://gcc.gnu.org/)
+- [Documentação Online](https://neohelp.readme.io/docs)
 
 ## IDEs e Editores para Razor
 ### IDEs
@@ -45,33 +28,6 @@ Linux, MacOS e Windows
 
 - #### [Atom](https://atom.io)
 Linux, MacOS e Windows
-
-## Configurando Ambiente de Desenvolvimento
-### Windows
-
-1. Instale o Node.JS
-2. Instale o Python com a opção de adicionar o Python ao PATH
-3. Abra o terminal de comando (PowerShell modo Administrador) e execute o comando
-```bash
-npm install --global --production windows-build-tools
-```
-
-Com as instalações concluídas, reinicie o computador.
-
-### MacOS
-
-1. Instale o Node.JS
-2. Instale o Xcode
-3. No terminal execute o comando de instalação do Command Line Tools do Xcode
-```bash
-xcode-select --install
-```
-4. Instale o Node-Gyp
-
-### Linux
-1. Instale o Node.JS
-2. Instale o Python
-3. Instale o Node-Gyp
 
 ## Obtendo o Tema Default
 
