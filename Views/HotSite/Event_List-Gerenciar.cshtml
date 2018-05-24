@@ -1,0 +1,222 @@
+﻿@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Gerenciar Lista de Eventos</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Gerenciar Lista</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+            <div class="sixteen wide mobile five wide tablet four wide computer column">
+                <div class="ui vertical menu aligned fluid">
+                    <a class="item active">
+                        Dados da Lista
+                    </a>
+                    <a class="item">
+                        Produtos
+                    </a>
+                    <a class="item">
+                        Lista de Convidados
+                    </a>
+                </div>
+            </div>
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                <div class="ui segment">
+                    <div class="ui grid stackable top aligned left grid">
+                        <div class="row two column divided horizontal">
+                            <div class="column">
+                                <div class="ui form">
+                                    <div class="field">
+                                        <label>Tipo de Lista</label>
+                                        <div class="ui left icon input">
+                                            <i class="file text icon"></i>
+                                            <input type="text" name="" value="" placeholder="Lista de Casamento">
+                                        </div>
+                                    </div>
+                                    <div class="field calendar required">
+                                        <label>Data do Evento</label>
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input type="text" class="masked" name="" placeholder="DD/MM/YYYY" data-inputmask="'alias': 'dd/mm/yyyy'">
+                                        </div>
+                                    </div>
+                                    <h4 class="ui dividing header">Cônjuge 1</h4>
+                                    <div class="field required">
+                                        <label>Nome</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="João das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>E-mail</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" name="" value="" placeholder="email@email.com.br">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Nome do Pai</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="João das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Nome da Mãe</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="Maria das Flores">
+                                        </div>
+                                    </div>
+                                    <h4 class="ui dividing header">Cônjuge 2</h4>
+                                    <div class="field required">
+                                        <label>Nome</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="João das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>E-mail</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" name="" value="" placeholder="email@email.com.br">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Nome do Pai</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="João das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Nome da Mãe</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="Maria das Flores">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="ui form">
+                                    <div class="field">
+                                        <label>Status</label>
+                                        <div class="ui input">
+                                            <input type="text" name="" value="" placeholder="Ativa">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Foto</label>
+                                        <div class="ui input">
+                                            <img class="ui image" src="../assets/image/img_default.png">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Mensagem aos convidados</label>
+                                        <div class="ui input">
+                                            <textarea></textarea>
+                                        </div>
+                                    </div>
+                                    <h4 class="ui dividing header">Dados de Entrega</h4>
+                                    <div class="ui grid stackable vertically divided">
+                                        <div class="row">
+                                            <div class="column">
+                                                <div class="field">
+                                                    <h4>Entrega no meu endereço</h4>
+                                                    <p>Rua Galileu Galilei, 1800</p>
+                                                    <p>Jardim Irajá</p>
+                                                    <p>Ribeirão Preto/SP</p>
+                                                    <p>CEP: 14020-620</p>
+                                                </div>
+                                                <div class="field">
+                                                    <button class="ui tiny compact icon teal button">
+                                                        <i class="check icon"></i>
+                                                        Alterar Endereço
+                                                    </button>
+                                                    <button class="ui tiny compact icon teal button">
+                                                        <i class="check icon"></i>
+                                                        Adicionar Endereço
+                                                    </button>
+                                                </div>
+                                                <div class="field">
+                                                    <button type="submit"
+                                                            class="ui animated button large submit green floated right">
+                                                        <div class="visible content">Entrega no meu endereço</div>
+                                                        <div class="hidden content">
+                                                            <i class="checkmark icon"></i>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <h4>Entrega no endereço do convidado</h4>
+                                                        <p>Ao selecionar esta opção, os produtos serão enviados ao endereço identificado pelo convidado no momento de sua compra.</p>
+                                                    </div>
+                                                    <div class="field">
+                                                        <button type="submit"
+                                                                class="ui animated button large submit green floated right">
+                                                            <div class="visible content">Entrega no endereço do convidado</div>
+                                                            <div class="hidden content">
+                                                                <i class="checkmark icon"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <a href="/Customer/Login" class="ui animated button large red left floated">
+                            <div class="visible content">Cancelar</div>
+                            <div class="hidden content">
+                                <i class="remove icon"></i>
+                            </div>
+                        </a>
+                        <button type="submit"
+                                class="ui animated button large submit green right floated">
+                            <div class="visible content">Salvar</div>
+                            <div class="hidden content">
+                                <i class="checkmark icon"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

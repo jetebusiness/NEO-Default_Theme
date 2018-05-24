@@ -56,7 +56,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="four wide tablet four wide computer column mobile-hide">
-                                                    <a href="@category.UrlFriendly">
+                                                    @{ 
+                                                        string linkCategoriaImagem = null;
+                                                        if (category.Link != null)
+                                                        {
+                                                            linkCategoriaImagem = @category.Link;
+                                                        }
+                                                        else
+                                                        {
+                                                            linkCategoriaImagem = @category.UrlFriendly;
+                                                        }
+                                                    }
+                                                    <a href="@linkCategoriaImagem">
                                                         <img class="ui image" src="@category.Image" />
                                                     </a>
                                                 </div>

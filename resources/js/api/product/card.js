@@ -153,7 +153,7 @@ $(document).on("click", ".button.avise-card", function () {
     var that = $(this);
     loading(that);
     $.ajax({
-        method: "GET",
+        method: "POST",
         url: "/Product/AlertMe",
         dataType: "html",
         data: {

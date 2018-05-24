@@ -17,6 +17,11 @@
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
+@section remarketing{
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+    <!-- End Google Remarketing -->
+}
 @section CustomSeo {
     @{
         if (!String.IsNullOrEmpty(Model.MetaDescription))
@@ -30,11 +35,7 @@
         }
     }
 }
-@section remarketing{
-    <!-- Google Remarketing -->
-    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
-    <!-- End Google Remarketing -->
-}
+
 @section breadcrumbs {
 }
 @{
@@ -206,7 +207,6 @@
                             {
                                 <h5 itemprop="productBrand" class="marcaProduto"></h5>
                             }
-
                             <div class="ui two column grid">
                                 <div class="column">
                                     <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
@@ -225,7 +225,6 @@
                         @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = Model.SKUPadrao != null ? Model.SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
-
                     <!--GRADE B2B-->
                     @if (Model.SKUs != null)
                     {
@@ -237,11 +236,9 @@
                     }
                     <!-- GRADE B2B-->
                 </div>
-
             </div>
             <!-- FIM INFORMAÇÕES DO PRODUTO-->
         </div>
-
         <div class="ui divider hidden"></div>
         <!--COMEÇO DESCRIÇÃO-->
         <div class="row">

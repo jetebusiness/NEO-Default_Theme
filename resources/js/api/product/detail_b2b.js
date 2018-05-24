@@ -99,24 +99,41 @@ export function CarregarParcelamento(isB2b){
             if(json_content[i].paymentMethods[j].status === true){
               for (var k = 0; k < json_content[i].paymentMethods[j].paymentBrands.length; k++) {
                   var total_parcelas = json_content[i].paymentMethods[j].paymentBrands[k].installments.length;
+
                   if(total_parcelas > 0){
                       total_parcelas_exibidas++;
-                      html += `         <div class="title">
+
+                      if(json_content[i].idPaymentGateway == 6)
+                      {
+                          html += `<div class="title">
                                       <i class="dropdown icon"></i>
                                       ${json_content[i].paymentMethods[j].paymentBrands[k].name}
                                   </div>
                                   <div class="content">
                                       <div class="ui list">`
-                      for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
-                          html += `<span class="item parcelamentos">
+                          html += `<div class="pagSeguroParcelamento" id="pagSeguroParcelamento" data-paymentbrand="${json_content[i].paymentMethods[j].paymentBrands[k].idPaymentBrand}" data-brand="${json_content[i].paymentMethods[j].paymentBrands[k].name.toLowerCase()}"> </div>`
+                          html += `</div>
+                                  </div>`
+                      }
+                      else
+                      {
+                          html += `         <div class="title">
+                                      <i class="dropdown icon"></i>
+                                      ${json_content[i].paymentMethods[j].paymentBrands[k].name}
+                                  </div>
+                                  <div class="content">
+                                      <div class="ui list">`
+                          for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+                              html += `<span class="item parcelamentos">
                                                   <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
                                                   <span class="valor"> ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
                                                   <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                   <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                               </span>`
-                      }
-                      html += `</div>
+                          }
+                          html += `</div>
                                   </div>`
+                      }
                   }
               }
             }
@@ -134,6 +151,7 @@ export function CarregarParcelamento(isB2b){
             </div>`;
     }
     $("#parcelamento_info").html(html);
+    CarregaParcelamentoPagSeguro();
 }
 
 function BuscarJsonParcelamento(isB2b){
@@ -297,4 +315,79 @@ function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
             $(document).find(".loading").removeClass("loading");
         }
     });
+}
+
+export function CarregaParcelamentoPagSeguro()
+{
+    if($('.pagSeguroParcelamento').length > 0)
+    {
+        $('.pagSeguroParcelamento').html("Carregando...");
+        $.ajax({
+            method: "GET",
+            url: "/Checkout/GetConfigPagSeguro",
+            success: function (responseConfig) {
+                var urlJS = '';
+                if (responseConfig.config.production) {
+                    urlJS = 'https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
+                }
+                else {
+                    urlJS = 'https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
+                }
+
+                $.getScript(urlJS, function () {
+                    PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
+
+                    var totalCheckout = 0;
+                    
+                    if($('#preco').length > 0)
+                        totalCheckout = $('#preco').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
+                    else
+                        totalCheckout = $('#conjunto-total-final').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
+
+                    $.each($('.pagSeguroParcelamento'), function(key, item)
+                    {
+                        var divParcelamento = $(item);
+                        var _brand = $(divParcelamento).data("brand");
+
+                        PagSeguroDirectPayment.getInstallments({
+                            amount: totalCheckout,
+                            brand: _brand,
+                            maxInstallmentNoInterest: responseConfig.config.maximumInstallmentWithoutInterest,
+                            success: function (responseInstallment) {
+                                //var auxTotalProduto = Number.parseFloat(totalCheckout);
+                                //var jurosTotal = 0;
+                                //var taxaMensal = 0;
+                                var maximumInstallment = Number.parseInt(responseConfig.config.maximumInstallment);
+                                $.each(responseInstallment.installments, function (key, ResponseBrand) {
+                                    //jurosTotal = Number.parseFloat(item.totalAmount) - auxTotalProduto;
+
+                                    //taxaMensal = (jurosTotal / (auxTotalProduto * Number.parseFloat(item.quantity))) * 100;
+                                    $("div.pagSeguroParcelamento[data-brand=" + key + "]").empty();
+                                    $.each(ResponseBrand, function(key2, item)
+                                    {
+                                        //if(item.quantity <= maximumInstallment)
+                                        //{
+                                            $("div.pagSeguroParcelamento[data-brand=" + key + "]").append(
+                                                '<span class="item parcelamentos">' +
+                                                    '<span class="parcelas">' + item.quantity + ' x </span>' +
+                                                    '<span class="valor">' + item.installmentAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + ' </span>' +
+                                                    '<span class="modelo">(' + ((item.interestFree)? 'Sem juros' : 'Com juros') + ')</span>' +
+                                                    //'<span class="modelo">(' + ((item.interestFree)? 'Sem Juros' : 'juros de ' + taxaMensal.toFixed(4) + '% ao mês') + ')</span>' +
+                                                    '<span class="total">Total Parcelado: ' + item.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + '</span>' +
+                                                '</span>'
+                                            );
+                                        //}
+                                    });
+                                });
+                            },
+                            error: function (responseInstallment) {
+                                console.log(responseInstallment);
+                            }
+                        });
+
+                    });
+                });
+            }
+        });
+    }
 }

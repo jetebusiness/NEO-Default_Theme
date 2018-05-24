@@ -31,7 +31,9 @@ require('./modules/register');
 require('./modules/editCustomer');
 //--------------------[ Client Mascára ]--------------------//
 require('./modules/mask');
+//--------------------[ DatePicker ]--------------------//
 require('./modules/jquery-ui.min');
+
 
 
 //--------------------[ Start Document ]--------------------//

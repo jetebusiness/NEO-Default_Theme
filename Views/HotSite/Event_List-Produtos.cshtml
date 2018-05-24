@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Gerenciar Lista de Eventos</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Gerenciar Lista</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+            <div class="sixteen wide mobile five wide tablet four wide computer column">
+                <div class="ui vertical menu aligned fluid">
+                    <a class="item">
+                        Dados da Lista
+                    </a>
+                    <a class="item active">
+                        Produtos
+                    </a>
+                    <a class="item">
+                        Lista de Convidados
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                <div class="ui grid middle aligned">
+                    <div class="row two column">
+                        <div class="column left aligned">
+                            <div class="ui search">
+                                <div class="ui icon input">
+                                    <input class="prompt" type="text" placeholder="Buscar...">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                        <div class="column right aligned">
+                            <button class="ui icon teal button">
+                                Adicionar Produto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid stackable">
+                    <div class="row">
+                        <div class="column">
+                            <table class="ui celled table">
+                                <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th class="ui center aligned">Quant. Solicitada</th>
+                                    <th class="ui center aligned">Comprados</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Notebook Asus Série Z Z450UA-WX009T Intel Core i5</td>
+                                    <td class="ui center aligned">
+                                        <div class="ui qtd action mini input">
+                                            <button class="ui icon button qtdminus">
+                                                <i class="minus icon"></i>
+                                            </button>
+                                            <input type="number" min="1" step="1" size="3" value="1" name="">
+                                            <button class="ui green icon button qtdplus">
+                                                <i class="add icon"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="ui center aligned">
+                                        <div class="ui action input">
+                                            <input type="number" name="" value="" placeholder="0">
+                                            <button class="ui icon button" id="addProduct">
+                                                <i class="unhide icon"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="ui center aligned">
+                                        <button class="ui icon red button">
+                                            <i class="trash outline icon"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th colspan="4">
+                                        <div class="ui right floated pagination menu">
+                                            <a class="icon item">
+                                                <i class="left chevron icon"></i>
+                                            </a>
+                                            <a class="item">1</a>
+                                            <a class="item">2</a>
+                                            <a class="item">3</a>
+                                            <a class="item">4</a>
+                                            <a class="icon item">
+                                                <i class="right chevron icon"></i>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid middle aligned">
+                    <div class="row">
+                        <div class="column">
+                            <a href="/Customer/Login" class="ui animated button large red left floated">
+                                <div class="visible content">Cancelar</div>
+                                <div class="hidden content">
+                                    <i class="remove icon"></i>
+                                </div>
+                            </a>
+                            <button type="submit"
+                                    class="ui animated button large submit green right floated">
+                                <div class="visible content">Salvar</div>
+                                <div class="hidden content">
+                                    <i class="checkmark icon"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

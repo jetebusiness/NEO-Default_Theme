@@ -7,7 +7,7 @@
             {
                 if (social.Identifier.ToUpper() == "WHATSAPP")
                 {
-                    <a href="https://api.whatsapp.com/send?text=@HttpContext.Current.Request.Url.ToString()" target="_blank">
+                    <a href="@string.Format("{0}{1}","https://api.whatsapp.com/send?phone=55", social.Content.Replace("(","").Replace(")","").Replace("-","").Replace(" ",""))" target="_blank">
                         <i class="@social.Identifier icon"></i>
                     </a>
                 }

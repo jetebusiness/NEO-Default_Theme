@@ -55,6 +55,10 @@ $(document).ready(function () {
         })
     })
 
+    $(document).on("click", "#btnOpenPaymentLink", function () {
+        $('.ui.modal.pagseguro').modal('show');
+    });
+
     $(document).on("keypress", ".prompt_pedidos", function (event) {
         var val = event.target.value;
         var filtered = val.replace(/[^0-9]/g, '');

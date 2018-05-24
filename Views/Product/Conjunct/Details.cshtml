@@ -7,17 +7,6 @@
         lista_avaliacoes_completa.RemoveRange(0, 5);
     }
 }
-
-<script>
-    var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
-    var lista_avaliacao_produto =
-        @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
-</script>
-@{
-
-    ViewBag.Title = Model.Name;
-    Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
-}
 @section CustomSeo {
     @{
         if (!String.IsNullOrEmpty(Model.MetaDescription))
@@ -30,6 +19,23 @@
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
     }
+}
+<script>
+    var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
+    var lista_avaliacao_produto =
+        @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
+</script>
+
+@{
+
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
+}
+
+@section remarketing{
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+    <!-- End Google Remarketing -->
 }
 
 @section breadcrumbs {
@@ -339,7 +345,7 @@
                             <!--FIM DISPONIBILIDADE / CARRINHO-->
                             @if (!Model.FlagExhausted)
                             {
-                
+
                                 <div id="pagamento-calculado">
                                     @{
                                         decimal price = 0;

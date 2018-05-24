@@ -64,39 +64,50 @@
                                 }
                                 @{
                                     @* Forma de pagamento com boleto Itaú *@
-                                if (Model.IdPaymentBrand == 207)
-                                {
-                                    <input type="hidden" id="idOrder" value="@Model.IdOrder" />
-                                    <span>(<a href="javascript:void(0)" id="reprintBankSlip">Reimprimir boleto</a>)</span>
+                                    if (Model.IdPaymentBrand == 207)
+                                    {
+                                        <input type="hidden" id="idOrder" value="@Model.IdOrder" />
+                                        <span>(<a href="javascript:void(0)" id="reprintBankSlip">Reimprimir boleto</a>)</span>
 
-                                    <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
-                                          method="post"
-                                          name="itauShopline"
-                                          id="itauShopline"
-                                          target="openShopline">
-                                        <input type="hidden" name="DC" id="tokenBankSlip" value="" />
-                                    </form>
+                                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                                              method="post"
+                                              name="itauShopline"
+                                              id="itauShopline"
+                                              target="openShopline">
+                                            <input type="hidden" name="DC" id="tokenBankSlip" value="" />
+                                        </form>
 
-                                    <div class="ui modal">
-                                        <i class="close icon"></i>
-                                        <div class="content">
-                                            <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                                        <div class="ui modal">
+                                            <i class="close icon"></i>
+                                            <div class="content">
+                                                <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                                @* Forma de pagamento com boleto MaxiPago*@
-                                else if (Model.IdPaymentBrand == 238)
-                                {
-                                    <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
-                                    <span>(<a href="javascript:void(0)" id="reprintBankSlipMaxiPago">Reimprimir boleto</a>)</span>
+                                    }
+                                    @* Forma de pagamento com boleto MaxiPago*@
+                                    else if (Model.IdPaymentBrand == 238)
+                                    {
+                                        <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
+                                        <span>(<a href="javascript:void(0)" id="reprintBankSlipMaxiPago">Reimprimir boleto</a>)</span>
 
-                                    <div class="ui modal maxiPago">
-                                        <i class="close icon"></i>
-                                        <div class="content">
-                                            <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
+                                        <div class="ui modal maxiPago">
+                                            <i class="close icon"></i>
+                                            <div class="content">
+                                                <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
+                                    }
+                                    @* Forma de pagamento com boleto PagSeguro*@
+                                    else if (!string.IsNullOrEmpty(Model.PaymentLink))
+                                    {
+                                        <span>(<a href="javascript:void(0)" id="btnOpenPaymentLink">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto"))? "Reimprimir boleto" : "Recuperar link de pagamento")</a>)</span>
+                                        <div class="ui modal pagseguro">
+                                            <i class="close icon"></i>
+                                            <div class="content">
+                                                <iframe src="@Model.PaymentLink" name="openPaymentLink" id="openPaymentLink" style="width: 100%; height: 50em; border: none;"></iframe>
+                                            </div>
+                                        </div>
+                                    }
                                 }
                             </div>
                         </div>

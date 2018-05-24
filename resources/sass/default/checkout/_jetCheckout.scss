@@ -154,3 +154,22 @@
         fill: #010101;
     }
 }
+
+.ui.form .two.fields > .fields, .ui.form .two.fields > .field.hidden {
+    display: none;
+}
+
+.success-debit-pagseguro {
+    background-color: white; 
+    color: black; 
+    padding: 15px; 
+    border-radius: 5px;
+}
+
+.success-debit-pagseguro h3 {
+    text-align: center;
+}
+
+.no-border {
+    border: 0 none !important;
+}

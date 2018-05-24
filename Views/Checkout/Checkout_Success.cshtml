@@ -1,25 +1,42 @@
 ﻿@model DomainOrder.Entities.Order
+
 @{
     ViewBag.Title = "Pedido Finalizado";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
 
-    if(ViewBag.ShowRegister == null)
+    if (ViewBag.ShowRegister == null)
     {
         ViewBag.ShowRegister = false;
     }
 
-    if(ViewBag.ViewBoleto == null)
+    if (ViewBag.ViewBoleto == null)
     {
         ViewBag.ViewBoleto = false;
     }
 
-    string bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
-}
+    string bgColor = "", tituloSucesso = "", msgSucesso = "";
 
-@section GoogleAdwords{
-    <!-- Google Adwords-->
-    @Html.Action("GetGoogleAdwords", "Company", new { controller = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"], idOrder = Model.IdOrder })
-    <!-- Google Adwords-->
+    if (Request.QueryString["s"] == null)
+    {
+        bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
+        tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
+        msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+    }
+    else
+    {
+        if (Request.QueryString["s"] == "true")
+        {
+            bgColor = "bg-green";
+            tituloSucesso = "Pedido Confirmado";
+            msgSucesso = string.Format("Seu pedido foi realizado com sucesso. {0}", Request.QueryString["m"] == null ? "Agora falta pouco para receber seus produtos" : LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+        }
+        else
+        {
+            bgColor = "bg-red";
+            tituloSucesso = "Pedido não Confirmado";
+            msgSucesso = string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+        }
+    }
 }
 
 @section steps{
@@ -57,25 +74,26 @@
             <div class="ui divider small hidden"></div>
             <div class="row two column">
                 <div class="column">
-                    <h1 class="floated left">@string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado")  </h1>
+                    <h1 class="floated left">@tituloSucesso</h1>
                 </div>
                 <div class="column text right">
                     <h2 class="">#@Model.IdOrder</h2>
                 </div>
             </div>
-            <div class="row">
+            <div class="doubling two column row">
                 <div class="column">
-                    @if (Request.QueryString["m"] == null)
-                    {
-                        <h3>Obrigado, @Model.NameCustomer</h3>
-                        <p>Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos.</p>
-                    }
-                    else
-                    {
-                        <h3>Obrigado, @Model.NameCustomer</h3>
-                        <p>@string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()))</p>
-                    }
+                    <h3>Obrigado, @Model.NameCustomer</h3>
+                    <p>@msgSucesso</p>
                 </div>
+                @if (!String.IsNullOrEmpty(Request.QueryString["d"]))
+                {
+                    <div class="column">
+                        <div class="text center success-debit-pagseguro">
+                            <h3>Para efetuar o pagamento</h3>
+                            <input class="ui large green button center" id="btnPagSeguroDebito" type="submit" value="Clique aqui" data-url="@LojaCorp.Control.Static.DecryptData(Request.QueryString["d"].ToString())" />
+                        </div>
+                    </div>
+                }
             </div>
             <div class="ui divider small hidden"></div>
         </div>
@@ -109,7 +127,7 @@
     <div class="ui grid divided horizontal">
         <div class="row">
             <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
-                <div class="ui divided items relaxed cart"  id="checkout_products_list_cart">
+                <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
                     @if (Model != null && Model.OrderItems != null)
                     {
                         foreach (var item in Model.OrderItems)
@@ -224,22 +242,30 @@
                 </div>
             </div>
             <!-- Começo do Itau Shopline -->
-            <div class="ui modal">
+            <div class="ui modal shopline">
                 <div class="content">
                     <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
                 </div>
             </div>
             <!-- Final do Itau Shopline -->
+            <!-- Começo do PagSeguro Débito -->
+            <div class="ui modal pagseguro">
+                <div class="content">
+                    <iframe name="openPagSeguro" id="openPagSeguro" style="width: 100%; height: 33em; border: none;"></iframe>
+                </div>
+            </div>
+            <!-- Final do PagSeguro Débito -->
         </div>
     </div>
 </div>
-@{
-    @section remarketing {
-        <!-- Google Remarketing -->
-        @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
-        <!-- End Google Remarketing -->
-    }
 
+@section remarketing {
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
+    <!-- End Google Remarketing -->
+}
+
+@{
     if (@LojaCorp.Control.Company._Company.UtilizaGoogleEcommerce && !LojaCorp.Control.Company._Company.StatusGTM)
     {
         <!-- GOOGLE E-COMMERCE -->

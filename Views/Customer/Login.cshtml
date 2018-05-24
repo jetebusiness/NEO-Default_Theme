@@ -1,5 +1,4 @@
 ﻿@model DomainCustomer.Entities.User
-
 @{
     ViewBag.Title = "Acesse sua conta";
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
@@ -9,7 +8,6 @@
         SocialLogin = (List<DomainSocialNetwork.Entities.SocialLogin>)ViewBag.SocialLogin;
     }
 }
-
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui one column grid stackable middle aligned">
@@ -25,16 +23,12 @@
             </div>
         </div>
     </div>
-
 }
-
 <div class="ui grid middle aligned center aligned">
     <div class="row">
         <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
             <form class="ui large form" id="formLogin">
-
                 @Html.AntiForgeryToken()
-
                 <div class="ui segment">
                     <div class="ui grid  very relaxed stackable middle aligned grid">
                         <div class="row two column ">
@@ -72,7 +66,6 @@
                                     <i class="add user icon"></i>
                                     Primeiro acesso? <br />Cadastre-se
                                 </a>
-
 
                                 @foreach (var item in SocialLogin)
                                 {

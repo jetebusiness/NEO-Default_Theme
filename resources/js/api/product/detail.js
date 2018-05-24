@@ -6,12 +6,26 @@ import {openModalQuickView, openLongModal} from "../../functions/modal";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
 import {LoadCarrinhoEventList} from "../../functions/mini_cart_generic";
-import {CarregarParcelamento} from "../../api/product/detail_b2b.js";
+import {CarregarParcelamento, CarregaParcelamentoPagSeguro} from "../../api/product/detail_b2b.js";
 import {getAllMask} from "../../ui/modules/mask";
 
 $(document).ready(function () {
     "use strict";
     VariacaoCor();
+
+    /*if($('#preco').length > 0) {
+        $('#preco').on('DOMSubtreeModified', function(){
+            CarregarParcelamento(false);
+            CarregaParcelamentoPagSeguro();
+        });
+    }*/
+    /*if($('#preco').length > 0) {
+        $('#preco').on('DOMSubtreeModified', function(){
+            CarregaParcelamentoPagSeguro();
+        });
+    }*/
+
+    CarregaParcelamentoPagSeguro();
 
     $(document).on("keyup", "#quantidade", function (e) {
         var valor_final = SomenteNumerosPositivos($(this).val());
@@ -23,7 +37,7 @@ $(document).ready(function () {
 
     $(".button.avise").api({
         action: 'alert me',
-        method: 'GET',
+        method: 'POST',
         dataType: "html",
         beforeSend: function (settings) {
             settings.data = {
@@ -300,7 +314,8 @@ $(document).on("click", "#dica_promocional", function () {
 
 //FUNÇÔES
 function VariacaoDropDown() {
-    $('.product-grid .dropdown').dropdown({
+    $('.product-grid .dropdown').attr("id", "dropDownGridProduct");
+    $('#dropDownGridProduct').dropdown({
         onChange: function (value, text, selectedItem) {
             var order        = $('.product-grid .variacao-drop[value=' + value + ']').data("order");
             var idReferencia = $('.product-grid .variacao-drop[value=' + value + ']').data("id-reference");
@@ -449,12 +464,14 @@ function CarregarMaisAvaliacoes() {
 }
 
 function ValidaVariacaoSelecionada(selecionada, seletor) {
-
+    let arrayVariacoesDropDown = $("#dropDownGridProduct .menu .active").attr("data-value");
     let referenciaSelecionada        = selecionada.split('-')[0] + '-';
     let referenciasJaSelecionadas    = $("#" + seletor + "-referencias-selecionadas").val();
     let ArrReferenciasJaSelecionadas = referenciasJaSelecionadas.split(',');
 
-
+    if (typeof arrayVariacoesDropDown != 'undefined') {
+        ArrReferenciasJaSelecionadas.push(arrayVariacoesDropDown);
+    }
     //SE REFERENCIA JÁ FOI SELECIONADA, EXCLUI E ADICIONA DE NOVO
     if (referenciasJaSelecionadas == "") {
         $("#" + seletor + "-referencias-selecionadas").val(selecionada);
@@ -779,10 +796,11 @@ function AtualizarQuantidade() {
     AtualizarCompreJunto();
     isLoading("body");
     $("#parcelamento_b2b").find(".active").removeClass("active");
+
 }
 
 function AtualizarParcelamento(preco) {
-
+    CarregarParcelamento(false);
 }
 
 function AtualizarCompreJunto() {
@@ -1177,7 +1195,7 @@ function MontaTipoCor(skU, seletor_produto, reference, variation, variacoes_sele
     if (flag_buscar_sku === true) {
         if (skU.stock <= 0 || skU.visible === false) {
             if (skU.stock <= 0) {
-                classeBtn += " disabled";
+                //classeBtn += " disabled";
             }
             else if (skU.visible === false) {
                 classeBtn += " hideme";
@@ -1231,7 +1249,7 @@ function MontaTipoImagem(skU, seletor_produto, reference, variation, variacoes_s
 
     if (skU.stock <= 0 || skU.visible === false) {
         if (skU.stock <= 0) {
-            classeBtn += " disabled";
+            //classeBtn += " disabled";
         }
         else if (skU.visible === false) {
             classeBtn += " hideme";

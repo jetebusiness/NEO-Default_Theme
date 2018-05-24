@@ -16,26 +16,29 @@
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
+@section remarketing{
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+    <!-- End Google Remarketing -->
+}
+
 @section CustomSeo {
-    @{ 
+    @{
         if (!String.IsNullOrEmpty(Model.MetaDescription))
         {
             <meta name="Description" content="@Model.MetaDescription">
         }
-
+        
         if (!String.IsNullOrEmpty(Model.MetaKeyWords))
         {
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
     }
 }
-@section remarketing{
-    <!-- Google Remarketing -->
-    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
-    <!-- End Google Remarketing -->
-}
+
 @section breadcrumbs {
 }
+
 @{
     DomainProduct.Entities.Sku SKUPadrao = new DomainProduct.Entities.Sku();
     if (TempData["SKUPadrao"] != null)
@@ -435,8 +438,7 @@
                                 <!--FIM DISPONIBILIDADE / CARRINHO-->
                             </div>
                             @if (!Model.FlagExhausted)
-            {                             
-
+                            {                             
                                 <div id="pagamento-calculado">
                                     @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                                     {
@@ -449,9 +451,9 @@
                                 </div>
                             }
                             @if (Model.HaveSku)
-            {
-                if (Model.FlagExhausted || SKUPadrao.Stock == 0)
-                {
+                            {
+                                if (Model.FlagExhausted || SKUPadrao.Stock == 0)
+                                {
                                     @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", true)
                                 }
                                 else
@@ -666,7 +668,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="" />
-                                  @Html.Action("GetRecaptcha", "Company", null)
+                                @Html.Action("GetRecaptcha", "Company", null)
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>
@@ -703,8 +705,10 @@
 
 
         @if (!Model.FlagExhausted || Session["EventList"] != null)
-            {
+        {
             @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
         }
     </div>
 </div>
+
+

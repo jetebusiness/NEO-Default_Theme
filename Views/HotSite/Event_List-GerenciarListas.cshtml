@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Gerenciar Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui container margin bottom large">
+    <div class="row">
+        <div class="ui grid">
+            <div class="four wide column">
+                <div class="ui segment">
+                    <div class="content ui left aligned">
+                        <div class="header">Nova Lista de Eventos</div>
+                    </div>
+                    <div class="ui divider"></div>
+                    <div class="ui small ui center aligned">
+                        <i class="ui icon big add circle blue"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="ui segment">
+                    <div class="ui small right aligned">
+                        <i class="ui icon big check circle green"></i>
+                    </div>
+                    <div class="content ui left aligned">
+                        <div class="header">Chá de Bebê</div>
+                        Nome<br />
+                        01/01/2017
+                    </div>
+                    <div class="ui divider"></div>
+                    <div class="ui center aligned">
+                        <button class="ui tiny compact icon green button">
+                            <i class="check icon"></i>
+                            Alterar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="four wide column">
+                <div class="ui segment">
+                    <div class="ui small right aligned">
+                        <i class="ui icon big remove circle red"></i>
+                    </div>
+                    <div class="content ui left aligned">
+                        <div class="header">Casamento</div>
+                        Nome e Nome<br />
+                        01/01/2017
+                    </div>
+                    <div class="ui divider"></div>
+                    <div class="ui center aligned">
+                        <button class="ui tiny compact icon red button">
+                            <i class="delete icon"></i>
+                            Encerrado
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,7 @@
     List<string> arrCustomSEOIgnore = new List<string>() { "Home-Index", "Search-Index" };
     string currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
     string currentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
-
+    
     if (arrCustomSEOIgnore.Contains(String.Format("{0}-{1}", currentController, currentAction)))
     {
         <meta name="distribution" content="Global">
@@ -20,4 +20,5 @@
     {
         <meta name="Robots" content="INDEX,FOLLOW">
     }
+
 }

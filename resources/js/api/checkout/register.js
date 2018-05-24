@@ -1,6 +1,13 @@
 ﻿$(document).ready(function () {
-    $(".cnpj_checkout").change(function () {
-        $('.rg_checkout').trigger({ type: 'keypress', which: 13, keyCode: 13 });
+
+    $(".cpf_cnpj_checkout").change(function () {
+        let field = $(this).val().toString();
+
+        if (field.length > 14) {
+            $('.ie_checkout').trigger({ type: 'keypress', which: 13, keyCode: 13 });
+        } else {
+            $('.rg_checkout').trigger({ type: 'keypress', which: 13, keyCode: 13 });
+        }      
     });
 
     $.jetRoute("checkout", function () {
@@ -18,3 +25,9 @@
         }
     });
 });
+
+/*
+
+
+
+*/

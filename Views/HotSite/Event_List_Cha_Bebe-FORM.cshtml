@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Lista de Chá de Bebê";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid middle aligned center aligned">
+        <div class="row">
+            <div class="column">
+                <div class="fluid ui ordered steps">
+                    <div class="active step">
+                        <div class="content">
+                            <div class="title">Configurar Dados</div>
+                        </div>
+                    </div>
+                    <div class="disabled step">
+                        <div class="content">
+                            <div class="title">Configurar Entrega</div>
+                        </div>
+                    </div>
+                    <div class="disabled step">
+                        <div class="content">
+                            <div class="title">Escolher Produtos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <h2>Configurar Dados</h2>
+                <div class="ui segment">
+                    <div class="ui grid stackable top aligned left">
+                        <div class="row two column divided horizontal">
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Dados do Evento</h4>
+                                    <div class="field calendar required">
+                                        <label>Data do Evento</label>
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input type="text" class="masked" name="" placeholder="DD/MM/YYYY" data-inputmask="'alias': 'dd/mm/yyyy'">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Criador da Lista</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="@Session["Name"]" placeholder="João das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Nome do Pai</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="João das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Nome da Mãe</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="" value="" placeholder="Maria das Flores">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>Termos e Condições</label>
+                                    </div>
+                                    <div class="field" style="display: inline-flex">
+                                        <div class="ui checkbox termo aceite">
+                                            <input type="checkbox" checked="checked">
+                                        </div>
+                                        <label id="termo_aceite">Li e estou de acordo com o regulamento. <a style="cursor: pointer;">Ler o Regulamento</a></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="ui form">
+                                    <div class="field required">
+                                        <label>Mensagem aos convidados</label>
+                                        <div class="ui input">
+                                            <textarea></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Imagem do Evento</label>
+                                        <div class="ui input">
+                                            <textarea></textarea>
+                                        </div>
+                                        <div class="text small">Extensões permitidas: .jpg .png ou .gif</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <a href="/Customer/Login" class="ui animated button large red left floated">
+                            <div class="visible content">Cancelar</div>
+                            <div class="hidden content">
+                                <i class="remove icon"></i>
+                            </div>
+                        </a>
+                        <button type="submit"
+                                class="ui animated button large submit green right floated">
+                            <div class="visible content">Próximo</div>
+                            <div class="hidden content">
+                                <i class="checkmark icon"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

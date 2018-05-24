@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Nova Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row one column">
+            <div class="column">
+                <div class="ui grid stackable">
+                    <h4>Selecione o tipo de lista adequado ao seu evento.</h4>
+                    <div class="row two column">
+                        <div class="column">
+                            <div class="ui items very relaxed divided menuclient">
+                                <a class="item" href="#">
+                                    <div class="ui small">
+                                        <i class="ui icon big heart red"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="header">Lista de Casamento</div>
+                                        <div class="description">
+                                            <p>Crie listas de presentes para seu casamento.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="item" href="#">
+                                    <div class="ui small">
+                                        <i class="ui icon big bar orange"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="header">Lista Chá Bar</div>
+                                        <div class="description">
+                                            <p>Crie listas de presentes do seu Chá Bar.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="item" href="#">
+                                    <div class="ui small">
+                                        <i class="ui icon big food blue"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="header">Lista Chá de Cozinha</div>
+                                        <div class="description">
+                                            <p>Crie listas de presentes do seu Chá de Cozinha.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="ui items very relaxed divided menuclient">
+                                <a class="item" href="#">
+                                    <div class="ui small">
+                                        <i class="ui icon big child purple"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="header">Lista Chá de Bebê</div>
+                                        <div class="description">
+                                            <p>Crie listas de presentes para seu bebê.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="item" href="#">
+                                    <div class="ui small">
+                                        <i class="ui icon big gift yellow"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="header">Lista de Presente</div>
+                                        <div class="description">
+                                            <p>Crie sua lista de presentes.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

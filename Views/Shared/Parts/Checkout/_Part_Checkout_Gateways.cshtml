@@ -35,6 +35,16 @@
                         break;
                 }
             }
+            <input type="hidden" name="hasPagSeguro" id="hasPagSeguro" value="@Session["PagSeguro"]" />
+            <input type="hidden" name="SessionPayment" id="PaymentSession" value="" />
+            <input type="hidden" name="HashPayment" id="PaymentHash" value="" />
+            @{
+                if (Convert.ToInt32(Session["PagSeguro"].ToString()) > 0)
+                {
+                    <input type="hidden" name="MaximumInstallmentWithoutInterest" id="MaximumInstallmentWithoutInterest" value="0" />
+                    <input type="hidden" name="MaximumInstallment" id="MaximumInstallment" value="0" />
+                }
+            }
         </div>
         @if (TempData["AddressListEvents"] != null)
         {
