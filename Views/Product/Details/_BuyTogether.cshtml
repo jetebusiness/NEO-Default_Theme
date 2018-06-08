@@ -36,7 +36,7 @@
                                 {
                                     <span>@Model.Brand.Name</span>
                                 }
-                                <h4 class="margin medium top" id="price-buy-together">
+                                <h4 class="margin small top" id="price-buy-together">
                                     @if (Model.HaveSku)
                                     {
                                         if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
@@ -130,11 +130,11 @@
 
                                     @if (item.AvailableReferences == null || item.AvailableReferences.Count() == 0)
                                     {
-                                        <h4 class="margin medium top" id="@item.IdProduct-price-product-buy-together">@preco_final.ToString("C")</h4>
+                                        <h4 class="margin small top" id="@item.IdProduct-price-product-buy-together">@preco_final.ToString("C")</h4>
                                     }
                                     else
                                     {
-                                        <h4 class="margin medium top" id="@item.IdProduct-price-product-buy-together"></h4>
+                                        <h4 class="margin small top" id="@item.IdProduct-price-product-buy-together"></h4>
                                     }
                                 </div>
                                 <div class="description" data-id="@item.IdProduct" data-variacoes="@total_variacoes">
@@ -145,7 +145,7 @@
                                 </div>
                             </div>
                             <div class="extra">
-                                <button class="ui circular icon big toggle button compre junto" data-id="@item.IdProduct" data-variacoes="@total_variacoes" id="adicionar-compre-junto-@item.IdProduct">
+                                <button class="ui circular icon big toggle button compre junto primary" data-id="@item.IdProduct" data-variacoes="@total_variacoes" id="adicionar-compre-junto-@item.IdProduct">
                                     <i class="plus icon"></i>
                                 </button>
                             </div>
@@ -247,14 +247,14 @@
                     {
                         if (SKUPadrao.Stock > 0)
                         {
-                            <a href="" class="ui big button green fluid buy-together" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together text uppercase" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
                         }
                         else
                         {
-                            <a href="" class="ui big button green fluid buy-together disabled" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
@@ -264,14 +264,14 @@
                     {
                         if (Model.Stock > 0)
                         {
-                            <a href="" class="ui big button green fluid buy-together" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together text uppercase" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
                         }
                         else
                         {
-                            <a href="" class="ui big button green fluid buy-together disabled" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>

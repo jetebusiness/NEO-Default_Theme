@@ -1,6 +1,5 @@
 ﻿@model DomainProduct.Entities.Reference
 
-
 @{
     DomainProduct.Entities.Sku SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadraoVariacao"];
     List<DomainProduct.Entities.Sku> ListSKUPadraoVariacao = null;
@@ -37,123 +36,122 @@
 
 <div class="ui form">
     <div class="field">
-            <select class="field ui dropdown" data-id-reference="@Model.IdReference" data-tipo="drop" data-order="@ordem">
-                <option value="">Selecione</option>
-                @foreach (var variacoes in Model.Variations)
+        <select class="field ui dropdown" data-id-reference="@Model.IdReference" data-tipo="drop" data-order="@ordem">
+            <option value="">Selecione</option>
+            @foreach (var variacoes in Model.Variations)
             {
                 //SE SKU PADRÂO = NULL APENAS EXIBE AS VARIAÇÔES (COMPRE JUNTO)
                 if (SKUPadrao == null || VariacoesSelecionadas == null)
                 {
-                        <option class="variacao-drop" value="@Model.IdReference-@variacoes.IdVariation" data-tipo="drop" data-variation-id="@variacoes.IdVariation" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
-                    }
-                    else
+                    <option class="variacao-drop" @(Model.IdReference+"-"+variacoes.IdVariation == ReferenciaPadrao ? "selected" : "") value="@Model.IdReference-@variacoes.IdVariation" data-tipo="drop" data-variation-id="@variacoes.IdVariation" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
+                }
+                else
+                {
+                    if (VariacoesSelecionadas != null || totalReferencias == 1)
                     {
-                        if (VariacoesSelecionadas != null || totalReferencias == 1)
+                        //BUSCA SKUS DISPONÍVEIS PARA VARIACAO SELECIONADA
+                        List<DomainProduct.Entities.Sku> ListaSkusDisponiveis = new List<DomainProduct.Entities.Sku>();
+
+                        if (totalReferencias == 1)
                         {
-                            //BUSCA SKUS DISPONÍVEIS PARA VARIACAO SELECIONADA
-                            List<DomainProduct.Entities.Sku> ListaSkusDisponiveis = new List<DomainProduct.Entities.Sku>();
-
-                            if (totalReferencias == 1)
+                            if (ListSKUPadraoVariacao != null)
                             {
-                                if (ListSKUPadraoVariacao != null)
-                                {
-                                    ListaSkusDisponiveis = ListSKUPadraoVariacao;
-                                }
-                                else
-                                {
-                                    ListaSkusDisponiveis = ListaSku;
-                                }
-                            }
-                            else {
-                                foreach (var skuL in ListaSku)
-                                {
-                                    int flag = 0;
-                                    foreach (var variacaoLSku in skuL.Variations)
-                                    {
-                                        foreach (var vSelecionadas in VariacoesSelecionadas)
-                                        {
-                                            if (variacaoLSku.IdVariation == vSelecionadas.IdVariation)
-                                            {
-                                                flag++;
-                                            }
-                                        }
-                                    }
-                                    if (flag == VariacoesSelecionadas.Count())
-                                    {
-                                        ListaSkusDisponiveis.Add(skuL);
-                                    }
-                                }
-                            }
-                            //PROCURA O SKU DA VARIACAO CORRENTE PARA VALIDAR ESTOQUE E VISIVEL
-                            DomainProduct.Entities.Sku skuvariacao = new DomainProduct.Entities.Sku();
-                            List<DomainProduct.Entities.Sku> skuTodasVariacoes = new List<DomainProduct.Entities.Sku>();
-                            foreach (var variacoesSkuDisponivel in ListaSkusDisponiveis)
-                            {
-                                foreach (var skuVariacao in variacoesSkuDisponivel.Variations)
-                                {
-                                    if (skuVariacao.IdVariation == variacoes.IdVariation)
-                                    {
-                                        skuTodasVariacoes.Add(variacoesSkuDisponivel);
-                                    }
-                                }
-                            }
-
-                            //APLICA REGRA SE APENAS 1 VARIAÇÃO ESTIVER SELECIONADA
-                            if (skuTodasVariacoes.Count > 0 && (skuTodasVariacoes.FindAll(s => s.Visible == true).Count() > 0) || skuTodasVariacoes.FindAll(s => s.Stock > 0).Count() > 0)
-                            {
-                                skuvariacao = skuTodasVariacoes.Find(s => s.Visible == true && s.Stock > 0);
-
-
-                                if (skuvariacao == null)
-                                {
-                                    skuvariacao = skuTodasVariacoes.Find(s => s.Visible == true);
-                                }
-
-                                if (skuvariacao == null)
-                                {
-                                    skuvariacao = skuTodasVariacoes.Find(s => s.Stock > 0);
-                                }
-
+                                ListaSkusDisponiveis = ListSKUPadraoVariacao;
                             }
                             else
                             {
-                                skuvariacao = new DomainProduct.Entities.Sku();
+                                ListaSkusDisponiveis = ListaSku;
                             }
-
-                            //MONTA CLASSE DO ELEMENTO
-                            if (skuvariacao.Stock <= 0 || !skuvariacao.Visible)
-                            {
-                                if (skuvariacao.Stock <= 0)
-                                {
-                                    if (string.IsNullOrEmpty(ReferenciaHide))
-                                    {
-                                        ReferenciaDisable += @Model.IdReference + "-" + variacoes.IdVariation;
-                                    }
-                                    else
-                                    {
-                                        ReferenciaDisable += "," + @Model.IdReference + "-" + variacoes.IdVariation;
-                                    }
-                                }
-                                else if (!skuvariacao.Visible)
-                                {
-                                    if (string.IsNullOrEmpty(ReferenciaHide))
-                                    {
-                                        ReferenciaHide += @Model.IdReference + "-" + variacoes.IdVariation;
-                                    }
-                                    else
-                                    {
-                                        ReferenciaHide += "," + @Model.IdReference + "-" + variacoes.IdVariation;
-                                    }
-                                }
-                            }
-
-
-                            <option class="variacao-drop" value="@Model.IdReference-@variacoes.IdVariation" data-variation-id="@variacoes.IdVariation" data-tipo="drop" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
                         }
+                        else {
+                            foreach (var skuL in ListaSku)
+                            {
+                                int flag = 0;
+                                foreach (var variacaoLSku in skuL.Variations)
+                                {
+                                    foreach (var vSelecionadas in VariacoesSelecionadas)
+                                    {
+                                        if (variacaoLSku.IdVariation == vSelecionadas.IdVariation)
+                                        {
+                                            flag++;
+                                        }
+                                    }
+                                }
+                                if (flag == VariacoesSelecionadas.Count())
+                                {
+                                    ListaSkusDisponiveis.Add(skuL);
+                                }
+                            }
+                        }
+                        //PROCURA O SKU DA VARIACAO CORRENTE PARA VALIDAR ESTOQUE E VISIVEL
+                        DomainProduct.Entities.Sku skuvariacao = new DomainProduct.Entities.Sku();
+                        List<DomainProduct.Entities.Sku> skuTodasVariacoes = new List<DomainProduct.Entities.Sku>();
+                        foreach (var variacoesSkuDisponivel in ListaSkusDisponiveis)
+                        {
+                            foreach (var skuVariacao in variacoesSkuDisponivel.Variations)
+                            {
+                                if (skuVariacao.IdVariation == variacoes.IdVariation)
+                                {
+                                    skuTodasVariacoes.Add(variacoesSkuDisponivel);
+                                }
+                            }
+                        }
+
+                        //APLICA REGRA SE APENAS 1 VARIAÇÃO ESTIVER SELECIONADA
+                        if (skuTodasVariacoes.Count > 0 && (skuTodasVariacoes.FindAll(s => s.Visible == true).Count() > 0) || skuTodasVariacoes.FindAll(s => s.Stock > 0).Count() > 0)
+                        {
+                            skuvariacao = skuTodasVariacoes.Find(s => s.Visible == true && s.Stock > 0);
+
+
+                            if (skuvariacao == null)
+                            {
+                                skuvariacao = skuTodasVariacoes.Find(s => s.Visible == true);
+                            }
+
+                            if (skuvariacao == null)
+                            {
+                                skuvariacao = skuTodasVariacoes.Find(s => s.Stock > 0);
+                            }
+
+                        }
+                        else
+                        {
+                            skuvariacao = new DomainProduct.Entities.Sku();
+                        }
+
+                        //MONTA CLASSE DO ELEMENTO
+                        if (skuvariacao.Stock <= 0 || !skuvariacao.Visible)
+                        {
+                            if (skuvariacao.Stock <= 0)
+                            {
+                                if (string.IsNullOrEmpty(ReferenciaHide))
+                                {
+                                    ReferenciaDisable += @Model.IdReference + "-" + variacoes.IdVariation;
+                                }
+                                else
+                                {
+                                    ReferenciaDisable += "," + @Model.IdReference + "-" + variacoes.IdVariation;
+                                }
+                            }
+                            else if (!skuvariacao.Visible)
+                            {
+                                if (string.IsNullOrEmpty(ReferenciaHide))
+                                {
+                                    ReferenciaHide += @Model.IdReference + "-" + variacoes.IdVariation;
+                                }
+                                else
+                                {
+                                    ReferenciaHide += "," + @Model.IdReference + "-" + variacoes.IdVariation;
+                                }
+                            }
+                        }
+
+
+                        <option class="variacao-drop" @(Model.IdReference+"-"+variacoes.IdVariation == ReferenciaPadrao ? "selected" : "") value="@Model.IdReference-@variacoes.IdVariation" data-variation-id="@variacoes.IdVariation" data-tipo="drop" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
                     }
                 }
-            </select>
-       
+            }
+        </select>
     </div>
 </div>
 
@@ -161,14 +159,14 @@
 {
     <script>
         $(document).ready(function () {
-            $('.product-grid .dropdown').dropdown('set selected', "@ReferenciaPadrao");
+            //$('.product-grid .dropdown').dropdown('set value', "@ReferenciaPadrao");
 
             var inputsDisable = "@ReferenciaDisable";
             var inputsD = inputsDisable.split(",");
             for (var i = 0; i < inputsD.length; i++) {
                 if (inputsD[i] != "") {
-                    $(".product-grid .dropdown option[value='" + inputsD[i] + "']").addClass('desabilitado');
-                    $(".product-grid .dropdown div[data-value='" + inputsD[i] + "']").addClass('desabilitado');
+                    $(".product-grid .dropdown option[value='" + inputsD[i] + "'],\n\
+                        .product-grid .dropdown div[data-value='" + inputsD[i] + "']").addClass('desabilitado');
                 }
             }
 
@@ -177,8 +175,8 @@
             var inputs = inputsHide.split(",");
             for (var i = 0; i < inputs.length; i++) {
                 if (inputs[i] != "") {
-                    $(".product-grid .dropdown option[value='" + inputs[i] + "']").addClass('hideme');
-                    $(".product-grid .dropdown div[data-value='" + inputs[i] + "']").addClass('hideme');
+                    $(".product-grid .dropdown option[value='" + inputs[i] + "'],\n\
+                    .product-grid .dropdown div[data-value='" + inputs[i] + "']").addClass('hideme');
                 }
             }
         });

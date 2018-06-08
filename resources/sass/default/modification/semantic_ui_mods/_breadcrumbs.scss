@@ -1,6 +1,22 @@
 /* Breadbrumbs */
 .breadcrumbs {
-	@media only screen and(max-width: $mobile-bp) {
-		display: none !important;
+	h1 {
+		margin: 0;
+		font-size: 1.5em;
+	}
+}
+
+.ui.breadcrumb {
+	text-transform: uppercase;
+	color:$black;
+	font-size:12px;
+	a {
+		color:#666666;
+	}
+	margin: 10px !important;
+	padding: 0;
+	
+	li {
+		display: inline-block;
 	}
 }

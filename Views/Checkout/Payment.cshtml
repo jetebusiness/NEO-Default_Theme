@@ -5,7 +5,6 @@
     ViewBag.Title = "Pagamento";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
 }
-
 @section steps{
     <div class="jet checkout jBreadCrumb">
         <div class="jCrumb completed">
@@ -42,6 +41,7 @@
     <div class="ui grid">
         <div class="row">
             <div class="sixteen wide mobile sixteen wide tablet five wide computer column">
+
                 <!-- Dados do Cliente -->
                 <div class="ui segment blue" id="dadosClienteUpdate">
                     @Html.Action("ListaDadosCliente", "Checkout", new { zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode })
@@ -53,7 +53,7 @@
                         <div class="ui compra">
                             <div class="content ui form">
                                 <div class="field">
-                                    <div class="ui floated left">
+                                    <div class="ui floated">
                                         <i class="ui icon gift"></i>
                                         <strong>Embrulhar para presente?</strong>
                                     </div>
@@ -69,6 +69,7 @@
                         </div>
                     </div>
                 }
+
                 <!-- Dados de Frete -->
                 <div class="ui segment yellow">
                     <div class="ui accordion frete">
@@ -82,30 +83,28 @@
                         </div>
                     </div>
                 </div>
-                <!-- Botao Ir para pagamento -->
-                <div class="row">
-                    <div class="column">
-                        <button type="submit" class="ui animated button large submit green right floated" id="goToPayment" disabled>
-                            <div class="visible content">Ir para Pagamento</div>
-                            <div class="hidden content">
-                                <i class="arrow right icon"></i>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="ui divider hidden medium both"></div>
+
+                
+
             </div>
+
             <div class="sixteen wide mobile sixteen wide tablet six wide computer column jetCheckout margin top disable_column" id="checkoutColumn2">
+
                 <!-- Cupom Desconto -->
                 @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
+
                 <!-- Formas de Pagamento -->
                 @Html.Action("ListaFormasPagamento", "Checkout")
+
                 <div class="ui divider hidden medium"></div>
+
             </div>
             <div class="sixteen wide mobile sixteen wide tablet five wide computer column">
+
                 <!-- Produtos do Carrinho -->
                 @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Carrinho.cshtml", Model)
             </div>
+
         </div>
     </div>
 </div>

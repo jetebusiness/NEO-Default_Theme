@@ -6,11 +6,19 @@
     flex-wrap: wrap;
     justify-content: space-between;
     z-index: auto;
+    @media screen and (max-width: $mobile-bp){
+      text-align: center;
+    }
     .info {
       z-index: auto;
+
+      .dados {
+        @media screen and (max-width: $mobile-bp){
+          text-align: center !important;
+        }
+      }
     }
     .top-info {
-      max-width: 25%;
       .top-info {
         max-width: 120px;
         .ui.imagetag {
@@ -21,13 +29,13 @@
           }
         }
       }
+
     }
 
     .middle-info {
       align-self: center;
     }
     .bottom-info {
-      max-width: 74%;
       text-align: right;
       align-self: flex-start;
       width: auto;
@@ -36,6 +44,14 @@
       min-width: 200px;
       max-height: 230px;
       padding: 0px .125em;
+
+
+      .dropdown {
+        @media screen and (max-width: $mobile-bp){
+          width: 100%;
+        }
+      }
+
 
     }
   }

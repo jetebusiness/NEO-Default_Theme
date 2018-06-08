@@ -13,7 +13,7 @@
                         <a class="ui button icon fecharCarrinho"><i class="remove icon"></i></a>
                     </div>
                 </div>
-                <div class="row green info">
+                <div class="row black info">
                     <div class="column">
                         <i class="lock icon"></i>Compra 100% Segura
                     </div>
@@ -97,7 +97,7 @@
                         </a>
                     </div>
                     <div class="column">
-                        <a type="submit" class="ui animated button fluid large submit green" tabindex="0" href="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")" >
+                        <a type="submit" class="ui animated button fluid large submit action" tabindex="0" href="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")" >
                             <div class="visible content">Finalizar Compra</div>
                             <div class="hidden content">
                                 <i class="right arrow icon"></i>

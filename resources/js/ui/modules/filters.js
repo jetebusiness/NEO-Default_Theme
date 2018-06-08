@@ -11,7 +11,7 @@ $(document).ready(function () {
         "exclusive": false,
     });
 
-    $(".filterbutton, .closeFiltros").click(function () {
+    $("body").delegate(".filterbutton, .closeFiltros", "click", function () {
         if (!$(".filterColumn").hasClass("ativo")) {
             $(".filterColumn").toggleClass("ativo");
         }

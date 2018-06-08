@@ -1,18 +1,24 @@
 @media screen and (max-width: $mobile-bp) {
-      .input-datepicker .agendar{
-            width:12.5em!important;
-        }
+      .logo {
+        display: block !important;
+        margin: 0 auto;
+      }
     }
 .input-datepicker .agendar{
-    width:10.3em;
+    width:120px;
 }
 .jetBg {
   background: rgb(248, 248, 248) !important;
+  
+  .ui.segment {
+    box-shadow: none;
+  }
 }
 
 .whiteBg {
   background: white;
 }
+
 
 .jet.checkout {
   .success {
@@ -45,7 +51,7 @@
 
       }
       .jButton {
-        background: #646461;
+        background: #ddd;
         border: 2px solid #ffffff;
         border-radius: 50%;
         height: 40px;
@@ -77,25 +83,25 @@
 
       &.active {
         .jButton {
-          background: $green;
+          background: $primary-color;
         }
         h4 {
-          color: $green;
+          color: $primary-color;
         }
       }
 
       &.completed {
         .jButton {
-          background: $grey;
+          background: $primary-color;
           span {
-            color: $inverted-green;
+            color: white;
             i {
               margin-left: 4px;
             }
           }
         }
         h4 {
-          color: $grey;
+          color: $primary-color;
         }
       }
 
@@ -138,6 +144,12 @@
       min-width: 60%;
       width: 100%;
     }
+  }
+}
+
+.presente {
+  #checkPresente {
+    margin-top:10px;
   }
 }
 

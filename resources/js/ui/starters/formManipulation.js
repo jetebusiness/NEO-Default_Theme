@@ -289,7 +289,7 @@ $(document).ready(function () {
         },
     });
 
-     /**
+    /**
      * Form Clear
      */
 
@@ -342,8 +342,8 @@ $(document).ready(function () {
 });
 
 $(document).on("click", ".form_refresh", function () {
-        $(".ui.form").form('clear');
-    })
+    $(".ui.form").form('clear');
+})
     .on("click", ".searchcolumn:not(.active)", function () {
         toggleSearch();
     })
@@ -385,9 +385,25 @@ $(document).on("click", ".form_refresh", function () {
             $(this).toggleClass("img-selecionado").children(".ui.checkbox").checkbox("toggle");
         }
 
-    });
+    })
+    .on("click", ".searchMobile>.button", function () {
+        $(".blocoBusca").toggleClass("active");
+    })
+
+
+
 
 function toggleSearch() {
     $(".searchcolumn").toggleClass("active");
     $(".searchcolumn .icon").toggleClass("remove circle");
 }
+
+
+$(function () {
+    if ($(window).innerWidth() < 768) {
+        $(".footer .header").on("click", function () {
+            $("i", this).toggleClass("right").toggleClass("down")
+            $(this).next().slideToggle();
+        })
+    }
+});

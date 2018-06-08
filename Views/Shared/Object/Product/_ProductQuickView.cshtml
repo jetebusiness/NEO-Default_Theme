@@ -90,10 +90,10 @@
                                                 <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
                                             </div>
                                             <div class="column">
-                                                <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
-                                                <a href="#avaliacoes" onclick="calltab('avaliacoes')">
+                                                <div class="avaliacoes">
+                                                    <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
                                                     @Model.Rate.Value avaliações
-                                                </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@
                                                     {
                                                         <h5 class="text grey regular right"></h5>
                                                     }
-                                                    <a class="ui animated big green button fluid btn-comprar">
+                                                    <a class="ui animated big action button fluid btn-comprar">
                                                         <div class="visible content">Adicionar ao Carrinho</div>
                                                         <div class="hidden content">
                                                             <i class="add to cart icon"></i>
@@ -298,5 +298,4 @@
             </div>
         </div>
     </div>
-
 </div>

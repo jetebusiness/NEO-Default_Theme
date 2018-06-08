@@ -2,7 +2,7 @@
 
 @{ 
     string classe_qtd = "ui icon button ";
-    string classe_remove = "mini ui icon red button produto ";
+    string classe_remove = "ui icon produto right floated ";
     string id_ipt_qtd = "qtd_";
     string classe_stock = "stock_";
     string classe_ipt_qtd = "";
@@ -29,52 +29,32 @@
         <img src="@Model.ProductImage.ImageDefault"  onerror="imgError(this)">
     </div>
     <div class="content">
-        <a href="/Product/Details/@Model.IdProduct" class="product title" id="name_@Model.IdCartItem">@Html.Raw(Model.NameProduct)</a>
+        <div class="header">
+            <a href="/Product/Details/@Model.IdProduct" class="product title" id="name_@Model.IdCartItem">
+                @Html.Raw(Model.NameProduct)
+                @if(Model.Quantity > 1) {
+                    <div>Qtd: @Model.Quantity</div>
+                }
+            </a>
+        </div>
         <div class="meta product avaibility" id="availability_@Model.IdCartItem">
-            @if (Model.Stock == 0)
-            {
-                @Html.Raw("Produto Esgotado")
-            }
-            else if (Model.AvailabilityStatus != null)
-            {
-                @Model.AvailabilityStatus.DescriptionCart
-            }
+            <span class="price" id="preco_total_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceTotalProduct)</span>
+            <div class="@classe_remove " data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                <i class="remove icon"></i>
+            </div>
         </div>
-        <div class="description">
-            <table class="ui very basic unstackable table ">
-                <thead>
-                    <tr>
-                        <th>Qtd</th>
-                        <th>Valor Un.</th>
-                        <th>Valor Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td data-idCartItem="@Model.IdCartItem">
-                            <div class="ui qtd action mini input">
-                                <button class="@classe_qtd" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
-                                    <i class="minus icon"></i>
-                                </button>
-                                <input type="hidden"  id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
-                                <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
-                                <input type="number" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" />
-                                <button class="@classe_qtd" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
-                                    <i class="add icon"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <td id="preco_unitario_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceProduct)</td>
-                        <td><strong id="preco_total_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceTotalProduct)</strong></td>
-                        <td>
-                            <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
-                                <i class="remove icon"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        @*<div class="description">
+            <div class="ui qtd action mini input">
+                <button class="@classe_qtd" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                    <i class="minus icon"></i>
+                </button>
+                <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity"/>
+                <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem"/>
+                <input type="number" class="text center" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt"/>
+                <button class="@classe_qtd grey" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                    <i class="add icon"></i>
+                </button>
+            </div>
+        </div>*@
     </div>
 </div>

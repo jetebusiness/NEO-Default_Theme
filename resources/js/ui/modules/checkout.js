@@ -124,6 +124,9 @@ $(document).ready(function () {
          * Semantic-UI Sticky
          * Box Detalhes da Compra
          */
+
+        $('.dadosUsuario').addClass('active');
+        
         $(".box.detalhes").sticky({
             offset:  20,
             debug:   false,
@@ -137,7 +140,7 @@ $(document).ready(function () {
     }
     if (isMobile()) {
         $(".box.detalhes, .box.success").sticky("destroy");
-        $(".ui.accordion.compra, .ui.accordion.resumo, .ui.accordion.usuario").accordion('close', 0);
+        $(".ui.accordion.compra div, .ui.accordion.resumo div, .ui.accordion.usuario div").removeClass("active");
     }
 });
 

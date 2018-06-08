@@ -3,15 +3,15 @@
 @foreach (var itemTitle in Model)
 {
     <div class="column">
-        <h4 class="ui inverted header">@itemTitle.Name</h4>
+        <h4 class="ui inverted header">@itemTitle.Name <i class="ui icon chevron right mobile only"></i></h4>
         <div class="ui inverted link list">
             @foreach (var itemPage in itemTitle.CustomPagesContent)
             {
-                <a href="/institucional/@itemTitle.IdCustomPage/@itemPage.IdCustomPageContent" class="item">@itemPage.Name</a>
+                <a href="/institucional/@itemTitle.IdCustomPage/@itemPage.IdCustomPageContent" class="item" title="@itemPage.Name"><h5>@itemPage.Name</h5></a>
             }
-            @if (@itemTitle.Name == "DÚVIDAS")
+            @if (@itemTitle.Name.ToUpper() == "DÚVIDAS")
             {
-                <a href="@Url.Action("CommonQuestions", "Company")" class="item">Dúvidas Frequentes</a>
+                <a href="@Url.Action("CommonQuestions", "Company")" class="item" title="Dúvidas Frequentes"><h5>Dúvidas Frequentes</h5></a>
             }
         </div>
     </div>

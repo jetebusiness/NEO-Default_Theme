@@ -1,7 +1,8 @@
 $menuBG: $primary-color;
 $menuTextColor: $white;
-$menuHeight: 60px;
-$menuHoverBorderColor: $ascent-1-color;
+$menuHeight: 50px;
+$menuHoverBorderColor: $secondary-color;
+$colorLinkSubMenu: "#666";
 
 .menuheader {
   background-color: $menuBG;
@@ -17,6 +18,7 @@ $menuHoverBorderColor: $ascent-1-color;
     font-weight: 400;
     min-height: 2.85714286em;
     flex-wrap: wrap;
+    margin:0;
     li {
       &:hover,
       &.active,
@@ -25,12 +27,14 @@ $menuHoverBorderColor: $ascent-1-color;
         }
       > .item {
         word-wrap: normal;
-        span {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          text-transform: uppercase;
+          margin:0;
+          font-size: 14px;
+          line-height: $menuHeight; 
             
-          }
         
         > .icon.dropdown {
           line-height: 18px;
@@ -59,6 +63,13 @@ $menuHoverBorderColor: $ascent-1-color;
           }
         }
       }
+      .header {
+        a {
+          color:$colorLinkSubMenu;
+          font-size:14px;
+          font-weight: 300;
+        }
+      }
     }
   .ui.menu .item {
     color: $menuTextColor;
@@ -85,6 +96,10 @@ $menuHoverBorderColor: $ascent-1-color;
     border-radius: 0px;
     }
   .ui.list {
+    
+    h4 {
+      font-weight: normal;
+    }
     .item {
       color: rgba(0, 0, 0, .7);
       padding-left: 10px !important;

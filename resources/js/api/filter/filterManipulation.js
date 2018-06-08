@@ -1,5 +1,6 @@
 ﻿import {isLoading} from "../api_config";
 import {_alert, _confirm} from "../../functions/message";
+import {lazyLoad} from "../../functions/lazy_load";
 
 var genericoPageFilter = "";
 var idEventListFilter = "";
@@ -54,7 +55,7 @@ $(document).ready(function () {
             let data = {
                 viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
                 pageNumber: filters.pageNumber === undefined ? "1" : filters.pageNumber,
-                pageSize: "",
+                pageSize: "12",
                 order: filters.order === undefined ? "" : filters.order,
                 brand: filters.idBrand === undefined ? "" : filters.idBrand,
                 category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
@@ -99,6 +100,12 @@ function makeLabel() {
         }
     }
     $("#filter>div.ui.labels:first-child").html(htmlTag);
+
+
+    if(htmlTag.trim() == "") {
+        $(".filterColumn").removeClass("ativo")
+    }
+
 }
 
 function ValidateLabel(type, id){
@@ -130,7 +137,7 @@ function callAjaxFunction(filterType)
     let data = {
         viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
-        pageSize: "",
+        pageSize: "12",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
         category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
@@ -156,6 +163,7 @@ function updateAjax(data){
         data: data,
         success: function (response) {
             $("#list").html(response);
+            lazyLoad();
 
             $.ajax({
                 url: "/product/filtermenu/",
@@ -165,7 +173,8 @@ function updateAjax(data){
                 },
                 dataType: "html",
                 success: function (response) {
-                    $("#filter").html(response);
+                    $("#filter").remove();
+                    $(".filterColumn>.filterBlock").html(response)
                     if(window.filterManipulation.labelFilter.length === 0){
                         window.filterManipulation.labelFilter = JSON.parse(data_temp);
                     }
@@ -208,7 +217,7 @@ $(document).on("click", "#viewgrid", function () {
     let data = {
         viewList: "g",
         pageNumber: filters.pageNumber === undefined ? "1" : filters.pageNumber,
-        pageSize: "",
+        pageSize: "12",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
         category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
@@ -233,7 +242,7 @@ $(document).on("click", "#viewlist", function () {
     let data = {
         viewList: "l",
         pageNumber: filters.pageNumber === undefined ? "1" : filters.pageNumber,
-        pageSize: "",
+        pageSize: "12",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
         category: filters.idCategory === undefined ? genericoPageFilter : filters.idCategory,
@@ -408,7 +417,7 @@ $(document).on("keyup", ".filterListEventsProducts", function(event){
     let data = {
         viewList: viewListGlobal,
         pageNumber: "1",
-        pageSize: "",
+        pageSize: "12",
         order: "",
         brand: "",
         category: "",

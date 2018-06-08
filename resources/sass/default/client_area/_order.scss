@@ -1,0 +1,39 @@
+.searchOrder {
+  @media only screen and(max-width: $mobile-bp) {
+    float:left
+  }
+}
+
+.dadosPedido {
+  .ui.steps {
+    .step {
+      @media only screen and(max-width: $tablet-bp-max) {
+        font-size: 0.78571429rem;
+        
+      }
+    
+      .description {
+        max-width: 230px;
+        @media only screen and(max-width: $tablet-bp-max) {
+          max-width: 150px;
+        }
+      }
+    }
+  } 
+  
+  .nomeProduto {
+    color:$black;
+    h1 {
+      font-size: 20px; 
+    }    
+  }
+}
+
+
+.ui.steps {
+  .step.active {
+    .title {
+      color: $black;
+    }
+  }
+}

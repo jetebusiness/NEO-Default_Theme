@@ -27,8 +27,8 @@
                                     <i class="minus icon"></i>
                                 </button>
                                 <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
-                                <input type="number" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" />
-                                <button class="ui green icon button qtdActionDetalhes" data-id="@Model.IdCartItem" data-action="plus">
+                                <input type="number" class="text center" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" />
+                                <button class="ui gray icon button qtdActionDetalhes" data-id="@Model.IdCartItem" data-action="plus">
                                     <i class="add icon"></i>
                                 </button>
                             </div>

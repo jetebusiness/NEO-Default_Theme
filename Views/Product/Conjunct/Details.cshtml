@@ -175,8 +175,8 @@
                         <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
                     </div>
                     <div class="column">
-                        <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
-                        <a href="#avaliacoes" onclick="calltab('avaliacoes')">
+                        <div class="avaliacoes">
+                            <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
                             @if (Model.ProductRatings != null)
                             {
                                 <span>0 avaliações</span>
@@ -189,11 +189,11 @@
                             {
                                 <span>@Model.ProductRatings.Count() avaliações</span>
                             }
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+         </div>
         <div class="row detalhes produto">
             <!-- FIM IMAGENS DO PRODUTO PRINCIPAL-->
             <div class="sixteen wide mobile seven wide computer column" id="exibePartial">
@@ -270,10 +270,10 @@
                                     <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
                                 </div>
                                 <div class="column">
+                                    <div class="avaliacoes">
                                     <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
-                                    <a href="#avaliacoes" onclick="calltab('avaliacoes')">
                                         @(Model.ProductRatings != null ? Model.ProductRatings.Count() : 0) avaliações
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -285,10 +285,10 @@
                     <!--FIM DICA DE COMPRA-->
                     <div class="row">
                         <div class="column">
-                            <div class="ui middle aligned grid blue segment">
+                            <div class="ui middle aligned grid border bottom grey attached segment">
                                 <h4>Produtos no Conjunto</h4>
                                 <div class="row one colum">
-                                    <div class="column">
+                                    <div class="ui container fluid">
                                         @Html.Partial("Conjunct/_ProductConjunctList")
                                     </div>
                                 </div>
@@ -300,7 +300,7 @@
                                             Sub-Total: <span id="conjunto-total"></span>
                                             <br />
                                             <span>Desconto: <span id="conjunto-desconto">R$ 0,00</span></span>
-                                        </span>
+                                        </span><br />
                                         <span itemprop="price" class="preco">
                                             <span id="conjunto-total-final"></span>
                                         </span>
@@ -309,7 +309,20 @@
                                     <div class="ui divider hidden"></div>
                                 </div>
                                 <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
-                                <div class="row">
+                                <div class="row @(ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago ? "two column stackable" : "")">
+                                    
+                                    @if (ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago)
+                                    {
+                                        <div class="column" id="btn_compre_oneclick_conjunto_selecionado text uppercase">
+                                            <a href="" class="ui animated large basic button fluid buy-conjunct" onclick="return false">
+                                                <div class="visible content">Comprar com 1-Click</div>
+                                                <div id="iconCart" class="hidden content">
+                                                    <i class="add to cart icon"></i>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                    
                                     <div class="column" id="btn_compre_conjunto_selecionado">
                                         @if (Model.Stock == 0 || Model.FlagExhausted)
                                         {
@@ -319,33 +332,19 @@
                                         {
                                             <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                                         }
-                                        <a href="" class="ui animated big green button fluid buy-conjunct" onclick="return false">
-                                            <div id="buttonText" class="visible content">Comprar Produtos Selecionados</div>
+                                        <a href="" class="ui animated large action button fluid buy-conjunct text uppercase" onclick="return false">
+                                            <div id="buttonText" class="visible content">Comprar Selecionados</div>
                                             <div id="iconCart" class="hidden content">
                                                 <i class="add to cart icon"></i>
                                             </div>
                                         </a>
                                     </div>
                                 </div>
-                                @if (ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago)
-                                {
-                                <br />
-                                <div class="row">
-                                    <div class="column" id="btn_compre_oneclick_conjunto_selecionado">
-                                        <a href="" class="ui animated big green button fluid buy-conjunct" onclick="return false">
-                                            <div class="visible content">Comprar com 1-Click</div>
-                                            <div id="iconCart" class="hidden content">
-                                                <i class="add to cart icon"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                }
                             </div>
                             <!--FIM DISPONIBILIDADE / CARRINHO-->
                             @if (!Model.FlagExhausted)
                             {
-
+                
                                 <div id="pagamento-calculado">
                                     @{
                                         decimal price = 0;

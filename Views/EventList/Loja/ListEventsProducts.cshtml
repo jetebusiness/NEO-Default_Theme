@@ -7,8 +7,9 @@
 }
 
 @section breadcrumbs {
-    <div class="ui container">
-        <div class="ui one column grid stackable middle aligned">
+    
+    <div class="ui two column centered grid stackable middle aligned breadcrumbs">
+        <div class="container">
             <div class="row">
                 <div class="column">
                     <h1>@ViewBag.Title</h1>
@@ -92,10 +93,9 @@
 
 @section filters {
     <div class="four wide column filterColumn">
-        <div class="row one column">
+        <div class="row one column filterBlock">
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @Html.Action("FilterMenu", "Product")
-            <div class="ui divider hidden"></div>
         </div>
     </div>
 }
@@ -104,11 +104,11 @@
     <div class="ui grid">
         <div class="row one column">
             <div class="column right aligned right floated">
-                <button class="ui mobile only left floated icon blue button filterbutton right labeled" data-tooltip="Filtros" data-inverted="">
+                <button class="ui mobile only left floated icon button basic filterbutton right labeled small" data-tooltip="Filtros" data-inverted="">
                     <i class="filter icon"></i>
                     Filtros
                 </button>
-                <div class="ui dropdown button dropdownorder">
+                <div class="ui dropdown button basic dropdownorder small">
                     <span class="text">Ordenar por</span>
                     <i class="dropdown icon"></i>
                     <div class="menu">
@@ -116,9 +116,17 @@
                             <i class="asterisk icon"></i>
                             Lançamentos
                         </div>
+                        <div class="item" data-value="maior_preco">
+                            <i class="sort numeric descending icon"></i>
+                            Maior Preço
+                        </div>
                         <div class="item" data-value="mais_vendidos">
                             <i class="diamond icon"></i>
                             Mais Vendidos
+                        </div>
+                        <div class="item" data-value="menor_preco">
+                            <i class="sort numeric ascending icon"></i>
+                            Menor Preço
                         </div>
                         <div class="item" data-value="nome_a_z">
                             <i class="sort alphabet ascending icon"></i>
@@ -128,14 +136,8 @@
                             <i class="sort alphabet descending icon"></i>
                             Nome [Z-A]
                         </div>
-                        <div class="item" data-value="menor_preco">
-                            <i class="sort numeric ascending icon"></i>
-                            Preço [Menor-Maior]
-                        </div>
-                        <div class="item" data-value="maior_preco">
-                            <i class="sort numeric descending icon"></i>
-                            Preço [Maior-Menor]
-                        </div>
+                        
+                        
                     </div>
                 </div>
             </div>

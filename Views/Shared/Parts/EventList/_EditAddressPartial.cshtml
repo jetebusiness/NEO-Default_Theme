@@ -20,7 +20,7 @@
                                     @if (Session["EventListState"] != null && Session["EventListState"].ToString() == "E")
                                     {
                                         <div id="divDeliveryMyAddress" class="ui small right aligned @(Session["EventListCurrent"] != null && ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).DeliveryAddressGuest == false ? "" : "hideme")">
-                                            <i class="ui icon big check circle green"></i>
+                                            <i class="ui icon big check circle black"></i>
                                         </div>
                                     }
 
@@ -35,21 +35,18 @@
                                         <p>CEP: @Model.ZipCode</p>
                                     </div>
                                     <div class="field">
-                                        <a href="@Url.Action("ChangeAddress", "EventList")" class="ui tiny compact icon teal button">
+                                        <a href="@Url.Action("ChangeAddress", "EventList")" class="ui small compact icon basic button">
                                             <i class="check icon"></i>
                                             Alterar Endereço
                                         </a>
-                                        <a href="@Url.Action("CreateAddress", "Customer")" class="ui tiny compact icon teal button">
+                                        <a href="@Url.Action("CreateAddress", "Customer")" class="ui small compact icon basic button">
                                             <i class="check icon"></i>
                                             Adicionar Endereço
                                         </a>
                                     </div>
                                     <div class="field">
-                                        <button type="submit" id="btnSendToMyAddress" class="ui animated button large submit green floated right" data-id="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")">
-                                            <div class="visible content">Entrega no meu endereço</div>
-                                            <div class="hidden content">
-                                                <i class="checkmark icon"></i>
-                                            </div>
+                                        <button type="submit" id="btnSendToMyAddress" class="ui button small submit primary floated right text uppercase" data-id="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")">
+                                            <i class="check icon"></i> Entrega no meu endereço
                                         </button>
                                     </div>
                                 </div>
@@ -64,7 +61,7 @@
                                 {
                                     <div id="divDeliveryAddressGuest" class="ui small right aligned @(Session["EventListCurrent"] != null && ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).DeliveryAddressGuest == true ? "" : "hideme")">
                                         <img src="" class="ui fluid image">
-                                        <i class="ui icon big check circle green"></i>
+                                        <i class="ui icon big check circle black"></i>
                                     </div>
                                 }
 
@@ -73,11 +70,8 @@
                                     <p>Ao selecionar esta opção, os produtos serão enviados ao endereço identificado pelo convidado no momento de sua compra.</p>
                                 </div>
                                 <div class="field">
-                                    <button type="submit" id="btnSendToGuestAddress" class="ui animated button large submit green floated right" data-id="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")">
-                                        <div class="visible content">Entrega no endereço do convidado</div>
-                                        <div class="hidden content">
-                                            <i class="checkmark icon"></i>
-                                        </div>
+                                    <button type="submit" id="btnSendToGuestAddress" class="ui button small submit primary floated right  text uppercase" data-id="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")">
+                                        <i class="check icon"></i> Entrega no endereço do convidado
                                     </button>
                                 </div>
                             </div>

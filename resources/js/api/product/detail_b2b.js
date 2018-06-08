@@ -93,51 +93,51 @@ export function CarregarParcelamento(isB2b){
         var total_parcelas_exibidas = 0;
         //GATEWAY
         for (var i = 0; i < json_content.length; i++) {
-          //METHODS
-          for (var j = 0; j < json_content[i].paymentMethods.length; j++) {
-            //BRANDS
-            if(json_content[i].paymentMethods[j].status === true){
-              for (var k = 0; k < json_content[i].paymentMethods[j].paymentBrands.length; k++) {
-                  var total_parcelas = json_content[i].paymentMethods[j].paymentBrands[k].installments.length;
+            //METHODS
+            for (var j = 0; j < json_content[i].paymentMethods.length; j++) {
+                //BRANDS
+                if(json_content[i].paymentMethods[j].status === true){
+                    for (var k = 0; k < json_content[i].paymentMethods[j].paymentBrands.length; k++) {
+                        var total_parcelas = json_content[i].paymentMethods[j].paymentBrands[k].installments.length;
 
-                  if(total_parcelas > 0){
-                      total_parcelas_exibidas++;
+                        if(total_parcelas > 0){
+                            total_parcelas_exibidas++;
 
-                      if(json_content[i].idPaymentGateway == 6)
-                      {
-                          html += `<div class="title">
+                            if(json_content[i].idPaymentGateway == 6)
+                            {
+                                html += `<div class="title">
                                       <i class="dropdown icon"></i>
                                       ${json_content[i].paymentMethods[j].paymentBrands[k].name}
                                   </div>
                                   <div class="content">
                                       <div class="ui list">`
-                          html += `<div class="pagSeguroParcelamento" id="pagSeguroParcelamento" data-paymentbrand="${json_content[i].paymentMethods[j].paymentBrands[k].idPaymentBrand}" data-brand="${json_content[i].paymentMethods[j].paymentBrands[k].name.toLowerCase()}"> </div>`
-                          html += `</div>
+                                html += `<div class="pagSeguroParcelamento" id="pagSeguroParcelamento" data-paymentbrand="${json_content[i].paymentMethods[j].paymentBrands[k].idPaymentBrand}" data-brand="${json_content[i].paymentMethods[j].paymentBrands[k].name.toLowerCase()}"> </div>`
+                                html += `</div>
                                   </div>`
-                      }
-                      else
-                      {
-                          html += `         <div class="title">
+                            }
+                            else
+                            {
+                                html += `         <div class="title">
                                       <i class="dropdown icon"></i>
                                       ${json_content[i].paymentMethods[j].paymentBrands[k].name}
                                   </div>
                                   <div class="content">
                                       <div class="ui list">`
-                          for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
-                              html += `<span class="item parcelamentos">
+                                for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+                                    html += `<span class="item parcelamentos">
                                                   <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
                                                   <span class="valor"> ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
                                                   <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                   <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                               </span>`
-                          }
-                          html += `</div>
+                                }
+                                html += `</div>
                                   </div>`
-                      }
-                  }
-              }
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
 
     }else {
@@ -338,7 +338,7 @@ export function CarregaParcelamentoPagSeguro()
                     PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
 
                     var totalCheckout = 0;
-                    
+
                     if($('#preco').length > 0)
                         totalCheckout = $('#preco').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
                     else
@@ -367,15 +367,15 @@ export function CarregaParcelamentoPagSeguro()
                                     {
                                         //if(item.quantity <= maximumInstallment)
                                         //{
-                                            $("div.pagSeguroParcelamento[data-brand=" + key + "]").append(
-                                                '<span class="item parcelamentos">' +
-                                                    '<span class="parcelas">' + item.quantity + ' x </span>' +
-                                                    '<span class="valor">' + item.installmentAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + ' </span>' +
-                                                    '<span class="modelo">(' + ((item.interestFree)? 'Sem juros' : 'Com juros') + ')</span>' +
-                                                    //'<span class="modelo">(' + ((item.interestFree)? 'Sem Juros' : 'juros de ' + taxaMensal.toFixed(4) + '% ao mês') + ')</span>' +
-                                                    '<span class="total">Total Parcelado: ' + item.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + '</span>' +
-                                                '</span>'
-                                            );
+                                        $("div.pagSeguroParcelamento[data-brand=" + key + "]").append(
+                                            '<span class="item parcelamentos">' +
+                                            '<span class="parcelas">' + item.quantity + ' x </span>' +
+                                            '<span class="valor">' + item.installmentAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + ' </span>' +
+                                            '<span class="modelo">(' + ((item.interestFree)? 'Sem juros' : 'Com juros') + ')</span>' +
+                                            //'<span class="modelo">(' + ((item.interestFree)? 'Sem Juros' : 'juros de ' + taxaMensal.toFixed(4) + '% ao mês') + ')</span>' +
+                                            '<span class="total">Total Parcelado: ' + item.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + '</span>' +
+                                            '</span>'
+                                        );
                                         //}
                                     });
                                 });

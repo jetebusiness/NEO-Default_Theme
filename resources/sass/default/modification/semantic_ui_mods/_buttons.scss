@@ -1,36 +1,33 @@
 .ui.button.basic {
 
   &.primary {
-
+    background-color: transparent !important;
     box-shadow: 0 0 0 1px $primary-color inset !important;
     color: $primary-color !important;
 
-    &:hover {
+    &:hover,
+    &:focus,
+    &:checked,
+    &:active{
       background-color: $primary-color !important;
       box-shadow: 0 0 0 1px $primary-color inset !important;
       box-shadow: none !important;
       color: white !important;
     }
-
-    &:focus {
-      box-shadow: 0 0 0 1px $active-color inset !important;
-      color: $active-color !important;
-    }
   }
 
   &.secondary {
+    background-color: transparent !important;
     box-shadow: 0 0 0 1px $secondary-color inset !important;
     color: $secondary-color !important;
 
-    &:hover {
+    &:hover,
+    &:focus,
+    &:checked,
+    &:active{
       background-color: $secondary-color !important;
       box-shadow: none !important;
       color: white !important;
-    }
-
-    &:focus {
-      box-shadow: 0 0 0 1px $active-color inset !important;
-      color: $active-color !important;
     }
   }
   &.ascent-1 {
@@ -116,8 +113,120 @@
     cursor: pointer;
     color: rgba(0,0,0,0.4);
     }
+
+  &.primary {
+
+     background-color: $primary-color !important;
+     box-shadow: 0 0 0 1px $primary-color inset !important;
+     color: $white !important;
+
+    &.labeled {
+      &:not(.toggle) {
+        i {
+          background-color: darken($primary-color, 5) !important;
+        }
+      }
+    }
+    
+
+     &:hover,
+     &:focus,
+     &:checked,
+     &:active{
+       background-color: darken($primary-color, 5) !important;
+       box-shadow: 0 0 0 1px darken($primary-color, 5) inset !important;
+       color: white !important;
+     }
+
+   }
+
+  &.secondary {
+
+    background-color: $secondary-color !important;
+    box-shadow: 0 0 0 1px $secondary-color inset !important;
+    color: $white !important;
+
+    &.labeled {
+      &:not(.toggle) {
+        i {
+          background-color: darken($secondary-color, 5) !important;
+        }
+      }
+    }
+
+
+    &:hover,
+    &:focus,
+    &:checked,
+    &:active{
+      background-color: darken($secondary-color, 5) !important;
+      box-shadow: 0 0 0 1px darken($secondary-color, 5) inset !important;
+      color: white !important;
+    }
+
+  }
+
+  &.action {
+
+    background-color: $action !important;
+    box-shadow: 0 0 0 1px $action inset !important;
+    color: $white !important;
+
+    &.labeled {
+      &:not(.toggle) {
+        i {
+          background-color: darken($action, 5) !important;
+        }
+      }
+    }
+
+    &:hover,
+    &:focus,
+    &:checked,
+    &:active{
+      opacity: .9 !important;
+      background-color: $action !important;
+      box-shadow: 0 0 0 1px $action inset !important;
+      color: white !important;
+    }
+
+  }
+  
+  
+  
   .button {
     margin-bottom: 0 !important;
+  }
+
+  &.toggle {
+
+    background-color: $action !important;
+    box-shadow: none !important;
+    color: white !important;
+    
+    &:hover,
+    &:focus,
+    &:checked,
+    &:active,
+    &.active{
+      background-color: $action !important;
+      opacity: .9 !important;
+      box-shadow: none !important;
+      color: white !important;
+    }   
+    
+    &.active {
+      &:hover,
+      &:focus,
+      &:checked,
+      &:active{
+        background-color: $action !important;
+        opacity: .9 !important;
+        box-shadow: none !important;
+        color: white !important;
+      }
+    }
+    
   }
 
   &.colorcheck {

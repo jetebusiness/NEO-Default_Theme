@@ -3,50 +3,9 @@
 {
 <div class="ui container">
     <div class="ui horizontal divider">
-        Quem comprou, comprou também
+        Também Compraram
     </div>
-    <script>
-        jQuery(document).ready(function($) {
-            var settings = {
-                prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
-                nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
-                dots: false,
-                slidesToShow: 4,
-                accessibility: false,
-                responsive: [
-                    {
-                        breakpoint: 933,
-                        settings: {
-                            slidesToShow: 3
-                        }
-                    },
-                    {
-                        breakpoint: 723,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 480,
-                        settings: {
-                            slidesToShow: 1
-                        }
-                    }
-                ]
-            };
-            var $sliderCard = jQuery(".tambem-comprados .card"),
-                $slider = jQuery(".tambem-comprados"),
-                $width = jQuery(".pusher").width();
                 
-            if ($sliderCard.length >= 4 && $width > 934) {
-                $slider.slick(settings);
-            } else if ($sliderCard.length >= 3 && $width < 724) {
-                $slider.slick(settings);
-            } else if ($sliderCard.length >= 2 && $width < 481) {
-                $slider.slick(settings);
-            } 
-        });
-    </script>
         <div class="ui cards centered tambem-comprados slideshow">
             @foreach (var product in Model)
             {

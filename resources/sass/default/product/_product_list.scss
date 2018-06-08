@@ -2,40 +2,62 @@
 /* Lista Produtos */
 .produtoList {
 	.content {
-	  width: 70% !important;
 	  .tags{
 		margin-top:25px;
 	  }
+		a {
+			color: $black;
+
+			@media screen and (max-width: $mobile-bp) {
+				margin-top:10px !important;
 	}
-	.extra {
-	  width: 30% !important;
-	  text-align: right;
+		}
+	}
+
+	.header {
+		h1 {
+			font-weight: normal;
+			color: $black;
+			font-size: 14px;
+	}
+	}
+
+
+	.valores {
 	  color: rgba(0,0,0,.9) !important;
-	  span{
+		/*span{
 		clear: both;
 		display: block;
-		&:last-child {
-		  margin-bottom: 15px;  
-		  display: inline-flex;  
-		}
-	  }
-	  .precobase{
+		}*/
+		.precoBase{
+			color: #666666;
+			font-size: 14px;
 		i{
 		  text-decoration: line-through;
+				font-style: normal;
 		}
 	  }
 	  .preco{
-
-		font-size: 1.2em;
-		line-height: 1.5em;
-		strong{
-		  font-size: 1.3em;
-		  color: $ascent-1-color;
-		}
+			color: $primary-color;
+			font-size: 18px;
+			line-height: 30px;
+			font-weight: 900;
 		&:after{
 		  content: '\A';
 		  white-space: pre;
 		}
 	  }
+
+		.parcelamento {
+			color: #666666;
+			font-size: 14px;
+		}
+
+		.btn-comprar-card {
+			@media screen and (max-width: $mobile-bp) {
+				width:100% !important;
+			}
+
+		}
 	}
   }

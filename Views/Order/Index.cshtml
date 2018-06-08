@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
 }
 
-
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui one column grid stackable middle aligned">
@@ -14,7 +13,7 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Central do Cliente</a>
+                        <a class="section" href="/Customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
                         <a class="section" href="/Order">Histórico de Pedidos</a>
                     </div>
@@ -26,12 +25,12 @@
 }
 
 <div class="ui grid middle aligned left aligned">
-    <div class="row two column">
+    <div class="row two column stackable">
         <div class="column">
             <h4>Histórico de Pedidos</h4>
         </div>
         <div class="column right aligned">
-            <div class="ui category search">
+            <div class="ui category searchOrder">
                 <div class="ui icon input">
                     <input class="prompt_pedidos" type="text" placeholder="Buscar por pedido">
                     <i class="search icon"></i>

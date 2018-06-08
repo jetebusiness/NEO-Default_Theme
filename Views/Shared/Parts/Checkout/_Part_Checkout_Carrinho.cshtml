@@ -19,7 +19,7 @@
                             <div class="content">
                                 <a class="product title description"><strong>@Html.Raw(product.NameProduct)</strong></a>
                                 <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
-                                <div class="extra text color green left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
+                                <div class="extra text color black left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
                             </div>
                         </div>
                     }

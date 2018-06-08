@@ -4,6 +4,13 @@
   }
 }
 
+
+.tablet-hide {
+  @media screen and (max-width: $tablet-bp-max) and (min-width: $table-bp-min) {
+    display: none !important;
+  }
+}
+
 .mobile-fluid {
   @media screen and (max-width: $mobile-bp) {
     width: 100%;
@@ -29,8 +36,10 @@
       }
 
       > .content {
-        @media screen and (max-width: $mobile-bp) {
-          display: none !important;
+        >.description {
+          @media screen and (max-width: $mobile-bp) {
+            display: none !important;
+          }
         }
       }
     }
@@ -40,7 +49,7 @@
 
     &.only {
       @media screen and (max-width: $mobile-bp) {
-        display: block;
+        display: block !important;
       }
     }
 

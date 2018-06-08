@@ -1,6 +1,7 @@
 ﻿import {_alert, _confirm} from '../../functions/message';
 import {buscaCep, atualizaCampos} from '../../api/customer/AddressManager';
 ﻿import {isLoading} from "../../api/api_config";
+﻿import {isMobile} from "../../functions/mobile";
 
 
 function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSomaFrete,  data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub) {
@@ -31,7 +32,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 _alert("", response.msg, "warning");
                 //location.reload(true);
             }
-            
+
         }
     });
 }
@@ -51,7 +52,7 @@ function BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAge
             //$(".agendar").hide("slow");
             $("#json_dataagendada_" + idFrete).val(response.msg);
 
-            if (DataAgendadas[0].listScheduled === null) 
+            if (DataAgendadas[0].listScheduled === null)
             {
                 $(".agendar").hide("slow");
                 _alert("", "Nao existem mais entregas disponíveis para essa data!", "warning");
@@ -61,7 +62,7 @@ function BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAge
                 //$("#dateAgendada_" + idFrete).show("slow");
                 DataPickerEntregaAgendada(response.msg, idFrete);
             }
-            
+
             //console.log("fechando");
             //SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, dataEntregaAgenda, periodoEntregaAgendada, valorEntregaAgendada);
             //SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada);
@@ -141,7 +142,7 @@ function initComponent(availableDates) {
 var useAntiFraudMaxiPago = false
 
 function GerarPedidoCompleto(
-    idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document,idOneClick, 
+    idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document,idOneClick,
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken
 ){
     $.ajax({
@@ -176,7 +177,7 @@ function GerarPedidoCompleto(
             cardToken            : cardToken
         },
         success: function (response) {
-            if (response.success === true) 
+            if (response.success === true)
             {
                 if(response.errorMsg != ""){
                     _alert("", response.errorMsg, "warning");
@@ -185,7 +186,7 @@ function GerarPedidoCompleto(
                 }
                 else
                 {
-                    if (response.urlRedirect != "") 
+                    if (response.urlRedirect != "")
                     {
                         if(response.typeRedirect == "1") {
                             window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
@@ -195,7 +196,7 @@ function GerarPedidoCompleto(
                             window.location.href = response.urlRedirect;
                         }
                     }
-                    else 
+                    else
                     {
                         if(response.urlBoleto != "")
                         {
@@ -214,8 +215,8 @@ function GerarPedidoCompleto(
                         }
                     }
                 }
-            } 
-            else 
+            }
+            else
             {
                 if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
                     swal({
@@ -242,19 +243,19 @@ function GerarPedidoCompleto(
 function GetStatusAntiFraudMaxiPago(){
     $.ajax({
         method: "GET",
-        url: "/Checkout/GetStatusAntiFraudMaxiPago",          
+        url: "/Checkout/GetStatusAntiFraudMaxiPago",
         async: false,
-        success: function (response) {  
-            useAntiFraudMaxiPago = response.active          
+        success: function (response) {
+            useAntiFraudMaxiPago = response.active
         },
         error: function(response){
-            _alert("", response, "warning");        
+            _alert("", response, "warning");
             useAntiFraudMaxiPago = false
         }
     })
 }
 
-function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem){  
+function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem){
     $.ajax({
         method: "POST",
         url: "/Checkout/LoadIframeAntiFraudMaxiPago",
@@ -267,12 +268,12 @@ function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, 
         },
         async: false,
         success: function (response) {
-            $("body").append(response.iframe)                       
+            $("body").append(response.iframe)
         },
         error: function(response){
-            _alert("", response, "warning");                       
+            _alert("", response, "warning");
         }
-    })         
+    })
 }
 
 function clickShipping(){
@@ -287,6 +288,9 @@ function clickShipping(){
     var exclusivaEntregaAgendada = "";
 
     $("#GetShippping .item .checkbox").click(function(){
+        $("#GetShippping .item .checkbox").removeClass("checked")
+        $(this).addClass("checked")
+
         $(".agendar").hide("slow");
         $('.hasDatepicker').datepicker('setDate', null);
         if(cancelarCalculoFrete())
@@ -319,13 +323,13 @@ function clickShipping(){
                     idPeridoescolhido = $("#combo_dataperiodoagendada_"+idFrete).val();
                     dataperiodoentregaescolhida = $("#combo_dataperiodoagendada_"+idFrete).val();
                     dataentregaescolhida = $("#dateAgendada_"+idFrete).val();
-                    $('#goToPayment').attr("disabled", false);
+                    HabilitaBlocoPagamento(true);
                 }
                 else
-                    $('#goToPayment').attr("disabled", true);
+                    HabilitaBlocoPagamento(false);
             }
             else
-                $('#goToPayment').attr("disabled", false)
+                HabilitaBlocoPagamento(true)
 
             disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorFrete,dataperiodoentregaescolhida,dataentregaescolhida,idPeridoescolhido, carrier, mode, hub);
         }
@@ -333,7 +337,7 @@ function clickShipping(){
 }
 
 function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorFrete,dataperiodoentregaescolhida,dataentregaescolhida,idPeridoescolhido, carrier, mode, hub){
-    
+
     $("#resumoCheckout .resumo .title").removeClass("active");
     $("#resumoCheckout .resumo .content").removeClass("active");
     $("#resumoCheckout .resumo .content").stop(false, true).slideUp();
@@ -434,7 +438,7 @@ function OrderCreate() {
         if(tipoVerificacao == "S")
         {
 
-            if($(this).attr("data-gateway") == "pagseguro") 
+            if($(this).attr("data-gateway") == "pagseguro")
             {
                 PaymentHash = PagSeguroDirectPayment.getSenderHash();
                 var statusPagSeguro = false;
@@ -547,7 +551,7 @@ function OrderCreate() {
         if(tipoVerificacao != "S" && $('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != "") {
             PaymentHash = PagSeguroDirectPayment.getSenderHash();
             var statusPagSeguro = false;
-            
+
             $.each(verifyPaymentMethod, function(key, value) {
                 if(value.code == externalCode) {
                     statusPagSeguro = value.status;
@@ -575,15 +579,15 @@ function OrderCreate() {
         }
         else
         {
-            if (validaFrete == "S") 
+            if (validaFrete == "S")
             {
                 //Verifica se o Antifraud do MaxiPago está ativo, se estiver gera o pré-pedido na sessão e carrega o iframe na página.
                 if(useAntiFraudMaxiPago && kind != "oneclick"){
                     LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
                     //Gerar pedido completo com atraso de 5 segundos
                     setTimeout(function(){GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken)}, 5000);
-                } 
-                else if(tipoVerificacao == "S" && $(this).attr("data-gateway") == "pagseguro") 
+                }
+                else if(tipoVerificacao == "S" && $(this).attr("data-gateway") == "pagseguro")
                 {
 
                     PagSeguroDirectPayment.createCardToken({
@@ -617,9 +621,9 @@ function OrderCreate() {
                 {
                     GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken);
                 }
-                    
-            } 
-            else 
+
+            }
+            else
             {
                 _alert("", "Escolha o frete antes de fechar o pedido!", "warning");
                 $(".GerarPedido").removeClass("loading");
@@ -647,12 +651,12 @@ function onChangeCheckBox(){
 function verificaPresente(){
     //$("#embrulhaPresente").click(function(){
     $("#exibeMsg").removeAttr("style");
-    if($('#checkPresente').checkbox('is checked')) 
+    if($('#checkPresente').checkbox('is checked'))
     {
         $("#exibeMsg > label").show();
         $("#exibeMsg > #mensagem").show();
     }
-    else 
+    else
     {
         $("#exibeMsg > label").hide();
         $("#exibeMsg > #mensagem").hide();
@@ -687,10 +691,10 @@ function GetPaymentGateway(nameBrand, typeForm){
     var seletorJson = typeForm == 'D' ? '#validCardDebit' : '#validCardCredit';
 
     var objPaymentMethod = $(seletorJson).data('paymentmethod');
-    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++) 
+    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++)
     {
         var auxNameBrand = objPaymentMethod.PaymentBrands[i].Name.toLowerCase();
-        if(auxNameBrand == nameBrand) 
+        if(auxNameBrand == nameBrand)
         {
             var IdPaymentBrand = Number.parseInt(objPaymentMethod.PaymentBrands[i].IdPaymentBrand, 10);
             return IdPaymentBrand;
@@ -702,10 +706,10 @@ function GetPaymentGateway(nameBrand, typeForm){
 function GetPaymentBrandExternalCode(nameBrand){
     var objPaymentMethod = $('#validCardCredit').data('paymentmethod'); //jQuery.parseJSON($('#validCardCredit').data('paymentgateway'));
     //console.log(objPaymentGateway);
-    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++) 
+    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++)
     {
         var auxNameBrand = objPaymentMethod.PaymentBrands[i].Name.toLowerCase();
-        if(auxNameBrand == nameBrand) 
+        if(auxNameBrand == nameBrand)
         {
             var ExternalCode = objPaymentMethod.PaymentBrands[i].ExternalCode;
             return ExternalCode;
@@ -728,12 +732,14 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
             cartao = $(this).find("option:selected").data("brand").toLowerCase();
             codigoBandeira = GetPaymentGateway(cartao, typeForm);
             externalCode = GetPaymentBrandExternalCode(cartao);
-            $(btnCard).attr("data-idBrand",codigoBandeira);
-            $(btnCard).attr("data-externalcode",externalCode);
+            $(btnCard).attr({
+                "data-idBrand" : codigoBandeira,
+                "data-externalcode" : externalCode
+            });
             $(updateBrand).val(cartao);
             oneclick = true;
-        } 
-        else 
+        }
+        else
         {
             numeroCartao = $(this).val().replace(/\s/g, '' );
 
@@ -759,8 +765,10 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
                 {
                     codigoBandeira = GetPaymentGateway(cartao, typeForm);
                     externalCode = GetPaymentBrandExternalCode(cartao);
-                    $(btnCard).attr("data-idBrand",codigoBandeira);
-                    $(btnCard).attr("data-externalcode",externalCode);
+                    $(btnCard).attr({
+                        "data-idBrand" : codigoBandeira,
+                        "data-externalcode" : externalCode
+                    });
                     $(updateBrand).val(cartao);
                     break;
                 }
@@ -977,7 +985,7 @@ function atualizaParcelamento(codigoBandeira, oneclick){
                         }
                         else
                         {
-                            for (var i = 0; i < objParcelamento.length; i++) 
+                            for (var i = 0; i < objParcelamento.length; i++)
                             {
                                 var IdInstallment = objParcelamento[i].IdInstallment;
                                 var InstallmentNumber = objParcelamento[i].InstallmentNumber;
@@ -994,9 +1002,9 @@ function atualizaParcelamento(codigoBandeira, oneclick){
                     }
                 }
                 else
-                    {
-                        $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
-                        _alert("", objMsgError, "warning");
+                {
+                    $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
+                    _alert("", objMsgError, "warning");
                 }
             }
         });
@@ -1071,7 +1079,7 @@ function listAddressPayment(){
         viewAddressLogged();
         RecoverPasswordByEmail();
         $('.ui.modal').modal('show');
-    }); 
+    });
 }
 
 function showAddressPayment(){
@@ -1117,6 +1125,10 @@ function showAddressPayment(){
 
 function changeAddressPayment(){
     $(".utilAddress").click(function(){
+
+        var _el = $(this);
+        _el.addClass("loading")
+
         var idAddressChange = $(this).attr("data-id");
         $("#registerAddressPayment").hide();
 
@@ -1139,6 +1151,7 @@ function changeAddressPayment(){
                         else
                         {
                             _alert("", responseChange.msg, "warning");
+                            _el.removeClass("loading")
                         }
                     }
                 });
@@ -1168,7 +1181,7 @@ function atualizaResumoCarrinho(oneclick){
             $("#resumoCheckout .resumo .title").addClass("active");
             $("#resumoCheckout .resumo .content").addClass("active");
             $("#resumoCheckout .resumo .content").stop(false, true).slideDown();
-            
+
             var codigoBandeira = $("#btnCardCredit").attr("data-idBrand");
             if($("#btnOneClick").length > 0){
                 codigoBandeira = $("#btnCardCredit").attr("data-idBrand") != "" ? $("#btnCardCredit").attr("data-idBrand") : $("#btnOneClick").attr("data-idBrand");
@@ -1178,7 +1191,7 @@ function atualizaResumoCarrinho(oneclick){
             {
                 atualizaParcelamento(codigoBandeira);
                 var _parcela = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
-                if(oneclick || $("#btnOneClick").attr("data-idBrand") != "") 
+                if(oneclick || $("#btnOneClick").attr("data-idBrand") != "")
                 {
                     _parcela = $("#parcCardOneClick").find(':selected').attr("data-InstallmentNumber");
                 }
@@ -1189,7 +1202,7 @@ function atualizaResumoCarrinho(oneclick){
                 }
             }
 
-            isLoading(".ui.accordion.frete");
+            //isLoading(".ui.accordion.frete");
             $('.ui.accordion.usuario').accordion("refresh");
             $('.ui.accordion.usuario .title').addClass("active");
             $('.ui.accordion.usuario .dadosCliente').addClass("active");
@@ -1197,14 +1210,19 @@ function atualizaResumoCarrinho(oneclick){
 
             var idFrete = $("#GetShippping .item .checkbox.checked input").val();
             var exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
-       
-            if (exclusivaEntregaAgendada == "True")
-                if (($("#dateAgendada_"+idFrete).val() != "") && ($("#combo_dataperiodoagendada_"+idFrete).val() != ""))
-                    $('#goToPayment').attr("disabled", false)
+
+            if (exclusivaEntregaAgendada == "True") {
+                if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != ""))
+                    HabilitaBlocoPagamento(true)
                 else
-                    $('#goToPayment').attr("disabled", true);
-            else
-                $('#goToPayment').attr("disabled", false)
+                    HabilitaBlocoPagamento(false);
+            } else {
+                if (idFrete == undefined || idFrete == "") {
+                    HabilitaBlocoPagamento(false)
+                } else {
+                    HabilitaBlocoPagamento(true)
+                }
+            }
             //isLoading(".ui.segment.teal");
         }
     });
@@ -1232,9 +1250,10 @@ function atualizaEnderecos(responseChange){
             {
                 clickShipping();
             }
-            HabilitarButtonIrParaPagamento();
+            HabilitaBlocoPagamento(false);
+            CampoEntregaAgendada();
             $('.ui.modal').modal('hide');
-            isLoading(".ui.accordion.frete");
+            //isLoading(".ui.accordion.frete");
         }
     });
 }
@@ -1319,7 +1338,7 @@ function calculaFreteUpdate(){
     $("#zipCode").keyup(function (event) {
         var cep = $("#zipCode").val()
         cep = cep.replace("-", "")
-        if (cep.length == 8) 
+        if (cep.length == 8)
         {
             buscaCep(cep)
         }
@@ -1338,6 +1357,8 @@ function updateDadosUsuario(){
         },
         success: function success(response){
             $("#dadosClienteUpdate").html(response);
+            $('.dadosUsuario').addClass('active');
+            $('.ui.accordion').accordion("refresh");
             updateAddress();
             listAddressPayment();
         }
@@ -1478,13 +1499,19 @@ function RecoverPasswordByEmail(){
     });
 }
 
-function HabilitarButtonIrParaPagamento(){
-    $('#goToPayment').attr("disabled", true);
-    $("#checkoutColumn2").addClass("disable_column");
+function HabilitaBlocoPagamento(habilita){
 
-    $("#goToPayment").click(function(){
-        $("#checkoutColumn2").removeClass("disable_column");
-    });
+    if($("#checkoutColumn2").length > 0) {
+        if(habilita == true) {
+            $("#checkoutColumn2").removeClass("disable_column");            
+            if (isMobile())
+                $('html, body').animate({scrollTop: $("#checkoutColumn2 .jetCheckout").offset().top - 30}, 1000);
+        } else {
+            $("#checkoutColumn2").addClass("disable_column");
+            if (isMobile())
+                $('html, body').animate({scrollTop: $(".accordion.frete").offset().top - 30}, 1000);
+        }
+    }
 }
 
 function TestaCPF(strCPF) {
@@ -1492,17 +1519,17 @@ function TestaCPF(strCPF) {
     var Resto;
     Soma = 0;
     if (strCPF == "00000000000") return false;
-    
+
     for (var i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
     Resto = (Soma * 10) % 11;
- 
+
     if ((Resto == 10) || (Resto == 11))  Resto = 0;
     if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
- 
+
     Soma = 0;
     for (var i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
- 
+
     if ((Resto == 10) || (Resto == 11))  Resto = 0;
     if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
     return true;
@@ -1516,6 +1543,98 @@ function onlyNumbers(evt) {
     if (filtered !== val) {
         event.target.value = filtered;
     }
+}
+
+
+function CampoEntregaAgendada() {
+    $('[id*="combo_dataperiodoagendada_"]').change(function(){
+        isLoading(".ui.accordion.frete");
+
+        HabilitaBlocoPagamento(false)
+        var data_periodo_selecionada = $("option:selected", this).val()
+        var idFrete = $(this).attr('data-id-frete');
+        if ($("#combo_dataperiodoagendada_"+idFrete).val() != "")
+        {
+            var zipcode = $("#zipcode").val();
+            var idEntrega = "";
+            var idPeriodoEntrega = "";
+            var valorFrete = "";
+            var correiosEntrega = "";
+            var entregaAgendada = "";
+            var exclusivaEntregaAgendada = "";
+            var carrier;
+            var mode;
+            var hub;
+            var valorSomaFrete = "";
+            var data_selecionada = "";
+            var ponteiroCurrent = $(".shippingGet", this);
+            $(".shippingGet").attr("checked", false);
+            $(ponteiroCurrent).attr("checked",true);
+
+            //valorSomaFrete = $("#combo_dataperiodoagendada_"+idFrete + " option:selected").data("addvalue");
+            valorSomaFrete = $("option:selected", this).data("addvalue");
+            idEntrega = $("option:selected", this).data("idscheduled");
+            idPeriodoEntrega = $("option:selected", this).data("idscheduledperiod");
+            valorFrete = $("#radio_"+idFrete).attr("data-value");
+            data_selecionada = $("#dateAgendada_"+idFrete).val()
+            correiosEntrega = $("#radio_"+idFrete).attr("data-correios");
+            entregaAgendada = $("#radio_"+idFrete).attr("data-entregaagendada");
+            exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
+            carrier = $("#radio_"+idFrete).attr("data-carrier");
+            mode = $("#radio_"+idFrete).attr("data-mode");
+            hub =  $("#radio_"+idFrete).attr("data-hub");
+
+            SaveFrete(zipcode, idFrete, correiosEntrega,entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub);
+        }
+        else
+        {
+            $("#combo_dataperiodoagendada_"+idFrete).hide("fast");
+            $('.hasDatepicker').datepicker('setDate', null);
+            atualizaResumoCarrinho();
+        }
+    });
+
+    $('[id*="dateAgendada_"]').change(function(){
+        var data_selecionada = $(this).val();
+        var idFrete = $(this).attr('data-id-frete');
+        var DataAgendadas = JSON.parse($('#json_dataagendada_' + idFrete).val());
+        var optionPeriodo = "";
+
+        var exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
+
+        for (var i = 0; i < DataAgendadas[0].listScheduled.length; i++)
+        {
+            if (DataAgendadas[0].listScheduled[i].listScheduledPeriodo != null)
+                for (var j = 0; j < DataAgendadas[0].listScheduled[i].listScheduledPeriodo.length; j++)
+                {
+                    if (DataAgendadas[0].listScheduled[i].date.substr(0,10) == data_selecionada.substr(6,4)+"-"+data_selecionada.substr(3,2)+"-"+data_selecionada.substr(0,2))
+                        optionPeriodo = optionPeriodo + "<option value=" +  DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].period + " data-addvalue=" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].deliveryPlusValue + " data-idscheduled=" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].idScheduled + " data-IdScheduledPeriod=" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].idScheduledPeriod + ">" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].period + " (" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].timePeriod.replace(" - ", " às ") +")</option>";
+                }
+        }
+
+        $("#combo_dataperiodoagendada_"+idFrete)
+            .find('option')
+            .remove()
+            .end()
+            .append('<option value="">Selecione</option>')
+            .val('')
+        ;
+
+        $("#combo_dataperiodoagendada_"+idFrete).append(optionPeriodo);
+        $("#combo_dataperiodoagendada_"+idFrete).trigger("chosen:updated");
+        $("#combo_dataperiodoagendada_"+idFrete).show("slow");
+
+        if (exclusivaEntregaAgendada == "True")
+            if (($("#dateAgendada_"+idFrete).val() != "") && ($("#combo_dataperiodoagendada_"+idFrete).val() != ""))
+                HabilitaBlocoPagamento(true)
+            else
+                HabilitaBlocoPagamento(false);
+        else
+            HabilitaBlocoPagamento(true)
+
+
+        //alert(data_selecionada + id_selecionado);
+    });
 }
 
 var availableDates = [];
@@ -1585,98 +1704,13 @@ $(document).ready(function () {
     }
     if(document.location.pathname.toLowerCase() == "/checkout/payment")
         GetStatusAntiFraudMaxiPago();
-
-    $('[id*="combo_dataperiodoagendada_"]').change(function(){
-        isLoading(".ui.accordion.frete");
-
-        $("#goToPayment").prop("disabled", true);
-        var data_periodo_selecionada = $("option:selected", this).val()
-        var idFrete = $(this).attr('data-id-frete');
-        if ($("#combo_dataperiodoagendada_"+idFrete).val() != "")
-        {
-            var zipcode = $("#zipcode").val();
-            var idEntrega = "";
-            var idPeriodoEntrega = "";
-            var valorFrete = "";
-            var correiosEntrega = "";
-            var entregaAgendada = "";
-            var exclusivaEntregaAgendada = "";
-            var carrier;
-            var mode;
-            var hub;
-            var valorSomaFrete = "";
-            var data_selecionada = "";
-            var ponteiroCurrent = $(".shippingGet", this);
-            $(".shippingGet").attr("checked", false);
-            $(ponteiroCurrent).attr("checked",true);
-
-            //valorSomaFrete = $("#combo_dataperiodoagendada_"+idFrete + " option:selected").data("addvalue");
-            valorSomaFrete = $("option:selected", this).data("addvalue");
-            idEntrega = $("option:selected", this).data("idscheduled");
-            idPeriodoEntrega = $("option:selected", this).data("idscheduledperiod");
-            valorFrete = $("#radio_"+idFrete).attr("data-value");
-            data_selecionada = $("#dateAgendada_"+idFrete).val()
-            correiosEntrega = $("#radio_"+idFrete).attr("data-correios");
-            entregaAgendada = $("#radio_"+idFrete).attr("data-entregaagendada");
-            exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
-            carrier = $("#radio_"+idFrete).attr("data-carrier");
-            mode = $("#radio_"+idFrete).attr("data-mode");
-            hub =  $("#radio_"+idFrete).attr("data-hub");
-            
-            SaveFrete(zipcode, idFrete, correiosEntrega,entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub);
-        }
-        else
-        {
-            $("#combo_dataperiodoagendada_"+idFrete).hide("fast");
-            $('.hasDatepicker').datepicker('setDate', null);
-            atualizaResumoCarrinho();
-        }
-    });
-
-    $('[id*="dateAgendada_"]').change(function(){
-        var data_selecionada = $(this).val();
-        var idFrete = $(this).attr('data-id-frete');
-        var DataAgendadas = JSON.parse($('#json_dataagendada_' + idFrete).val());
-        var optionPeriodo = "";
-
-        var exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
-
-        for (var i = 0; i < DataAgendadas[0].listScheduled.length; i++)
-        {
-            if (DataAgendadas[0].listScheduled[i].listScheduledPeriodo != null)
-                for (var j = 0; j < DataAgendadas[0].listScheduled[i].listScheduledPeriodo.length; j++)
-                {
-                    if (DataAgendadas[0].listScheduled[i].date.substr(0,10) == data_selecionada.substr(6,4)+"-"+data_selecionada.substr(3,2)+"-"+data_selecionada.substr(0,2))
-                        optionPeriodo = optionPeriodo + "<option value=" +  DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].period + " data-addvalue=" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].deliveryPlusValue + " data-idscheduled=" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].idScheduled + " data-IdScheduledPeriod=" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].idScheduledPeriod + ">" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].period + " (" + DataAgendadas[0].listScheduled[i].listScheduledPeriodo[j].timePeriod.replace(" - ", " às ") +")</option>";
-                }
-        }
-
-        $("#combo_dataperiodoagendada_"+idFrete)
-        .find('option')
-        .remove()
-        .end()
-        .append('<option value="">Selecione</option>')
-        .val('')
-        ;
-
-        $("#combo_dataperiodoagendada_"+idFrete).append(optionPeriodo);
-        $("#combo_dataperiodoagendada_"+idFrete).trigger("chosen:updated");
-
-        if (exclusivaEntregaAgendada == "True")
-            if (($("#dateAgendada_"+idFrete).val() != "") && ($("#combo_dataperiodoagendada_"+idFrete).val() != ""))
-                $('#goToPayment').attr("disabled", false)
-            else
-                $('#goToPayment').attr("disabled", true);
-        else
-            $('#goToPayment').attr("disabled", false)
-
-        $("#combo_dataperiodoagendada_"+idFrete).show("slow");
-        //alert(data_selecionada + id_selecionado);
-    });
+    
 
     $('#Document').keyup(function (event) {
         return onlyNumbers(event);
     });
+
+    CampoEntregaAgendada();
 
     $('#Document').blur(function(){
         if(!TestaCPF($(this).val())) {
@@ -1690,7 +1724,7 @@ $(document).ready(function () {
     if($("#idAddress").val() != "")
     {
         clickShipping();
-        if ($(".GerarPedido").length > 0) 
+        if ($(".GerarPedido").length > 0)
         {
             OrderCreate();
         }
@@ -1717,7 +1751,7 @@ $(document).ready(function () {
         CheckAccessKey();
         ReEnviarCodigoEmail();
         onChangeParcelamento();
-        HabilitarButtonIrParaPagamento();
+        HabilitaBlocoPagamento(false);
     }
     else
     {

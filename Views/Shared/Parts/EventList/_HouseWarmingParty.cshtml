@@ -95,26 +95,21 @@
                                         </div>
                                     </div>
                                     <input type="file" id="filePicture" name="Picture" />
-                                    <a class="ui button blue floated right" id="changeEventPicture">Alterar</a>
+                                    <a class="ui button basic floated right" id="changeEventPicture">Alterar</a>
                                     <div class="text small">Extensões permitidas: .jpg .png ou .gif</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="column">
-                            <a href="javascript:history.go(-1)" class="ui animated button large red left floated">
-                                <div class="visible content">Cancelar</div>
-                                <div class="hidden content">
-                                    <i class="remove icon"></i>
-                                </div>
+                        <div class="column btnEventList">
+                            <a href="javascript:history.go(-1)" class="ui primary button large basic left floated">
+                                <i class="remove icon"></i> Cancelar
                             </a>
-                            <button type="submit" class="ui animated button large submit green right floated">
-                                <div class="visible content">@(Model.IdEventList > 0 ? "Salvar" : "Próximo")</div>
-                                <div class="hidden content">
-                                    <i class="checkmark icon"></i>
-                                </div>
+                            <button type="submit" id="btnSaveInvitation" class="ui button large submit primary right floated">
+                                <i class="checkmark icon"></i> @(Model.IdEventList > 0 ? "Salvar" : "Próximo")
                             </button>
+                            
                         </div>
                     </div>
                 </div>

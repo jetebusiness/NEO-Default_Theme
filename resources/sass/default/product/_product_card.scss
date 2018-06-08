@@ -21,13 +21,16 @@
                     text-decoration: underline;
                 }
 
-                h1 {
-                    color: $primary-color;
-                    font-size: 16px;
+                h3 {
+                    font-weight: normal;
+                    color: $black;
+                    font-size: 14px;
+                    margin-bottom:10px;
                 }
 
                 .precoBase {
-                    font-size: 0.75em;
+                    color: #666666;
+                    font-size: 14px;
 
                     i {
                         text-decoration: line-through;
@@ -35,14 +38,20 @@
                 }
 
                 .preco {
-                    color: $ascent-1-color;
-                    font-size: 20px;
+                    color: $primary-color;
+                    font-size: 18px;
                     line-height: 30px;
+                    font-weight: 900;
 
                     &:after {
                         content: '\A';
                         white-space: pre;
                     }
+                }
+                
+                .parcelamento {
+                    color: #666666;
+                    font-size: 14px;
                 }
             }
 
@@ -54,6 +63,37 @@
                 position: absolute;
                 transition-duration: 0.3s;
                 width: 100%;
+
+                @media screen and (max-width: $tablet-bp-max) {
+                    bottom: initial;
+                    left: initial;
+                    opacity: 1;
+                    position: relative;
+                }
+                
+                .btnComprar {
+                    @media screen and (min-width: $desktop-bp-min) {
+                        display: none;
+                    }
+                }
+                
+                
+                
+
+                .btnDetalhes {
+                    background:#eee;
+                    color: #666;
+
+                    &:hover,
+                    &:focus,
+                    &:checked,
+                    &:active{
+                        background:#eee;
+                        color: #666;
+                        opacity: .9;
+                    }
+
+                }
 
                 button.ui.circular {
                     @media screen and (max-width: $mobile-bp) {
@@ -70,7 +110,7 @@
             }
 
             .sku-options {
-                background: rgba(0, 0, 0, .5);
+                
                 color: #ffffff;
                 display: block;
                 opacity: 0;
@@ -82,6 +122,10 @@
                 width: 100%;
                 max-height: 230px;
                 z-index: 10 !important;
+                
+                &.mask {
+                    background: rgba(255, 255, 255, .5);
+                }
             }
         }
     }
@@ -102,7 +146,11 @@
         }
 
         .info {
+
+            @media screen and (min-width: $desktop-bp-min) {
             transform: translateY(-40px);
+            }
+
 
             .botoes {
                 opacity: 1;

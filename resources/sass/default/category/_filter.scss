@@ -12,21 +12,27 @@
   }
   .ui.accordion {
     .title {
-      font-weight: 600;
+      font-weight: bold;
       font-size: 14px;
-      border-bottom: 1px solid #dededf;
+      color: $primary-color;
       text-transform: uppercase;
       padding-left: 15px;
-      box-shadow: inset 5px 0 0 rgb(44, 62, 80);
+      box-shadow: inset 3px 0 0 #EEEEEE;
       margin-bottom: 10px;
       &.active {
-        border-bottom: 0px solid #dededf;
-        background-color: rgb(44, 62, 80) !important;
-        color: #ffffff;
+        border-top: 3px solid #EEEEEE;
+        border-bottom: 3px solid #EEEEEE;
+        box-shadow:none;
       }
       .icon {
         float: right;
         margin-top: 3px;
+      }
+      
+      >span {
+        word-break: break-word;
+        max-width: 120px;
+        display: inline-block;
       }
     }
   }
@@ -92,7 +98,7 @@
         border-radius: 0px;
         font-size: 20px;
         padding: 10px;
-        margin-right: -14px !important;
+        margin-right: -4px !important;
       }
     }
   }
@@ -110,6 +116,30 @@
     width: 100%;
     display: inline-block !important;
     height: 100%;
-    overflow: scroll;
+    overflow-y: scroll;
+  }
+}
+
+
+
+.groupList {
+
+  .segment {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    padding: 2em 0px;
+    border-bottom: 5px solid $primary-color;
+
+    .item {
+      padding-left: 1.5em;
+      color:#666666 !important;
+      font-size: 16px;
+      
+      h3 {
+        font-size: 16px;
+        margin:0;
+        font-weight: normal;
+      }
+    }
   }
 }

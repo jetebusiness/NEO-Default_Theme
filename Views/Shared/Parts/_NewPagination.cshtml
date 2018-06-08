@@ -9,7 +9,7 @@
     {
         if ((Model.PageCount <= 5) || (Model.PageCount > 5 && (i >= Model.PageNumber - 5 && i <= Model.PageNumber + 5)))
         {
-            <a id="btnPageNumber" class="@((i) == Model.PageNumber ? "active" : "") item" data-number="@(i)" href="#">
+            <a class="@((i) == Model.PageNumber ? "active" : "") btnPageNumber item" data-number="@(i)" href="#">
                 @(i)
             </a>
         }

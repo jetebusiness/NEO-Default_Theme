@@ -167,8 +167,8 @@
                         <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
                     </div>
                     <div class="column">
-                        <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
-                        <a href="#avaliacoes" onclick="calltab('avaliacoes')">
+                        <div class="avaliacoes">
+                            <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
                             @if (Model.ProductRatings != null)
                             {
                                 <span>0 avaliações</span>
@@ -181,7 +181,7 @@
                             {
                                 <span>@Model.ProductRatings.Count() avaliações</span>
                             }
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -207,15 +207,16 @@
                             {
                                 <h5 itemprop="productBrand" class="marcaProduto"></h5>
                             }
+
                             <div class="ui two column grid">
                                 <div class="column">
                                     <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
                                 </div>
-                                <div class="column right aligned">
-                                    <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
-                                    <a href="#avaliacoes" onclick="calltab('avaliacoes')">
+                                <div class="column">
+                                    <div class="avaliacoes">
+                                        <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
                                         @(Model.ProductRatings != null ? Model.ProductRatings.Count() : 0) avaliações
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -225,6 +226,7 @@
                         @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = Model.SKUPadrao != null ? Model.SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
+
                     <!--GRADE B2B-->
                     @if (Model.SKUs != null)
                     {
@@ -236,9 +238,11 @@
                     }
                     <!-- GRADE B2B-->
                 </div>
+
             </div>
             <!-- FIM INFORMAÇÕES DO PRODUTO-->
         </div>
+
         <div class="ui divider hidden"></div>
         <!--COMEÇO DESCRIÇÃO-->
         <div class="row">

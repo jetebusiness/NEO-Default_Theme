@@ -21,10 +21,10 @@
         </div>
     </div>
 }
-<div class="ui container margin bottom large">
+<div class="row margin bottom large fluid">
     @if (Model != null && Model.Any())
     {
-        <div class="ui icon yellow message">
+        <div class="ui icon message tiny">
             <i class="warning circle icon"></i>
             <div class="content">
                 <p>Selecione a opção "Divulgar" para que sua lista esteja disponível e seus convidados realizem as compras em nossa loja.</p>
@@ -32,74 +32,100 @@
         </div>
     }
     <div class="row">
-        <div class="ui stackable four column grid">
-            <div class="column">
-                <div class="ui segment">
-                    <div class="ui big horizontal list">
-                        <div class="item">
-                            <i class="calendar outline large purple icon"></i>
-                            <div class="content">
-                                <div class="header">Nova Lista de Eventos</div>
-                            </div>
+      
+        
+        
+        <div class="ui cards stackable three column grid">
+            @if (ViewBag.HasEventListTypes == true)
+            {
+                <div class="card">
+                    <div class="content">
+                        <i class="right floated calendar outline large teal icon"></i>
+                        <div class="header titleList">
+                            Nova Lista de Eventos
                         </div>
                     </div>
-                    <div class="ui divider"></div>
-                    <div class="ui small ui center aligned">
-                        @if (ViewBag.HasEventListTypes == true)
-                        {
-                            <a href="/EventList/NewList">
-                                <i class="ui icon big add circle green"></i>
+                    <div class="extra">
+                        <span>
+                            <a href="/EventList/NewList" class="ui small compact icon primary basic button text uppercase">
+                                <i class="ui icon add circle primary"></i> Criar uma nova lista
                             </a>
-                        }
-                        else
-                        {
-                            <a id="btnEventListDisabled" href="javascript:void(0)">
-                                <i class="ui icon big add circle green disabled"></i>
-                            </a>
-                        }
+                        </span>
                     </div>
                 </div>
-            </div>
+            }
             @if (Model != null && Model.Any())
             {
                 foreach (var lista in Model)
                 {
-                    <div class="column">
-                        <div class="ui segment">
-                            <div class="ui top right attached label">
-                                <span class="text bold">@(lista.EventDate < DateTime.Now ? "Encerrado" : !lista.Status ? "Inativo" : lista.DateDivugaltionList != null ? "Divulgada" : "Ativo")</span>
+                    <div class="card">
+                        <div class="content">
+
+                            <i class="right floated calendar large teal icon"></i>
+                            <div class="header">
+                                @{
+                                    var TitleList = lista.Title.ToLower();
+                                    var iconList = "";
+                                    
+                                    switch (TitleList)
+                                    {
+                                        case "presentes":
+                                            iconList = "gift large yellow icon";
+                                            break;
+    
+                                        case "casamento":
+                                            iconList = "icon big heart red";
+                                            break;
+    
+                                        case "chá bar":
+                                            iconList = "icon big bar orange";
+                                            break;
+    
+                                        case "chá de cozinha":
+                                            iconList = "gift large gray icon";
+                                            break;
+                                        
+                                        case "chá de bebe":
+                                            iconList = "icon big child purple";
+                                            break;
+    
+                                    }
+                                }
+                                <i class="@iconList"></i>
+                                @lista.Title
                             </div>
-                            <div class="ui big horizontal list">
-                                <div class="item">
-                                    <img class="ui avatar image" src="@lista.UrlPicture">
-                                    <div class="content">
-                                        @*<div class="header">@lista.Type.ToString()</div>*@
-                                        <div class="header">@lista.Title</div>
-                                        @lista.EventDate.ToShortDateString()
-                                    </div>
-                                </div>
+                            <div class="meta">
+                                @lista.EventDate.ToShortDateString()
                             </div>
-                            <div class="ui divider"></div>
-                            <div class="ui center aligned">
-                                @if (lista.EventDate >= DateTime.Now)
-                                {
-                                    <a href="@Url.Action("ManagerList", "EventList", new {listId = lista.IdEventList})" class="ui tiny compact icon green button">
+                            <div class="description">
+                                <span>@(lista.EventDate < DateTime.Now ? "Encerrado" : !lista.Status ? "Inativo" : lista.DateDivugaltionList != null ? "Divulgada" : "Ativo")</span>
+                            </div>
+                        </div>
+                        <div class="extra">
+                            @if (lista.EventDate >= DateTime.Now)
+                            {
+                                <div class="ui two columns row stackable">
+                                    <a href="@Url.Action("ManagerList", "EventList", new {listId = lista.IdEventList})" class="ui small compact icon primary basic button text uppercase">
                                         <i class="check icon"></i>
                                         Alterar
                                     </a>
-                                    <button id="btnShareEventList_@lista.IdEventList" class="ui tiny compact icon @(lista.Status ? "green" : "disabled") button" data-id="@lista.IdEventList">
+                                    <button id="btnShareEventList_@lista.IdEventList" class="ui small compact icon text uppercase @(lista.Status ? "primary" : "disabled") button right floated" data-id="@lista.IdEventList">
                                         <i class="check icon"></i>
                                         Divulgar
                                     </button>
-                                }
-                                else
-                                {
-                                    <button class="ui tiny compact icon red button">
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="ui one buttons">
+                                    <button class="ui small compact icon red button">
                                         <i class="delete icon"></i>
                                         Encerrado
                                     </button>
-                                }
-                            </div>
+                                </div>
+                            }
+
                         </div>
                     </div>
                 }

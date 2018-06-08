@@ -57,6 +57,6 @@ $(document).ready(function () {
 
     //Inicializa o PS
     montaListaProdutos();
-   
+
 
 });

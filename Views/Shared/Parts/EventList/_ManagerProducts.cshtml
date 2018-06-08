@@ -2,10 +2,10 @@
 
 <div class="sixteen wide mobile eleven wide tablet twelve wide computer column" id="product_manager">
     <div class="ui grid middle aligned">
-        <div class="row two column">
+        <div class="row two column stackable sixteen wide eleven wide computer">
             <div class="column left aligned">
                 <div class="ui busca_lista_evento">
-                    <div class="ui icon input">
+                    <div class="ui icon input fluid">
                         <input class="busca_lista" type="text" placeholder="Buscar...">
                         <button class="ui icon button busca_lista_btn">
                             <i class="search icon"></i>
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="column right aligned">
-                <a class="ui icon teal button" href="/EventList/AddProductsInListFromHome">
+                <a class="ui icon primary basic button" href="/EventList/AddProductsInListFromHome">
                     Adicionar Produto
                 </a>
             </div>
@@ -42,15 +42,15 @@
                                         <button class="ui icon button qtdminus qtd_change" data-id-event-list="@produto.IdEventListProduct" data-action="minus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
                                             <i class="minus icon"></i>
                                         </button>
-                                        <input type="number" min="1" step="1" size="3" value="@produto.Quantity" name="" id="qtd_product_@produto.IdEventListProduct" data-id-event-list="@produto.IdEventListProduct" data-action="plus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
-                                        <button class="ui green icon button qtdplus qtd_change" data-id-event-list="@produto.IdEventListProduct" data-action="plus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
+                                        <input type="number" class="text center" min="1" step="1" size="3" value="@produto.Quantity" name="" id="qtd_product_@produto.IdEventListProduct" data-id-event-list="@produto.IdEventListProduct" data-action="plus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
+                                        <button class="ui grey icon button qtdplus qtd_change" data-id-event-list="@produto.IdEventListProduct" data-action="plus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
                                             <i class="add icon"></i>
                                         </button>
                                     </div>
                                 </td>
                                 <td class="ui center aligned">
                                     <div class="ui action input">
-                                        <input type="number" name="" value="@produto.QuantityBuy" placeholder="0" disabled>
+                                        <input type="number" class="inpSearch" name="" value="@produto.QuantityBuy" placeholder="0" disabled>
                                         <button class="ui icon button" id="view_invited_purchased" data-product-id="@produto.IdProduct" data-product-id-sku="@produto.idSku">
                                             <i class="unhide icon"></i>
                                         </button>

@@ -16,15 +16,58 @@ $(document).ready(function () {
         }
     });
 
-    let $easyzoom = $(".easyzoom").easyZoom();
-    $easyzoom.init();
+    let $easyzoom = $(".easyzoom");
+    if (!isMobile()) {
+        $easyzoom.easyZoom().init();
+    }
     // Setup thumbnails example
-    let $thumb = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
+
     $('.thumbnails').on('click', 'a', function(e) {
         let $this = $(this);
+        let $toggle = $('.toggleZoom');
+
         e.preventDefault();
-        $thumb.swap($this.data('standard'), $this.attr('href'));
+
+        $this.parents(".slick-slide").siblings().removeClass("slick-current")
+        $this.parents(".slick-slide").addClass("slick-current")
+
+        if ($toggle.data("active") === true || !isMobile()) {
+            $easyzoom.easyZoom().filter('.easyzoom--with-thumbnails').data('easyZoom').swap($this.data('standard'), $this.attr('href'));
+        } else {
+            $(">a", ".easyzoom").attr("href", $this.data('standard'))
+            $(">a>img", ".easyzoom").attr("src", $this.data('standard'))
+        }
+
+
     });
+
+    $('.toggleZoom').on('click', function() {
+        var $this = $(this);
+
+        if ($this.data("active") === true) {
+            $this.text("Habilitar Zoom").data("active", false);
+            $easyzoom.easyZoom().filter('.easyzoom--with-toggle').data('easyZoom').teardown();
+        } else {
+            $this.text("Desativar Zoom").data("active", true);
+            $easyzoom.easyZoom().init();
+        }
+    });
+    
+    /*
+    Funcao para ativar a aba avaliacao
+    */
+    $('.avaliacoes').on('click', function () {
+        if ($('.item[data-tab="avaliacoes"]').length > 0){
+            $('.item[data-tab="avaliacoes"]').click();
+        }
+    });
+
+    $(document).on("click", ".avaliacoes", function(e){
+        if ($('.item[data-tab="avaliacoes"]').length > 0){
+            $('.item[data-tab="avaliacoes"]').click();
+            $('html, body').animate({scrollTop: $(".menu.tabular .item").offset().top - 150}, 1000);
+        }
+    })
 
     if (!isMobile()) {
         /**

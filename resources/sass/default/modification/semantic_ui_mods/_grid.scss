@@ -15,6 +15,7 @@
   }
 }
 
+
 .ui.container.fluid {
   @media only screen and(max-width: $mobile-bp) {
     width: auto !important;
@@ -23,12 +24,18 @@
     padding-left: 1em !important;
     padding-right: 1em !important
   }
-;
+
   .ui.container {
     @media only screen and(max-width: $mobile-bp) {
       padding-left: 0 !important;
       padding-right: 0 !important;
     }
+  }
+}
+
+.ui.container {
+  @media only screen and(min-width: $desktop-xl) {
+    width: 1320px;
   }
 }
 

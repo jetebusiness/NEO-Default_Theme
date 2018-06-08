@@ -4,7 +4,7 @@
 }
 @if (Model != null && Model.Any() && Model.FirstOrDefault().PaymentMethods != null && Model.FirstOrDefault().PaymentMethods.Any() && Model.FirstOrDefault().PaymentMethods.FirstOrDefault().PaymentBrands != null)
 {
-    <div class="ui green segment formas-pagamento" id="calculo-parcelamento">
+    <div class="ui segment formas-pagamento" id="calculo-parcelamento">
         <div class="ui accordion fluid" id="parcelamento_b2b">
             <div class="title">
                 <i class="dropdown icon"></i>
@@ -42,26 +42,26 @@
                                                 }
                                                 else
                                                 {
-                                                    foreach (var parcelas in brands.Installments)
-                                                    {
-                                                        var typeDiscount = brands.typeDiscount != null ? brands.typeDiscount.Value : DomainCheckout.Entities.typeDiscount.General;
-                                                        var totalCompra = parcelas.Total.ToString("C");
+                                                foreach (var parcelas in brands.Installments)
+                                                {
+                                                    var typeDiscount = brands.typeDiscount != null ? brands.typeDiscount.Value : DomainCheckout.Entities.typeDiscount.General;
+                                                    var totalCompra = parcelas.Total.ToString("C");
 
-                                                        if (parcelas.InstallmentNumber == 1)
+                                                    if (parcelas.InstallmentNumber == 1)
+                                                    {
+                                                        if (typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
                                                         {
-                                                            if (typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
-                                                            {
-                                                                totalCompra = parcelas.Value.ToString("C");
-                                                            }
+                                                            totalCompra = parcelas.Value.ToString("C");
                                                         }
-                                                        <span class="item parcelamentos">
-                                                            <span class="parcelas">@parcelas.InstallmentNumber x</span>
-                                                            <span class="valor"> @parcelas.Value.ToString("C") </span>
-                                                            <span class="modelo">(@parcelas.Description)</span>
-                                                            <span class="total">Total Parcelado: @totalCompra</span>
-                                                        </span>
                                                     }
+                                                    <span class="item parcelamentos">
+                                                        <span class="parcelas">@parcelas.InstallmentNumber x</span>
+                                                        <span class="valor"> @parcelas.Value.ToString("C") </span>
+                                                        <span class="modelo">(@parcelas.Description)</span>
+                                                        <span class="total">Total Parcelado: @totalCompra</span>
+                                                    </span>
                                                 }
+                                            }
                                             }
                                         </div>
                                     </div>

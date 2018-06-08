@@ -1,6 +1,6 @@
 ﻿@model DomainProduct.Entities.Category
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Name +" - "+LojaCorp.Control.Company._Company.FantasyName;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
     var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
@@ -15,16 +15,26 @@
 }
 
 @section breadcrumbs {
-    <div class="ui container">
-        <div class="ui two column grid stackable middle aligned">
-            <div class="row">
+    <div class="ui two column centered grid stackable middle aligned breadcrumbs">
+        <div class="row">
+            <div class="container">
                 <div class="column">
-                    <h1>@ViewBag.Title</h1>
-                    <div class="ui breadcrumb text small">
-                        <a class="section" href="/">Home</a>
+                    <h1>@Model.Name</h1>
+                    <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ui breadcrumb">
+                        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
+                                <span itemprop="name">Home</span>
+                                <meta itemprop="url" content="/">
+                            </a>
+                            <meta itemprop="position" content="1" />
                         <i class="right angle icon divider"></i>
-                        <div class="active section">@(Model != null ? Model.Name : "")</div>
-                    </div>
+                        </li>
+                        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                            <span itemprop="name">@(Model != null ? Model.Name : "")</span>
+                            <meta itemprop="url" content="/@(Model.Name)">
+                            <meta itemprop="position" content="2" />
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -33,18 +43,17 @@
 @section banner {
     @if (Model != null)
     {
-        <div class="sixteen wide column">
-            <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
-            @Html.Action("BannerCategory", "Banner", new { id = Model.IdCategory, type = 'F' })
-        </div>
+        <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
+        @Html.Action("BannerCategory", "Banner", new { id = Model.IdCategory, type = 'F' })
     }
 }
 @section filters {
     <div class="four wide column filterColumn">
-        <div class="row one column">
+        <div class="row one column filterBlock">
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @Html.Action("FilterMenu", "Product")
-            <div class="ui divider hidden"></div>
+        </div>
+        <div class="row">
             <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
             @Html.Action("SideHalfBannerCategory", "Banner", new { categoryId = Model.IdCategory })
         </div>
@@ -54,11 +63,11 @@
     <div class="ui grid">
         <div class="row one column">
             <div class="column right aligned right floated">
-                <button class="ui mobile only left floated icon blue button filterbutton right labeled" data-tooltip="Filtros" data-inverted="">
+                <button class="ui mobile only left floated icon button basic filterbutton right labeled small" data-tooltip="Filtros" data-inverted="">
                     <i class="filter icon"></i>
                     Filtros
                 </button>
-                <div class="ui dropdown button dropdownorder">
+                <div class="ui dropdown button basic dropdownorder small">
                     <span class="text">Ordenar por</span>
                     <i class="dropdown icon"></i>
                     <div class="menu">
@@ -66,9 +75,17 @@
                             <i class="asterisk icon"></i>
                             Lançamentos
                         </div>
+                        <div class="item" data-value="maior_preco">
+                            <i class="sort numeric descending icon"></i>
+                            Maior Preço
+                        </div>
                         <div class="item" data-value="mais_vendidos">
                             <i class="diamond icon"></i>
                             Mais Vendidos
+                        </div>
+                        <div class="item" data-value="menor_preco">
+                            <i class="sort numeric ascending icon"></i>
+                            Menor Preço
                         </div>
                         <div class="item" data-value="nome_a_z">
                             <i class="sort alphabet ascending icon"></i>
@@ -78,20 +95,14 @@
                             <i class="sort alphabet descending icon"></i>
                             Nome [Z-A]
                         </div>
-                        <div class="item" data-value="menor_preco">
-                            <i class="sort numeric ascending icon"></i>
-                            Preço [Menor-Maior]
-                        </div>
-                        <div class="item" data-value="maior_preco">
-                            <i class="sort numeric descending icon"></i>
-                            Preço [Maior-Menor]
-                        </div>
+                        
+                        
                     </div>
                 </div>
-                <button id="viewgrid" class="ui icon button viewgrid mobile hide" data-tooltip="Grid" data-inverted="">
+                <button id="viewgrid" class="ui icon button basic small viewgrid mobile hide" data-tooltip="Grid" data-inverted="">
                     <i class="grid layout icon"></i>
                 </button>
-                <button id="viewlist" class="ui icon button viewlist mobile hide" data-tooltip="Lista" data-inverted="">
+                <button id="viewlist" class="ui icon button basic small viewlist mobile hide" data-tooltip="Lista" data-inverted="">
                     <i class="list layout icon"></i>
                 </button>
             </div>

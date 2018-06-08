@@ -34,14 +34,14 @@ require('./modules/mask');
 //--------------------[ DatePicker ]--------------------//
 require('./modules/jquery-ui.min');
 
-
+//--------------------[ LazyLoad ]--------------------//
+require('../functions/lazy_load');
 
 //--------------------[ Start Document ]--------------------//
 
 $(document).ready(function(){
     "use strict";
-    $(".footer-wrap").prev().css("cssText", `padding-bottom:${$(".footer-wrap").height()}px !important;`);
-
+    
     setTimeout(function (){
         $(".intial-loader").fadeOut(800, function(){
             $(this).remove();

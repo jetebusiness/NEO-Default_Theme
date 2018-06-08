@@ -23,3 +23,66 @@
     }
   }
 }
+
+.busca_lista_evento {
+  @media screen and (max-width: $mobile-bp){
+    width:calc(100% - 40px)
+  }
+}
+
+.inpSearch {
+  max-width: 55px !important;
+  text-align: center !important;
+  padding-right: 0 !important;
+}
+
+.header {
+  &.titleList {
+    @media screen and (max-width: $tablet-bp-max) and (min-width: $table-bp-min){
+      max-width: 160px;
+    }
+    
+  }
+}
+
+#btnSendToMyAddress,
+#btnSendToGuestAddress {
+  @media screen and (max-width: $mobile-bp){
+    i {
+      display: block;
+      margin: 0 auto 10px auto
+    }
+
+    text-align: center !important;
+    line-height: 18px !important;
+  }
+}
+
+
+
+.buttonsGrid {
+  .button {
+    @media screen and (max-width: $mobile-bp){
+      width:100%;
+      margin:0 auto 10px auto !important;
+      text-transform: uppercase !important;
+    }
+  }
+}
+
+
+.btnEventList {
+  .button {
+    margin-left:0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+
+#product_manager {
+  table {
+    @media screen and (max-width: $mobile-bp){
+      text-align: center;
+    }
+  }
+}

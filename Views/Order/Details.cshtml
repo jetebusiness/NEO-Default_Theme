@@ -12,7 +12,7 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Central do Cliente</a>
+                        <a class="section" href="/Customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
                         <a class="section" href="/Order">Histórico de Pedidos</a>
                         <i class="right angle icon divider"></i>
@@ -23,7 +23,8 @@
         </div>
     </div>
 }
-<div id="pagePrint" class="ui grid left aligned">
+
+<div id="pagePrint" class="ui grid left aligned dadosPedido">
     @if (Model == null)
     {
         <div class="row two column">
@@ -32,7 +33,7 @@
     }
     else
     {
-        <div class="row two column">
+        <div class="row two column stackable">
             <div class="column">
                 <div class="ui padded segment">
                     <h5 class="ui header">
@@ -64,38 +65,38 @@
                                 }
                                 @{
                                     @* Forma de pagamento com boleto Itaú *@
-                                    if (Model.IdPaymentBrand == 207)
-                                    {
-                                        <input type="hidden" id="idOrder" value="@Model.IdOrder" />
-                                        <span>(<a href="javascript:void(0)" id="reprintBankSlip">Reimprimir boleto</a>)</span>
+                                if (Model.IdPaymentBrand == 207)
+                                {
+                                    <input type="hidden" id="idOrder" value="@Model.IdOrder" />
+                                    <span>(<a href="javascript:void(0)" id="reprintBankSlip">Reimprimir boleto</a>)</span>
 
-                                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
-                                              method="post"
-                                              name="itauShopline"
-                                              id="itauShopline"
-                                              target="openShopline">
-                                            <input type="hidden" name="DC" id="tokenBankSlip" value="" />
-                                        </form>
+                                    <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                                          method="post"
+                                          name="itauShopline"
+                                          id="itauShopline"
+                                          target="openShopline">
+                                        <input type="hidden" name="DC" id="tokenBankSlip" value="" />
+                                    </form>
 
-                                        <div class="ui modal">
-                                            <i class="close icon"></i>
-                                            <div class="content">
-                                                <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
-                                            </div>
+                                    <div class="ui modal">
+                                        <i class="close icon"></i>
+                                        <div class="content">
+                                            <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
                                         </div>
-                                    }
-                                    @* Forma de pagamento com boleto MaxiPago*@
-                                    else if (Model.IdPaymentBrand == 238)
-                                    {
-                                        <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
-                                        <span>(<a href="javascript:void(0)" id="reprintBankSlipMaxiPago">Reimprimir boleto</a>)</span>
+                                    </div>
+                                }
+                                @* Forma de pagamento com boleto MaxiPago*@
+                                else if (Model.IdPaymentBrand == 238)
+                                {
+                                    <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
+                                    <span>(<a href="javascript:void(0)" id="reprintBankSlipMaxiPago">Reimprimir boleto</a>)</span>
 
-                                        <div class="ui modal maxiPago">
-                                            <i class="close icon"></i>
-                                            <div class="content">
-                                                <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
-                                            </div>
+                                    <div class="ui modal maxiPago">
+                                        <i class="close icon"></i>
+                                        <div class="content">
+                                            <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
                                         </div>
+                                    </div>
                                     }
                                     @* Forma de pagamento com boleto PagSeguro*@
                                     else if (!string.IsNullOrEmpty(Model.PaymentLink))
@@ -107,7 +108,7 @@
                                                 <iframe src="@Model.PaymentLink" name="openPaymentLink" id="openPaymentLink" style="width: 100%; height: 50em; border: none;"></iframe>
                                             </div>
                                         </div>
-                                    }
+                                }
                                 }
                             </div>
                         </div>
@@ -262,7 +263,7 @@
 @if (Model != null)
 {
     @Html.Action("StatusOrder", "Order", new { orderId = Model.IdOrder })
-
+    
     <br />
     <div class="row">
         <div class="column">

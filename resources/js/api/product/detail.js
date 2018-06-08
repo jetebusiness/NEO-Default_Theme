@@ -1,6 +1,7 @@
 import {isLoading} from "../api_config";
 import {moneyPtBR} from "../../functions/money";
 import {ZoomReset} from '../../functions/zoom';
+import {lazyLoad} from '../../functions/lazy_load';
 import {_alert, _confirm} from "../../functions/message";
 import {openModalQuickView, openLongModal} from "../../functions/modal";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
@@ -56,7 +57,7 @@ $(document).ready(function () {
             $(".modal-block").append(response);
             openModalQuickView($(this).attr("data-modal-open"), callback => {
                 getAllMask();
-            });
+        });
         },
         onFailure: function (response) {
             //console.log(response);
@@ -97,8 +98,8 @@ $(document).ready(function () {
     });
 
 
-    $(".ui.huge.star.rating").click(function () {
-        var starsSelected = $(".huge.rating .icon.active").length;
+    $(".ui.star.rating").click(function () {
+        var starsSelected = $(".ui.rating .icon.active").length;
         $("#Rate").val(starsSelected);
     });
 
@@ -169,9 +170,9 @@ $(document).ready(function () {
     $(".detalhes.btn-add-event-list").click(function(){
         var resultado = ValidarSkuProdutoPrincipal();
         let productSKU = $("#produto-sku").val(),
-        productID = $("#produto-id").val(),
-        productQuantity = parseInt($("#quantidade").val()),
-        totalVariations = $("#principal-total-variacoes").val()
+            productID = $("#produto-id").val(),
+            productQuantity = parseInt($("#quantidade").val()),
+            totalVariations = $("#principal-total-variacoes").val()
 
         //PRODUTO DEVE SER DIFERENTE DE NULL
         if(productID != null && productID != ""){
@@ -299,23 +300,16 @@ $(document).ready(function () {
     $("#btn_carregar_avaliacoes").click(function () {
         CarregarMaisAvaliacoes();
     });
-
-    $(document).on("click", "#avaliacoes", function(e){
-        $(".menu.tabular .item").trigger("click")
-        window.scrollTo(0, document.body.scrollHeight * 0.22);  
-        e.stopPropagation()
-    })
 });
 
 $(document).on("click", "#dica_promocional", function () {
-    $(".modal-block").append("<div class='ui longer modal'><i class='close icon'></i><div class='header'>Dica Promocional</div><div class='ui medium image' style='display: none;' onerror=\"imgError(this)\"><img src=''></div><div class='description' style='margin: 20px;'>" + $("#dica_leve_x").html() + "</div></div><div class='actions'><div class='ui button approve'>OK</div></div></div>");
+    $(".modal-block").append("<div class='ui longer modal'><i class='close icon'></i><div class='header'>Dica Promocional</div><div class='ui medium image' style='display: none;' onerror=\"imgError(this)\"><img src=''></div><div class='description' style='margin: 20px;'>" + $("#dica_leve_x").html() + "</div></div>");
     openLongModal($(this).attr("data-modal-open"));
 });
 
 //FUNÇÔES
 function VariacaoDropDown() {
-    $('.product-grid .dropdown').attr("id", "dropDownGridProduct");
-    $('#dropDownGridProduct').dropdown({
+    $('.product-grid .field.dropdown').dropdown({
         onChange: function (value, text, selectedItem) {
             var order        = $('.product-grid .variacao-drop[value=' + value + ']').data("order");
             var idReferencia = $('.product-grid .variacao-drop[value=' + value + ']').data("id-reference");
@@ -324,7 +318,7 @@ function VariacaoDropDown() {
             isLoading("body");
             CarregarVariacoes('principal', value, order, idReferencia);
             buscarSKU('principal');
-            $('.product-grid .dropdown').dropdown('set selected', value);
+            //$(this).dropdown('set selected', value);
         }
     });
 }
@@ -403,10 +397,13 @@ function BuscarVariacaoCor(valor_selecionado, order, idReferencia) {
         dataType: 'html',
         success: function (response) {
             $("#exibePartial").html(response);
-            if(document.getElementById("buy-together").getElementsByClassName("ui image medium").length > 0){
-                document.getElementById("buy-together").getElementsByClassName("ui image medium")[0].children[0].src = $("#imagem-padrao")[0].src
+            lazyLoad();
+
+            if($("#buy-together .image.medium").length > 0){
+                $("#buy-together .image.medium")[0].children[0].src = $("#imagem-padrao").attr("data-src")
             }
-            ZoomReset();
+            
+            ZoomReset();            
             isLoading("body");
         },
         error: function (request, error) {
@@ -458,13 +455,13 @@ function CarregarMaisAvaliacoes() {
     }
 
     $("#lista_avaliacoes").append($(avaliacao_html)).fadeIn('slow');
-    $(".ui.mini.star.rating").rating("disable");
+    $(".ui.star.rating").rating("disable");
     lista_avaliacao_produto = "";
     $("#btn_carregar_avaliacoes").addClass("disabled");
 }
 
 function ValidaVariacaoSelecionada(selecionada, seletor) {
-    let arrayVariacoesDropDown = $("#dropDownGridProduct .menu .active").attr("data-value");
+
     let referenciaSelecionada        = selecionada.split('-')[0] + '-';
     let referenciasJaSelecionadas    = $("#" + seletor + "-referencias-selecionadas").val();
     let ArrReferenciasJaSelecionadas = referenciasJaSelecionadas.split(',');
@@ -557,49 +554,52 @@ function buscarSKU(seletor, produtoID) {
 
     var qtdParcelaMaximaUnidade      = $("#qtd-parcela-maxima-unidade").val();
     var pagamentoDescricao           = $("#pagamento-descricao").val();
+    
+    console.log(ArrReferenciasJaSelecionadas)
 
-        $.ajax({
-            url: '/Product/GetSku/',
-            type: 'POST',
-            data: {
-                jsonSKU                 : jsonSKU,
-                referencias             : referenciasJaSelecionadas,
-                parcelaMaximaUnidade    : parcelaMaximaUnidade,
-                qtdParcelaMaximaUnidade : new Number(qtdParcelaMaximaUnidade),
-                pagamentoDescricao      : pagamentoDescricao
-            },
-            dataType: 'json',
-            success: function (data) {
-                if (typeof produtoID != 'undefined') {
-                    if (data.Visible === true && data.Stock > 0) {
-                        AtualizarGradeCompreJunto(data, produtoID, referenciasJaSelecionadas);
-                    } else {
-                        swal({
-                            title: '',
-                            text: 'Variação inválida ou produto sem estoque!',
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        }).then(function () {
-                            $("adicionar-compre-junto-" + produtoID).removeClass('adicionado');
-                            $("adicionar-compre-junto-" + produtoID).removeClass('active');
-                            $("#" + produtoID + "-buy-together-sku").val("");
-                        });
-                    }
-
+    $.ajax({
+        url: '/Product/GetSku/',
+        type: 'POST',
+        data: {
+            jsonSKU                 : jsonSKU,
+            referencias             : referenciasJaSelecionadas,
+            parcelaMaximaUnidade    : parcelaMaximaUnidade,
+            qtdParcelaMaximaUnidade : new Number(qtdParcelaMaximaUnidade),
+            pagamentoDescricao      : pagamentoDescricao
+        },
+        dataType: 'json',
+        success: function (data) {
+            console.log(data)
+            if (typeof produtoID != 'undefined') {
+                if (data.Visible === true && data.Stock > 0) {
+                    AtualizarGradeCompreJunto(data, produtoID, referenciasJaSelecionadas);
                 } else {
-                    AtualizarGrade(data);
+                    swal({
+                        title: '',
+                        text: 'Variação inválida ou produto sem estoque!',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        $("adicionar-compre-junto-" + produtoID).removeClass('adicionado');
+                        $("adicionar-compre-junto-" + produtoID).removeClass('active');
+                        $("#" + produtoID + "-buy-together-sku").val("");
+                    });
                 }
 
-                AtualizarDicaCompreJunto($("#produto-id").val(), data.IdSku);
-                CarregarParcelamento(false);
-            },
-            error: function (request, error) {
-                //console.log("erro ao buscar sku");
+            } else {
+                AtualizarGrade(data);
             }
-        });
+
+            AtualizarDicaCompreJunto($("#produto-id").val(), data.IdSku);
+            CarregarParcelamento(false);
+        },
+        error: function (request, error) {
+            //console.log("erro ao buscar sku");
+        }
+    });
 }
 
 function AtualizarGradeCompreJunto(jsonSKU, productID, referencias) {
@@ -608,10 +608,10 @@ function AtualizarGradeCompreJunto(jsonSKU, productID, referencias) {
     $.ajax({
         url: '/Product/GetProductImages?id=' + productID + '&referencias=' + referencias,
         type: 'GET',
-        success: function (result) 
+        success: function (result)
         {
             var listProducts = document.getElementById("buy-together").getElementsByClassName("item buy-together");
-            for (var i = 0; i < listProducts.length; i++) 
+            for (var i = 0; i < listProducts.length; i++)
             {
                 if(listProducts[i].dataset.id == id)
                 {
@@ -640,7 +640,7 @@ function AtualizarGradeCompreJunto(jsonSKU, productID, referencias) {
 
 function AtualizarGrade(jsonSKU) {
 
-    let 
+    let
         estoque        = parseInt(jsonSKU.Stock),
         html_price     = "",
         price          = jsonSKU.Price,
@@ -728,7 +728,7 @@ function AtualizarGrade(jsonSKU) {
     $("#parcela-maxima-unidade").val(max_v);
     $("#qtd-parcela-maxima-unidade").val(max_p);
     $("#pagamento-descricao").val(description);
-    
+
     let referenciasvariacoes = $("#principal-referencias-selecionadas").val().split(",");
     let variacoesSelecionadas = "";
     for (var i = 0; i < referenciasvariacoes.length; i++) {

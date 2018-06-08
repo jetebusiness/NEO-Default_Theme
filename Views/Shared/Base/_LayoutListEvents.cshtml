@@ -57,6 +57,10 @@
         @Html.Partial("Common/_TopBar")
         <!-- ~/Views/Shared/Common/_Head.cshtml -->
         @Html.Partial("Common/_Head")
+        
+        <!-- ~/Views/Shared/Common/_Menu.cshtml -->
+        @Html.Action("Menu", "Home")
+        
         @RenderSection("breadcrumbs", required: true)
         <div class="ui container margin bottom large">
             <div class="ui divider"></div>

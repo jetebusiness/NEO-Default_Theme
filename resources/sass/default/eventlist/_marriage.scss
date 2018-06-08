@@ -1,19 +1,20 @@
 .lista.casamento {
-  background: linear-gradient(to bottom, rgba(255,255,255,1) 41%,rgba(234,234,234,1) 54%,rgba(44,62,80,1) 54%,rgba(44,62,80,1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 41%,rgba(255,255,255,1) 54%,#eee 54%,#eee 100%);
+  margin-top:50px;
+  padding-bottom: 50px;
   
-  margin-bottom: -30px;
-  @media screen and (max-width: $mobile-bp) {
-    margin-bottom: -30px;
+  + .footer {
+    margin-top: 0 !important;
   }
 
-  @media only screen and (max-width: 1199px) and (min-width: 992px) {
-    //margin-bottom: -30px;
+  @media screen and (max-width: $mobile-bp) {
+    margin-top:0px;
   }
 
   .index {
 
     .img-banner-casal {
-      margin-top: 40px;
+      margin-top: 50px;
 
       @media screen and (max-width: $tablet-bp-max) {
         position: absolute;
@@ -32,11 +33,11 @@
       }
 
       h1 {
-        color: rgba(244, 115, 33, 1);
+        color: $primary-color;
 
         span {
           font-weight: normal;
-          display: block;
+          display: inline-block;
         }
       }
 
@@ -50,14 +51,31 @@
         @media screen and (max-width: $mobile-bp) {
           margin: auto;
         }
+
+        #parametro {
+          width: calc(100% - 119px) !important;
+        }
+        
       }
     }
 
     .login-lista {
-      background-color: $primary-color;
+      margin-top:100px;
+
 
       h1 {
-        font-weight: lighter;
+        font-size: 19px;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin: 0 0 10px 0;
+
+        @media screen and (max-width: $mobile-bp) {
+          padding-top: 70px;
+        }
+      }
+      
+      p {
+        color:#666;
       }
     }
   }

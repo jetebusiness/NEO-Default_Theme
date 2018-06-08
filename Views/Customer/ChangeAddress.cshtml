@@ -14,7 +14,7 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Central do Cliente</a>
+                        <a class="section" href="/Customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
                         <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
                     </div>
@@ -26,7 +26,7 @@
 
 <div class="ui grid middle aligned">
 <h3>Endereço(s) selecionado(s):</h3>
-<div class="two column row">
+<div class="two column row stackable">
     @{
         if (Model != null && Model.Address != null)
         {
@@ -69,10 +69,10 @@
                                         @{
                                             string valueDelete = item.IdAddress.ToString() + "|#|" + (item.Default ? "default" : "billing");
                                         }
-                                        <button id="delete" value="@valueDelete" class="ui right floated  red button icon">
+                                        <button id="delete" value="@valueDelete" class="ui red button icon">
                                             <i class="icon trash"></i>
                                         </button>
-                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui right floated primary button">
+                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui icon basic button">
                                             <i class="write icon"></i>
                                             Editar
                                         </a>
@@ -120,10 +120,10 @@
                                         @{
                                             string valueDelete = item.IdAddress.ToString() + "|#|" + (item.Default ? "default" : "billing");
                                         }
-                                        <button id="delete" value="@valueDelete" class="ui right floated  red button icon">
+                                        <button id="delete" value="@valueDelete" class="ui red button icon">
                                             <i class="icon trash"></i>
                                         </button>
-                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui right floated primary button">
+                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui icon basic button">
                                             <i class="write icon"></i>
                                             Editar
                                         </a>
@@ -171,10 +171,10 @@
                                         @{
                                             string valueDelete = item.IdAddress.ToString() + "|#|" + (item.Default ? "default" : "billing");
                                         }
-                                        <button id="delete" value="@valueDelete" class="ui right floated  red button icon">
+                                        <button id="delete" value="@valueDelete" class="ui red button icon">
                                             <i class="icon trash"></i>
                                         </button>
-                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui right floated primary button">
+                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui icon basic button">
                                             <i class="write icon"></i>
                                             Editar
                                         </a>
@@ -223,15 +223,19 @@
                                     <p>@item.City, @item.State</p>
                                     <p>CEP @item.ZipCode</p>
                                 </div>
-                                <div class="extra">
-                                    <button id="entrega" value="@item.IdAddress" class="ui tiny compact icon teal button">
+                                <div class="ui grid">
+                                    <div class="row two column stackable">
+                                        <div class="column">
+                                            <button id="entrega" value="@item.IdAddress" class="ui tiny compact icon primary basic button">
                                         <i class="check icon"></i>
                                         Entrega
                                     </button>
-                                    <button id="cobranca" value="@item.IdAddress" class="ui tiny compact icon teal button">
+                                            <button id="cobranca" value="@item.IdAddress" class="ui tiny compact icon primary basic button">
                                         <i class="check icon"></i>
                                         Cobrança
                                     </button>
+                                        </div>
+                                        <div class="column">
                                     @{
                                         string valueDelete = "";
                                         if (item.Default)
@@ -247,10 +251,10 @@
                                             valueDelete = item.IdAddress.ToString() + "|#|" + "nothing";
                                         }
                                     }
-                                    <button id="delete" value='@valueDelete' class="ui right floated  red button icon">
+                                            <button id="delete" value='@valueDelete' class="ui red button icon">
                                         <i class="icon trash"></i>
                                     </button>
-                                    <a href="/Customer/EditAddress/@item.IdAddress" class="ui right floated primary button">
+                                            <a href="/Customer/EditAddress/@item.IdAddress" class="ui basic button icon">
                                         <i class="write icon"></i>
                                         Editar
                                     </a>
@@ -259,13 +263,15 @@
                         </div>
                     </div>
                 </div>
+                    </div>
+                </div>
             }
         }
     }
 </div>
 <div class="row">
     <div class="column">
-        <a href="/Customer/CreateAddress" class="ui right floated green button">
+        <a href="/Customer/CreateAddress" class="ui right floated primary button">
             <i class="plus icon"></i>
             Novo Endereço
         </a>

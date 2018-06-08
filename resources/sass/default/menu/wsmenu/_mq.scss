@@ -199,6 +199,7 @@
     display: block !important;
     .wsmenu-list {
       display: block !important;
+      margin: 0 !important;
       > li {
         clear: left;
         width: 100%;
@@ -333,6 +334,15 @@
       left: 0;
       transition: all .4s ease-in-out;
       }
+
+    .titleMenu {
+      padding: 1em;
+      background: darken($primary-color, 5);
+      color: #fff;
+      font-weight: bold;
+          display: block !important;
+    }
+    
     
     .animated-arrow {
       left: calc(100% - 40px);
@@ -385,8 +395,7 @@
   .animated-arrow {
     position: absolute;
     left: 0;
-    top: 15px;
-    z-index: 102;
+    top: 10px;
     transition: all .4s ease-in-out;
     cursor: pointer;
     padding: 13px 35px 16px 0;

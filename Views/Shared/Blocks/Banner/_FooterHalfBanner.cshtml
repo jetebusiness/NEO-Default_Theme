@@ -7,32 +7,11 @@
             <div class="column">
                 <div class="ui images text center left grid-banners  middle aligned center aligned">
                     @{
-                        var contador = 0;
                         foreach (var banner in Model)
                         {
-                            <a href="@banner.Link">
-                                <img src="@banner.NameFileImage" alt="" class="ui image" onerror="imgError(this)">
+                            <a href="@banner.Link" title="@banner.Name">
+                                <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" alt="@banner.Name" title="@banner.Name" class="ui image" onerror="imgError(this)">
                             </a>
-                            contador++;
-
-                            if (contador >= 3)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                </div>
-                <div class="ui images text center left grid-banners  middle aligned center aligned">
-                    @{
-                        contador = 0;
-                        foreach (var banner in Model)
-                        {
-                            contador++;
-
-                            if (contador > 3)
-                            {
-                                <img src="@banner.NameFileImage" alt="" class="ui image" onerror="imgError(this)">
-                            }
                         }
                     }
                 </div>

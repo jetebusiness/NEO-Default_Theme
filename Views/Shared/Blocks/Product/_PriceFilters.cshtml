@@ -2,28 +2,29 @@
 <div class="active title">Preço<i class="dropdown icon"></i></div>
 <div class="active content">
     <div class="ui form">
-        <div class="inline three fields nowrap">
-            <div class="seven wide field">
+        <div class="two fields stackable">
+            <div class="field">
+                <label>Valor De:</label>
                 <div class="ui input left icon fluid">
                     <i class="dollar icon"></i>
                     <input type="text" name="initialPrice" id="initialPrice" placeholder="Min">
                 </div>
             </div>
-
-            <div class="seven wide field">
+            <div class="field">
+                <label>Valor Até</label>
                 <div class="ui input left icon fluid">
                     <i class="dollar icon"></i>
                     <input type="text" name="finalPrice" id="finalPrice" placeholder="Max">
                 </div>
             </div>
-            <div class="two wide field">
-                <button class="ui teal icon button pricefilter">
+        </div>
+        
+        <button class="ui labeled icon button primary fluid pricefilter text uppercase">
                     <i class="check icon"></i>
+            Filtrar Produtos
                 </button>
             </div>
         </div>
-    </div>
-</div>
 
 <script>
     $("#initialPrice, #finalPrice").mask("#.##0,00", { reverse: true });

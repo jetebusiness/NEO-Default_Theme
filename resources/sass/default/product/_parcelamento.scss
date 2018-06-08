@@ -14,6 +14,8 @@ span.parcelamentos {
   & > .total {
     color:#C5C7C9;
     font-size: 0.8rem;
-    float: right;
+    clear: both;
+    display: block;
+    margin-bottom: 10px;
     }
   }

@@ -3,16 +3,20 @@ headlogo {
   width: 100%;
 }
 
-.logo{
-  max-height: 80px;
-}
-
 ._header {
   background: rgb(255,255,255);
   margin-top: 0px;
 
   &.fixed{
-  box-shadow: rgba(0,0,0,.3) 0px 0px 10px 0px;
+    box-shadow: rgba(0,0,0,.3) 0px 0px 10px 0px;
+    @media screen and (max-width: $mobile-bp) {
+      box-shadow: none;
+      border-bottom:1px solid #eee;
+    }
+
+    .blocoBusca {
+      top:90px;
+    }
   }
 
   .ui.container {
@@ -30,13 +34,54 @@ headlogo {
   }
 
   .searchcolumn {
-    @media screen and (max-width: $mobile-bp){
+    .ui.icon.input > i.icon {
+      opacity: initial;
+    }
+
+    @media screen and (max-width: $mobile-bp) {
       display: none !important;
     }
   }
 
+  .searchMobile {
+    display: inline-block;
+    float: right;
+    margin-right: 1em;
+    padding-right: 1em;
+    border-right: 1px solid #eee;
+
+    >.button {
+      background: transparent;
+      margin: 0;
+    }
+
+    .blocoBusca {
+      display: none;
+      &.active {
+        display: block !important;
+        position: fixed;
+        right: 10px;
+        top: 100px;
+        z-index: 10;
+        width: calc(100% - 20px);
+        height: 40px;
+
+        i {
+          top:0 !important;
+          right: 0 !important;
+        }
+      }
+    }
+  }
+
+
   .cartbutton {
-    .ui.basic.primary.button {
+    margin: 0;
+    display: inline-block;
+    cursor: pointer;
+    float: right;
+    line-height: 36px;
+    .ui.basic.button {
       > span {
         @media screen and (max-width: $mobile-bp){
           display: none;

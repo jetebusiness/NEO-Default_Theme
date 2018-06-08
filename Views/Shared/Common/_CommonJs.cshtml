@@ -19,7 +19,7 @@
             url: "@(Session["EventList"] != null ? "/EventList/TotalItensList" : "/Checkout/TotalItensCart")",
             data: {},
             success: function (data) {
-                $("#total_itens_card").text(data)
+                $("#total_itens_card").text("("+data+")")
                 if (data != "")
                     $("#MiniCartTitle").text("@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista") (" + data + ")")
             },

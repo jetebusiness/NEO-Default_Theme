@@ -1,68 +1,362 @@
+.newsletter-bar {
+	padding-bottom: 10px;
+	background: #333;
+	position: relative;
+
+	i.envelope {
+		float: left;
+		margin-right: 5px;
+		font-size: 3em;
+		color: #fff;
+		line-height: 40px;
+	}
+
+	h4.header {
+		color: #fff;
+		font-size: 18px;
+		font-weight: 700;
+		text-transform: uppercase;
+		border-right: 1px solid lighten($secondary-color, 30);
+		padding-right: 15px;
+		margin: 0;
+		float: left;
+		line-height: 40px;
+
+		@media screen and (max-width: $mobile-bp) {
+			border:0;
+			padding-right: 0;
+		}
+	}
+
+	span.text {
+		color: #999;
+		font-size: 12px;
+	}
+
+
+	.inline.fields {
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+
+		.field {
+			@media screen and (max-width: $mobile-bp) {
+				padding-right: 0 !important;
+			}
+		}
+
+	}
+
+
+	.inline {
+		>.icon.input {
+			@media screen and (max-width: $mobile-bp) {
+				display:table;
+			}
+		}
+
+		.textNews {
+			@media screen and (min-width: $table-bp-min) and (max-width: $tablet-bp-max) {
+				max-width: 180px;
+
+			}
+
+			@media screen and (max-width: $mobile-bp) {
+				margin: 10px auto !important;
+				padding:0 !important;
+			}
+		}
+
+		#email_news {
+			background: #fff;
+			font-size: 12px;
+			color: #666666;
+
+
+			@media screen and (max-width: $mobile-bp) {
+				max-width: 200px;
+
+			}
+
+
+		}
+
+		i.mail.icon {
+			color: $secondary-color;
+			opacity: 1 !important;
+
+			@media screen and (max-width: $mobile-bp) {
+				top: 16px;
+				height:initial;
+			}
+		}
+
+		#btn_news {
+			margin-left: 5px;
+			color: #ffffff;
+			text-transform: uppercase;
+			background: lighten($secondary-color , 20);
+			font-size: 13px;
+
+			@media screen and (max-width: $mobile-bp) {
+				width: 100%;
+				margin:0 auto;
+			}
+		}
+
+
+	}
+
+}
+
 .footer-wrap{
 	position: absolute;
 	bottom: 0px;
-  }
+}
 
-  .footer {
-	background-color: $ascent-4-color !important;
+.footer {
+	background-color: $secondary-color !important;
 	padding-bottom: 20px !important;
-	margin-top:30px !important;
 
-	.social.list {
-
-	  .button {
-		margin-left:10px;
-
-		i{
-		  font-size: 2em;
-		  line-height: 0.95em;
+	> .ui.container {
+		>.ui.grid {		
+			> .column {
+				padding-bottom: 0 !important;
+			}
 		}
-	  }
 	}
-  }
 
-  .subFooter {
-	background-color: $ascent-5-color;
+	.listMobile {
+		.column {
+			@media screen and (max-width: $mobile-bp) {
+				border-bottom:1px solid lighten($secondary-color, 10);
+			}
+		}
+
+	}
+
+	.header {
+		text-transform: uppercase;
+		font-size: 14px !important;
+		margin:0;
+		@media screen and (max-width: $mobile-bp) {
+			line-height: 30px;
+		}
+
+		i.icon:only-child {
+			display:none;
+			float:right !important;
+			font-size: 1em;
+		}
+	}
+
+
+	socialbar {
+		margin-top: 10px;
+		display: inline-block;
+		a {
+			i.icon{
+				font-size: 1.7em;
+				line-height: 0.95em;
+			}
+		}
+	}
+
+	.list {
+		&.link {
+			a,
+			h5 {
+				color: #999999 !important;
+				font-size: 12px;
+				font-weight: bold;
+				margin: 0;
+				line-height: 20px;
+
+				&:hover,
+				&:focus,
+				&:checked,
+				&:active {
+					color: #fff !important;
+				}
+			}
+
+			@media screen and (max-width: $mobile-bp) {
+				padding: 1em;
+				text-align: left !important;
+				margin: 10px 0 0 0;
+				display: none;
+				background: lighten($secondary-color, 5);
+
+			}
+		}
+		
+		&.selos {
+			margin-top:10px;
+			margin-bottom: 30px;
+			
+			a ~ a {
+				margin-left:10px;
+			}
+		}
+
+
+        
+		&.selos a img {
+		        height: 100px;
+                display: inline-block;
+                background-size: cover;
+		}
+		
+	}
+
+	p {
+		color:#999999;
+		font-size: 12px;
+		font-weight: bold;
+	}
+
+	h4,
+	h5{
+		font-weight: bold;
+		font-size: 16px;
+		color:$white;
+	}
+
+	.tireDuvidas {
+		background: #fff;
+		h5 {
+			color: $black;
+			margin:0;
+			font-size: 1rem;
+		}
+
+	}
+
+
+	.ui.form  {
+
+
+		> .inline {
+			>.icon.input {
+				@media screen and (max-width: $mobile-bp) {
+					display:table;
+				}
+
+				.mail {
+					color:$black;
+					opacity: 1 !important;
+
+					@media screen and (max-width: $mobile-bp) {
+						top: 22px;
+						height:initial;
+					}
+				}
+
+				#email_news {
+					@media screen and (max-width: $mobile-bp) {
+						width: 100%;
+					}
+				}
+
+				#btn_news {
+					margin-left: 5px;
+					color: #000;
+					text-transform: uppercase;
+					background: #fff;
+
+					@media screen and (max-width: $mobile-bp) {
+						width: 100%;
+						margin:5px auto 0 auto;
+					}
+
+				}
+			}
+		}
+	}
+
+
+
+}
+
+.subFooter {
+	background-color: $secondary-color;
+	border-top:1px solid lighten($secondary-color,10);
+
+	@media screen and (max-width: $mobile-bp) {
+		text-align: center;
+	}
 
 	.menu_subfooter {
-	  margin-bottom: 1em;
+		margin-bottom: 1em;
 
-	  a.submenu {
-		padding: .42857143em 0.84285714em;
-		color: white;
+		a.submenu {
+			padding: .42857143em 0.84285714em;
+			color: white;
 
-		&:hover {
-		  text-decoration: underline;
+			&:hover {
+				text-decoration: underline;
+			}
 		}
-	  }
 	}
-  }
 
-  .jetBrand{
+	.textoEmpresa {
+		text-align: center;
+
+		>h6 {
+			color:#999;
+			font-size:12px;
+			font-weight: normal;
+			margin:0 0 10px 0;
+			display: inline-block;
+		}
+		> address {
+			color:#999;
+			font-size:12px;
+			font-weight: normal;
+			font-style: normal;
+			display: inline-block;
+		}
+	}
+
+	.ui.tiny.images {
+		@media screen and (max-width: $mobile-bp) {
+			text-align: center;
+		}
+	}
+
+
+}
+
+.jetBrand{
 	height: 35px;
 	text-align: center;
 	padding: 0px !important;
 	background: black !important;
 
 	img{
-	  height: 25px;
-	  margin:5px;
+		height: 25px;
+		margin:5px;
 	}
-  }
-#seloEbit{
-	display: inline-table !important;
-	float: right;
-	margin-left: 10px;
-	}
-#jetLogo {
-    height: 28px;
-
-    .cinza {
-        fill: rgba(255, 255, 255, 1);
-    }
-
-    .vermelho {
-        fill: rgba(228, 25, 32, 1);
-    }
 }
-  
+#seloEbit{
+	display: inline-block !important;
+	width:84px;
+	@media screen and (max-width: $mobile-bp) {
+		float:none;
+		margin: 0;
+		width: auto;
+	}
+
+}
+#jetLogo {
+	height: 57px;
+
+	.st0 {
+		fill: rgba(255, 255, 255, 1);
+
+	}
+
+	.st1 {
+		fill: rgba(255,0, 0, 1);
+	}
+}

@@ -1,4 +1,23 @@
-.ui.cards > .card > .content,
-.ui.card > .content{
+.ui.cards > .card {
+  border-radius: 0 !important;  
+  > .content {
+    border-top:none !important;
+  }
+}
+
+.ui.card  {
+  &:last-child {
+    border-radius: 0 !important;
+  }
+  
+  &.produto {
+    &:hover,
+    &:focus {
+      box-shadow: 0 1px 3px 0 #eee, 0 0 0 1px #eee !important;
+    }
+  }
+  
+  > .content{
   border-top:none !important;
   }
+}

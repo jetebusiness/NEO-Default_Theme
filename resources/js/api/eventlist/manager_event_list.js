@@ -1,6 +1,7 @@
 import {isLoading} from "../api_config";
 import {_alert, _confirm} from "../../functions/message";
 import {openModalQuickView} from "../../functions/modal";
+import {isValidEmail} from "../../functions/validate.js"
 import {openLongModal} from "../../functions/modal";
 import {SomenteNumerosPositivos} from "../../functions/form-control";
 import {formSettings} from "../../ui/starters/formManipulation";
@@ -179,8 +180,9 @@ $(document).on("click", "#addGuest", function (e) {
         return false;
     }
 
-    if (emailGuest === "") {
+    if (!isValidEmail(emailGuest)) {
         $("#divFieldEmailGuest").addClass("error");
+        $("#divFieldEmailGuest> #divMsgEmailGuest").remove();
         $("#divFieldEmailGuest").append(`<div id="divMsgEmailGuest" class="ui basic red pointing prompt label transition visible">Preencha o email do convidado. (Ex: email@dominio.com.br)</div></div>`);
 
         return false;

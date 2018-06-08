@@ -34,7 +34,7 @@
                         }
                     </div>
                     <div class="ui divider"></div>
-                    <button class="ui button grey large"
+                    <button class="ui button basic large"
                             id="ClearCart" tabindex="0">
                         Limpar Carrinho
                     </button>
@@ -68,7 +68,7 @@
                                                                class="masked" size="9" name="shipping"
                                                                value="@Model.ZipCode"
                                                                id="shipping">
-                                                        <button class="ui yellow right labeled icon button frete calcular" id="CallServiceShipping">
+                                                        <button class="ui right labeled icon button frete calcular" id="CallServiceShipping">
                                                             <i class="shipping icon"></i>
                                                             Calcular
                                                         </button>
@@ -79,10 +79,10 @@
                                     </div>
                                     <div class="description resultado" id="exibeFrete">
                                         <div class="ui form right floated ">
-                                            <div class="inline field">
+                                            <div class="field">
                                                 <label class="frete valor" id="loadFrete"></label>
-                                                <div class="ui input">
-                                                    <button class="ui orange right labeled icon mini button frete recalcular" id="btn_recalcular_frete">
+                                                <div class="ui">
+                                                    <button class="ui right labeled icon mini button frete recalcular margin none" id="btn_recalcular_frete">
                                                         <i class="refresh icon"></i>
                                                         Recalcular
                                                     </button>
@@ -118,7 +118,7 @@
                                     </a>
                                 </div>
                                 <div class="column">
-                                    <button id="finalizePurchase" class="ui animated button fluid large submit green"
+                                    <button id="finalizePurchase" class="ui animated button fluid large submit action"
                                        tabindex="0">
                                         <div class="visible content">Finalizar Compra</div>
                                         <div class="hidden content">
@@ -146,3 +146,4 @@
     @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
     <!-- End Google Remarketing -->
 }
+

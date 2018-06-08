@@ -24,15 +24,16 @@
                         <img src="@tag.Image" alt="@tag.Name" class="ui image tiny" onerror="imgError(this)">
                     </div>
                 }
-                <div class="produto easyzoom easyzoom--overlay easyzoom--with-thumbnails">
+                <div class="produto easyzoom easyzoom--overlay easyzoom--with-thumbnails easyzoom--with-toggle">
                     @if (Model != null && Model.Count() > 0)
                     {
                         <a href="@(Model.FirstOrDefault().ImageHighResolution != null ? Model.FirstOrDefault().ImageHighResolution : "#" )">
                             @* Tem de Setar aqui a imagem de tamanho maior ZOOM!*@
-                            <img id="imagem-padrao" class="img" src="@Model.FirstOrDefault().ImageDefault"  onerror="imgError(this)" />
+                            <img id="imagem-padrao" class="img" src="/assets/image/img_default.png" data-src="@Model.FirstOrDefault().ImageDefault"  onerror="imgError(this)" />
                         </a>
                     }
                 </div>
+                <button class="ui button basic small toggleZoom mobile only" data-active="false">Habilitar Zoom</button>
             </div>
         </div>
     </div>

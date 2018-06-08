@@ -28,8 +28,8 @@
                                 </button>
                                 <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
                                 <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
-                                <input type="number" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" />
-                                <button class="ui green icon button qtdAction" data-id="@Model.IdCartItem" data-action="plus">
+                                <input type="number" class="text center" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" />
+                                <button class="ui grey icon button qtdAction" data-id="@Model.IdCartItem" data-action="plus">
                                     <i class="add icon"></i>
                                 </button>
                             </div>

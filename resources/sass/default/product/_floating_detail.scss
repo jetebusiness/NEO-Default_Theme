@@ -19,10 +19,15 @@
 		padding: 0.25rem 0 !important;
 	  }
 
+		.nomeProduto {
+			font-weight: bold;
+			font-size: 20px;
+		}
+
 	  .precoAntigo{
 		clear: both;
-		color:#C5C7C9;
-		font-size: 14px;
+		  color: #999;
+		  font-size: 12px;
 		line-height: 18px;
 
 		&:after{
@@ -32,9 +37,9 @@
 	  }
 	  .preco{
 		clear: both;
-		color:$ascent-1-color;
-		font-size: 24px;
-		line-height:30px;
+		  color: $black;
+		  font-size: 20px;
+		  line-height: 25px;
 
 		&:after{
 		  content: '\A';
@@ -58,6 +63,14 @@
 		  font-weight: 700;
 		}
 	  }
+	}
+	
+	#floating-bar {
+		>.attached {
+			padding-top: 0;
+			padding-bottom: 0;
+			border: 0;
+		}
 	}
   }
 

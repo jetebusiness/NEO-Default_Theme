@@ -3,13 +3,13 @@
 
 <div class="row product-b2b">
     <div class="column">
-        <div class="ui middle aligned grid blue segment" id="grade_sku" style="overflow: scroll;max-height: 340px;overflow-x: hidden">
+        <div class="ui middle aligned grid attached segment" id="grade_sku" style="overflow: scroll;max-height: 340px;overflow-x: hidden">
             @foreach (var sku in Model.SKUs)
             {
                 if (sku.Visible)
                 {
-                    <div class="three column row sku_b2b" data-sku-id="@sku.IdSku" data-stock="@sku.Stock" data-produto-id="@Model.IdProduct">
-                        <div class="column">
+                    <div class="three column stackable row sku_b2b" data-sku-id="@sku.IdSku" data-stock="@sku.Stock" data-produto-id="@Model.IdProduct">
+                        <div class="column center aligned">
                             <div class="ui form">
                                 <div class="grouped fields">
                                     <div class="field inline-flex">
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ui right aligned column">
+                        <div class="column center aligned">
                             <div>
                                 @if (sku.PricePromotion.HasValue && sku.PricePromotion > 0)
                                 {
@@ -45,13 +45,13 @@
                         </div>
                         @if (sku.Stock > 0)
                     {
-                            <div class="column ui right aligned">
+                            <div class="column center aligned">
                                 <div class="ui qtd action mini input">
                                     <button class="ui icon button b2b_minus detalhes" id="qtdminus-detalhes">
                                         <i class="minus icon"></i>
                                     </button>
-                                    <input type="number" min="1" step="1" size="3" value="0" name="quantidade" id="quantidade_b2b_@sku.IdSku" class="quantidade_b2b" data-qtd-max="@sku.Stock" />
-                                    <button class="ui green icon button b2b_plus detalhes" id="qtdplus-detalhes">
+                                    <input type="number" min="1" step="1" size="3" value="0" name="quantidade" id="quantidade_b2b_@sku.IdSku" class="quantidade_b2b text center" data-qtd-max="@sku.Stock" />
+                                    <button class="ui grey icon button b2b_plus detalhes" id="qtdplus-detalhes">
                                         <i class="add icon"></i>
                                     </button>
                                 </div>
@@ -59,7 +59,7 @@
                         }
                         else
                         {
-                            <div class="column">
+                            <div class="column center aligned">
                                 <a class="ui button grey animated fluid avise_b2b" data-produto-id="@Model.IdProduct">
                                     <input type="hidden" class="quantidade_b2b" value="0" />
                                     <div class="visible content">Avise-me!</div>
@@ -88,7 +88,7 @@
         </div>
         <div class="row margin top medium">
             <div class="column">
-                <a class="ui animated big green button fluid detalhes" id="btn_comprar_b2b">
+                <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_b2b">
                     <div class="visible content">Comprar</div>
                     <div class="hidden content">
                         <i class="add to cart icon"></i>
@@ -98,7 +98,7 @@
         </div>
         <div class="row margin top medium">
             <div class="column">
-                <a class="ui animated big green button fluid detalhes" id="btn_comprar_oneclick_b2b">
+                <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_oneclick_b2b">
                     <div class="visible content">Comprar com 1-Click</div>
                     <div class="hidden content">
                         <i class="add to cart icon"></i>
@@ -108,7 +108,7 @@
         </div>
         <div class="row margin top medium">
             <div class="column">
-                <a class="ui animated big blue button fluid" id="btn_comprar_continuar">
+                <a class="ui animated large basic button fluid" id="btn_comprar_continuar">
                     <div class="visible content">Adicionar e Continuar Comprando</div>
                     <div class="hidden content">
                         <i class="plus icon"></i>

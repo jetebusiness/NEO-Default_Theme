@@ -1,4 +1,5 @@
 ﻿import {isLoading} from "../api_config";
+import {lazyLoad} from "../../functions/lazy_load";
 
 let urlBase = "/product/getproducts/";
 
@@ -41,7 +42,7 @@ $(document).on("click", "#nextPage", function() {
     }
 });
 
-$(document).on("click", "#btnPageNumber", function() {
+$(document).on("click", ".btnPageNumber", function() {
     let page = $(this).data("number");
     window.filterManipulation.pageNumber = page;
 
@@ -60,6 +61,7 @@ function getProducts(data) {
         data: data,
         success: function (response) {
             $("#list").html(response);
+            lazyLoad();
             $(".ui.rating").rating({ 
                 maxRating: 5, 
                 interactive: false 
@@ -89,7 +91,7 @@ function loadData() {
     data = {
         viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: filters.pageNumber === undefined ? "1" : filters.pageNumber,
-        pageSize: "",
+        pageSize: "12",
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
         category: filters.idCategory === undefined ? genericPageFilter : filters.idCategory,

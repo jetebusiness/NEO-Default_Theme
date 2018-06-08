@@ -5,12 +5,12 @@
     <div class="ui container">
         <div class="ui middle aligned three column centered grid">
             <div class="row">
-                <div class="ui ten wide mobile six wide tablet four wide computer column">
-                    <a href="@(Session["idEventList"] == null ? "/Home" : "#")">
-                        <img class="ui middle aligned image" src="/assets/image/logo/logo.png" alt="">
+                <div class="ui eight wide mobile six wide tablet five wide computer column">
+                    <a href="/Home" title="Página Inicial">
+                        <img class="ui middle aligned image logo" src="/assets/image/logo/logo.png" alt="@LojaCorp.Control.Company._Company.FantasyName" title="@LojaCorp.Control.Company._Company.FantasyName">
                     </a>
                 </div>
-                <div class="ui center aligned five wide tablet eight wide computer column searchcolumn">
+                <div class="ui center aligned seven wide tablet seven wide computer column searchcolumn">
                     <div class="ui category @_classSearch">
                         <div class="ui icon input fluid">
                             <input class="prompt" type="text" placeholder="Buscar...">
@@ -19,27 +19,38 @@
                         <div class="results"></div>
                     </div>
                 </div>
-                <div class="ui right aligned six wide mobile five wide tablet four wide computer column">
-                    <div id="cartButton" class="ui labeled button cartbutton mini-cart no margin bottom" tabindex="0" data-segment="@(Session["segment"] != null ? Session["segment"] : "b2c")">
-                        <div class="ui basic primary button ">
-                            <i class="cart icon"></i>
-                            <span>@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</span>
-                        </div>
-                        <a class="ui left pointing primary label" id="total_itens_card">
+                <div class="ui eight wide mobile three wide tablet four wide computer column">
+                    <div id="cartButton" class="ui cartbutton mini-cart" tabindex="0" data-segment="@(Session["segment"] != null ? Session["segment"] : "b2c")">
+                        <i class="cart icon"></i>
+                        <span class="mobile-hide">@(Session["idEventList"] == null && Session["EventList"] == null ? "Carrinho" : "Minha Lista")</span>
+                        <span id="total_itens_card">
                             @{
                                 if (Session["EventList"] == null)
                                 {
                                     @Html.Action("TotalItensCart", "Checkout")
-                                }else
-	                            {
-	                                @Html.Action("TotalItensList", "EventList")
+                                }
+                                else
+                                {
+                                    @Html.Action("TotalItensList", "EventList")
                                 }
                             }
-                            
-                        </a>
+                        </span>
+                    </div>
+                    <div class="ui searchMobile mobile only">
+                        <div class="ui button icon centered">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="ui blocoBusca @_classSearch">
+                            <div class="ui icon input fluid">
+                                <input class="prompt" type="text" placeholder="Buscar...">
+                                <i class="search icon"></i>
+                            </div>
+                            <div class="results"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+

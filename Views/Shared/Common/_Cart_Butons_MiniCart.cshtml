@@ -11,7 +11,7 @@
         </button>
     </div>
     <div class="column">
-        <button class="ui animated button fluid large submit green buttonsMiniCart" tabindex="0" id="btn_finalizar" data-total-itens="@Model" data-user-url="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")">
+        <button class="ui animated button fluid large submit action buttonsMiniCart" tabindex="0" id="btn_finalizar" data-total-itens="@Model" data-user-url="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")">
             <div class="visible content">Finalizar Compra</div>
             <div class="hidden content">
                 <i class="right arrow icon"></i>

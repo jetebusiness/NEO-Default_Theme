@@ -1,8 +1,26 @@
 .ui {
+  
+  &.filterListEventsProducts {
+    .prompt {
+      border-radius: 500rem;
+    }    
+  }
 
   &.search{
 
     > .results{
+
+      @media screen and (max-width: $tablet-bp-max) and (min-width: $table-bp-min){
+        left: 50%;
+        margin-left: -19.75em;
+      }
+
+      @media screen and (max-width: $mobile-bp) {
+        top: 35px !important;
+        width: 100% !important;
+      }
+
+
       .result
       {
         .imagem + .content {
@@ -16,17 +34,24 @@
         }
 
         .imagem {
-        float: left;
-        overflow: hidden;
-        background: none;
-        max-width: 6rem;
-        border-radius: 0;
-
-        img {
-          display: block;
+          float: left;
+          overflow: hidden;
+          background: none;
           max-width: 6rem;
+          border-radius: 0;
+
+          @media screen and (max-width: $mobile-bp) {
+            max-width: 17%;
+          }
+
+          img {
+            display: block;
+            max-width: 6rem;
+            @media screen and (max-width: $mobile-bp) {
+              max-width: 100%;
+            }
+          }
         }
-      }
 
         .title {
           margin: -0.14285714em 0em 0em;

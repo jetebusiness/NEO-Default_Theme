@@ -14,7 +14,7 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Central do Cliente</a>
+                        <a class="section" href="/Customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
                         <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
                         <i class="right angle icon divider"></i>
@@ -32,7 +32,7 @@
         <div class="column">
             <form action="CreateAddress" method="POST">
                 @Html.AntiForgeryToken()
-                <div class="ui segment">''
+                <div class="ui segment">
                     <div class="ui grid stackable top aligned left aligned grid">
                         <div class="row two column divided horizontal">
                             <div class="column">
@@ -179,14 +179,14 @@
                 </div>
                 <div class="row">
                     <div class="column">
-                        <a href="javascript: history.go(-1)" class="ui animated button large red left floated">
+                        <a href="javascript: history.go(-1)" class="ui animated button large basic left floated">
                             <div class="visible content">Cancelar</div>
                             <div class="hidden content">
                                 <i class="remove icon"></i>
                             </div>
                         </a>
                         <button type="submit"
-                                class="ui animated button large submit green right floated"
+                                class="ui animated button large submit primary right floated"
                                 tabindex="0">
                             <div class="visible content">Cadastrar</div>
                             <div class="hidden content">

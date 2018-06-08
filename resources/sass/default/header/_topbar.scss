@@ -1,31 +1,38 @@
 .topbar {
-  background-color: $secondary-color;
-  color: #d8e5e6 !important;
+  border-bottom: 1px solid #EEEEEE;
+  color: #666666;
   height: 30px;
-  margin-bottom: 0px;
+  margin: 5px auto 0;
 
-  a {
-    color: #d8e5e6 !important;
-  }
 
-  .ui.horizontal.list {
-    padding-top: 5px;
+  .list {
+
+    line-height: initial;
+
+    >.item {
+      padding-top:0 !important;
+      padding-bottom:0 !important;
+      line-height: initial !important;
+
+      i {
+        color:#332B24;
+        font-size:18px;
+      }
+
+      a {
+        color:#666666;
+        font-size:13px;
+        text-transform: uppercase;
+      }
+
+    }
+
+
 
     span.text,
     .menu {
       @media screen and (max-width: $mobile-bp) {
         display: none;
-      }
-    }
-  }
-
-  .menu {
-    background: #1b1c1d !important;
-
-    .item {
-
-      &:hover {
-        background: #3f4041 !important;
       }
     }
   }
@@ -47,40 +54,26 @@
       margin-right: 5px;
     }
 
-    .facebook:hover {
-      color: #3b5998;
+    i{
+      font-size: 1.2em;
+      line-height: 0.95em;
+
+      &.facebook.icon {
+        color: #475993 !important;
+      }
+      &.instagram.icon {
+        color: #DE943F !important;
+      }
+      &.twitter.icon {
+        color: #2795e9 !important;
+      }
+      &.youtube.icon {
+        color: #dd4b39 !important;
+      }
+      &.google.icon {
+        color: #dd4b39 !important;
+      }
     }
 
-    .twitter:hover {
-      color: #55acee;
-    }
-
-    .instagram:hover {
-      color: #e95950;
-    }
-
-    .youtube.play:hover {
-      color: #bb0000;
-    }
-
-    .whatsapp:hover {
-      color: #4dc247;
-    }
-
-    .vimeo:hover {
-      color: #162221;
-    }
-
-    .wordpress:hover {
-      color: #21759b;
-    }
-
-    .pinterest:hover {
-      color: #cb2027;
-    }
-
-    .google.plus:hover {
-      color: #dd4b39;
-    }
   }
 }

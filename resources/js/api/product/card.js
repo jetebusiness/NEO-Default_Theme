@@ -25,7 +25,7 @@ $(document).on('click', '.btn-adiciona-conjunto', function () {
     if ($checkbox.prop("checked")) {
         $(this)
             .prop("checked", false)
-            .removeClass("green")
+            .removeClass("action")
             .addClass("grey")
             .find(".icon")
             .removeClass("checkmark box")
@@ -37,7 +37,7 @@ $(document).on('click', '.btn-adiciona-conjunto', function () {
         $(this)
             .prop("checked", true)
             .removeClass("grey")
-            .addClass("green")
+            .addClass("action")
             .find(".icon")
             .addClass("square outline")
             .addClass("checkmark box")
@@ -60,20 +60,20 @@ $(document).on("click", ".btn-comprar-card", function () {
 $(document).on("click", ".add-event-list", function () {
     $(this).addClass("loading");
     //isLoading("#miniCarrinho");
-      if(!$(this).hasClass("avise-card")){
+    if(!$(this).hasClass("avise-card")){
         $.when(insertItemInList($(this).data("idproduct"), this)).then(
-          function() {
-              //isLoading("#miniCarrinho");
-          });
-      }else {
+            function() {
+                //isLoading("#miniCarrinho");
+            });
+    }else {
         $(this).removeClass("loading");
-      }
+    }
 });
 
 function insertItemInList(productId, element) {
     let keep              = true,
         variationSelected = "",
-        $parent = $(element).closest(".ui.card.produto");
+        $parent = ($(element).closest(".ui.card.produto").length == 0 ? $(element).closest(".item.produtoList") : $(element).closest(".ui.card.produto"));
 
     $parent.find(".sku-options [id=referencefromproduct_" + productId + "]").each(function () {
         let idVariation = $(this).dropdown("get value");
@@ -167,8 +167,8 @@ $(document).on("click", ".button.avise-card", function () {
             $(".modal-block").append(response);
             openModalQuickView($(this).attr("data-modal-open"), callback => {
                 getAllMask();
-                loading(that);
-            });
+            loading(that);
+        });
 
         },
         onFailure: function (response) {
@@ -218,7 +218,7 @@ $(document).ready(function () {
         });
         updateProductConjunctTable();
     }else{
-        $(".buy-conjunct").removeClass("ui animated green button fluid")
+        $(".buy-conjunct").removeClass("ui animated primary button fluid")
         $(".buy-conjunct").addClass("ui labeled icon button fluid grey disabled")
         $("#buttonText").text("Indisponível")
         $("#iconCart").remove()
@@ -281,14 +281,14 @@ function callAjaxGetSku(element) {
 
                 if (sku.Stock <= 0 || isExhausted(productId)) {
                     $parent.find("#btn-comprar-card-" + productId)
-                        .removeClass("green btn-comprar-card")
+                        .removeClass("primary btn-comprar-card")
                         .addClass("grey avise-card avise-me-modal")
                         .html('<i class="icon announcement"></i> Avise-me');
 
-                        $parent.find("#add-event-list-" + productId)
-                            .removeClass("green btn-comprar-card")
-                            .addClass("grey avise-card avise-me-modal")
-                            .html('<i class="icon announcement"></i> Avise-me');
+                    $parent.find("#add-event-list-" + productId)
+                        .removeClass("primary btn-comprar-card")
+                        .addClass("grey avise-card avise-me-modal")
+                        .html('<i class="icon announcement"></i> Avise-me');
 
 
                     $parent.find("#produto-esgotado_" + productId).removeClass("hideme");
@@ -297,13 +297,13 @@ function callAjaxGetSku(element) {
                 else {
                     $parent.find("#btn-comprar-card-" + productId)
                         .removeClass("grey avise-card avise-me-modal")
-                        .addClass("green btn-comprar-card")
+                        .addClass("primary btn-comprar-card")
                         .html('<i class="icon add to cart"></i> Comprar');
 
-                        $parent.find("#add-event-list-" + productId)
-                            .removeClass("grey avise-card avise-me-modal")
-                            .addClass("ui labeled icon button green fluid add-event-list")
-                            .html('<i class="icon add to cart"></i> Adicionar à Lista');
+                    $parent.find("#add-event-list-" + productId)
+                        .removeClass("grey avise-card avise-me-modal")
+                        .addClass("ui labeled icon button primary fluid add-event-list")
+                        .html('<i class="icon add to cart"></i> Adicionar à Lista');
 
                     $parent.find("#produto-esgotado_" + productId).addClass("hideme");
                     $parent.data("stock", sku.Stock);
@@ -385,8 +385,8 @@ function updateStockConjunct(element) {
         $button
             .attr('disabled', true)
             .prop("checked", false)
-            .removeClass("green")
-            .addClass("black")
+            .removeClass("action")
+            .addClass("grey")
             .find(".icon")
             .removeAttr("class")
             .attr("class", "icon warning circle")
@@ -403,8 +403,8 @@ function updateStockConjunct(element) {
         $button
             .attr('disabled', false)
             .prop("checked", true)
-            .removeClass("black")
-            .addClass("green")
+            .removeClass("grey")
+            .addClass("action")
             .find(".icon")
             .removeAttr("class")
             .attr("class", "icon checkmark box")

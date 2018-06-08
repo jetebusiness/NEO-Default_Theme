@@ -21,7 +21,7 @@
         bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
         tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
         msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
-    }
+}
     else
     {
         if (Request.QueryString["s"] == "true")
@@ -80,7 +80,7 @@
                     <h2 class="">#@Model.IdOrder</h2>
                 </div>
             </div>
-            <div class="doubling two column row">
+            <div class="row @(ViewBag.ViewBoleto ? "two column stackable" : "")">
                 <div class="column">
                     <h3>Obrigado, @Model.NameCustomer</h3>
                     <p>@msgSucesso</p>
@@ -94,11 +94,66 @@
                         </div>
                     </div>
                 }
+                
+                @if (ViewBag.ViewBoleto)
+                {
+                    <div class="column">
+                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                              method="post"
+                              name="itauShopline"
+                              id="itauShopline"
+                              target="openShopline">
+                            <input type="hidden" name="DC" id="DC" value="@ViewBag.ItauShoplineKey" />
+                            <input class="ui large action button floated right" id="itauShoplineBoleto" type="submit" value="Imprimir Boleto" />
+                        </form>
+                    </div>
+                }
+                
+                @if (!String.IsNullOrEmpty(Request.QueryString["b"]))
+                {
+                    <div class="column">
+                        <a class="ui large action button floated right" href="@LojaCorp.Control.Static.DecryptData(Request.QueryString["b"].ToString())" title="Boleto" target="_blank">
+                            Imprimir Boleto
+                        </a>
+                    </div>
+                }
             </div>
             <div class="ui divider small hidden"></div>
         </div>
     </div>
 </div>
+
+
+@if (ViewBag.ActiveEbit != 0) {
+    var individualPrice = "";
+    var individualQTD = "";
+    var individualName = "";
+    var individualSKU = "";
+        
+    if (Model != null && Model.OrderItems != null)
+    {
+            
+        var conc = Model.OrderItems.Count() > 1 ? "|" : "";
+            
+        var regex = new System.Text.RegularExpressions.Regex("<h1(.*?)>(.*?)</h1>");
+            
+            
+        foreach (var item in Model.OrderItems)
+        {
+            individualPrice += item.UnitPrice.ToString().Replace(",", ".") + conc;
+            individualQTD += item.Quantity + conc;
+            var m = regex.Match(item.Name);
+            individualName += m.Groups[2].Value + conc;
+            individualSKU += (String.IsNullOrEmpty(item.IdSku.ToString()) ? item.IdProduct.ToString() : item.IdSku.ToString()) + conc;
+                
+        }
+    }
+        
+    <param id="ebitParam" value="email=@Model.Email&zipCode=@Model.Address.ZipCode&parcels=@Model.NumberOfInstallments&deliveryTax=@Model.TotalShipping.ToString().Replace(",", ".")&totalSpent=@Model.Total.ToString().Replace(",", ".")&value=@individualPrice&quantity=@individualQTD&productName=@individualName&transactionId=@Model.IdOrder&sku=@individualSKU&storeId=@ViewBag.ActiveEbit"/>
+                           
+    <a id="bannerEbit" class="ui grid centered"></a>
+    <script type="text/javascript" id="getSelo"src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
+}
 
 @if (ViewBag.ShowRegister)
 {
@@ -137,8 +192,7 @@
                                     <img src="@item.Image" onerror="imgError(this)">
                                 </div>
                                 <div class="content">
-                                    <a class="product title">@Html.Raw(item.Name)</a>
-                                    <div class="meta">Disponibilidade</div>
+                                    <div class="product title">@Html.Raw(item.Name)</div>
                                     <div class="description">
                                         <table class="ui very basic unstackable table ">
                                             <thead>
@@ -162,11 +216,6 @@
                                 </div>
                             </div>
                         }
-                    }
-                    @if (ViewBag.ActiveEbit != 0)
-                    {
-                        <a id="bannerEbit"></a>
-                        <script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
                     }
                 </div>
             </div>
@@ -204,7 +253,7 @@
                     </div>
                     <div class="ui divider"></div>
                     <div class="ui grid">
-                        <div class="row two column">
+                        <div class="row one column">
                             <div class="column">
                                 <a href="/Home" class="ui animated button fluid large basic"
                                    tabindex="0">
@@ -214,29 +263,6 @@
                                     </div>
                                 </a>
                             </div>
-
-                            @if (ViewBag.ViewBoleto)
-                            {
-                                <div class="column">
-                                    <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
-                                          method="post"
-                                          name="itauShopline"
-                                          id="itauShopline"
-                                          target="openShopline">
-                                        <input type="hidden" name="DC" id="DC" value="@ViewBag.ItauShoplineKey" />
-                                        <input class="ui large green button floated right" id="itauShoplineBoleto" type="submit" value="Imprimir Boleto" />
-                                    </form>
-                                </div>
-                            }
-
-                            @if (!String.IsNullOrEmpty(Request.QueryString["b"]))
-                            {
-                                <div class="column">
-                                    <a class="ui large green button floated right" href="@LojaCorp.Control.Static.DecryptData(Request.QueryString["b"].ToString())" title="Boleto" target="_blank">
-                                        Imprimir Boleto
-                                    </a>
-                                </div>
-                            }
                         </div>
                     </div>
                 </div>
@@ -259,11 +285,11 @@
     </div>
 </div>
 
-@section remarketing {
-    <!-- Google Remarketing -->
-    @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
-    <!-- End Google Remarketing -->
-}
+    @section remarketing {
+        <!-- Google Remarketing -->
+        @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
+        <!-- End Google Remarketing -->
+    }
 
 @{
     if (@LojaCorp.Control.Company._Company.UtilizaGoogleEcommerce && !LojaCorp.Control.Company._Company.StatusGTM)
