@@ -90,11 +90,12 @@
     }
   }
 
-  &.none {
-    margin: 0 !important;;
-  }
+    &.none {
+        margin: 0 !important;
+        ;
+    }
 
-  &.no {
+    &.no {
 
     &.top {
       margin-top: 0 !important;
@@ -110,7 +111,7 @@
     }
   }
 
-  &.bottom {
+    &.bottom {
 
     &.small {
       margin-bottom: 1em !important;

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = LojaCorp.Control.Company._Company.FantasyName;
+    ViewBag.Title = string.IsNullOrEmpty(LojaCorp.Control.Company._Company.Title) ? LojaCorp.Control.Company._Company.NameStore : LojaCorp.Control.Company._Company.Title;
     Layout = "~/Views/Shared/Base/_Layout.cshtml";
 }
 

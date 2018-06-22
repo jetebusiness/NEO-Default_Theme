@@ -13,7 +13,7 @@
     var lista_avaliacao_produto = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
 </script>
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
 @section remarketing{
@@ -183,15 +183,18 @@
                         <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
                         @if (Model.ProductRatings != null)
                         {
-                            <span>0 avaliações</span>
-                        }
-                        else if (Model.ProductRatings.Count() == 1)
-                        {
-                            <span>1 avaliação</span>
+                            if (Model.ProductRatings.Count() == 1)
+                            {
+                                <span>1 avaliação</span>
+                            }
+                            else
+                            {
+                                <span>@Model.ProductRatings.Count() avaliações</span>
+                            }
                         }
                         else
                         {
-                            <span>@Model.ProductRatings.Count() avaliações</span>
+                            <span>0 avaliações</span>
                         }
                     </div>
                 </div>
@@ -280,15 +283,18 @@
                                     <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
                                         @if (Model.ProductRatings != null)
                                         {
-                                            <span>0 avaliações</span>
-                                        }
-                                        else if (Model.ProductRatings.Count() == 1)
-                                        {
-                                            <span>1 avaliação</span>
+                                            if (Model.ProductRatings.Count() == 1)
+                                            {
+                                                <span>1 avaliação</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@Model.ProductRatings.Count() avaliações</span>
+                                            }
                                         }
                                         else
                                         {
-                                            <span>@Model.ProductRatings.Count() avaliações</span>
+                                            <span>0 avaliações</span>
                                         }
                                     </div>
                                 </div>

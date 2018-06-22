@@ -76,7 +76,7 @@ $(document).ready(function () {
             dataFinal = new Date(dateSplited[1] + '/' + dateSplited[0] + '/' + dateSplited[2]);
 
             if(dataFinal > dateNow){
-                _alert("", "Data de Nascimento inválida!", "warning");
+                _alert("", "Data de Nascimento inválida.", "error");
                 $('#inputDateBirthRegister').val(null);
             }
         }
@@ -96,7 +96,7 @@ $(document).ready(function () {
             dataFinal = new Date(dateSplited[1] + '/' + dateSplited[0] + '/' + dateSplited[2]);
 
             if(dataFinal > dateNow){
-                _alert("", "Data de Nascimento inválida!", "warning");
+                _alert("", "Data de Nascimento inválida.", "error");
                 $('#inputDateBirthEdit').val(null);
             }
         }

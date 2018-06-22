@@ -14,7 +14,7 @@
         "card": "^2.4.0",
         "cross-env": "^5.1.1",
         "easyzoom": "^2.5.0",
-        "jetcheckout": "^1.0.4",
+        "jetcheckout": "^1.0.10",
         "jetroute": "^1.0.3",
         "jquery": "^3.3.1",
         "jquery-ajax-unobtrusive": "^3.2.4",

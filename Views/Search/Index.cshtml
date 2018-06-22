@@ -1,8 +1,8 @@
 ﻿@model DomainProduct.Result
 
 @{
-    ViewBag.Title = "Resultado da Busca - "+LojaCorp.Control.Company._Company.FantasyName;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
+    ViewBag.Title = string.IsNullOrEmpty(LojaCorp.Control.Company._Company.Title) ? "Resultado da Busca" : LojaCorp.Control.Company._Company.Title;
     var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
 
@@ -11,14 +11,9 @@
         <div class="row">
             <div class="container">
                 <div class="column">
-                    <h1>Resultado de Busca</h1>
-                    <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ui breadcrumb">
-                        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
-                                <span itemprop="name">Home</span>
-                                <meta itemprop="url" content="/">
-                            </a>
-                            <meta itemprop="position" content="1" />
+                    <h1>Resultado da Busca</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
                         </li>
                         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">

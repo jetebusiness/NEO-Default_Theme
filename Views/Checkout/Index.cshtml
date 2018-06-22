@@ -130,6 +130,12 @@
                         </div>
                     </div>
                 </div>
+
+                @section remarketing {
+                    <!-- Google Remarketing -->
+                    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+                    <!-- End Google Remarketing -->
+                }
             }
             else
             {
@@ -140,10 +146,4 @@
         </div>
     </div>
 </div>
-
-@section remarketing {
-    <!-- Google Remarketing -->
-    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
-    <!-- End Google Remarketing -->
-}
 

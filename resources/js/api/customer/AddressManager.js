@@ -19,9 +19,9 @@ export function buscaCep(cep) {
     $.getJSON("//viacep.com.br/ws/" + cep + "/json/unicode", function (dados) {
         if (dados.erro) {
             if (window.swal) {
-                window.swal('Erro', 'CEP não encontrado!', 'error');
+                window.swal('Erro', 'CEP não encontrado.', 'error');
             } else {
-                alert("CEP não encontrado!");
+                alert("CEP não encontrado.");
             }
         } else {
             atualizaCampos(dados);

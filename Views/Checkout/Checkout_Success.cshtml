@@ -67,6 +67,7 @@
         </div>
     </div>
 }
+
 <input type="hidden" name="idOrderCurrent" id="idOrderCurrent" value="@Model.IdOrder" />
 <div class="ui container fluid @bgColor">
     <div class="ui container">
@@ -80,7 +81,7 @@
                     <h2 class="">#@Model.IdOrder</h2>
                 </div>
             </div>
-            <div class="row @(ViewBag.ViewBoleto ? "two column stackable" : "")">
+            <div class="row @(ViewBag.ViewBoleto || !String.IsNullOrEmpty(Request.QueryString["d"]) ? "two column stackable" : "")">
                 <div class="column">
                     <h3>Obrigado, @Model.NameCustomer</h3>
                     <p>@msgSucesso</p>
@@ -90,33 +91,16 @@
                     <div class="column">
                         <div class="text center success-debit-pagseguro">
                             <h3>Para efetuar o pagamento</h3>
-                            <input class="ui large green button center" id="btnPagSeguroDebito" type="submit" value="Clique aqui" data-url="@LojaCorp.Control.Static.DecryptData(Request.QueryString["d"].ToString())" />
+                            <a class="ui large primary button center" href="@LojaCorp.Control.Static.DecryptData(Request.QueryString["d"].ToString())">Clique aqui</a>
                         </div>
                     </div>
                 }
-                
-                @if (ViewBag.ViewBoleto)
+
+                @if (ViewBag.PaymentType == 3)
                 {
-                    <div class="column">
-                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
-                              method="post"
-                              name="itauShopline"
-                              id="itauShopline"
-                              target="openShopline">
-                            <input type="hidden" name="DC" id="DC" value="@ViewBag.ItauShoplineKey" />
-                            <input class="ui large action button floated right" id="itauShoplineBoleto" type="submit" value="Imprimir Boleto" />
-                        </form>
-                    </div>
+                    <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
                 }
-                
-                @if (!String.IsNullOrEmpty(Request.QueryString["b"]))
-                {
-                    <div class="column">
-                        <a class="ui large action button floated right" href="@LojaCorp.Control.Static.DecryptData(Request.QueryString["b"].ToString())" title="Boleto" target="_blank">
-                            Imprimir Boleto
-                        </a>
-                    </div>
-                }
+
             </div>
             <div class="ui divider small hidden"></div>
         </div>
@@ -285,11 +269,13 @@
     </div>
 </div>
 
-    @section remarketing {
-        <!-- Google Remarketing -->
-        @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
-        <!-- End Google Remarketing -->
-    }
+@Html.Partial("~/Views/Shared/Parts/Checkout/_SecurityBankSlip.cshtml")
+
+@section remarketing {
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
+    <!-- End Google Remarketing -->
+}
 
 @{
     if (@LojaCorp.Control.Company._Company.UtilizaGoogleEcommerce && !LojaCorp.Control.Company._Company.StatusGTM)

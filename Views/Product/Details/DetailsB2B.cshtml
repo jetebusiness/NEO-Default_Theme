@@ -14,7 +14,7 @@
     var lista_avaliacao_produto = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
 </script>
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
 @section remarketing{

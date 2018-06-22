@@ -24,6 +24,9 @@ export function getMaskMultiplePhone() {
             $('.mask_phone').mask('(00) 0000-0000#');
         }
     });
+
+    $('.mask_phone1').mask('(00) 00000-0000');
+
 }
 
 export function getMaskMultipleDocument() {

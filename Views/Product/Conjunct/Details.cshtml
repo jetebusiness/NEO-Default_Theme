@@ -28,7 +28,7 @@
 
 @{
 
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
 }
 
@@ -174,26 +174,29 @@
                     <div class="column">
                         <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
                     </div>
-                    <div class="column">
+                    <div class="column ten wide mobile">
                         <div class="avaliacoes">
-                            <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
+                            <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
                             @if (Model.ProductRatings != null)
                             {
-                                <span>0 avaliações</span>
-                            }
-                            else if (Model.ProductRatings.Count() == 1)
-                            {
-                                <span>1 avaliação</span>
+                                if (Model.ProductRatings.Count() == 1)
+                                {
+                                    <span>1 avaliação</span>
+                                }
+                                else
+                                {
+                                    <span>@Model.ProductRatings.Count() avaliações</span>
+                                }
                             }
                             else
                             {
-                                <span>@Model.ProductRatings.Count() avaliações</span>
+                                <span>0 avaliações</span>
                             }
                         </div>
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
         <div class="row detalhes produto">
             <!-- FIM IMAGENS DO PRODUTO PRINCIPAL-->
             <div class="sixteen wide mobile seven wide computer column" id="exibePartial">
@@ -271,8 +274,22 @@
                                 </div>
                                 <div class="column">
                                     <div class="avaliacoes">
-                                    <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
-                                        @(Model.ProductRatings != null ? Model.ProductRatings.Count() : 0) avaliações
+                                        <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
+                                        @if (Model.ProductRatings != null)
+                                        {
+                                            if (Model.ProductRatings.Count() == 1)
+                                            {
+                                                <span>1 avaliação</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@Model.ProductRatings.Count() avaliações</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span>0 avaliações</span>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -310,7 +327,7 @@
                                 </div>
                                 <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
                                 <div class="row @(ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago ? "two column stackable" : "")">
-                                    
+
                                     @if (ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago)
                                     {
                                         <div class="column" id="btn_compre_oneclick_conjunto_selecionado text uppercase">
@@ -322,7 +339,7 @@
                                             </a>
                                         </div>
                                     }
-                                    
+
                                     <div class="column" id="btn_compre_conjunto_selecionado">
                                         @if (Model.Stock == 0 || Model.FlagExhausted)
                                         {
@@ -344,7 +361,7 @@
                             <!--FIM DISPONIBILIDADE / CARRINHO-->
                             @if (!Model.FlagExhausted)
                             {
-                
+
                                 <div id="pagamento-calculado">
                                     @{
                                         decimal price = 0;
@@ -547,6 +564,7 @@
                                         <label>Mostrar Email?</label>
                                     </div>
                                 </div>
+                                <input type="hidden" name="Rate" id="Rate" value="" />
                                 @Html.Action("GetRecaptcha", "Company", null)
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>

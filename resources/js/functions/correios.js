@@ -48,13 +48,13 @@ export function completaCEP(cep, fieldEndereco, fieldBairro, fieldCidade, fieldE
                 .catch(error => {
                     //console.log(error);
                     limpa_formulario_cep();
-                    _alert('Erro', 'CEP não encontrado!', 'error');
+                    _alert('Erro', 'CEP não encontrado.', 'error');
                 });
         } //end if.
         else {
             //cep é inválido.
             limpa_formulario_cep();
-            _alert('Erro', 'Formato de CEP inválido!', 'error');
+            _alert('Erro', 'Formato de CEP inválido.', 'error');
 
         }
     } //end if.

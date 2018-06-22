@@ -1,0 +1,96 @@
+﻿<div id="printBankSlip"></div>
+
+<!-- Solicitação Senha Usuário  -->
+<div class="ui small modal hidden" id="modalPassword">
+    <i class="close icon"></i>
+    <div class="header">
+        IDENTIFICAÇÃO
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <h4 class="ui dividing header">Você já possui cadastro em nossa loja. Por favor, informe sua senha no campo abaixo:</h4>
+            <form id="formPassword">
+                <div class="field">
+                    <label>E-mail</label>
+                    <div class="ui left icon input">
+                        @Html.AntiForgeryToken()
+                        <input disabled name="UserName" type="text" id="UserName" value="">
+                        <i class="envelope icon"></i>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Senha</label>
+                    <div class="ui left icon input focus">
+                        <input required="" type="password" id="loginPassword" name="Password" value="">
+                        <i class="lock icon"></i>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="actions">
+        <button id="BackPassword" class="ui button">Voltar</button>
+        <button id="ConfirmPassword" class="ui green button">Confirmar</button>
+    </div>
+</div>
+
+
+<!-- Final da  Solicitação Senha Usuário -->
+<!-- Primeiro Acesso Usuário  -->
+<div class="ui small firstAccess modal hidden" id="modalAccessCode">
+    <i class="close icon"></i>
+    <div class="header">
+        PRIMEIRO ACESSO
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <h4 class="ui dividing header">Cheque seu email, pois foi enviado um código para efetuar seu primeiro acesso na loja</h4>
+            <div class="field">
+                <div class="ui left icon input">
+                    <input disabled name="UserName" type="text" id="UserNameCode" value="">
+                    <i class="envelope icon"></i>
+                </div>
+                <label class="margin top large">Digite o código que recebeu por e-mail*</label>
+                <div class="ui left icon input">
+                    <input required type="text" id="KeyAccess" name="KeyAccess" placeholder="Código de Acesso" autocomplete="off">
+                    <i class="lock icon"></i>
+                </div>
+            </div>
+            <h4 class="ui dividing header">Não recebeu ainda sua chave? <a id="ReSendAccessCode" href="javascript:void(0)">Re-envie o código de acesso.</a></h4>
+        </div>
+    </div>
+    <div class="actions">
+        <button id="BackAccessCode" class="ui button">Voltar</button>
+        <button id="ConfirmAccessCode" class="ui green button">Confirmar</button>
+    </div>
+</div>
+<!-- Fim - Primeiro Acesso Usuário  -->
+<!-- Cadastro senha Acesso Usuário  -->
+<div class="ui small modal hidden" id="modalRegisterPassword">
+    <i class="close icon"></i>
+    <div class="header">
+        PRIMEIRO ACESSO
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <h4 class="ui dividing header">Por favor, efetue o cadastro de sua senha através dos campos abaixo:</h4>
+            <div class="field">
+                <div class="ui left icon input focus">
+                    <input required type="password" id="password" name="password" placeholder="Senha">
+                    <i class="lock icon"></i>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui left icon input">
+                    <input required type="password" id="passwordConfirm" name="passwordConfirm" placeholder="Repetir Senha">
+                    <i class="lock icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button id="RegisterPassword" class="ui green button">Cadastrar</button>
+    </div>
+</div>
+
+<!-- Fim - Cadastro senha Acesso Usuário  -->

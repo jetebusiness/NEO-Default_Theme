@@ -68,11 +68,11 @@
                 .then(({data}) => {
                     if (data.erro){
                         if (window.swal) {
-                            window.swal('Erro', 'CEP não encontrado!', 'error');
+                            window.swal('Erro', 'CEP não encontrado.', 'error');
                             limpaForm();
                         }
                         else {
-                            alert("CEP não encontrado!");
+                            alert("CEP não encontrado.");
                             limpaForm();
                         }   
                     }else{
@@ -83,11 +83,11 @@
                     //console.log("JET CORREIOS - Chamada AJAX");
                     //console.log(error);
                     if (window.swal) {
-                        window.swal('Erro', 'CEP não encontrado!', 'error');
+                        window.swal('Erro', 'CEP não encontrado.', 'error');
                         limpaForm();
                     }
                     else {
-                        alert("CEP não encontrado!");
+                        alert("CEP não encontrado.");
                         limpaForm();
                     }
                 });

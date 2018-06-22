@@ -1,7 +1,7 @@
 ﻿@model DomainProduct.Entities.Group
 
 @{
-    ViewBag.Title = Model.Name +" - "+LojaCorp.Control.Company._Company.FantasyName;
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
 }
 
@@ -19,14 +19,10 @@
         <div class="row">
             <div class="container">
                 <div class="column">
-                    <h1>@Model.Name</h1>
-                    <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ui breadcrumb">
-                        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
-                                <span itemprop="name">Home</span>
-                                <meta itemprop="url" content="/">
-                            </a>
-                            <meta itemprop="position" content="1" />
+                    <h1>@(Model != null ? Model.Name : "")</h1>
+                    <div class="ui breadcrumb text small">
+                        <div class="ui breadcrumb">
+                            <a class="section" href="/">Home</a>
                             <i class="right angle icon divider"></i>
                         </li>
                         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">

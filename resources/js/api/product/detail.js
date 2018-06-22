@@ -461,7 +461,7 @@ function CarregarMaisAvaliacoes() {
 }
 
 function ValidaVariacaoSelecionada(selecionada, seletor) {
-
+    let arrayVariacoesDropDown = $("#dropDownGridProduct .menu .active").attr("data-value");
     let referenciaSelecionada        = selecionada.split('-')[0] + '-';
     let referenciasJaSelecionadas    = $("#" + seletor + "-referencias-selecionadas").val();
     let ArrReferenciasJaSelecionadas = referenciasJaSelecionadas.split(',');

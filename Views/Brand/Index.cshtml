@@ -1,7 +1,7 @@
 ﻿@model DomainProduct.Entities.Brand
 
 @{
-    ViewBag.Title = Model.Name +" - "+LojaCorp.Control.Company._Company.FantasyName;
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
 }
 
