@@ -58,7 +58,7 @@ $.fn.search.settings.templates.autoComplete = function (response, fields) {
 
 $(document).on("keypress", ".prompt", function (e) {
     if (e.which === 13) {
-        location.href = `/busca?n=${$(".prompt").val()}`;
+        location.href = `/busca?n=${$(".prompt").val()}&mdf=${$("#metaDataField").val()}&mdv=${$("#metaDataValue").val()}`;
     }
 });
 
@@ -86,26 +86,33 @@ $(document).on("click", ".btn_convidado_lista", function (e) {
     location.href = `/EventList/ManagerGuest?n=${$(".busca_convidado_lista").val()}`;
 });
 
-
-
 $(document).ready(function () {
     $('.ui.search').search({
         type: 'autoComplete',
         minCharacters: 3,
         showNoResults: true,
         apiSettings: {
+            beforeSend: function (settings) {
+                settings.data.n = $(".prompt").val();
+                // Quando for utilizar a busca com metadata separados por "|"
+                // settings.data.mdf = 'feature';
+                // settings.data.mdv = 'produto';
+                return settings;
+            },
             action: 'search products',
             onResponse: function (searchResponse) {
                 var response = {
                     results: [],
-                    query: this.urlData.query
+                    query: this.urlData.query,
+                    metadatafield: this.urlData.metadatafield,
+                    metadatavalue: this.urlData.metadatavalue
                 };
                 $.each(searchResponse.data.Products, function (index, item) {
                     var maxResults = 5;
                     if (index >= maxResults) {
                         response.results.push({
                             title: `Exibir todos os resultados`,
-                            url: `/busca?n=${response.query}`
+                            url: `/busca?n=${response.query}&mdf=${response.metadatafield}&mdv=${response.metadatavalue}`
                         });
 
                         return false;

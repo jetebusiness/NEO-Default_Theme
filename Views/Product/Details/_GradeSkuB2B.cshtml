@@ -1,5 +1,8 @@
 ﻿@model DomainProduct.Entities.ProductDetail
 
+@{
+    var useOneClick = (bool)ViewData["useOneCLick"];
+}
 
 <div class="row product-b2b">
     <div class="column">
@@ -44,7 +47,7 @@
                             </div>
                         </div>
                         @if (sku.Stock > 0)
-                    {
+                        {
                             <div class="column center aligned">
                                 <div class="ui qtd action mini input">
                                     <button class="ui icon button b2b_minus detalhes" id="qtdminus-detalhes">
@@ -70,7 +73,8 @@
                             </div>
                         }
                     </div>
-                    if(Model.SKUs.LastOrDefault() != sku) {
+                    if (Model.SKUs.LastOrDefault() != sku)
+                    {
                         <div class="ui divider"></div>
                     }
                     <input type="hidden" value="@sku.PricePromotion" id="preco_antigo_unidade_@sku.IdSku" />
@@ -96,16 +100,20 @@
                 </a>
             </div>
         </div>
-        <div class="row margin top medium">
-            <div class="column">
-                <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_oneclick_b2b">
-                    <div class="visible content">Comprar com 1-Click</div>
-                    <div class="hidden content">
-                        <i class="add to cart icon"></i>
-                    </div>
-                </a>
+
+        @if (useOneClick)
+        {
+            <div class="row margin top medium">
+                <div class="column">
+                    <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_oneclick_b2b">
+                        <div class="visible content">Comprar com 1-Click</div>
+                        <div class="hidden content">
+                            <i class="add to cart icon"></i>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
+        }
         <div class="row margin top medium">
             <div class="column">
                 <a class="ui animated large basic button fluid" id="btn_comprar_continuar">
@@ -120,6 +128,5 @@
             @Html.Action("Payment", "Product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = true })
         </div>
     </div>
-
 </div>
 

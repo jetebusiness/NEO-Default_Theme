@@ -249,6 +249,13 @@
                             <th colspan="4" class="right aligned">Valor do Desconto</th>
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalDiscount)</th>
                         </tr>
+                        @if (Model.TotalShoppingVoucher > 0)
+                        {
+                        <tr>
+                            <th colspan="4" class="right aligned">Vale Compra</th>
+                            <th class="right aligned">@string.Format("{0:c}", Model.TotalShoppingVoucher)</th>
+                        </tr>
+                        }
                         <tr>
                             <th colspan="4" class="right aligned"><h3>Total</h3></th>
                             <th class="right aligned"><h3>@string.Format("{0:c}", Model.Total)</h3></th>
@@ -257,7 +264,7 @@
                 </table>
             </div>
         </div>
-                                    }
+    }
 </div>
 
 @if (Model != null)

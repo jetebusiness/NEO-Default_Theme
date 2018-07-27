@@ -77,7 +77,7 @@
                 <!-- Verificar se o produto é conjunto -->
                 @if (Model.HasConjunct)
                 {
-                    <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="Comprar" class="ui labeled icon button primary fluid btn-comprar text uppercase" data-idproduct="@Model.IdProduct" data-name="Model.Name">
+                    <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="Comprar" class="ui labeled icon button action fluid btn-comprar text uppercase" data-idproduct="@Model.IdProduct" data-name="Model.Name">
                         <i id="btn-icon-card-Model.IdProduct" class="icon announcement"></i>
                         Comprar
                     </a>
@@ -98,7 +98,7 @@
                 }
                 else
                 {
-                    <a id="btn-comprar-card-@Model.IdProduct" title="Comprar" class="ui labeled icon button primary fluid btn-comprar-card text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                    <a id="btn-comprar-card-@Model.IdProduct" title="Comprar" class="ui labeled icon button action fluid btn-comprar-card text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
                         <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
                         Comprar
                     </a>
@@ -153,7 +153,7 @@
                 <!-- Verificar se o produto é conjunto -->
                 @if (Model.HasConjunct)
                 {
-                    <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="Comprar" class="ui labeled icon button primary fluid text uppercase btnComprar" data-idproduct="@Model.IdProduct" data-name="Model.Name">
+                    <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="Comprar" class="ui labeled icon button action fluid text uppercase btnComprar" data-idproduct="@Model.IdProduct" data-name="Model.Name">
                         <i id="btn-icon-card-Model.IdProduct" class="icon announcement"></i>
                         Comprar
                     </a>
@@ -174,7 +174,7 @@
                 }
                 else
                 {
-                    <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" id="btn-comprar-card-@Model.IdProduct" title="Comprar" class="ui labeled icon button primary fluid text uppercase btnComprar" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                    <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" id="btn-comprar-card-@Model.IdProduct" title="Comprar" class="ui labeled icon button action fluid text uppercase btnComprar" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
                         <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
                         Comprar
                     </a>

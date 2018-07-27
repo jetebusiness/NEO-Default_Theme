@@ -85,6 +85,12 @@
                                         <i class="whatsapp icon"></i>
                                     </a>
                                 }
+                                @if (redesSociais.Find(f => f.Identifier.ToUpper() == "BLOGER") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "bloger").Content" target="_blank" title="Blogger">
+                                        <i class="wpforms icon"></i>
+                                    </a>
+                                }
                             </socialbar>
                         </div>
                     </div>
@@ -100,7 +106,7 @@
                             <div class="ui inverted link list">
                                 <p>Preparada para esclarecer suas dúvidas e problemas.</p>
                                 <h5>SAC: @LojaCorp.Control.Company._Company.Phone1</h5>
-                                <a href="/fale-conosco" class="ui button text uppercase tireDuvidas margin top bottom small">Tire suas dúvidas</a>
+                                <a href="/fale-conosco" class="ui button text uppercase tireDuvidas margin top bottom medium">Tire suas dúvidas</a>
                             </div>
                         </div>
                     </div>
@@ -119,7 +125,6 @@
                             <div class="ui horizontal list selos">
                                 @Html.Action("EBit", "Company")
                                 @Html.Action("GetCompanySeal", "Company")
-                                @Html.Partial("Common/_JetLogo")
                                 @*
                                     <div class="item">
                                         <img src="//assets.pagseguro.com.br/ps-integration-assets/banners/seguranca/seguranca_125x125.gif" alt="Banner PagSeguro" title="Compre com PagSeguro e fique sossegado">
@@ -130,6 +135,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row text center">
+            <div class="ui divider"></div>
+            @Html.Partial("Common/_JetLogo")
         </div>
     </div>
 </div>
@@ -155,3 +164,7 @@
 <div class="modal-block">
 
 </div>
+
+
+@*teste pablo*@
+

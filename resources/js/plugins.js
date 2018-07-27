@@ -35,10 +35,6 @@ require("jquery-mask-plugin/dist/jquery.mask.min");
  */
 require("semantic-ui-calendar/src/definitions/modules/calendar");
 
-
-
-
-
 /**
  * jQuery Easy Zoom
  * https://github.com/i-like-robots/EasyZoom/
@@ -52,4 +48,8 @@ window.easyzoom = require("easyzoom");
 window.axios = require("axios");
 
 
-
+/**
+ * JQuery Mask Money
+ * https://www.npmjs.com/package/jquery-maskmoney
+ * */
+require("jquery-maskmoney/dist/jquery.maskMoney");

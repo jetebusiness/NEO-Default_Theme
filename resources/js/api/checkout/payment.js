@@ -3,7 +3,7 @@ import { buscaCep, atualizaCampos } from '../../api/customer/AddressManager';
 ﻿import { isLoading } from "../../api/api_config";
 import { debug, isNull, isNullOrUndefined } from 'util';
 
-﻿import {isMobile} from "../../functions/mobile";
+﻿import { isMobile } from "../../functions/mobile";
 
 function gettoken() {
     var token = $("input[name='__RequestVerificationToken']").val();
@@ -56,8 +56,7 @@ function BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAge
             //$(".agendar").hide("slow");
             $("#json_dataagendada_" + idFrete).val(response.msg);
 
-            if (DataAgendadas[0].listScheduled === null)
-            {
+            if (DataAgendadas[0].listScheduled === null) {
                 $(".agendar").hide("slow");
                 _alert("", "Nao existem mais entregas disponíveis para essa data!", "warning");
             }
@@ -143,7 +142,7 @@ function initComponent(availableDates) {
 var useAntiFraudMaxiPago = false
 
 function GerarPedidoCompleto(
-    idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document,idOneClick,
+    idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken
 ) {
     $.ajax({
@@ -184,40 +183,32 @@ function GerarPedidoCompleto(
                     $(".GerarPedido").removeClass("loading");
                     $(".GerarPedido").removeClass("disabled");
                 }
-                else
-                {
-                    if (response.urlRedirect != "")
-                    {
-                        if(response.typeRedirect == "1") {
+                else {
+                    if (response.urlRedirect != "") {
+                        if (response.typeRedirect == "1") {
                             window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
                         }
-                        else
-                        {
+                        else {
                             window.location.href = response.urlRedirect;
                         }
                     }
-                    else
-                    {
-                        if(response.urlBoleto != "")
-                        {
+                    else {
+                        if (response.urlBoleto != "") {
                             window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
                             //window.location.href = "Success?orderId=" + response.idPedido;
                         }
-                        else
-                        {
-                            if(response.msg != ""){
+                        else {
+                            if (response.msg != "") {
                                 window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                             }
-                            else
-                            {
+                            else {
                                 window.location.href = "Success?orderId=" + response.idPedido;
                             }
                         }
                     }
                 }
             }
-            else
-            {
+            else {
                 if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
                     swal({
                         title: '',
@@ -248,14 +239,14 @@ function GetStatusAntiFraudMaxiPago() {
         success: function (response) {
             useAntiFraudMaxiPago = response.active
         },
-        error: function(response){
+        error: function (response) {
             _alert("", response, "warning");
             useAntiFraudMaxiPago = false
         }
     })
 }
 
-function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem){
+function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem) {
     $.ajax({
         method: "POST",
         url: "/Checkout/LoadIframeAntiFraudMaxiPago",
@@ -270,7 +261,7 @@ function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, 
         success: function (response) {
             $("body").append(response.iframe)
         },
-        error: function(response){
+        error: function (response) {
             _alert("", response, "warning");
         }
     })
@@ -287,7 +278,8 @@ function clickShipping() {
     var entregaAgendada = "";
     var exclusivaEntregaAgendada = "";
 
-    $("#GetShippping .item .checkbox").click(function(){
+    $("#GetShippping .item .checkbox").click(function () {
+        ValeCompraRemover();
         $("#GetShippping .item .checkbox").removeClass("checked")
         $(this).addClass("checked")
 
@@ -314,13 +306,11 @@ function clickShipping() {
             var dataentregaescolhida = null;
             var idPeridoescolhido = null;
 
-            if (exclusivaEntregaAgendada == "True")
-            {
-                if (($("#dateAgendada_"+idFrete).val() != "") && ($("#combo_dataperiodoagendada_"+idFrete).val() != ""))
-                {
-                    idPeridoescolhido = $("#combo_dataperiodoagendada_"+idFrete).val();
-                    dataperiodoentregaescolhida = $("#combo_dataperiodoagendada_"+idFrete).val();
-                    dataentregaescolhida = $("#dateAgendada_"+idFrete).val();
+            if (exclusivaEntregaAgendada == "True") {
+                if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != "")) {
+                    idPeridoescolhido = $("#combo_dataperiodoagendada_" + idFrete).val();
+                    dataperiodoentregaescolhida = $("#combo_dataperiodoagendada_" + idFrete).val();
+                    dataentregaescolhida = $("#dateAgendada_" + idFrete).val();
                     HabilitaBlocoPagamento(true);
                 }
                 else
@@ -334,7 +324,7 @@ function clickShipping() {
     });
 }
 
-function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorFrete,dataperiodoentregaescolhida,dataentregaescolhida,idPeridoescolhido, carrier, mode, hub){
+function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorFrete, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub) {
 
     $("#resumoCheckout .resumo .title").removeClass("active");
     $("#resumoCheckout .resumo .content").removeClass("active");
@@ -429,8 +419,7 @@ function OrderCreate() {
 
         if (tipoVerificacao == "S") {
 
-            if($(this).attr("data-gateway") == "pagseguro")
-            {
+            if ($(this).attr("data-gateway") == "pagseguro") {
                 PaymentHash = PagSeguroDirectPayment.getSenderHash();
                 var statusPagSeguro = false;
                 $.each(verifyPaymentMethod, function (key, value) {
@@ -532,8 +521,8 @@ function OrderCreate() {
             PaymentHash = PagSeguroDirectPayment.getSenderHash();
             var statusPagSeguro = false;
 
-            $.each(verifyPaymentMethod, function(key, value) {
-                if(value.code == externalCode) {
+            $.each(verifyPaymentMethod, function (key, value) {
+                if (value.code == externalCode) {
                     statusPagSeguro = value.status;
                 }
             });
@@ -556,18 +545,15 @@ function OrderCreate() {
             $(".GerarPedido").removeClass("loading");
             $(".GerarPedido").removeClass("disabled")
         }
-        else
-        {
-            if (validaFrete == "S")
-            {
+        else {
+            if (validaFrete == "S") {
                 //Verifica se o Antifraud do MaxiPago está ativo, se estiver gera o pré-pedido na sessão e carrega o iframe na página.
                 if (useAntiFraudMaxiPago && kind != "oneclick") {
                     LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
                     //Gerar pedido completo com atraso de 5 segundos
-                    setTimeout(function(){GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken)}, 5000);
+                    setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken) }, 5000);
                 }
-                else if(tipoVerificacao == "S" && $(this).attr("data-gateway") == "pagseguro")
-                {
+                else if (tipoVerificacao == "S" && $(this).attr("data-gateway") == "pagseguro") {
 
                     PagSeguroDirectPayment.createCardToken({
                         cardNumber: card.replace(/ /g, ''),
@@ -602,8 +588,7 @@ function OrderCreate() {
                 }
 
             }
-            else
-            {
+            else {
                 _alert("", "Escolha o frete antes de fechar o pedido!", "warning");
                 $(".GerarPedido").removeClass("loading");
                 $(".GerarPedido").removeClass("disabled");
@@ -630,13 +615,11 @@ function onChangeCheckBox() {
 function verificaPresente() {
     //$("#embrulhaPresente").click(function(){
     $("#exibeMsg").removeAttr("style");
-    if($('#checkPresente').checkbox('is checked'))
-    {
+    if ($('#checkPresente').checkbox('is checked')) {
         $("#exibeMsg > label").show();
         $("#exibeMsg > #mensagem").show();
     }
-    else
-    {
+    else {
         $("#exibeMsg > label").hide();
         $("#exibeMsg > #mensagem").hide();
     }
@@ -644,8 +627,8 @@ function verificaPresente() {
 }
 
 function testegit() {
-     $("#exibeMsg > label").hide();
-     $("#exibeMsg > #mensagem").hide();
+    $("#exibeMsg > label").hide();
+    $("#exibeMsg > #mensagem").hide();
     alert("HI");
 }
 
@@ -675,11 +658,9 @@ function GetPaymentGateway(nameBrand, typeForm) {
     var seletorJson = typeForm == 'D' ? '#validCardDebit' : '#validCardCredit';
 
     var objPaymentMethod = $(seletorJson).data('paymentmethod');
-    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++)
-    {
+    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++) {
         var auxNameBrand = objPaymentMethod.PaymentBrands[i].Name.toLowerCase();
-        if(auxNameBrand == nameBrand)
-        {
+        if (auxNameBrand == nameBrand) {
             var IdPaymentBrand = Number.parseInt(objPaymentMethod.PaymentBrands[i].IdPaymentBrand, 10);
             return IdPaymentBrand;
         }
@@ -690,11 +671,9 @@ function GetPaymentGateway(nameBrand, typeForm) {
 function GetPaymentBrandExternalCode(nameBrand) {
     var objPaymentMethod = $('#validCardCredit').data('paymentmethod'); //jQuery.parseJSON($('#validCardCredit').data('paymentgateway'));
     //console.log(objPaymentGateway);
-    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++)
-    {
+    for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++) {
         var auxNameBrand = objPaymentMethod.PaymentBrands[i].Name.toLowerCase();
-        if(auxNameBrand == nameBrand)
-        {
+        if (auxNameBrand == nameBrand) {
             var ExternalCode = objPaymentMethod.PaymentBrands[i].ExternalCode;
             return ExternalCode;
         }
@@ -716,15 +695,14 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
             codigoBandeira = GetPaymentGateway(cartao, typeForm);
             externalCode = GetPaymentBrandExternalCode(cartao);
             $(btnCard).attr({
-                "data-idBrand" : codigoBandeira,
-                "data-externalcode" : externalCode
+                "data-idBrand": codigoBandeira,
+                "data-externalcode": externalCode
             });
             $(updateBrand).val(cartao);
             oneclick = true;
         }
-        else
-        {
-            numeroCartao = $(this).val().replace(/\s/g, '' );
+        else {
+            numeroCartao = $(this).val().replace(/\s/g, '');
 
             var cartoes = {
                 elo: /^(401178|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|(506699|5067[0-6]\d|50677[0-8])|(50900\d|5090[1-9]\d|509[1-9]\d{2})|65003[1-3]|(65003[5-9]|65004\d|65005[0-1])|(65040[5-9]|6504[1-3]\d)|(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|(65054[1-9]| 6505[5-8]\d|65059[0-8])|(65070\d|65071[0-8])|65072[0-7]|(65090[1-9]|65091\d|650920)|(65165[2-9]|6516[6-7]\d)|(65500\d|65501\d)|(65502[1-9]|6550[3-4]\d|65505[0-8]))[0-9]{10,12}/,
@@ -747,8 +725,8 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
                     codigoBandeira = GetPaymentGateway(cartao, typeForm);
                     externalCode = GetPaymentBrandExternalCode(cartao);
                     $(btnCard).attr({
-                        "data-idBrand" : codigoBandeira,
-                        "data-externalcode" : externalCode
+                        "data-idBrand": codigoBandeira,
+                        "data-externalcode": externalCode
                     });
                     $(updateBrand).val(cartao);
                     break;
@@ -820,12 +798,15 @@ function atualizaParcelamento(codigoBandeira, oneclick) {
             success: function (response) {
                 var objOneClick = response.OneClick;
                 var objMsgError = response.ErrorMsg;
-                var objParcelamento = response.ListInstallment;
                 var objAdditionalFields = response.AdditionalFields;
                 var objMaxiPago = response.MaxiPago;
                 var objPagSeguro = response.PagSeguro;
+                if (response.ListInstallment != null && response.ListInstallment != "")
+                    var objParcelamento = response.ListInstallment;
+                else
+                    var objParcelamento = 0;
 
-                if (objMsgError == "" || typeof (objMsgError) == "undefined") {
+                if (objMsgError == "" || typeof (objMsgError) == "undefined" || objParcelamento.length > 0) {
                     //if($('#divScriptPagSeguro').length > 0) $('#divScriptPagSeguro').remove();
                     if (typeof (objMaxiPago) != "undefined" && objMaxiPago == true) {
                         $("#btnCardCredit").attr("data-gateway", "maxipago");
@@ -885,10 +866,10 @@ function atualizaParcelamento(codigoBandeira, oneclick) {
                         PagSeguroDirectPayment.getBrand({
                             cardBin: ccNumber,
                             success: function (responseBrand) {
-                                PagSeguroDirectPayment.getInstallments({
+
+                                var objGetInstallments = {
                                     amount: totalCheckout,
                                     brand: responseBrand.brand.name,
-                                    maxInstallmentNoInterest: maximumInstallmentWithoutInterest,
                                     success: function (responseInstallment) {
                                         //console.log(responseInstallment);
                                         var option = "";
@@ -906,7 +887,14 @@ function atualizaParcelamento(codigoBandeira, oneclick) {
                                     complete: function (responseBrand) {
                                         console.log(responseBrand);
                                     }
-                                });
+                                };
+
+                                if (parseInt(maximumInstallmentWithoutInterest) > 1) {
+                                    objGetInstallments.maxInstallmentNoInterest = maximumInstallmentWithoutInterest;
+                                }
+
+
+                                PagSeguroDirectPayment.getInstallments(objGetInstallments);
                             },
                             error: function (responseBrand) {
                                 console.log(responseBrand);
@@ -942,10 +930,8 @@ function atualizaParcelamento(codigoBandeira, oneclick) {
                             var installmentNumber = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
                             AtualizaResumoCarrinhocomDesconto(codigoBandeira, 1, installmentNumber);
                         }
-                        else
-                        {
-                            for (var i = 0; i < objParcelamento.length; i++)
-                            {
+                        else {
+                            for (var i = 0; i < objParcelamento.length; i++) {
                                 var IdInstallment = objParcelamento[i].IdInstallment;
                                 var InstallmentNumber = objParcelamento[i].InstallmentNumber;
                                 var Description = objParcelamento[i].Description;
@@ -960,8 +946,7 @@ function atualizaParcelamento(codigoBandeira, oneclick) {
                         }
                     }
                 }
-                else
-                {
+                else {
                     $("#parcCard").html("<option value='0'>Informe o numero do cartão primeiro</option>");
                     _alert("", objMsgError, "warning");
                 }
@@ -978,10 +963,6 @@ function ContainsInArray(needle, arr) {
         if (arr[i] == needle) return true;
     }
     return false;
-}
-
-function testegit() {
-    alert("HI");
 }
 
 function buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada) {
@@ -1035,10 +1016,9 @@ function listAddressPayment() {
         $("#addDataAddress").text("Adicionar");
         $("#listAddressData").show();
         $("#registerAddressPayment").hide();
-
-        viewAddressLogged();
-        RecoverPasswordByEmail();
-        $('.ui.modal').modal('show');
+        viewAddressLogged(".lista-endereco-cliente");
+        RecoverPasswordByEmail(".lista-endereco-cliente");
+        $('.ui.modal.lista-endereco-cliente').modal('show');
     });
 }
 
@@ -1075,13 +1055,13 @@ function showAddressPayment() {
             $("#registerAddressPayment").show();
             $(this).addClass("addAddress");
             $(this).text("Cadastrar");
-            $('.ui.modal').modal('refresh');
+            $('.ui.modal.lista-endereco-cliente').modal('refresh');
         }
     });
 }
 
-function changeAddressPayment(){
-    $(".utilAddress").click(function(){
+function changeAddressPayment() {
+    $(".utilAddress").click(function () {
 
         var _el = $(this);
         _el.addClass("loading")
@@ -1143,8 +1123,7 @@ function atualizaResumoCarrinho(oneclick) {
             if (typeof (codigoBandeira) != "undefined") {
                 atualizaParcelamento(codigoBandeira);
                 var _parcela = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
-                if(oneclick || $("#btnOneClick").attr("data-idBrand") != "")
-                {
+                if (oneclick || $("#btnOneClick").attr("data-idBrand") != "") {
                     _parcela = $("#parcCardOneClick").find(':selected').attr("data-InstallmentNumber");
                 }
                 var parcela_selecionada = _parcela != undefined ? _parcela : "1";
@@ -1161,7 +1140,7 @@ function atualizaResumoCarrinho(oneclick) {
             $('.ui.accordion.usuario .dadosCliente .fluid').removeClass("hidden");
 
             var idFrete = $("#GetShippping .item .checkbox.checked input").val();
-            var exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
+            var exclusivaEntregaAgendada = $("#radio_" + idFrete).attr("data-exclusiva-entregaagendada");
 
             if (exclusivaEntregaAgendada == "True") {
                 if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != ""))
@@ -1226,6 +1205,9 @@ function applyDiscount() {
                 success: function success(response) {
                     if (response.success) {
                         atualizaResumoCarrinho();
+                        if ($('.ui.accordion.shopping-voucher').length > 0) {
+                            ValeCompraRemover();
+                        }
                         _alert("Cupom de Desconto!", response.msg, "success");
                     }
                     else {
@@ -1251,16 +1233,16 @@ function updateAddress() {
             changeAddressPayment();
             showAddressPayment();
             calculaFreteUpdate();
-            $('.ui.modal').modal('refresh');
+            $('.ui.modal.lista-endereco-cliente').modal('refresh');
         }
     });
 }
 
-function viewAddressLogged() {
-    $("#loginPayment").click(function () {
-        var token = $("input[name='__RequestVerificationToken']").val();
-        var userName = $("#UserName").val();
-        var password = $("#password").val();
+function viewAddressLogged(form) {
+    $(form + " .loginPayment").click(function () {
+        var token = $(form + " input[name='__RequestVerificationToken']").val();
+        var userName = $(form + " .UserName").val();
+        var password = $(form + " .password").val();
         $.ajax({
             method: "POST",
             url: "/Customer/Login",
@@ -1271,6 +1253,9 @@ function viewAddressLogged() {
             },
             success: function success(response) {
                 if (response.success) {
+                    $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
+                    $(".ui.accordion.shopping-voucher").accordion('open', 0);
+
                     updateAddress();
                     updateDadosUsuario();
                 } else {
@@ -1285,8 +1270,7 @@ function calculaFreteUpdate() {
     $("#zipCode").keyup(function (event) {
         var cep = $("#zipCode").val()
         cep = cep.replace("-", "")
-        if (cep.length == 8)
-        {
+        if (cep.length == 8) {
             buscaCep(cep)
         }
     });
@@ -1312,9 +1296,9 @@ function updateDadosUsuario() {
     });
 }
 
-function CheckAccessKey() {
-    $("#ListaEnderecosCliente").on("click", "#confirmTokkenPayment", function (event) {
-        var codeTokkenPayment = $("#codeTokkenPayment").val();
+function CheckAccessKey(form) {
+    $(form).on("click", ".confirmTokkenPayment", function (event) {
+        var codeTokkenPayment = $(form + " .codeTokkenPayment").val();
         if ((codeTokkenPayment != "") && (typeof (codeTokkenPayment) != "undefined")) {
             $.ajax({
                 method: "POST",
@@ -1324,8 +1308,8 @@ function CheckAccessKey() {
                 },
                 success: function success(response) {
                     if (response.Success) {
-                        viewNewPassword();
-                        $('.ui.modal').modal('refresh');
+                        viewNewPassword(form);
+                        $('.ui.modal.lista-endereco-cliente').modal('refresh');
                     }
                     else {
                         _alert("", response.Message, "warning");
@@ -1348,7 +1332,7 @@ function viewRecive_Code() {
     });
 }
 
-function viewNewPassword() {
+function viewNewPassword(form) {
     var token = $("input[name='__RequestVerificationToken']").val();
 
     $.ajax({
@@ -1358,19 +1342,19 @@ function viewNewPassword() {
             __RequestVerificationToken: token
         },
         success: function success(response) {
-            $("#ListaEnderecosCliente").html(response);
-            accessUser();
+            $(form).html(response);
+            accessUser(form);
         }
     });
 }
 
-function accessUser() {
-    $("#pwdPayment").click(function (event) {
+function accessUser(form) {
+    $(form + " .pwdPayment").click(function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var token = $("input[name='__RequestVerificationToken']").val();
-        var pwdUser = $("#pwdUser").val();
-        var pwdUserConfirm = $("#pwdUserConfirm").val();
+        var token = $(form + " input[name='__RequestVerificationToken']").val();
+        var pwdUser = $(form + " .pwdUser").val();
+        var pwdUserConfirm = $(form + " .pwdUserConfirm").val();
 
         if ((pwdUser != "") && (pwdUserConfirm != "")) {
             $.ajax({
@@ -1386,6 +1370,9 @@ function accessUser() {
                         updateAddress();
                         updateDadosUsuario();
                         calculaFreteUpdate();
+
+                        $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
+                        $(".ui.accordion.shopping-voucher").accordion('open', 0);
                     }
                     else {
                         _alert("", response.message, "warning");
@@ -1400,7 +1387,7 @@ function accessUser() {
 }
 
 function ReEnviarCodigoEmail() {
-    $("#reenviarCod").click(function () {
+    $(".reenviarCod").click(function () {
         $.ajax({
             method: "POST",
             url: "ReEnviarCodigoEmail",
@@ -1416,7 +1403,7 @@ function ReEnviarCodigoEmail() {
     });
 }
 
-function RecoverPasswordByEmail() {
+function RecoverPasswordByEmail(form) {
     $("#RecoverPasswordByEmail").click(function () {
         $.ajax({
             method: "POST",
@@ -1436,17 +1423,25 @@ function RecoverPasswordByEmail() {
     });
 }
 
-function HabilitaBlocoPagamento(habilita){
+function HabilitarButtonIrParaPagamento() {
+    $('#goToPayment').attr("disabled", true);
+    $("#checkoutColumn2").addClass("disable_column");
 
-    if($("#checkoutColumn2").length > 0) {
-        if(habilita == true) {
-            $("#checkoutColumn2").removeClass("disable_column");            
+    $("#goToPayment").click(function () {
+        $("#checkoutColumn2").removeClass("disable_column");
+    });
+}
+function HabilitaBlocoPagamento(habilita) {
+
+    if ($("#checkoutColumn2").length > 0) {
+        if (habilita == true) {
+            $("#checkoutColumn2").removeClass("disable_column");
             if (isMobile())
-                $('html, body').animate({scrollTop: $("#checkoutColumn2 .jetCheckout").offset().top - 30}, 1000);
+                $('html, body').animate({ scrollTop: $("#checkoutColumn2 .jetCheckout").offset().top - 30 }, 1000);
         } else {
             $("#checkoutColumn2").addClass("disable_column");
             if (isMobile())
-                $('html, body').animate({scrollTop: $(".accordion.frete").offset().top - 30}, 1000);
+                $('html, body').animate({ scrollTop: $(".accordion.frete").offset().top - 30 }, 1000);
         }
     }
 }
@@ -1457,18 +1452,18 @@ function TestaCPF(strCPF) {
     Soma = 0;
     if (strCPF == "00000000000") return false;
 
-    for (var i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+    for (var i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
     Resto = (Soma * 10) % 11;
 
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+    if ((Resto == 10) || (Resto == 11)) Resto = 0;
+    if (Resto != parseInt(strCPF.substring(9, 10))) return false;
 
     Soma = 0;
     for (var i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
 
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+    if ((Resto == 10) || (Resto == 11)) Resto = 0;
+    if (Resto != parseInt(strCPF.substring(10, 11))) return false;
     return true;
 }
 
@@ -1482,16 +1477,87 @@ function onlyNumbers(evt) {
     }
 }
 
+function ValeCompraAplicar(_valor) {
+
+    _valor = (_valor + "").replace(".", ",");
+
+    $.ajax({
+        async: false,
+        method: "POST",
+        url: "/Checkout/ValeCompraAplicar",
+        data: {
+            valor: _valor
+        },
+        success: function (responseValeCompra) {
+            if (responseValeCompra.success) {
+                isLoading(".ui.accordion.shopping-voucher");
+                ValeCompraRefresh();
+                atualizaResumoCarrinho(false);
+            } else {
+                _alert(responseValeCompra.msg);
+            }
+        }
+    });
+}
+
+function ValeCompraRemover() {
+    $.ajax({
+        async: false,
+        method: "PUT",
+        url: "/Checkout/ValeCompraRemover",
+        success: function (responseValeCompra) {
+            if (responseValeCompra.success) {
+                isLoading(".ui.accordion.shopping-voucher");
+                ValeCompraRefresh();
+                atualizaResumoCarrinho(false);
+                $('#ShoppingVoucherValue').val('');
+                $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                $(".ui.accordion.shopping-voucher").accordion('close', 0);
+                $('#formas-pagamento').removeClass("disable_column");
+            }
+            //} else {
+            //    //_alert(responseValeCompra.msg);
+            //}
+        }
+    });
+}
+
+function ValeCompraRefresh() {
+    $.ajax({
+        async: false,
+        method: "GET",
+        url: "/Checkout/ValeCompraRefresh",
+        success: function (responseValeCompra) {
+            if (responseValeCompra.success) {
+                //$('#btnGerarPedidoValeCompra').attr("disabled", true);
+
+                var balance = ("" + responseValeCompra.valeCompra.balanceAmount).replace(",", ".");
+
+                $('#ShoppingVoucherValue').data('balance', balance);
+
+                var remainingBalance = responseValeCompra.valeCompra.remainingBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                var balanceAmount = responseValeCompra.valeCompra.balanceAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                var suggestedAmount = responseValeCompra.valeCompra.suggestedAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                $('#ValeCompra_remainingBalance').html(remainingBalance);
+                $('#ValeCompra_balanceAmount').html(balanceAmount);
+                $('#ValeCompra_suggestedAmount').html(suggestedAmount);
+
+                isLoading(".ui.accordion.shopping-voucher");
+            }
+        }
+    });
+}
+
 
 function CampoEntregaAgendada() {
-    $('[id*="combo_dataperiodoagendada_"]').change(function(){
+    $('[id*="combo_dataperiodoagendada_"]').change(function () {
         isLoading(".ui.accordion.frete");
 
         HabilitaBlocoPagamento(false)
         var data_periodo_selecionada = $("option:selected", this).val()
         var idFrete = $(this).attr('data-id-frete');
-        if ($("#combo_dataperiodoagendada_"+idFrete).val() != "")
-        {
+        if ($("#combo_dataperiodoagendada_" + idFrete).val() != "") {
             var zipcode = $("#zipcode").val();
             var idEntrega = "";
             var idPeriodoEntrega = "";
@@ -1512,16 +1578,16 @@ function CampoEntregaAgendada() {
             valorSomaFrete = $("option:selected", this).data("addvalue");
             idEntrega = $("option:selected", this).data("idscheduled");
             idPeriodoEntrega = $("option:selected", this).data("idscheduledperiod");
-            valorFrete = $("#radio_"+idFrete).attr("data-value");
-            data_selecionada = $("#dateAgendada_"+idFrete).val()
-            correiosEntrega = $("#radio_"+idFrete).attr("data-correios");
-            entregaAgendada = $("#radio_"+idFrete).attr("data-entregaagendada");
-            exclusivaEntregaAgendada = $("#radio_"+idFrete).attr("data-exclusiva-entregaagendada");
-            carrier = $("#radio_"+idFrete).attr("data-carrier");
-            mode = $("#radio_"+idFrete).attr("data-mode");
-            hub =  $("#radio_"+idFrete).attr("data-hub");
+            valorFrete = $("#radio_" + idFrete).attr("data-value");
+            data_selecionada = $("#dateAgendada_" + idFrete).val()
+            correiosEntrega = $("#radio_" + idFrete).attr("data-correios");
+            entregaAgendada = $("#radio_" + idFrete).attr("data-entregaagendada");
+            exclusivaEntregaAgendada = $("#radio_" + idFrete).attr("data-exclusiva-entregaagendada");
+            carrier = $("#radio_" + idFrete).attr("data-carrier");
+            mode = $("#radio_" + idFrete).attr("data-mode");
+            hub = $("#radio_" + idFrete).attr("data-hub");
 
-            SaveFrete(zipcode, idFrete, correiosEntrega,entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub);
+            SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub);
         }
         else {
             $("#combo_dataperiodoagendada_" + idFrete).hide("fast");
@@ -1547,20 +1613,20 @@ function CampoEntregaAgendada() {
                 }
         }
 
-        $("#combo_dataperiodoagendada_"+idFrete)
+        $("#combo_dataperiodoagendada_" + idFrete)
             .find('option')
             .remove()
             .end()
             .append('<option value="">Selecione</option>')
             .val('')
-        ;
+            ;
 
-        $("#combo_dataperiodoagendada_"+idFrete).append(optionPeriodo);
-        $("#combo_dataperiodoagendada_"+idFrete).trigger("chosen:updated");
-        $("#combo_dataperiodoagendada_"+idFrete).show("slow");
+        $("#combo_dataperiodoagendada_" + idFrete).append(optionPeriodo);
+        $("#combo_dataperiodoagendada_" + idFrete).trigger("chosen:updated");
+        $("#combo_dataperiodoagendada_" + idFrete).show("slow");
 
         if (exclusivaEntregaAgendada == "True")
-            if (($("#dateAgendada_"+idFrete).val() != "") && ($("#combo_dataperiodoagendada_"+idFrete).val() != ""))
+            if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != ""))
                 HabilitaBlocoPagamento(true)
             else
                 HabilitaBlocoPagamento(false);
@@ -1570,7 +1636,7 @@ function CampoEntregaAgendada() {
 
         //alert(data_selecionada + id_selecionado);
     });
- 
+
 }
 
 var availableDates = [];
@@ -1578,7 +1644,99 @@ var verifyPaymentMethod = [];
 
 $(document).ready(function () {
 
-    if($('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != undefined) {
+    if ($('.ui.accordion.shopping-voucher').length > 0) {
+        // Limpa o vale compra ao recarregar a pagina.
+        ValeCompraRemover();
+
+        // Vale Compra
+        $('.ui.accordion.shopping-voucher > .title').on('click', function () {
+            //if(!confirm("checka accordion")) return false;
+            if ($('.ui.modal.shopping-voucher').html().trim() == "Logged") {
+                return true;
+            }
+            else {
+                viewAddressLogged(".shopping-voucher");
+                RecoverPasswordByEmail(".shopping-voucher");
+                CheckAccessKey("#modal-shopping-voucher");
+                ReEnviarCodigoEmail();
+                $('.ui.modal.shopping-voucher').modal('show');
+                return false;
+            }
+        });
+
+        var delay = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+
+        $('#ShoppingVoucherValue')
+            .maskMoney()
+            .keypress(function () {
+                var shoppingVoucherValue = new Number($(this).val().replace(".", "").replace(",", "."));
+                var subTotal = new Number($('.subtotal').html().replace('R$', '').replace(".", "").replace(",", "."));
+                var saldoShoppingVoucher = new Number($(this).data('balance').replace(".", "").replace(",", "."));
+
+                var discount = new Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
+
+                var valorCompare = subTotal - discount;
+
+
+                if (shoppingVoucherValue > valorCompare) {
+                    _alert("", "O valor deve ser menor ou igual ao valor dos produtos!", "warning");
+                    //$(this).val('');
+                    delay(function () {
+                        ValeCompraRemover();
+                    }, 1000);
+                }
+
+                if (shoppingVoucherValue > saldoShoppingVoucher) {
+                    _alert("", "O valor deve ser menor ou igual ao saldo do cliente!", "warning");
+                    //$(this).val('');
+                    delay(function () {
+                        ValeCompraRemover();
+                    }, 1000);
+                }
+            });
+
+
+
+        $('#ShoppingVoucherValue').keyup(function () {
+            let valor = $(this).val();
+            let balance = $(this).data('balance');
+            delay(function () {
+                var shoppingVoucherValue = new Number(valor.replace(".", "").replace(",", "."));
+                var subTotal = new Number($('.subtotal').html().replace('R$', '').replace(".", "").replace(",", "."));
+                var saldoShoppingVoucher = new Number(balance.replace(",", "."));
+                var shippingTotal = new Number($('#shipping_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
+                var discount = new Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
+
+                var valorCompare = subTotal - discount;
+
+
+                if (parseFloat(shoppingVoucherValue) == parseFloat(valorCompare) && parseFloat(shippingTotal) == 0) {
+                    $('#btnGerarPedidoValeCompra').removeAttr("disabled");
+                    $('#formas-pagamento').addClass("disable_column");
+                } else {
+                    $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                    $('#formas-pagamento').removeClass("disable_column");
+                }
+
+                if (parseFloat(shoppingVoucherValue) > 0 && shoppingVoucherValue <= subTotal && shoppingVoucherValue <= saldoShoppingVoucher) {
+                    ValeCompraAplicar(shoppingVoucherValue);
+                } else {
+                    if (parseFloat(shoppingVoucherValue) == 0) {
+                        ValeCompraRemover();
+                    }
+                }
+            }, 1000);
+        });
+    }
+
+    if ($('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != undefined) 
+    {
         $.ajax({
             async: false,
             method: "GET",
@@ -1589,7 +1747,7 @@ $(document).ready(function () {
                 {
                     urlJS = 'https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
                 }
-                else
+                else 
                 {
                     urlJS = 'https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
                 }
@@ -1598,49 +1756,48 @@ $(document).ready(function () {
 
                 $('#MaximumInstallmentWithoutInterest').val(responseConfig.config.maximumInstallmentWithoutInterest);
 
-                if(responseConfig.session != null)
+                if (responseConfig.session != null) 
                 {
-                    $.ajaxSetup({async:false});
-                    $.getScript(urlJS, function() {
+                    $.ajaxSetup({ async: false });
+                    $.getScript(urlJS, function () {
                         $('#PaymentSession').val(responseConfig.session.Id);
                         PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
 
                         var totalCheckout = $('#total_checkout').html().replace("R$", "").replace(".", "").replace(",", ".");
 
-                        PagSeguroDirectPayment.getPaymentMethods({ 
+                        PagSeguroDirectPayment.getPaymentMethods({
                             amount: totalCheckout,
-                            success: function(response){
-                                if(response.error == false) {
-                                    $.each(response.paymentMethods, function(item, value) {
-                                        $.each(value.options, function(item2, value2){
+                            success: function (response) {
+                                if (response.error == false) {
+                                    $.each(response.paymentMethods, function (item, value) {
+                                        $.each(value.options, function (item2, value2) {
                                             verifyPaymentMethod.push({
                                                 code: value2.code,
                                                 name: value2.name,
-                                                status: ((value2.status == "AVAILABLE")? true : false)
+                                                status: ((value2.status == "AVAILABLE") ? true : false)
                                             });
                                         });
                                     });
                                 }
                             },
-                            error: function(response){
+                            error: function (response) {
                                 _alert("Erro ao obter formas de pagamento.");
                             },
-                            complete: function() {
-                                $.ajaxSetup({async:true});
+                            complete: function () {
+                                $.ajaxSetup({ async: true });
                             }
                         });
                     });
                 }
-                else
-                {
+                else {
                     _alert("Erro ao obter sessão no pagseguro, entre em contato com suporte técnico.");
                 }
             }
         });
     }
-    if(document.location.pathname.toLowerCase() == "/checkout/payment")
+    if (document.location.pathname.toLowerCase() == "/checkout/payment")
         GetStatusAntiFraudMaxiPago();
-    
+
 
     $('#Document').keyup(function (event) {
         return onlyNumbers(event);
@@ -1648,8 +1805,8 @@ $(document).ready(function () {
 
     CampoEntregaAgendada();
 
-    $('#Document').blur(function(){
-        if(!TestaCPF($(this).val())) {
+    $('#Document').blur(function () {
+        if (!TestaCPF($(this).val())) {
             _alert("", "Número de CPF inválido.", "warning");
             $(this).val('');
         }
@@ -1658,9 +1815,29 @@ $(document).ready(function () {
 
     //$.jetRoute("checkout", function (){
     if ($("#idAddress").val() != "") {
+        window.onbeforeunload = function (e) {
+            if (window.location.pathname.toLowerCase() == "/checkout/payment") {
+                $('#checkoutColumn1, #checkoutColumn2').addClass("disable_column");
+                if ($('.ui.accordion.shopping-voucher').length > 0) {
+                    $.ajax({
+                        async: false,
+                        method: "PUT",
+                        url: "/Checkout/ValeCompraRemover",
+                        success: function (responseValeCompra) {}
+                    });
+                }
+
+                $.ajax({
+                    async: false,
+                    method: "POST",
+                    url: "/Checkout/CancelarCalculoFrete",
+                    success: function (responseCancelarCalculoFrete) { }
+                });
+            }
+        }
+
         clickShipping();
-        if ($(".GerarPedido").length > 0)
-        {
+        if ($(".GerarPedido").length > 0) {
             OrderCreate();
         }
         onChangeCheckBox();
@@ -1683,7 +1860,7 @@ $(document).ready(function () {
         changeAddressPayment();
         showAddressPayment();
         applyDiscount();
-        CheckAccessKey();
+        CheckAccessKey("#ListaEnderecosCliente");
         ReEnviarCodigoEmail();
         onChangeParcelamento();
         HabilitaBlocoPagamento(false);
@@ -1965,7 +2142,7 @@ $(document).ready(function () {
 
 
     //Botões modal de cadastro de senha    **************************************
-    function RegisterPasswordWithKeyAccess() {    
+    function RegisterPasswordWithKeyAccess() {
         let password = $("#password").val()
         let passwordConfirm = $("#passwordConfirm").val()
         let email = $("#UserNameCode").val()

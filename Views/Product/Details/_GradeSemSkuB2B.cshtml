@@ -1,5 +1,9 @@
 ﻿@model ViewModels.Produto.DetalhesB2BViewModel
 
+@{
+    var useOneClick = (bool)ViewData["useOneCLick"];
+}
+
 <div class="row product-grid">
     <div class="column">
         <div id="grade_sku" class="ui middle aligned grid blue segment">
@@ -82,7 +86,6 @@
                         <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
                     }
 
-
                     <div class="row margin top medium">
                         <div class="column">
                             <a class="ui animated big action button fluid detalhes" id="btn_comprar_b2b">
@@ -93,16 +96,21 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row margin top medium">
-                        <div class="column">
-                            <a class="ui animated big action button fluid detalhes" id="btn_comprar_oneclick_b2b">
-                                <div class="visible content">Comprar com 1-Click</div>
-                                <div class="hidden content">
-                                    <i class="add to cart icon"></i>
-                                </div>
-                            </a>
+
+                    @if (useOneClick)
+                    { 
+                        <div class="row margin top medium">
+                            <div class="column">
+                                <a class="ui animated big action button fluid detalhes" id="btn_comprar_oneclick_b2b">
+                                    <div class="visible content">Comprar com 1-Click</div>
+                                    <div class="hidden content">
+                                        <i class="add to cart icon"></i>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    }
+
                     <div class="row margin top medium">
                         <div class="column">
                             <a class="ui animated big blue button fluid" id="btn_comprar_continuar">
@@ -113,9 +121,6 @@
                             </a>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
             <!--FIM DISPONIBILIDADE / CARRINHO-->

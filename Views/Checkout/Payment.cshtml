@@ -34,14 +34,13 @@
     </div>
 }
 <input type="hidden" name="idShipping" id="idShipping" value="@Model.IdShippingMode" />
-<div class="ui tiny scrolling modal" id="ListaEnderecosCliente">
+<div class="ui tiny scrolling modal lista-endereco-cliente" id="ListaEnderecosCliente">
     @Html.Action("ListaEnderecosCliente", "Checkout")
 </div>
 <div class="ui container no-p no-m">
     <div class="ui grid">
         <div class="row">
-            <div class="sixteen wide mobile sixteen wide tablet five wide computer column">
-
+            <div class="sixteen wide mobile sixteen wide tablet five wide computer column" id="checkoutColumn1">
                 <!-- Dados do Cliente -->
                 <div class="ui segment blue" id="dadosClienteUpdate">
                     @Html.Action("ListaDadosCliente", "Checkout", new { zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode })
@@ -92,7 +91,8 @@
 
                 <!-- Cupom Desconto -->
                 @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
-
+                <!-- Vale Compras -->
+                @Html.Action("ValeCompra", "Checkout")
                 <!-- Formas de Pagamento -->
                 @Html.Action("ListaFormasPagamento", "Checkout")
 

@@ -7,6 +7,8 @@
         lista_avaliacoes_completa.AddRange(Model.ProductRatings);
         lista_avaliacoes_completa.RemoveRange(0, 5);
     }
+
+    var usaOneClick = ViewBag.UseOneClickMaxiPago != null ? ViewBag.UseOneClickMaxiPago : false;
 }
 
 <script>
@@ -230,11 +232,11 @@
                     <!--GRADE B2B-->
                     @if (Model.SKUs != null)
                     {
-                        @Html.Partial("~/Views/Product/Details/_GradeSkuB2B.cshtml", Model)
+                        @Html.Partial("~/Views/Product/Details/_GradeSkuB2B.cshtml", Model, new ViewDataDictionary { { "useOneCLick", usaOneClick } })
                     }
                     else
                     {
-                        @Html.Partial("~/Views/Product/Details/_GradeSemSkuB2B.cshtml", Model)
+                        @Html.Partial("~/Views/Product/Details/_GradeSemSkuB2B.cshtml", Model, new ViewDataDictionary { { "useOneCLick", usaOneClick } })
                     }
                     <!-- GRADE B2B-->
                 </div>

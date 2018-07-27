@@ -705,6 +705,7 @@ function AtualizarGrade(jsonSKU) {
         //$("#pagamento-calculado").addClass("detalhes hideme");
         $("#avise_me").removeClass("detalhes hideme");
         $("#btn_comprejunto").addClass("disabled");
+        $(".btn-comprar div").html("PRODUTO ESGOTADO");
         $(".btn-comprar").addClass("disabled");
         $(".btn-comprar-oneclick").addClass("disabled");
         $(".btn-add-event-list").addClass("disabled");
@@ -714,6 +715,7 @@ function AtualizarGrade(jsonSKU) {
         $("#btn_comprejunto").removeClass("disabled");
         //$("#pagamento-calculado").removeClass("detalhes hideme");
         $("#avise_me").addClass("detalhes hideme");
+        $(".btn-comprar div").html("ADICIONAR AO CARRINHO");
         $(".btn-comprar").removeClass("disabled");
         $(".btn-comprar-oneclick").removeClass("disabled");
         $("#calculo-frete").removeClass("detalhes hideme");
@@ -1202,6 +1204,7 @@ function MontaTipoCor(skU, seletor_produto, reference, variation, variacoes_sele
             }
         }
     }
+
     if (validaSejaEstaSelecionado(seletor_produto, reference.IdReference, variation.IdVariation, variacoes_selecionadas_bkp)) {
         classeBtn += " selecionado";
     }
@@ -1216,14 +1219,18 @@ function MontaTipoCheckBox(skU, seletor_produto, reference, variation, variacoes
     var classeBtn = "ui basic primary button radio tiny variacao-radio";
     var classeDiv = "ui checkbox hideme";
 
-    if (skU.stock <= 0 || skU.visible === false) {
-        if (skU.stock <= 0) {
-            //classeBtn += "disabled"; mesmo que stock = 0 o mesmo deve ser exibido
-            classeBtn += "";
+    if (skU != "" && skU != undefined) {
+        if (skU.stock <= 0 || skU.visible === false) {
+            if (skU.stock <= 0) {
+                //classeBtn += "disabled"; mesmo que stock = 0 o mesmo deve ser exibido
+                classeBtn += "";
+            }
+            else if (skU.visible === false) {
+                classeBtn += " hideme";
+            }
         }
-        else if (skU.visible === false) {
-            classeBtn += " hideme";
-        }
+    } else {
+        classeBtn += " hideme";
     }
 
     if (validaSejaEstaSelecionado(seletor_produto, reference.IdReference, variation.IdVariation, variacoes_selecionadas_bkp)) {

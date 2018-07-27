@@ -8,7 +8,8 @@ export const formSettings = {
         name: {
             identifier: "name",
             rules: [{
-                type: "empty",
+                type: "regExp",
+                value: /^([A-zÀ-ÿ]{1,}\s[a-zA-z]{1,}'?-?[A-zÀ-ÿ]{1,}\s?([A-zÀ-ÿ]{1,})?)/,
                 prompt: "Preencha com seu nome completo. (Ex: João Silva ou Maria Silva)"
             }]
         },

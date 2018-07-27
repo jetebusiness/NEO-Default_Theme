@@ -5,16 +5,16 @@
         <div class="field">
             <div class="ui left icon input">
                 <i class="mail icon"></i>
-                <input type="text" autocomplete="off" readonly disabled="disabled" name="UserName" id="UserName" value="@ViewBag.EmailCliente" />
+                <input type="text" autocomplete="off" readonly disabled="disabled" name="UserName" class="UserName" value="@ViewBag.EmailCliente" />
             </div>
         </div>
         <div class="field">
             <div class="ui left icon input">
                 <i class="lock icon"></i>
-                <input type="password" name="password" id="password" placeholder="Senha">
+                <input type="password" name="password" class="password" placeholder="Senha">
             </div>
         </div>
-        <a class="ui fluid large submit primary button" id="loginPayment">Entrar</a>
+        <a class="ui fluid large submit primary button loginPayment">Entrar</a>
         <div class="ui divider"></div>
         <p>Esqueceu sua senha? <a id="RecoverPasswordByEmail">Recuperar senha</a></p>
     </div>

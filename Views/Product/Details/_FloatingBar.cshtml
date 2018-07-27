@@ -39,9 +39,9 @@
                     {
                         <img src="@Model.ImageHome" class="ui image fluid"  onerror="imgError(this)"/>
                     }
-                    else
+                    else 
                     {
-                        var imageDetails = Model.ProductImages != null ? Model.ProductImages.FirstOrDefault().ImageDefault : "";
+                        var imageDetails = Model.ProductImages != null && Model.ProductImages.Count > 0 ? Model.ProductImages.FirstOrDefault().ImageDefault : "";
 
                         <img src="@imageDetails" class="ui image fluid"  onerror="imgError(this)"/>
                     }

@@ -21,7 +21,7 @@
         bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
         tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
         msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
-}
+    }
     else
     {
         if (Request.QueryString["s"] == "true")
@@ -67,7 +67,6 @@
         </div>
     </div>
 }
-
 <input type="hidden" name="idOrderCurrent" id="idOrderCurrent" value="@Model.IdOrder" />
 <div class="ui container fluid @bgColor">
     <div class="ui container">
@@ -81,7 +80,7 @@
                     <h2 class="">#@Model.IdOrder</h2>
                 </div>
             </div>
-            <div class="row @(ViewBag.ViewBoleto || !String.IsNullOrEmpty(Request.QueryString["d"]) ? "two column stackable" : "")">
+            <div class="row @((ViewBag.PaymentType == 3 || !String.IsNullOrEmpty(Request.QueryString["d"])) ? "two column stackable" : "")">
                 <div class="column">
                     <h3>Obrigado, @Model.NameCustomer</h3>
                     <p>@msgSucesso</p>
@@ -96,10 +95,7 @@
                     </div>
                 }
 
-                @if (ViewBag.PaymentType == 3)
-                {
-                    <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
-                }
+                
 
             </div>
             <div class="ui divider small hidden"></div>
@@ -108,20 +104,21 @@
 </div>
 
 
-@if (ViewBag.ActiveEbit != 0) {
+@if (ViewBag.ActiveEbit != 0)
+{
     var individualPrice = "";
     var individualQTD = "";
     var individualName = "";
     var individualSKU = "";
-        
+
     if (Model != null && Model.OrderItems != null)
     {
-            
+
         var conc = Model.OrderItems.Count() > 1 ? "|" : "";
-            
+
         var regex = new System.Text.RegularExpressions.Regex("<h1(.*?)>(.*?)</h1>");
-            
-            
+
+
         foreach (var item in Model.OrderItems)
         {
             individualPrice += item.UnitPrice.ToString().Replace(",", ".") + conc;
@@ -129,14 +126,14 @@
             var m = regex.Match(item.Name);
             individualName += m.Groups[2].Value + conc;
             individualSKU += (String.IsNullOrEmpty(item.IdSku.ToString()) ? item.IdProduct.ToString() : item.IdSku.ToString()) + conc;
-                
+
         }
     }
-        
-    <param id="ebitParam" value="email=@Model.Email&zipCode=@Model.Address.ZipCode&parcels=@Model.NumberOfInstallments&deliveryTax=@Model.TotalShipping.ToString().Replace(",", ".")&totalSpent=@Model.Total.ToString().Replace(",", ".")&value=@individualPrice&quantity=@individualQTD&productName=@individualName&transactionId=@Model.IdOrder&sku=@individualSKU&storeId=@ViewBag.ActiveEbit"/>
-                           
+
+    <param id="ebitParam" value="email=@Model.Email&zipCode=@Model.Address.ZipCode&parcels=@Model.NumberOfInstallments&deliveryTax=@Model.TotalShipping.ToString().Replace(",", ".")&totalSpent=@Model.Total.ToString().Replace(",", ".")&value=@individualPrice&quantity=@individualQTD&productName=@individualName&transactionId=@Model.IdOrder&sku=@individualSKU&storeId=@ViewBag.ActiveEbit" />
+
     <a id="bannerEbit" class="ui grid centered"></a>
-    <script type="text/javascript" id="getSelo"src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
+    <script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
 }
 
 @if (ViewBag.ShowRegister)
@@ -220,6 +217,16 @@
                                 </div>
                             </div>
                         </div>
+                        @if (Model.TotalShoppingVoucher > 0)
+                        {
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description">
+                                        Vale Compra: @string.Format("{0:c}", Model != null ? Model.TotalShoppingVoucher : 0)
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         <div class="item detalhes">
                             <div class="content">
                                 <div class="description">
@@ -237,7 +244,7 @@
                     </div>
                     <div class="ui divider"></div>
                     <div class="ui grid">
-                        <div class="row one column">
+                        <div class="row two column">
                             <div class="column">
                                 <a href="/Home" class="ui animated button fluid large basic"
                                    tabindex="0">
@@ -247,6 +254,12 @@
                                     </div>
                                 </a>
                             </div>
+                            @if (ViewBag.PaymentType == 3)
+                            {
+                            <div class="column">
+                                <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
+                            </div>
+                            }
                         </div>
                     </div>
                 </div>

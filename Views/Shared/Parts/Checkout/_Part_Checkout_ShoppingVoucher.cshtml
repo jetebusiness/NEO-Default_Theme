@@ -1,0 +1,62 @@
+﻿@model DomainCheckout.Entities.ShoppingVoucher.BalanceCheckout
+
+@if (Model != null && Model.balanceAmount > 0)
+{
+    <div class="ui tiny scrolling modal shopping-voucher" id="modal-shopping-voucher">
+        @Html.Action("ValeCompraLogin", "Checkout")
+    </div>
+    <div class="ui segment green">
+        <div class="ui accordion shopping-voucher">
+            <div class="title">
+                <i class="ui icon tag"></i>
+                <strong>Utilizar Vale Compras</strong>
+                <i class="ui icon dropdown floated right"></i>
+            </div>
+            <div class="content">
+                <label>Utilizar saldo:</label>
+                <div class="field required">
+                    <div class="ui left icon input">
+                        <i class="tag icon"></i>
+                        <input 
+                               class="no-border" 
+                               type="text" 
+                               name="ShoppingVoucherValue" 
+                               id="ShoppingVoucherValue" 
+                               value="" 
+                               data-symbol="R$ " 
+                               data-thousands="." 
+                               data-decimal="," 
+                               data-balance="@Model.balanceAmount"
+                               placeholder="R$" 
+                               autocomplete="off">
+                    </div>
+                </div>
+                <div class="ui divider no-p no-m"></div>
+                <div class="field">
+                    <div class="ui basic red pointing prompt label">Valor Sugerido: <span id="ValeCompra_suggestedAmount">@Model.suggestedAmount.ToString("C")</span></div>
+                </div>
+
+                <div class="ui fluid items">
+                    <div class="item">
+                        <div class="content">
+                            <div class="description">
+                                <span><b>Saldo Total</b></span>
+                                <span class="ui floated right" id="ValeCompra_balanceAmount">@Model.balanceAmount.ToString("C")</span>
+                            </div>
+                            <div class="description">
+                                <span><b>Saldo Restante</b></span>
+                                <span class="ui floated right" id="ValeCompra_remainingBalance">@Model.remainingBalance.ToString("C")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <button class="ui labeled icon green large fluid button GerarPedido" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" disabled="disabled">
+                        <i class="tag icon"></i>
+                        Finalizar com Vale Compras
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

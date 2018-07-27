@@ -7,7 +7,7 @@
                 <div class="content">
                     <div class="description">
                         <span>Subtotal</span>
-                        <span class="ui floated right">@string.Format("{0:c}", Model.SubTotal != null ? Model.SubTotal : 0)</span>
+                        <span class="ui floated right subtotal">@string.Format("{0:c}", Model.SubTotal != null ? Model.SubTotal : 0)</span>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                 <div class="content">
                     <div class="description">
                         <span>Frete</span>
-                        <span class="ui floated right">@string.Format("{0:c}", Model.TotalShipping != null ? Model.TotalShipping : 0)</span>
+                        <span class="ui floated right" id="shipping_checkout">@string.Format("{0:c}", Model.TotalShipping != null ? Model.TotalShipping : 0)</span>
                     </div>
                 </div>
             </div>
@@ -27,6 +27,19 @@
                     </div>
                 </div>
             </div>
+            @if (Model.TotalShoppingVoucher != null && Model.TotalShoppingVoucher > 0)
+            {
+                <div class="item">
+                    <div class="content">
+                        <div class="description">
+                            <span>Vale Compras</span>
+                            <span class="ui floated right" id="desconto_shopping_voucher">
+                                @string.Format("{0:c}", Model.TotalShoppingVoucher != null ? Model.TotalShoppingVoucher : 0)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="item">
                 <div class="content">
                     <div class="description">
