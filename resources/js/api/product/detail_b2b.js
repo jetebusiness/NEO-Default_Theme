@@ -32,33 +32,44 @@ $(document).ready(function () {
 
         $(this).addClass(".loading");
         let Cart = [];
+        let _contProducts = 0;
+        let _msgErrors = "";
         $("#grade_sku .sku_b2b").each(function(posicao) {
             let CartItem = new Object();
             CartItem.IdProduct = $(this).data("produto-id");
             CartItem.IdSku = $(this).data("sku-id");
             CartItem.Quantity = $(this).find(".quantidade_b2b").val();
-            if(CartItem.Quantity > 0){
+            CartItem.Stock = $(this).find(".quantidade_b2b").data("qtd-max") !== undefined ? $(this).find(".quantidade_b2b").data("qtd-max") :0;
+
+            if (CartItem.Quantity > 0 && CartItem.Quantity <= CartItem.Stock) {
                 Cart.push(CartItem);
+                _contProducts++;
             }
         });
 
-        AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho);
+        if (_contProducts > 0) {
+            AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho);
 
-        if($(this)[0].id == "btn_comprar_oneclick_b2b") {
-            $.ajax({
-                method: "GET",
-                url: "/Checkout/CheckoutNext",
-                data: {},
-                success: function(data){
-                    if(data.success === true)
-                        window.location.href = "/" + data.redirect
-                    else
-                        _alert("Mensagem", data.message, "error")
-                },
-                onFailure: function(data){
-                    //console.log("Erro ao excluir frete");
-                }
-            });
+            if ($(this)[0].id == "btn_comprar_oneclick_b2b") {
+                $.ajax({
+                    method: "GET",
+                    url: "/Checkout/CheckoutNext",
+                    data: {},
+                    success: function (data) {
+                        if (data.success === true)
+                            window.location.href = "/" + data.redirect
+                        else
+                            _alert("Mensagem", data.message, "error")
+                    },
+                    onFailure: function (data) {
+                        //console.log("Erro ao excluir frete");
+                    }
+                });
+            }
+        }
+        else {
+            _msgErrors = "Você deve selecionar ao menos 1 produto";
+            _alert("Mensagem", _msgErrors, "warning");
         }
     });
 
@@ -67,6 +78,15 @@ $(document).ready(function () {
         let produtoID = $(this).data("produto-id");
 
         $.when(AviseMe(produtoID, skuID)).done(function(x) {
+
+        });
+    });
+
+    $(".avise_b2b").click(function () {
+        let skuID = $(this).parents(".sku_b2b").attr("data-sku-id");
+        let produtoID = $(this).data("produto-id");
+
+        $.when(AviseMe(produtoID, skuID)).done(function (x) {
 
         });
     });
@@ -214,6 +234,8 @@ function AtualizaValoresGerais(){
     $("#total_geral").text("Total: " + moneyPtBR(total_real_skus_selecionados));
     $("#total_geral").data("total-geral", total_real_skus_selecionados);
     $("#total_selecionados").text("Itens selecionados: " + parseInt(total_qtd_skus_selecionados));
+
+    CarregarParcelamento(false);
 }
 function ValidaQuantidadeSelecionada(skuID, qtdSelecionada, stock, tipo){
     if(tipo != "INPUT"){
@@ -228,7 +250,7 @@ function ValidaQuantidadeSelecionada(skuID, qtdSelecionada, stock, tipo){
         }
         if(qtdSelecionada > stock){
             qtdSelecionada = stock;
-            _alert("Quantidade máxima para o produto selecionado: "+stock+" unidades", "Mensagem", "warning");
+            _alert("Mensagem", "Quantidade máxima para o produto selecionado: " + stock +" unidades", "warning");
         }
 
         $("#quantidade_b2b_"+skuID).val(qtdSelecionada);

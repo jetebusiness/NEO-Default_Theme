@@ -12,6 +12,10 @@
   &.grid {
     display: grid !important;
   }
+
+  &.block {
+      display: block !important;
+  }
 }
 
 .inline-flex {

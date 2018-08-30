@@ -1,0 +1,18 @@
+﻿@model Tuple<string, DomainCompany.Entities.Recaptcha>
+@if (Model != null)
+{
+    if (Model.Item2.Status && Model.Item2.Tipo.Contains(Model.Item1))
+    {
+
+        <input type='hidden' id='googleVersion' name='googleVersion' value='@Model.Item2.Versao' />
+        <input type='hidden' id='googleResponse' name='googleResponse' value='' />
+        if (Model.Item2.Versao == 2)
+        {
+            <div id="gCaptcha" class="g-recaptcha" data-sitekey="@Model.Item2.SiteKey" data-callback="onCheckgCaptcha"></div>
+        }
+        else
+        {
+            <input type='hidden' id='googleSiteKey' name='googleSiteKey' value='@Model.Item2.SiteKey' />
+        }
+    }
+}

@@ -224,7 +224,18 @@
 
                                 <tr>
                                     <td>@counter.ToString().PadLeft(3, '0')</td>
-                                    <td><a>@Html.Raw(orderProduct.Name)</a></td>
+                                    <td>
+                                        <a>@Html.Raw(orderProduct.Name)</a>
+                                        @if (orderProduct.IsKit)
+                                        {
+                                            <div>
+                                                @foreach (var productKit in orderProduct.ProductsKit)
+                                                {
+                                                    <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
                                     <td class="right aligned">@string.Format("{0:c}", orderProduct.UnitPrice)</td>
                                     <td class="right aligned">@orderProduct.Quantity</td>
                                     <td class="right aligned">

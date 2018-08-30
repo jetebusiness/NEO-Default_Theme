@@ -101,7 +101,7 @@
                                             <div class="ui left icon input">
                                                 <i class="icon id card"></i>
                                                 <input class="ie_checkout" type="text" name="Rg_ie" placeholder="Instrição Estadual"
-                                                       tabindex="4" 
+                                                       tabindex="4"
                                                        autocomplete="off">
                                             </div>
                                         </div>
@@ -318,7 +318,6 @@
         if (response.success == true) {
             window.location.href = "/checkout/Payment";
         } else {
-            $("#email").attr("disabled", false);
             swal({
                 title: 'Mensagem',
                 text: response.msg,

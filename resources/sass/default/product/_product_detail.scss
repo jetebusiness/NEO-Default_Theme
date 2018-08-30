@@ -1,418 +1,469 @@
 h1.nomeProduto {
-	font-weight: bold;
-	margin-bottom: 0.5rem;
-	font-size: 20px;
-	color: $black;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 20px;
+    color: $black;
 }
 
 h6.codProduto {
-	color: #888888;
-	margin: 0px !important;
-  }
-
-  .infoProduto {
-
-
-	  #dica_compra_partial {
-		  margin-top: 15px;
-
-		  @media screen and (max-width: $mobile-bp){
-			  margin:0 auto;
-			  display: table;
-		  }
-	  }
-	  
-
-	.marcaProduto {
-		color:#666;
-		font-size: 14px;
-	}
-
-	.avaliacoes {
-		color:#666;		
-		display: table;
-		
-		&:hover {
-			cursor: pointer;
-		}
-	}
-
-	.blocoInfo {
-		@media screen and (max-width: $mobile-bp){
-			padding: 0;
-		}
-
-		.linkRating {
-			color:#666666;
-			font-size:12px;
-		}
-		
-		.blocoValores {
-			border-bottom: 5px solid #ddd;
-			
-			>.column {
-				@media screen and (max-width: $mobile-bp){
-					text-align: center;
-				}
-			}
-			
-	.row {
-	  padding: 0.25rem 0 !important;
-	}
-
-			.blocoQtd {
-				@media screen and (max-width: $mobile-bp){
-					text-align: center;
-				}
-			}
-			
-			.blocoPreco {
-
-				@media screen and (max-width: $mobile-bp){
-					text-align: center !important;
-				}
-
-
-	.precoAntigo {
-	  clear: both;
-								color: #999;
-								font-size: 12px;
-	  line-height: 18px;
-
-	  &:after {
-		content: '\A';
-		white-space: pre;
-	  }
-	}
-
-	.preco {
-	  clear: both;
-					color: $black;
-					font-size: 20px;
-					line-height: 25px;
-
-	  &:after {
-		content: '\A';
-		white-space: pre;
-	  }
-	}
-
-				.disponibilidade {
-					margin: 5px 0 10px 0;
-					color:#666666;
-					font-size: 12px;
-
-					@media screen and (max-width: $mobile-bp){
-						text-align: center !important;
-					}
-				}
-
-	.infoPreco {
-	  clear: both;
-								color: #999;
-	  font-size: 14px;
-	  line-height: 18px;
-
-	  &:after {
-		content: '\A';
-		white-space: pre;
-	  }
-
-	  .descontoBoleto {
-		color: $ascent-1-color;
-		font-weight: 700;
-	  }
-	}
-  }
-
-			.btnComprar {
-				@media screen and (max-width: $mobile-bp){
-					text-align: center !important;
-				}
-				
-				margin: 20px 0 10px !important;
-				
-				.btn-comprar-oneclick {
-					margin-top: 20px;
-					font-size: .92857143rem;
-					font-weight: normal;
-				}
-				
-
-			}
-		}	
-		
-	}
-
-
+    color: #888888;
+    margin: 0px !important;
 }
 
-  .product-button {
-	position: absolute;
-	right: 10px;
-	top: 10px;
+.infoProduto {
 
-	a {
-	  display: block !important;
-	  margin-bottom: 10px !important;
-	}
-  }
 
-  .product-tags {
-	bottom: 10px;
-	left: 10px;
-	position: absolute;
-	width: 70%;
+    #dica_compra_partial {
+        margin-top: 15px;
 
-	.tag {
-	  margin-left: 1.5em !important;
-	}
-  }
+        @media screen and (max-width: $mobile-bp) {
+            margin: 0 auto;
+            display: table;
+        }
+    }
+
+
+    .marcaProduto {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .avaliacoes {
+        color: #666;
+        display: table;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .blocoInfo {
+        @media screen and (max-width: $mobile-bp) {
+            padding: 0;
+        }
+
+        .linkRating {
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .blocoValores {
+            border-bottom: 5px solid #ddd;
+
+            > .column {
+                @media screen and (max-width: $mobile-bp) {
+                    text-align: center;
+                }
+            }
+
+            .row {
+                padding: 0.25rem 0 !important;
+            }
+
+            .blocoQtd {
+                @media screen and (max-width: $mobile-bp) {
+                    text-align: center;
+                }
+            }
+
+            .blocoPreco {
+
+                @media screen and (max-width: $mobile-bp) {
+                    text-align: center !important;
+                }
+
+
+                .precoAntigo {
+                    clear: both;
+                    color: #999;
+                    font-size: 12px;
+                    line-height: 18px;
+
+                    &:after {
+                        content: '\A';
+                        white-space: pre;
+                    }
+                }
+
+                .preco {
+                    clear: both;
+                    color: $black;
+                    font-size: 20px;
+                    line-height: 25px;
+
+                    &:after {
+                        content: '\A';
+                        white-space: pre;
+                    }
+                }
+
+                .disponibilidade {
+                    margin: 5px 0 10px 0;
+                    color: #666666;
+                    font-size: 12px;
+
+                    @media screen and (max-width: $mobile-bp) {
+                        text-align: center !important;
+                    }
+                }
+
+                .infoPreco {
+                    clear: both;
+                    color: #999;
+                    font-size: 14px;
+                    line-height: 18px;
+
+                    &:after {
+                        content: '\A';
+                        white-space: pre;
+                    }
+
+                    .descontoBoleto {
+                        color: $ascent-1-color;
+                        font-weight: 700;
+                    }
+                }
+            }
+
+            .btnComprar {
+                @media screen and (max-width: $mobile-bp) {
+                    text-align: center !important;
+                }
+
+                margin: 20px 0 10px !important;
+
+                .btn-comprar-oneclick {
+                    margin-top: 20px;
+                    font-size: .92857143rem;
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+}
+
+.product-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+
+    a {
+        display: block !important;
+        margin-bottom: 10px !important;
+    }
+}
+
+.product-tags {
+    bottom: 10px;
+    left: 10px;
+    position: absolute;
+    width: 70%;
+
+    .tag {
+        margin-left: 1.5em !important;
+    }
+}
 
 .border.bottom.grey:not(.inverted) {
-	border-bottom: 5px solid #DDDDDD;
-	box-shadow: none;
-	-webkit-box-shadow: none;
-	border-radius: 0 !important;
-	border-top: 1px solid #d4d4d5!important;
+    border-bottom: 5px solid #DDDDDD;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-radius: 0 !important;
+    border-top: 1px solid #d4d4d5 !important;
 }
 
 .ui.segment.grey.formas-pagamento {
+    border-bottom: 5px solid #DDDDDD;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-radius: 0 !important;
+    border-top: 1px solid #d4d4d5 !important;
 
-	border-bottom: 5px solid #DDDDDD;
-	box-shadow: none;
-	-webkit-box-shadow: none;
-	border-radius: 0 !important;
-	border-top: 1px solid #d4d4d5!important;
+    .accordion {
+        .title {
+            color: #666666;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
 
-	.accordion {
-		.title {
-			color:#666666;
-			text-transform: uppercase;
-			font-size:12px;
-		}
-
-	  .ui.list {
-		padding-left: 2.2em;
-	  }
-	}
-  }
+        .ui.list {
+            padding-left: 2.2em;
+        }
+    }
+}
 
 
-  .ui.grid.segment {
-	padding: 10px 0px !important;
-  }
+.ui.grid.segment {
+    padding: 10px 0px !important;
+}
 
-  .ui.segment {
+.ui.segment {
 
-	&.yellow,
-	&.grey {
+    &.yellow,
+    &.grey {
 
-	  .ui.form .fields {
-		margin: 0px !important;
-	  }
-	}
-  }
+        .ui.form .fields {
+            margin: 0px !important;
+        }
+    }
+}
 
-  .ui.ribbon {
-	z-index: 5;
-  }
+.ui.ribbon {
+    z-index: 5;
+}
 
-  .produtos.compre.junto {
-	> .item {
+.produtos.compre.junto {
+    > .item {
 
-	  .content {
-	  }
+        .content {
+        }
 
-	  .extra {
-		width: auto !important;
-	  }
-	}
-  }
+        .extra {
+            width: auto !important;
+        }
+    }
+}
 
-  .variacao {
+.variacao {
 
-	&.cor {
-	  height: 35px;
-	  width: 35px;
-	}
+    &.cor {
+        height: 35px;
+        width: 35px;
+    }
 
-	&.selecionado {
-	  box-shadow: 0 0 0 3px rgba(0, 0, 0, .35) !important;
-	}
-  }
+    &.selecionado {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, .35) !important;
+    }
+}
 
-  .product {
+.product {
 
-	&.information {
+    &.information {
 
-	  .marcaProduto {
-		margin: 0px !important;
-	  }
+        .marcaProduto {
+            margin: 0px !important;
+        }
 
-	  &.row {
-		padding-bottom: .1rem !important;
-	  }
+        &.row {
+            padding-bottom: .1rem !important;
+        }
 
-	  h1 {
-		margin-top: 10px;
-	  }
+        h1 {
+            margin-top: 10px;
+        }
 
-	  .column {
-		padding-bottom: .3rem !important;
-		padding-top: 0.3rem !important;
-	  }
-	}
-  }
+        .column {
+            padding-bottom: .3rem !important;
+            padding-top: 0.3rem !important;
+        }
+    }
+}
 
-  .produto {
+.produto {
 
-	&.detalhes {
+    &.detalhes {
 
-	  &.row {
-		padding-top: 0px !important;
-	  }
-	}
-  }
+        &.row {
+            padding-top: 0px !important;
+        }
+    }
+}
 
 
 #pagamento-calculado {
-	margin-top:10px;
-	margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 
-	.formas-pagamento {
-		border-bottom: 5px solid #ddd;
-		box-shadow: none !important;
-		border-radius: 0!important;
-		border-top: 1px solid #d4d4d5 !important;
-	}
-	}
+    .formas-pagamento {
+        border-bottom: 5px solid #ddd;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border-top: 1px solid #d4d4d5 !important;
+    }
+}
 
 .fb-share-button {
-	display: block;
-	float:left;
-	margin-right: 3px;
+    display: block;
+    float: left;
+    margin-right: 3px;
 }
 
 
 .menu.tabular {
-	.item {
-		color:#999 !important;
-		text-transform: uppercase;
+    .item {
+        color: #999 !important;
+        text-transform: uppercase;
 
-		&.active {
-			color:$black !important;
-		}
-	}
+        &.active {
+            color: $black !important;
+        }
+    }
 }
 
 .product-b2b {
-	.preco {
-		font-size: 20px !important;
-		line-height: 20px !important;
-	}
-	.precoAntigo i {
-		text-decoration: line-through;
-	}
-	.ui.form .field > .button {
-		margin-bottom: 0px;
-	}
+    .preco {
+        font-size: 20px !important;
+        line-height: 20px !important;
+    }
+
+    .precoAntigo i {
+        text-decoration: line-through;
+    }
+
+    .ui.form .field > .button {
+        margin-bottom: 0px;
+    }
 }
 
 #buy-together {
 
-	.row {
-		&.horizontal {
-			&.divided {
-				background: #fff;
-			}
-		}
-	}
+    .row {
+        &.horizontal {
+            &.divided {
+                background: #fff;
+            }
+        }
+    }
 
-	a {
-		font-weight: bold;
-		font-size: 14px;
-		color:#666666;
-	}
-	
-	.ui.attached.segment {
-		border: 0;
-		padding-right: 0;
-		padding-left: 0;
-	}
+    a {
+        font-weight: bold;
+        font-size: 14px;
+        color: #666666;
+    }
 
-	.ui.table {
-		border: 1px solid #eee;
-		color: #666666;
-		border-radius: 0 !important;
-		strong {
-			color:#000;
-		}
-		thead th {
-			background-color: #999999;
-			color: #fff;
-			font-size: 14px;
-			font-weight: bold;
-			border-radius: 0 !important;
-		}
-	}
-	
-	#price-buy-together,
-	h4{
-		color: $black;
-		font-size: 20px;
-		line-height: 25px;
-	}
+    .ui.attached.segment {
+        border: 0;
+        padding-right: 0;
+        padding-left: 0;
+    }
 
-	#btn_comprejunto {
-		i {
-			opacity: 1 !important;
-		}
-	}
+    .ui.table {
+        border: 1px solid #eee;
+        color: #666666;
+        border-radius: 0 !important;
 
+        strong {
+            color: #000;
+        }
+
+        thead th {
+            background-color: #999999;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 0 !important;
+        }
+    }
+
+    #price-buy-together,
+    h4 {
+        color: $black;
+        font-size: 20px;
+        line-height: 25px;
+    }
+
+    #btn_comprejunto {
+        i {
+            opacity: 1 !important;
+        }
+    }
 }
 
 
 
 #AlsoProducts {
-	margin-top:60px;
-	>.ui {
-		&.container {
-			@media screen and (max-width: $mobile-bp){
-				margin:25px auto 0 auto !important;
-			}
-		}
-	}
+    margin-top: 60px;
 
+    > .ui {
+        &.container {
+            @media screen and (max-width: $mobile-bp) {
+                margin: 25px auto 0 auto !important;
+            }
+        }
+    }
 }
 
-#RelatedProducts{
-	>.ui {
-		&.container {
-			@media screen and (max-width: $mobile-bp){
-				margin:25px auto 0 auto !important;
-			}
-		}
-	}
-
+#RelatedProducts {
+    > .ui {
+        &.container {
+            @media screen and (max-width: $mobile-bp) {
+                margin: 25px auto 0 auto !important;
+            }
+        }
+    }
 }
 
 
 
 
 .ui.items:not(.unstackable) > .item > .image > a > img {
-	@media screen and (max-width: $mobile-bp) {
-		max-width: 100% !important;
-		width: auto !important;
-		max-height: 250px !important;
-	}
+    @media screen and (max-width: $mobile-bp) {
+        max-width: 100% !important;
+        width: auto !important;
+        max-height: 250px !important;
+    }
 }
 
 .ui.list > div > .item {
-	display: list-item;
-	table-layout: fixed;
-	list-style-type: none;
-	list-style-position: outside;
-	padding: 0.21428571em 0em;
-	line-height: 1.14285714em;
+    display: list-item;
+    table-layout: fixed;
+    list-style-type: none;
+    list-style-position: outside;
+    padding: 0.21428571em 0em;
+    line-height: 1.14285714em;
+}
+
+.kit-product {
+
+    .blocoKit {
+
+        h5 {
+            font-size: 16px;
+            color: #262626;
+        }
+
+        .infoKit {
+            text-align: right;
+
+            .nameProduct {
+                font-size: 16px;
+                color: #262626;
+                font-weight: 700;
+            }
+
+            .valores {
+                color: #767676;
+                margin: 5px 0 10px;
+
+                .valorDe {
+                    font-size: 11px;
+                    text-decoration: line-through;
+                }
+
+                .valorPor {
+                    color: #2980b9;
+                    font-size: 20px;
+                }
+
+                .kit {
+                    font-size: 11px;
+                }
+            }
+
+            .variacao {
+                color: #767676;
+                font-size: 14px;
+            }
+
+            .quantidade {
+                color: #767676;
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+.infoPrecoKit {
+    color: #999;
+    font-size: 14px;
 }

@@ -220,6 +220,27 @@ function GerarPedidoCompleto(
                         confirmButtonText: 'OK'
                     });
 
+                    var googleRecaptchaVersion = "";
+                    if ($('#googleVersion').length > 0) {
+                        googleRecaptchaVersion = $('#googleVersion').val();
+                    }
+
+                    if (googleRecaptchaVersion == '2') {
+                        grecaptcha.reset();
+                        $("#googleResponse").val('');
+                    } else if (googleRecaptchaVersion == '3') {
+                        var googleSiteKey = $('#googleSiteKey').val();
+                        $("#googleResponse").val('');
+                        $.ajaxSetup({ async: false });
+                        $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                            grecaptcha.ready(function () {
+                                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                    $("#googleResponse").val(token);
+                                });
+                            });
+                        });
+                    }
+
                     $(".GerarPedido").removeClass("loading");
                     $(".GerarPedido").removeClass("disabled")
                 }
@@ -517,7 +538,7 @@ function OrderCreate() {
             });
         }
 
-        if (tipoVerificacao != "S" && $('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != "") {
+        if (tipoVerificacao != "S" && $('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != "" && externalCode != "") {
             PaymentHash = PagSeguroDirectPayment.getSenderHash();
             var statusPagSeguro = false;
 
@@ -1681,7 +1702,7 @@ $(document).ready(function () {
 
                 var discount = new Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
 
-                var valorCompare = subTotal - discount;
+                var valorCompare = (subTotal - discount).toFixed(2);
 
 
                 if (shoppingVoucherValue > valorCompare) {
@@ -1713,7 +1734,7 @@ $(document).ready(function () {
                 var shippingTotal = new Number($('#shipping_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
                 var discount = new Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
 
-                var valorCompare = subTotal - discount;
+                var valorCompare = (subTotal - discount).toFixed(2);
 
 
                 if (parseFloat(shoppingVoucherValue) == parseFloat(valorCompare) && parseFloat(shippingTotal) == 0) {
@@ -2204,3 +2225,4 @@ $(document).ready(function () {
     })
     //************************************************************************
 });
+

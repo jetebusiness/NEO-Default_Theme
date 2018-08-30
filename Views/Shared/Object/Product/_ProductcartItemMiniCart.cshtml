@@ -30,6 +30,15 @@
     </div>
     <div class="content">
         <a href="/Product/Details/@Model.IdProduct" class="product title" id="name_@Model.IdCartItem">@Html.Raw(Model.NameProduct)</a>
+        @if (Model.IsKit)
+        {
+            <div>
+                @foreach (var productKit in Model.ProductsKit)
+                {
+                    <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                }
+            </div>
+        }
         <div class="meta product avaibility" id="availability_@Model.IdCartItem">
             @if (Model.Stock == 0)
             {

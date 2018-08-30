@@ -1,7 +1,7 @@
 $(function () {
 
-    $(".slideshow").each(function() {
-        
+    $(".slideshow").each(function () {
+
         var $arrows = ($(this).data("arrow") != null ? $(this).data("arrow") : true),
             $dots = ($(this).data("dots") != null ? $(this).data("dots") : false),
             $qtd = ($(this).data("qtd") != null || $(this).data("qtd") != undefined) ? $(this).data("qtd") : 4,
@@ -16,7 +16,7 @@ $(function () {
             accessibility: false,
             autoplay: $auto,
             autoplaySpeed: 6000,
-            infinite:false,
+            infinite: false,
             responsive: [
                 {
                     breakpoint: 935,
@@ -41,8 +41,14 @@ $(function () {
         var $sliderCard = jQuery(".card", this),
             $slider = jQuery(this),
             $width = jQuery(".pusher").width();
-        
+
+        if ($sliderCard.length >= 4 && $width >= 934) {
             $slider.slick(settings);
+        } else if ($sliderCard.length >= 3 && $width < 934) {
+            $slider.slick(settings);
+        } else if ($sliderCard.length >= 2 && $width < 481) {
+            $slider.slick(settings);
+        }
     });
 
 });

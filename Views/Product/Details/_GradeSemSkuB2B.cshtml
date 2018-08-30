@@ -2,6 +2,7 @@
 
 @{
     var useOneClick = (bool)ViewData["useOneCLick"];
+    var isB2B = ViewData["isB2B"] != null ? (bool)ViewData["isB2B"] : true;
 }
 
 <div class="row product-grid">
@@ -130,11 +131,11 @@
             <div id="pagamento-calculado">
                 @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                 {
-                    @Html.Action("Payment", "Product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
+                    @Html.Action("Payment", "Product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
                 }
                 else
                 {
-                    @Html.Action("Payment", "Product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
+                    @Html.Action("Payment", "Product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
                 }
             </div>
         }

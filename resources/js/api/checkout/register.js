@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     $(".cpf_cnpj_checkout").change(function () {
         let field = $(this).val().toString();
 

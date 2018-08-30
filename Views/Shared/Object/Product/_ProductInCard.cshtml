@@ -114,37 +114,45 @@
                 </a>
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
-                    <meta itemprop="priceCurrency" content="BRL"/>
-                        @if (Model.PricePromotion != null && Model.PricePromotion > 0)
-                        {
-                            <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span> 
+                    <meta itemprop="priceCurrency" content="BRL" />
+                    @if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                    {
+                        <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span>
                         <span class="preco">R$ <span itemprop="price">@string.Format("{0:n2}", Model.PricePromotion)</span></span>
-                        
-                        }
-                        else
-                        {
+
+                    }
+                    else
+                    {
                         <span id="price_@Model.IdProduct" class="preco" itemprop="price">
                             <span class="precoBase">
                                 @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)
                             </span>
                             R$ @string.Format("{0:n2}", Model.Price)
                         </span>
-                        }
-                        @if (Model.InstallmentMax != null)
-                        {
-                            <span class="parcelamento">
-                                ou em <span class="installmentMaxNumber">@Model.InstallmentMax.MaxNumber</span>
-                                x de <span class="installmentMaxValue">@string.Format("{0:c}", Model.InstallmentMax.Value)</span>
-                            </span>
-                        }
+                    }
+                    @if (Model.InstallmentMax != null)
+                    {
+                        <span class="parcelamento">
+                            ou em <span class="installmentMaxNumber">@Model.InstallmentMax.MaxNumber</span>
+                            x de <span class="installmentMaxValue">@string.Format("{0:c}", Model.InstallmentMax.Value)</span>
+                        </span>
+                    }
+
+                    @if (Model.Stock >= 0 && !Model.FlagExhausted)
+                    {
+                        <br /><br />
+                        <span class="text color grey regular parcelamento small">
+                            @Model.DescriptionAvailabilityStatus
+                        </span>
+                    }
 
                     @if (!Model.FlagExhausted)
                     {
-                        <link itemprop="availability" href="http://schema.org/InStock" content="disponível"/>
+                        <link itemprop="availability" href="http://schema.org/InStock" content="disponível" />
                     }
                     else
                     {
-                        <link itemprop="availability" href="http://schema.org/SoldOut" content="esgotado"/>
+                        <link itemprop="availability" href="http://schema.org/SoldOut" content="esgotado" />
                     }
 
                 </div>

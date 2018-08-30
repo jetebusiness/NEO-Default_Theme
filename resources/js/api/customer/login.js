@@ -17,7 +17,7 @@ function Login() {
         dataType: "json",
         success: function (response) {
             if (response.success == false) {
-                if(googleRecaptchaStatus)
+                if (googleRecaptchaStatus)
                     grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
@@ -29,7 +29,7 @@ function Login() {
         },
         error: function () {
             if (response.success == false) {
-                if(googleRecaptchaStatus)
+                if (googleRecaptchaStatus)
                     grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
@@ -51,29 +51,29 @@ function LoginB2B() {
         dataType: "json",
         success: function (response) {
             if (response.success == false) {
-                if(googleRecaptchaStatus)
+                if (googleRecaptchaStatus)
                     grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
             }
             else {
-                if(response.showAcceptTerm){
+                if (response.showAcceptTerm) {
                     window.scrollTo(0, 200)
                     $("#idCustomer").val(response.idCustomer)
                     $("#idTablePrice").val(response.idTablePrice)
                     $("#loginB2B").removeClass("loading");
                     $("#loginB2B").hide()
-                    $("#termoAceite").removeClass("hideme")                    
+                    $("#termoAceite").removeClass("hideme")
                 }
-                else{
+                else {
                     $("#loginB2B").removeClass("loading");
-                    location.href = response.redirectUrl;                
+                    location.href = response.redirectUrl;
                 }
             }
         },
         error: function () {
             if (response.success == false) {
-                if(googleRecaptchaStatus)
+                if (googleRecaptchaStatus)
                     grecaptcha.reset()
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
@@ -98,10 +98,10 @@ $(document).ready(function () {
                 $("#formLogin #gCaptcha").show()
             }
             else if (count > 3 && googleRecaptchaStatus) {
-                if(grecaptcha.getResponse() != ""){
+                if (grecaptcha.getResponse() != "") {
                     $("#googleResponse").val(grecaptcha.getResponse())
                     Login()
-                }else{
+                } else {
                     $("#submitForm").removeClass("loading");
                 }
             }
@@ -110,7 +110,7 @@ $(document).ready(function () {
             }
         }
         else {
-            if(googleRecaptchaStatus)
+            if (googleRecaptchaStatus)
                 grecaptcha.reset()
             $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
             $(".ui.message.form-message").show();
@@ -128,10 +128,10 @@ $(document).ready(function () {
                 $("#formLogin #gCaptcha").show()
             }
             else if (count > 3 && googleRecaptchaStatus) {
-                if(grecaptcha.getResponse() != ""){
+                if (grecaptcha.getResponse() != "") {
                     $("#googleResponse").val(grecaptcha.getResponse())
                     LoginB2B()
-                }else{
+                } else {
                     $("#loginB2B").removeClass("loading");
                 }
             }
@@ -140,7 +140,7 @@ $(document).ready(function () {
             }
         }
         else {
-            if(googleRecaptchaStatus)
+            if (googleRecaptchaStatus)
                 grecaptcha.reset()
             $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
             $(".ui.message.form-message").show();
@@ -192,12 +192,12 @@ $(document).ready(function () {
         }
     })
     $(document).on("keypress", "#password", function (e) {
-        if(e.which == 13) {
-            return false;    
+        if (e.which == 13) {
+            return false;
         }
     })
     $(document).on("keypress", "#password", function (e) {
-        if(e.which == 13) {
+        if (e.which == 13) {
             var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
 
             if ($("#email").val().length > 0 && $("#password").val().length > 0) {
@@ -212,7 +212,7 @@ $(document).ready(function () {
                     if (response.length > 0) {
                         Login()
                     }
-                    else{
+                    else {
                         $("#submitForm").removeClass("loading");
                     }
                 }
@@ -221,7 +221,7 @@ $(document).ready(function () {
                 }
             }
             else {
-                if(googleRecaptchaStatus)
+                if (googleRecaptchaStatus)
                     grecaptcha.reset()
                 $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
                 $(".ui.message.form-message").show();
@@ -230,7 +230,7 @@ $(document).ready(function () {
     })
 
     $(document).on("keypress", "#passwordb2b", function (e) {
-        if(e.which == 13) {
+        if (e.which == 13) {
             var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
 
             if ($("#userName").val().length > 0 && $("#passwordb2b").val().length > 0) {
@@ -245,7 +245,7 @@ $(document).ready(function () {
                     if (response.length > 0) {
                         LoginB2B()
                     }
-                    else{
+                    else {
                         $("#loginB2B").removeClass("loading");
                     }
                 }
@@ -254,7 +254,7 @@ $(document).ready(function () {
                 }
             }
             else {
-                if(googleRecaptchaStatus)
+                if (googleRecaptchaStatus)
                     grecaptcha.reset()
                 $(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
                 $(".ui.message.form-message").show();

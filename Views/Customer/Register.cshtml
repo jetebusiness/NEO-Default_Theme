@@ -12,22 +12,22 @@
 }
 
 @section breadcrumbs {
-<div class="ui container">
-    <div class="ui grid stackable middle aligned">
-        <div class="row one column">
-            <div class="column">
-                <h1 class="text uppercase">@ViewBag.Title</h1>
-                <div class="ui breadcrumb text small uppercase">
-                    <a class="section" href="/">Home</a>
-                    <div class="divider"> / </div>
-                    <a class="section" href="/Customer">Área do Cliente</a>
-                    <div class="divider"> / </div>
-                    <a class="active section">Cadastre-se</a>
+    <div class="ui container">
+        <div class="ui grid stackable middle aligned">
+            <div class="row one column">
+                <div class="column">
+                    <h1 class="text uppercase">@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small uppercase">
+                        <a class="section" href="/">Home</a>
+                        <div class="divider"> / </div>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <div class="divider"> / </div>
+                        <a class="active section">Cadastre-se</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>  
 }
 
 @section banner {
@@ -167,7 +167,7 @@
                                             <div class="ui left icon input">
                                                 <i class="phone icon"></i>
                                                 <input type="tel" name="Phone.Phone1"
-                                                       placeholder="(00) 00000-0000" 
+                                                       placeholder="(00) 00000-0000"
                                                        class="masked mask_phone"
                                                        data-validate="phone">
                                             </div>
@@ -204,15 +204,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @*
-                                            <div class="field required">
-                                                <label>Confirme a Senha</label>
-                                                <div class="ui left icon input">
-                                                    <i class="lock icon"></i>
-                                                    <input type="password" name="User.PasswordConfirm"
-                                                           placeholder="*******" data-validate="passwordcheck">
-                                                </div>
-                                            </div>*@
                                     </div>
                                     <div class="field">
                                         <label>Selecione as categorias que deseja receber por e-mail.</label>
@@ -470,7 +461,7 @@
                         </div>
                     </div>
                 </div>
-                                            }
+            }
         </div>
     </div>
 </div>
@@ -485,6 +476,7 @@
 @section custom_js {
     <script>
         function OnSuccess(response) {
+
             if (response.Success == true) {
                 swal({
                     title: '',

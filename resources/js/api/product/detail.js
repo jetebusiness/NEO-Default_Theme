@@ -35,7 +35,6 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-
     $(".button.avise").api({
         action: 'alert me',
         method: 'POST',
@@ -43,7 +42,7 @@ $(document).ready(function () {
         beforeSend: function (settings) {
             settings.data = {
                 produtoID: $("#produto-id").val(),
-                sku: $("#variacoesSelecionadas").val(),
+                sku: $("#variacoesSelecionadas").val() !== "" ? $("#variacoesSelecionadas").val() : $(this).data("produto-variations") !== "" && $(this).data("produto-variations") !== undefined ? $(this).data("produto-variations") : "",
                 titulo: $("#produto-nome").text() !== "" ? $("#produto-nome").text() : $(this).data("name"),
                 imagem: $('#imagem-padrao').attr('src') !== undefined ? $('#imagem-padrao').attr('src') : $('#mainImageCard_' + $(this).data("id")).attr('src'),
                 codigo: $("#produto-codigo").val()
@@ -555,8 +554,6 @@ function buscarSKU(seletor, produtoID) {
     var qtdParcelaMaximaUnidade      = $("#qtd-parcela-maxima-unidade").val();
     var pagamentoDescricao           = $("#pagamento-descricao").val();
     
-    console.log(ArrReferenciasJaSelecionadas)
-
     $.ajax({
         url: '/Product/GetSku/',
         type: 'POST',
@@ -569,7 +566,6 @@ function buscarSKU(seletor, produtoID) {
         },
         dataType: 'json',
         success: function (data) {
-            console.log(data)
             if (typeof produtoID != 'undefined') {
                 if (data.Visible === true && data.Stock > 0) {
                     AtualizarGradeCompreJunto(data, produtoID, referenciasJaSelecionadas);
@@ -1219,18 +1215,14 @@ function MontaTipoCheckBox(skU, seletor_produto, reference, variation, variacoes
     var classeBtn = "ui basic primary button radio tiny variacao-radio";
     var classeDiv = "ui checkbox hideme";
 
-    if (skU != "" && skU != undefined) {
-        if (skU.stock <= 0 || skU.visible === false) {
-            if (skU.stock <= 0) {
-                //classeBtn += "disabled"; mesmo que stock = 0 o mesmo deve ser exibido
-                classeBtn += "";
-            }
-            else if (skU.visible === false) {
-                classeBtn += " hideme";
-            }
+    if (skU.stock <= 0 || skU.visible === false) {
+        if (skU.stock <= 0) {
+            //classeBtn += "disabled"; mesmo que stock = 0 o mesmo deve ser exibido
+            classeBtn += "";
         }
-    } else {
-        classeBtn += " hideme";
+        else if (skU.visible === false) {
+            classeBtn += " hideme";
+        }
     }
 
     if (validaSejaEstaSelecionado(seletor_produto, reference.IdReference, variation.IdVariation, variacoes_selecionadas_bkp)) {

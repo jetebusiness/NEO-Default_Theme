@@ -9,6 +9,17 @@
         <div class="meta">
             @Model.IdProduct
         </div>
+
+        @if (Model.IsKit)
+        {
+            <div>
+                @foreach (var productKit in Model.ProductsKit)
+                {
+                    <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                }
+            </div>
+        }
+
         <div class="description">
             <table class="ui very basic unstackable table ">
                 <thead>
