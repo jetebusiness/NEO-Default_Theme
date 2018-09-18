@@ -1,7 +1,21 @@
 ﻿@model IList<DomainCompany.Entities.Banner>
-@if (Model != null && Model.Any())
+@if (Model != null && Model.Count() > 0)
 {
 
+    <script>
+        jQuery(document).ready(function ($) {
+            $('.car-banners').slick({
+                infinite: true,
+                autoplay: true,
+                autoplaySpeed: 2000,
+                slidesToScroll: 1,
+                arrows: false,
+                dots: true,
+                accessibility: false,
+                slidesToShow: 1
+            });
+        });
+    </script>
 
     List<DomainCompany.Entities.Banner> bannerRandom = Model.Where(b => b.Random == true).ToList();
     List<DomainCompany.Entities.Banner> bannerNoRandom = Model.Where(b => b.Random == false).ToList();
@@ -15,7 +29,7 @@
                 <div class="fullBannerWithText">
                     <div class="linkFullBanner">
                         <a href="@randombanner.Link" title="@randombanner.Name">
-                            <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)"/>
+                            <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
                         </a>
                     </div>
                     <div class="textFullBanner">
@@ -31,7 +45,7 @@
             @foreach (var banner in bannerNoRandom)
             {
                 <a href="@banner.Link" title="@banner.Name">
-                    <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)"/>
+                    <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
                 </a>
             }
         </div>

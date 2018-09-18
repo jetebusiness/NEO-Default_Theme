@@ -442,6 +442,11 @@
                             </div>
                         }
                         <div class="row">
+                            <div class="column text right">
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Register" })
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="column">
                                 <a href="/Customer/Login" class="ui animated button large basic left floated">
                                     <div class="visible content">Cancelar</div>
@@ -475,6 +480,47 @@
 
 @section custom_js {
     <script>
+
+        function OnBegin(response) {
+            var googleRecaptchaVersion = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersion = $('#googleVersion').val();
+            }
+
+            if (googleRecaptchaVersion == '2') {
+                if ($("#googleResponse").val() == '') {
+                    // if error I post a message in a div
+                    //$('#reCaptchaError').html('<p>Please verify youare human</p>');
+                    swal({
+                        title: '',
+                        html: 'Por favor, verifique que não é um robo.',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+            } else if (googleRecaptchaVersion == '3') {
+                if ($("#googleResponse").val() == '') {
+                    // if error I post a message in a div
+                    //$('#reCaptchaError').html('<p>Please verify youare human</p>');
+                    swal({
+                        title: '',
+                        html: 'Por favor, ocorreu um erro no google recaptcha.',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+            }
+        }
+
         function OnSuccess(response) {
 
             if (response.Success == true) {
@@ -491,6 +537,27 @@
                 });
             }
             else {
+                var googleRecaptchaVersion = "";
+
+                if ($('#googleVersion').length > 0) {
+                    googleRecaptchaVersion = $('#googleVersion').val();
+                }
+
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
                 swal({
                     title: '',
                     html: response.Message,
@@ -504,7 +571,28 @@
         }
 
         function OnFailure(response) {
+            var googleRecaptchaVersion = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersion = $('#googleVersion').val();
+            }
+
             if (response.Success == false) {
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
                 swal({
                     title: '',
                     text: response.Message,
@@ -517,6 +605,10 @@
                     window.location.href = "/area-cliente";
                 });
             }
+        }
+
+        function OnComplete() {
+
         }
     </script>
 }

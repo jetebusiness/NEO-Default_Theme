@@ -407,7 +407,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="" />
-                                @Html.Action("GetRecaptcha", "Company", null)
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Evaluation" })
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>

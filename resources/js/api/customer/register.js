@@ -2,6 +2,25 @@
 import {_alert} from '../../functions/message';
 
 $(document).ready(function () {
+    if ($('#googleModule').length > 0) {
+        if ($('#googleModule').val() == 'Register') {
+            var googleRecaptchaVersionRegisterCustomer = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersionRegisterCustomer = $('#googleVersion').val();
+            }
+
+            if (googleRecaptchaVersionRegisterCustomer == '3') {
+                var googleSiteKey = $('#googleSiteKey').val();
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                        $("#googleResponse").val(token);
+                    });
+                });
+            }
+        }
+    }
+
     $('#categories_news .ui.checkbox').checkbox({
         onChecked: function () {
             var idCategorySelected = $(this).data("id");

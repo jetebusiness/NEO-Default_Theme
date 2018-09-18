@@ -21,29 +21,39 @@ $(document).ready(function(){
     $(document).on("click", "#Entrar", function () {
         var userName = $("#UserName").val()
         var password = $("#Password").val()
-
-        if(password != ""){
-            $.ajax({
-                method: "POST",
-                url: "/Customer/Login",
-                data: {
-                    __RequestVerificationToken: gettoken(),
-                    UserName: userName,
-                    Password: password
-                },
-                success: function (data) {
-                    if (data.success === true) {
-                        window.location = data.redirectUrl
+        var googleSiteKey = $('#googleSiteKey').val();
+        $("#googleResponse").val('');
+        $.ajaxSetup({ async: false });
+        $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+            grecaptcha.ready(function () {
+                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
+                    $("#googleResponse").val(tokenGoogleRecaptchaV3);
+                    if (password != "") {
+                        $.ajax({
+                            method: "POST",
+                            url: "/Customer/Login",
+                            data: {
+                                __RequestVerificationToken: gettoken(),
+                                UserName: userName,
+                                Password: password,
+                                googleResponse: tokenGoogleRecaptchaV3
+                            },
+                            success: function (data) {
+                                if (data.success === true) {
+                                    window.location = data.redirectUrl
+                                } else {
+                                    _alert("", data.message, "error")
+                                }
+                            },
+                            error: function (data) {
+                                _alert("", data.message, "error")
+                            }
+                        });
                     } else {
-                        _alert("", data.message, "error")
+                        _alert("", "Informe sua senha.", "warning")
                     }
-                },
-                error: function (data) {
-                    _alert("", data.message, "error")
-                }
+                });
             });
-        }else{
-            _alert("", "Informe sua senha.", "warning")
-        }
+        });
     })
 })

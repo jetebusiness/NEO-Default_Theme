@@ -15,7 +15,7 @@
                         <div class="grouped fields">
                             <div class="field">
 
-                                @foreach (var variation in reference.Variations)
+                                @foreach (var variation in reference.Variations.OrderBy(p => p.DisplayOrder))
                                 {
                                     if (string.IsNullOrEmpty(variation.Color))
                                     {

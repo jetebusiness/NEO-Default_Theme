@@ -332,13 +332,13 @@
                                     <!--COMEÇO VARIAÇÔES-->
                                     if (!Model.FlagExhausted)
                                     {
-                                        @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs });
+                                        @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })
                                     }
                                     <!--FIM VARIAÇÔES-->
 
                                     if (Model.IsKit)
                                     {
-                                        @Html.Partial("~/Views/Product/Details/_ProductsKit.cshtml", Model.KitProducts);
+                                        @Html.Partial("~/Views/Product/Details/_ProductsKit.cshtml", Model.KitProducts)
                                     }
 
                                     <div class="column ui attached segment">
@@ -493,6 +493,31 @@
                                                             </div>
                                                         </a>
                                                     }
+
+                                                    @{
+                                                        bool inlist = false;
+                                                        string color = "grey";
+
+                                                        if (ViewBag.InWishList)
+                                                        {
+                                                            inlist = true;
+                                                            color = "red";
+                                                        }
+                                                    }
+                                                    @{
+                                                        bool isb2b = Session["segment"] != null && Session["segment"].ToString() == "b2b" ? true : false;
+                                                        if (!isb2b)
+                                                        {
+                                                            <div class="one column wishlistDetails">
+                                                                <div class="column">
+                                                                    <a href="#" class="wishlist-btn" data-wishlist-local="detail">
+                                                                        <i class="icon heart @color wishlist-item" data-in-list="@inlist" data-have-sku="@(Model.AvailableReferences != null && Model.AvailableReferences.Count() > 0 ? "true" : "false")" data-product-id="@Model.IdProduct"></i>
+                                                                        <span>Adicionar a Lista de Desejo</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -546,12 +571,12 @@
                             <div class="one column row">
                                 <div class="column">
                                     @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
-                    <div class="addthis_inline_share_toolbox"></div>
-                <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
-                <div class="g-plus" data-action="share"></div>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
-                <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
-                <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
+                                            <div class="addthis_inline_share_toolbox"></div>
+                                        <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
+                                        <div class="g-plus" data-action="share"></div>
+                                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
+                                        <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
+                                        <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
                                     <!-- Go to www.addthis.com/dashboard to customize your tools -->
                                     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
                                     <!-- Go to www.addthis.com/dashboard to customize your tools -->
@@ -735,8 +760,7 @@
                                         <label>Mostrar Email?</label>
                                     </div>
                                 </div>
-                                <input type="hidden" name="Rate" id="Rate" value="" />
-                                @Html.Action("GetRecaptcha", "Company", null)
+                                <input type="hidden" name="Rate" id="Rate" value="1" />                    
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>
@@ -774,5 +798,14 @@
         {
             @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
         }
+    </div>
+</div>
+
+
+<div class="ui modal login">
+    <i class="close icon"></i>
+    <div class="header ui center aligned segment">Faça login ou cadastre-se para continuar</div>
+    <div class="description">
+        @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = Model.UrlFriendlyCustom != null ? $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={Model.UrlFriendlyCustom}" : $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={Model.UrlFriendly}" })
     </div>
 </div>

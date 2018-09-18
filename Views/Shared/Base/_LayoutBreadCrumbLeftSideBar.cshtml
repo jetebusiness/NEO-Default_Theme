@@ -4,7 +4,7 @@
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
         @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
-     <!-- End GoogleTagManager Common -->
+        <!-- End GoogleTagManager Common -->
     }
 
     <!-- ~/Views/Shared/Common/_Header.cshtml -->
@@ -50,7 +50,7 @@
         <!-- End Google Tag Manager (noscript) -->
     }
 
-     <!-- ~/Views/Shared/Common/_Cart.cshtml -->
+    <!-- ~/Views/Shared/Common/_Cart.cshtml -->
     @Html.Action("GetCartBySession", "Checkout")
 
     <div class="pusher">
@@ -67,16 +67,16 @@
         <div class="row one column">
             @RenderSection("banner", required: false)
         </div>
-        
+
         <div class="ui container margin bottom large">
             <div class="ui grid">
                 <div class="row divided horizontal stackable">
-                    @RenderSection("filters", required: true)                    
+                    @RenderSection("filters", required: true)
                     @RenderBody()
                 </div>
             </div>
         </div>
-        
+
         <!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
         @Html.Action("Brand", "Product")
 
@@ -85,5 +85,13 @@
         @Html.Partial("Common/_Footer")
     </div>
     @RenderSection("remarketing", required: false)
+
+    <div class="ui modal login">
+        <i class="close icon"></i>
+        <div class="header ui center aligned segment">Faça login ou cadastre-se para continuar</div>
+        <div class="description">
+            @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={Request.Url.AbsoluteUri}" })
+        </div>
+    </div>
 </body>
 </html>

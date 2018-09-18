@@ -21,7 +21,6 @@ require("./checkout/success.js");
  */
 require('./customer/AddressManager.js')
 
-
 /**
  * Order API Calls
  */
@@ -37,6 +36,7 @@ require("./customer/register");
 require("./customer/newsletter");
 require("./customer/AccessKey");
 require("./customer/login");
+require("./customer/wishlist");
 require("./customer/contact");
 require("./customer/changeEmail");
 require("./product/alertMe");

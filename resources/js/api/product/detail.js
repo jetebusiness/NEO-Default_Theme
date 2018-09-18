@@ -9,6 +9,7 @@ import {SomenteNumerosPositivos} from "../../functions/form-control";
 import {LoadCarrinhoEventList} from "../../functions/mini_cart_generic";
 import {CarregarParcelamento, CarregaParcelamentoPagSeguro} from "../../api/product/detail_b2b.js";
 import {getAllMask} from "../../ui/modules/mask";
+import { HaveInWishList } from "../customer/wishlist";
 
 $(document).ready(function () {
     "use strict";
@@ -83,17 +84,35 @@ $(document).ready(function () {
     });
 
     $(".btn-avaliar").click(function () {
-        var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false
-        if(googleRecaptchaStatus){
-            if(grecaptcha.getResponse() != ""){
-                $("#googleResponse").val(grecaptcha.getResponse())
-                AvaliarProduto()
-            }else{
-                grecaptcha.reset()
-            }
+        var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false;
+        var googleRecaptchaVersion = "";
+
+        if ($('#googleVersion').length > 0) {
+            googleRecaptchaVersion = $('#googleVersion').val();
         }
-        else
-            AvaliarProduto()
+
+        if (googleRecaptchaVersion == "2") {
+            if (googleRecaptchaStatus) {
+                if (grecaptcha.getResponse() != "") {
+                    $("#googleResponse").val(grecaptcha.getResponse());
+                    AvaliarProduto();
+                } else {
+                    grecaptcha.reset();
+                }
+            } else {
+                AvaliarProduto();
+            }
+        } else if (googleRecaptchaVersion == "3") {
+            var googleSiteKey = $('#googleSiteKey').val();
+            grecaptcha.ready(function () {
+                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                    $("#googleResponse").val(token);
+                    AvaliarProduto();
+                });
+            });
+        } else {
+            AvaliarProduto();
+        }
     });
 
 
@@ -487,8 +506,13 @@ function ValidaVariacaoSelecionada(selecionada, seletor) {
 
 function AvaliarProduto() {
     var form = $('#avaliar');
-    var googleRecaptcha = $("#avaliar #gCaptcha").length > 0 ?  $("#avaliar #gCaptcha").val() : ""
+    var googleRecaptcha = $("#googleResponse").length > 0 ? $("#googleResponse").val() : "";
     var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false
+    var googleRecaptchaVersion = "";
+
+    if ($('#googleVersion').length > 0) {
+        googleRecaptchaVersion = $('#googleVersion').val();
+    }
 
     $.ajax({
         url: '/Product/ProductRating?googleResponse=' + googleRecaptcha,
@@ -529,14 +553,38 @@ function AvaliarProduto() {
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    if(googleRecaptchaStatus)
-                        grecaptcha.reset()
+                    if (googleRecaptchaVersion == '2') {
+                        grecaptcha.reset();
+                    } else if (googleRecaptchaVersion == '3') {
+                        var googleSiteKey = $('#googleSiteKey').val();
+                        $("#googleResponse").val('');
+                        $.ajaxSetup({ async: false });
+                        $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                            grecaptcha.ready(function () {
+                                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                    $("#googleResponse").val(token);
+                                });
+                            });
+                        });
+                    }
                 });
             }
         },
         error: function (request, error) {
-            if(googleRecaptchaStatus)
-                grecaptcha.reset()
+            if (googleRecaptchaVersion == '2') {
+                grecaptcha.reset();
+            } else if (googleRecaptchaVersion == '3') {
+                var googleSiteKey = $('#googleSiteKey').val();
+                $("#googleResponse").val('');
+                $.ajaxSetup({ async: false });
+                $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                            $("#googleResponse").val(token);
+                        });
+                    });
+                });
+            }
         }
     });
 }
@@ -591,6 +639,8 @@ function buscarSKU(seletor, produtoID) {
 
             AtualizarDicaCompreJunto($("#produto-id").val(), data.IdSku);
             CarregarParcelamento(false);
+
+            var response = HaveInWishList($("#produto-id").val(), data.IdSku, null);
         },
         error: function (request, error) {
             //console.log("erro ao buscar sku");
@@ -870,7 +920,7 @@ function AtualizarCarrinhoCompreJunto(valor, valorP, operador) {
         if (operador == "+") {
             $("#compre-junto-desconto").text(moneyPtBR(parseFloat(desconto) + parseFloat(descontoP)));
             if (valorP != "" && parseFloat(valorP) > 0) {
-                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) + parseFloat(valorP)));
+                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) + parseFloat(valor)));
                 $("#compre-junto-total-final").text(moneyPtBR(parseFloat(total_final) + parseFloat(valorP)));
             } else {
                 $("#compre-junto-total").text(moneyPtBR(parseFloat(total) + parseFloat(valor)));

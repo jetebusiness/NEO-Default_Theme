@@ -1,0 +1,72 @@
+﻿.wishlist {
+    .bcg-ball {
+        background: #f0f0f0;
+        border-radius: 50%;
+        width: 75px;
+        height: 75px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 15px auto;
+    }
+
+    .ui.icon {
+        font-size: 36px;
+    }
+
+    .header {
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .description {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+    }
+}
+
+.wishlistProduct {
+    .header {
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .description {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+    }
+
+    .price {
+        color: #2980b9;
+        font-size: 18px;
+        line-height: 20px;
+    }
+
+    .de-price-por {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+
+        span {
+            text-decoration: line-through;
+        }
+    }
+
+    .parcelamento {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+    
+    @media only screen and (max-width: 767px) {
+        .text-center {
+            text-align: center;
+        }
+    }
+}

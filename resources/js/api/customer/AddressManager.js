@@ -48,7 +48,8 @@ $(document).ready(function () {
                 text: "Remover"
             },
             cancel: {
-                text: "Cancelar"
+                text: "Cancelar",
+                color: "#95979b"
             },
             callback: function () {
                 $.ajax({

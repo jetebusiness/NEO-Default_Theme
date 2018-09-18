@@ -1,31 +1,69 @@
-﻿@model DomainProduct.Entities.Product
+﻿
+@model DomainProduct.Entities.Product
 
-@* 
-    reference: https://developers.google.com/search/docs/data-types/product 
+@*
+    reference: https://developers.google.com/search/docs/data-types/product
 *@
 
 <div id="Product_@Model.IdProduct" class="ui card produto" data-exhausted="@Model.FlagExhausted" itemscope itemtype="http://schema.org/Product">
     <input type="hidden" id="selected-references_@Model.IdProduct" />
     <meta itemprop="productID" content="@Model.IdProduct">
     <div class="content">
+        @{
+            List<DomainCustomer.Entities.Wishlist.WishlistItem> wishList = null;
+            bool inlist = false;
+            string color = "grey";
+
+            if (Request.Cookies["WishList"] == null)
+            {
+                @Html.Action("LoadWishListCookie", "Customer")
+            }
+
+            wishList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DomainCustomer.Entities.Wishlist.WishlistItem>>(Request.Cookies["WishList"] != null ? Request.Cookies["WishList"].Value : string.Empty);
+
+            if (wishList != null)
+            {
+                if (Model.AvailableReferences == null || Model.AvailableReferences.Count() == 0)
+                {
+                    inlist = wishList.Find(p => p.IdProduct == Model.IdProduct) != null ? true : false;
+                }
+            }
+            if (inlist)
+            {
+                color = "red";
+            }
+        }
+
+        @{
+            bool isb2b = Session["segment"] != null && Session["segment"].ToString() == "b2b" ? true : false;
+
+            if (!Model.HasConjunct && !isb2b)
+            {
+                <div class="ui top right attached label massive wishlist">
+                    <div class="bcg-heart wishlist-btn" data-wishlist-local="card">
+                        <i class="wishlist-item icon heart @color" data-in-list="@inlist" data-have-sku="@(Model.AvailableReferences != null && Model.AvailableReferences.Count() > 0 ? "true" : "false")" data-product-id="@Model.IdProduct"></i>
+                    </div>
+                </div>
+            }
+        }
         @if (Model.AlternativeImage != null)
         {
             <a class="ui slide masked reveal image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
                 <img itemprop="image" id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
-                <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)"  alt="@Model.Name" title="@Model.Name">
+                <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
 
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
                     <div class="ui bottom right attached label massive imagetag">
-                        <img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)"  alt="@Model.Name" title="@Model.Name">
+                        <img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                     </div>
                 }
             </a>
         }
         else
         {
-            <a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)"  title="@Model.Name">
-                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)"  alt="@Model.Name" title="@Model.Name">
+            <a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
+                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
                     <div class="ui bottom right attached label massive imagetag">
@@ -37,7 +75,7 @@
         <div class="ui horizontal divider avaliacao">
             <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
         </div>
-        
+
         <div class="info">
 
             <div class="sku-options mobile-hide tablet-hide @(Model.AvailableReferences != null ? "mask" : "") @(Session["segment"] != null && Session["segment"].ToString() == "b2b" ? "hideme" : string.Empty)">
@@ -187,7 +225,7 @@
                         Comprar
                     </a>
                 }
-                
+
                 <a class="ui button btnDetalhes mobile-hide tablet-hide" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
                     <i class="icon search"></i>Detalhes
                 </a>

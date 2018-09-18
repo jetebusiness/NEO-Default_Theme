@@ -85,9 +85,11 @@
                     <input type="password" name="Password" id="Password" placeholder="Senha">
                 </div>
             </div>
+            @Html.Action("GetRecaptchaV3", "Company", new { Module = "Login" })
             <button type="button" id="Entrar" class="ui fluid large submit primary button">Entrar</button>
             <div class="ui divider"></div>
-            <p>Esqueceu sua senha? <a href="/Customer/Forgot/">Recuperar senha</a>
+            <p>
+                Esqueceu sua senha? <a href="/Customer/Forgot/">Recuperar senha</a>
             </p>
         </div>
     </div>

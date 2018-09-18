@@ -1,4 +1,23 @@
 ﻿$(document).ready(function () {
+    if ($('#googleModule').length > 0) {
+        if ($('#googleModule').val() == 'Register') {
+            var googleRecaptchaVersionRegisterCheckout = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersionRegisterCheckout = $('#googleVersion').val();
+            }
+
+            if (googleRecaptchaVersionRegisterCheckout == '3') {
+                var googleSiteKey = $('#googleSiteKey').val();
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                        $("#googleResponse").val(token);
+                    });
+                });
+            }
+        }
+    }
+
     $(".cpf_cnpj_checkout").change(function () {
         let field = $(this).val().toString();
 

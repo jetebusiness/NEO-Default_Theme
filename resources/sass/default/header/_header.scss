@@ -1,93 +1,120 @@
 topbar,
 headlogo {
-  width: 100%;
+    width: 100%;
 }
 
 ._header {
-  background: rgb(255,255,255);
-  margin-top: 0px;
+    background: rgb(255,255,255);
+    margin-top: 0px;
 
-  &.fixed{
-    box-shadow: rgba(0,0,0,.3) 0px 0px 10px 0px;
-    @media screen and (max-width: $mobile-bp) {
-      box-shadow: none;
-      border-bottom:1px solid #eee;
-    }
+    &.fixed {
+        box-shadow: rgba(0,0,0,.3) 0px 0px 10px 0px;
 
-    .blocoBusca {
-      top:90px;
-    }
-  }
-
-  .ui.container {
-    padding-top: 0px !important;
-    padding-bottom: 10px !important;
-  }
-
-  i.circular.icon {
-    box-shadow: none;
-  }
-
-  .ui.floating.label {
-    top: 0.8em;
-    left: 105%;
-  }
-
-  .searchcolumn {
-    .ui.icon.input > i.icon {
-      opacity: initial;
-    }
-
-    @media screen and (max-width: $mobile-bp) {
-      display: none !important;
-    }
-  }
-
-  .searchMobile {
-    display: inline-block;
-    float: right;
-    margin-right: 1em;
-    padding-right: 1em;
-    border-right: 1px solid #eee;
-
-    >.button {
-      background: transparent;
-      margin: 0;
-    }
-
-    .blocoBusca {
-      display: none;
-      &.active {
-        display: block !important;
-        position: fixed;
-        right: 10px;
-        top: 100px;
-        z-index: 10;
-        width: calc(100% - 20px);
-        height: 40px;
-
-        i {
-          top:0 !important;
-          right: 0 !important;
+        @media screen and (max-width: $mobile-bp) {
+            box-shadow: none;
+            border-bottom: 1px solid #eee;
         }
-      }
-    }
-  }
 
-
-  .cartbutton {
-    margin: 0;
-    display: inline-block;
-    cursor: pointer;
-    float: right;
-    line-height: 36px;
-    .ui.basic.button {
-      > span {
-        @media screen and (max-width: $mobile-bp){
-          display: none;
+        .blocoBusca {
+            top: 90px;
         }
-      }
     }
-  }
 
+    .ui.container {
+        padding-top: 0px !important;
+        padding-bottom: 10px !important;
+    }
+
+    i.circular.icon {
+        box-shadow: none;
+    }
+
+    .ui.floating.label {
+        top: 0.8em;
+        left: 105%;
+    }
+
+    .searchcolumn {
+        .ui.icon.input > i.icon {
+            opacity: initial;
+        }
+
+        @media screen and (max-width: $mobile-bp) {
+            display: none !important;
+        }
+    }
+
+    .searchMobile {
+        display: inline-block;
+        float: right;
+        margin-right: 1em;
+        padding-right: 1em;
+        border-right: 1px solid #eee;
+
+        > .button {
+            background: transparent;
+            margin: 0;
+        }
+
+        .blocoBusca {
+            display: none;
+
+            &.active {
+                display: block !important;
+                position: fixed;
+                right: 10px;
+                top: 100px;
+                z-index: 10;
+                width: calc(100% - 20px);
+                height: 40px;
+
+                i {
+                    top: 0 !important;
+                    right: 0 !important;
+                }
+            }
+        }
+    }
+
+
+    .cartbutton {
+        margin: 0;
+        display: inline-block;
+        cursor: pointer;
+        float: right;
+        line-height: 36px;
+
+        .ui.basic.button {
+            > span {
+                @media screen and (max-width: $mobile-bp) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.wishlist {
+    text-align: right !important;
+
+    @media screen and (max-width: $desktop-bp-min) {
+        text-align: center !important;
+    }
+
+    .absolute {
+        position: absolute;
+    }
+
+    #wishListCount {
+        position: relative;
+        bottom: 6px;
+        left: 16px;
+        min-width: 18px !important;
+        min-height: 18px !important;
+        padding: 0 !important;
+        line-height: 16px !important;
+        font-size: 10px !important;
+        background: #fff !important;
+        border: 1px solid #2c3e50;
+    }
 }

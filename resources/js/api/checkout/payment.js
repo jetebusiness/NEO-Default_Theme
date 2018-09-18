@@ -143,7 +143,7 @@ var useAntiFraudMaxiPago = false
 
 function GerarPedidoCompleto(
     idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
-    saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken
+    saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse
 ) {
     $.ajax({
         method: "POST",
@@ -174,7 +174,8 @@ function GerarPedidoCompleto(
             phone: phone,
             installmentValue: installmentValue,
             installmentTotal: installmentTotal,
-            cardToken: cardToken
+            cardToken: cardToken,
+            googleResponse: googleResponse
         },
         success: function (response) {
             if (response.success === true) {
@@ -230,8 +231,7 @@ function GerarPedidoCompleto(
                         $("#googleResponse").val('');
                     } else if (googleRecaptchaVersion == '3') {
                         var googleSiteKey = $('#googleSiteKey').val();
-                        $("#googleResponse").val('');
-                        $.ajaxSetup({ async: false });
+                        $("#googleResponse").val('');                 
                         $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
                             grecaptcha.ready(function () {
                                 grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
@@ -401,6 +401,17 @@ function OrderCreate() {
 
         var idFrete = $("#GetShippping .item .checkbox.checked input").val();
         var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
+
+        var googleResponse = $("#googleResponse").val();
+        var googleRecaptchaVersion = "";
+        if ($('#googleVersion').length > 0) {
+            googleRecaptchaVersion = $('#googleVersion').val();
+        }
+        if (googleRecaptchaVersion == "2" && googleResponse == "") {
+            msgErrors += "<br />Por favor, verifique que não é um robo.";
+        } else if (googleRecaptchaVersion == "3" && googleResponse == "") {
+            msgErrors += "<br />Erro no recaptcha, por favor tente novamente mais tarde.";
+        }
 
         var validaFrete = "";
 
@@ -572,7 +583,7 @@ function OrderCreate() {
                 if (useAntiFraudMaxiPago && kind != "oneclick") {
                     LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
                     //Gerar pedido completo com atraso de 5 segundos
-                    setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken) }, 5000);
+                    setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse) }, 5000);
                 }
                 else if (tipoVerificacao == "S" && $(this).attr("data-gateway") == "pagseguro") {
 
@@ -585,7 +596,7 @@ function OrderCreate() {
                         success: function (response) {
                             cardToken = response.card.token;
 
-                            GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken);
+                            GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse);
                         },
                         error: function (response) {
                             swal({
@@ -605,7 +616,7 @@ function OrderCreate() {
                 }
                 else//Caso não utilize, segue o fluxo de gerar pedido normalmente sem iframe e sem atraso   
                 {
-                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken);
+                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse);
                 }
 
             }
@@ -1264,26 +1275,82 @@ function viewAddressLogged(form) {
         var token = $(form + " input[name='__RequestVerificationToken']").val();
         var userName = $(form + " .UserName").val();
         var password = $(form + " .password").val();
-        $.ajax({
-            method: "POST",
-            url: "/Customer/Login",
-            data: {
-                __RequestVerificationToken: token,
-                UserName: userName,
-                password: password
-            },
-            success: function success(response) {
-                if (response.success) {
-                    $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
-                    $(".ui.accordion.shopping-voucher").accordion('open', 0);
 
-                    updateAddress();
-                    updateDadosUsuario();
-                } else {
-                    _alert("", response.message, "warning");
+        var googleRecaptchaVersion = "";
+
+        if ($('#googleVersion').length > 0) {
+            googleRecaptchaVersion = $('#googleVersion').val();
+        }
+
+        if (googleRecaptchaVersion == "3") {
+            var googleSiteKey = $('#googleSiteKey').val();
+             $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(googleSiteKey, { action: 'Login' }).then(function (tokenGoogle) {
+                        $("#googleResponse").val(tokenGoogle);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/Customer/Login",
+                            data: {
+                                __RequestVerificationToken: token,
+                                UserName: userName,
+                                password: password,
+                                googleResponse: tokenGoogle
+                            },
+                            success: function success(response) {
+                                if (response.success) {
+                                    $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
+                                    $(".ui.accordion.shopping-voucher").accordion('open', 0);
+
+                                    updateAddress();
+                                    updateDadosUsuario();
+
+                                    var googleRecaptchaVersionPaymentCheckout = "";
+
+                                    if ($('#googleVersion').length > 0) {
+                                        googleRecaptchaVersionPaymentCheckout = $('#googleVersion').val();
+                                    }
+
+                                    if (googleRecaptchaVersionPaymentCheckout == '3') {
+                                        var googleSiteKey = $('#googleSiteKey').val();
+
+                                        grecaptcha.ready(function () {
+                                            grecaptcha.execute(googleSiteKey, { action: 'Payment' }).then(function (tokenGoogle) {
+                                                $("#googleResponse").val(tokenGoogle);
+                                            });
+                                        });
+                                    }
+                                } else {
+                                    _alert("", response.message, "warning");
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+        } else {
+            $.ajax({
+                method: "POST",
+                url: "/Customer/Login",
+                data: {
+                    __RequestVerificationToken: token,
+                    UserName: userName,
+                    password: password
+                },
+                success: function success(response) {
+                    if (response.success) {
+                        $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
+                        $(".ui.accordion.shopping-voucher").accordion('open', 0);
+
+                        updateAddress();
+                        updateDadosUsuario();
+                    } else {
+                        _alert("", response.message, "warning");
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 }
 
@@ -1778,8 +1845,7 @@ $(document).ready(function () {
                 $('#MaximumInstallmentWithoutInterest').val(responseConfig.config.maximumInstallmentWithoutInterest);
 
                 if (responseConfig.session != null) 
-                {
-                    $.ajaxSetup({ async: false });
+                {                  
                     $.getScript(urlJS, function () {
                         $('#PaymentSession').val(responseConfig.session.Id);
                         PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
@@ -2224,5 +2290,25 @@ $(document).ready(function () {
         }
     })
     //************************************************************************
+
+    if ($('#googleModule').length > 0) {
+        if ($('#googleModule').val() == 'Payment') {
+            var googleRecaptchaVersionPaymentCheckout = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersionPaymentCheckout = $('#googleVersion').val();
+            }
+
+            if (googleRecaptchaVersionPaymentCheckout == '3') {
+                var googleSiteKey = $('#googleSiteKey').val();
+
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(googleSiteKey, { action: 'Payment' }).then(function (token) {
+                        $("#googleResponse").val(token);
+                    });
+                });
+            }
+        }
+    }
 });
 

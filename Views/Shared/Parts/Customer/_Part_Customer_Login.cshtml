@@ -14,6 +14,10 @@
                 <input type="password" name="password" class="password" placeholder="Senha">
             </div>
         </div>
+        @{
+            Tuple<string, DomainCompany.Entities.Recaptcha> _tuple = Tuple.Create<string, DomainCompany.Entities.Recaptcha>("Login", ViewBag.recaptchaData);
+            @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_GoogleRecaptcha.cshtml", _tuple)
+        }
         <a class="ui fluid large submit primary button loginPayment">Entrar</a>
         <div class="ui divider"></div>
         <p>Esqueceu sua senha? <a id="RecoverPasswordByEmail">Recuperar senha</a></p>

@@ -12,7 +12,6 @@
     "dependencies": {
         "axios": "^0.17.1",
         "card": "^2.4.0",
-        "cross-env": "^5.1.1",
         "easyzoom": "^2.5.0",
         "jetcheckout": "^1.0.10",
         "jetroute": "^1.0.3",
@@ -23,7 +22,7 @@
         "jquery-maskmoney": "^3.0.2",
         "jquery-touch-events": "^1.0.7",
         "jquery-validation": "^1.17.0",
-        "mobile-detect": "^1.3.6",
+        "mobile-detect": "^1.4.2",
         "sass-semantic-ui": "^2.2.12-3",
         "semantic-ui-calendar": "0.0.8",
         "slick-carousel": "^1.7.1",
@@ -31,9 +30,9 @@
         "toastr": "^2.1.2"
     },
     "devDependencies": {
-        "browser-sync": "^2.18.13",
+        "browser-sync": "^2.24.6",
         "browser-sync-webpack-plugin": "^1.2.0",
-        "cross-env": "^5.1.1",
+        "cross-env": "^5.2.0",
         "laravel-mix-jet": "^1.5.1-3",
         "lodash": "^4.17.4"
     }

@@ -1,5 +1,39 @@
 ﻿@model IList<DomainProduct.Entities.Brand>
 
+
+
+
+<script>
+    jQuery(document).ready(function ($) {
+        $('.car-marcas').slick({
+            prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
+            nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
+            dots: false,
+            slidesToShow: 6,
+            accessibility: false,
+            responsive: [
+                {
+                    breakpoint: 933,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                },
+                {
+                    breakpoint: 723,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+    });
+</script>
 @if (Model != null && Model.Count() > 0)
 {
     <div class="ui container topsellers">
@@ -7,7 +41,7 @@
             Marcas
         </div>
         <div class="ui grid">
-            <div class="ui column cards centered car-maisvendidos slideshow">
+            <div class="ui column cards centered car-marcas slideshow">
                 @foreach (var brand in Model)
                 {
                     <div class="ui card produto">

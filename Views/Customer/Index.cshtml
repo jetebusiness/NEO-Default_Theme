@@ -73,6 +73,23 @@
                             </div>
                         </div>
                     </a>
+                    @{
+                        bool isb2b = Session["segment"] != null && Session["segment"].ToString() == "b2b" ? true : false;
+                        if (!isb2b)
+                        {
+                            <a class="item" href="/Customer/WishList">
+                                <div class="ui small">
+                                    <i class="ui icon heart big red"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="header">Lista de desejos</div>
+                                    <div class="description">
+                                        <p>Consulte ou edite a lista dos seus produtos preferidos.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
                 </div>
             </div>
             <div class="column">

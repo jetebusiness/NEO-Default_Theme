@@ -6,7 +6,7 @@ $(document).ready(function () {
 });
 
 function checkEmail() {
-    $("#checkEmail").on("click", function(event){
+    $("#checkEmail").on("click", function (event) {
         event.preventDefault();
         $(this).addClass("loading");
         var sEmail = $("#email").val();
@@ -14,7 +14,7 @@ function checkEmail() {
         var emailFilter = /^.+@.+\..{2,}$/;
         var illegalChars = /[\(\)\ \<\>\,\;\:\\\/\"\[\]]/
         // condição
-        if(sEmail == ""){
+        if (sEmail == "") {
             _alert("", "Informe um e-mail.", "warning");
             $("#checkEmail").removeClass("loading");
         }
@@ -26,16 +26,21 @@ function checkEmail() {
             $.ajax({
                 method: "POST",
                 url: "/checkout/CheckaEmail",
-                data:{
-                    email : sEmail
+                data: {
+                    email: sEmail
                 },
-                success: function(response){
-                    if(response.success){
+                success: function (response) {
+                    if (response.success) {
                         window.location.href = response.action;
                     }
-                    else{
-                        $("#identificationForm").attr("action", "/checkout/" + response.action);
-                        $("#identificationForm").submit();
+                    else {
+                        if (response.msg == "") {
+                            $("#identificationForm").attr("action", "/checkout/" + response.action);
+                            $("#identificationForm").submit();
+                        } else {
+                            swal('', response.msg, 'error');
+                            $("#checkEmail").removeClass("loading");
+                        }
                     }
                 }
             });

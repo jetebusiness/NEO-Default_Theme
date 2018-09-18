@@ -1,10 +1,15 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    @{
+        Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+        Response.Cache.SetNoStore();
+    }
+    <meta http-equiv="PRAGMA" content="NO-CACHE">
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
         @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
-     <!-- End GoogleTagManager Common -->
+        <!-- End GoogleTagManager Common -->
     }
 
     <!-- ~/Views/Shared/Common/_Header.cshtml -->
@@ -19,6 +24,7 @@
     @Html.Partial("Common/_CommonJs")
     @RenderSection("custom_js", required: false)
 
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <!-- Google Analytics -->
     @{
         if (!string.IsNullOrEmpty(LojaCorp.Control.Company._Company.IdAnalytics) && !LojaCorp.Control.Company._Company.StatusGTM)
@@ -40,16 +46,16 @@
     <!-- End Google Analytics -->
 </head>
 <body>
-      @if (LojaCorp.Control.Company._Company.StatusGTM)
-      {
+    @if (LojaCorp.Control.Company._Company.StatusGTM)
+    {
         <!-- Google Tag Manager (noscript) -->
         <noscript>
             <iframe src="https://www.googletagmanager.com/ns.html?id=@LojaCorp.Control.Company._Company.GTM"
                     height="0" width="0" style="display:none;visibility:hidden"></iframe>
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
-      }
-   
+    }
+
     <!-- ~/Views/Shared/Common/_Cart.cshtml -->
     @Html.Action("GetCartBySession", "Checkout")
 
@@ -70,5 +76,16 @@
     </div>
 
     @RenderSection("remarketing", required: false)
+
+
+    <div class="ui modal login">
+        <i class="close icon"></i>
+        <div class="header ui center aligned segment">Faça login ou cadastre-se para continuar</div>
+        <div class="description">
+            @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = "/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage=/Home/Index" })
+        </div>
+    </div>
+
+
 </body>
 </html>
