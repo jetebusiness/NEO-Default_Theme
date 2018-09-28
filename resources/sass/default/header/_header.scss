@@ -46,7 +46,9 @@ headlogo {
 
     .searchMobile {
         display: inline-block;
-        float: right;
+        @media screen and (min-width: 375px) {
+            float: right;
+        }
         margin-right: 1em;
         padding-right: 1em;
         border-right: 1px solid #eee;

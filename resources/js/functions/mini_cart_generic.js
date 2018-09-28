@@ -8,6 +8,7 @@ export function LoadCarrinho(showSidebar){
     $.ajax({
         method: "GET",
         url: "/Checkout/LoadProductsMiniCart",
+        cache: false,
         success: function(loadProduct){
             var retornoAjax      = loadProduct.split("|$|");
             var listaProdutos    = retornoAjax[0];
@@ -23,6 +24,7 @@ export function UpdateCarrinho(showSidebar) {
         method: "GET",
         url: "/Checkout/LoadPartialCart",
         contentType: "application/json; charset=utf-8",
+        cache: false,
         success: function (response) {
             if (response.success === true) {
                 let objCarrinho = jQuery.parseJSON(response.cartJson);

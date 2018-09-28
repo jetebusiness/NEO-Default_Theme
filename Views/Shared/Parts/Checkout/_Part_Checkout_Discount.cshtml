@@ -10,18 +10,29 @@
                 {
                     if (brand.typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
                     {
-                        <div class="item">
-                            <div class="content">
-                                <p class="ui header text small floated left">
-                                    <span class="text color grey">
-                                        No @brand.NamePayment (@brand.Discount% de desconto)
-                                    </span>
-                                </p>
-                                <p class="ui text small color grey floated right description">
-                                    <span class="text color grey">@($"{(brand.Installments.Any() ? brand.Installments.FirstOrDefault().Total : 0):c}")</span>
-                                </p>
+                        decimal _exibeDescontoDebito = 0;
+                        if (ViewBag.TotalCarrinho != null)
+                        {
+                            if (LojaCorp.Control.Company._Company.DescontoTotalProduto) {
+                                _exibeDescontoDebito = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
+                            }
+                            else
+                            {
+                                _exibeDescontoDebito = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
+                            }
+                        }
+                            <div class="item">
+                                <div class="content">
+                                    <p class="ui header text small floated left">
+                                        <span class="text color grey">
+                                            No @brand.NamePayment (@brand.Discount% de desconto)
+                                        </span>
+                                    </p>
+                                    <p class="ui text small color grey floated right description">
+                                        <span class="text color grey">@string.Format("{0}", _exibeDescontoDebito.ToString("C"))</span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
                     }
                     else
                     {
@@ -45,7 +56,13 @@
                             decimal _exibeDescontoBoleto = 0;
                             if (ViewBag.TotalCarrinho != null)
                             {
-                                _exibeDescontoBoleto = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
+                                if (LojaCorp.Control.Company._Company.DescontoTotalProduto) {
+                                    _exibeDescontoBoleto = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
+                                }
+                                else
+                                {
+                                    _exibeDescontoBoleto = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
+                                }
                             }
                             <div class="item">
                                 <div class="content">

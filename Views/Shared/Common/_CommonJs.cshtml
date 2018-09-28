@@ -18,6 +18,7 @@
             method: "GET",
             url: "@(Session["EventList"] != null ? "/EventList/TotalItensList" : "/Checkout/TotalItensCart")",
             data: {},
+            cache: false,
             success: function (data) {
                 $("#total_itens_card").text(data);
                 if (data != "")

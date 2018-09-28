@@ -10,6 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix-jet/setup/webpack.config.js"
     },
     "dependencies": {
+        "@babel/polyfill": "^7.0.0",
         "axios": "^0.17.1",
         "card": "^2.4.0",
         "easyzoom": "^2.5.0",

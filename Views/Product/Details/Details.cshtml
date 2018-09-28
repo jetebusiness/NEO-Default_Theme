@@ -463,7 +463,7 @@
                                                 <!--FIM GRADE-->
 
                                                 <div class="ten wide computer sixteen wide tablet sixteen wide mobile column btnComprar">
-                                                    <a class="@(Model.Stock == 0 || Model.FlagExhausted ? " disabled " : " ") ui animated button detalhes @(Session[" EventList"] !=null ? "btn-add-event-list" :"btn-comprar") @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0) ? "disabled action" : "action" )">
+                                                    <a class="@(Model.Stock == 0 || Model.FlagExhausted ? " disabled " : " ") ui animated button detalhes @(Session["EventList"] !=null ? "btn-add-event-list" :"btn-comprar") @(Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0) ? "disabled action" : "action" )">
 
                                                         @if (Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0))
                                                         {

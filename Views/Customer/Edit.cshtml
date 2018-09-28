@@ -60,7 +60,7 @@
                                                 <label>CPF</label>
                                                 <div class="ui left icon input">
                                                     <i class="certificate icon"></i>
-                                                    <input type="text" name="Cpf_cnpj" class="masked mask_cnpj"
+                                                    <input type="text" name="Cpf_cnpj" class="masked mask_cpf"
                                                            placeholder="000.000.000-00"
                                                            value="@Model.Cpf_cnpj">
                                                 </div>
@@ -261,7 +261,7 @@
                                                 <i class="marker icon"></i>
                                                 <input type="text" name="Address[0].ZipCode" value="@(Model.Address.Count() > 0 ? Model.Address[0].ZipCode : string.Empty)"
                                                        placeholder="00000-000"
-                                                       class="masked" data-validate="zipcode">
+                                                       class="masked mask_zipcode" data-validate="zipcode">
                                             </div>
                                         </div>
                                         <div class="field">
