@@ -393,7 +393,10 @@ export function RecalcularFrete(zipCode){
     }
 }
 
-export function ExibirDicadeFrete(shippingID, zipcode){
+export function ExibirDicadeFrete(shippingID, zipcode) {
+    if (zipcode == "" || zipcode == "0")
+        return;
+
     $.ajax({
         method: "GET",
         url: "/Checkout/ObterDicaFrete",

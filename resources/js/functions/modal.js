@@ -7,8 +7,10 @@
 export function openModalQuickView(modal, callback) {
     "use strict";
     callback = typeof callback !== 'undefined' ? callback : null;
+    modal = typeof modal !== 'undefined' ? (modal == "avise" ? ".ui.modal.form" : '.ui.modal') : '.ui.modal';
+    console.log(modal)
     //console.log('Modal ID: ' + modal);
-    $('.ui.modal')
+    $(modal)
         .modal({
             transition: 'fade up',
             onShow: function () {
@@ -17,10 +19,10 @@ export function openModalQuickView(modal, callback) {
             onVisible: function () {
                 $(".ui.modal .dropdown").dropdown("refresh");
             },
-            onVisible: () =>{
-                if(typeof callback === "function"){
-                  callback();
-              }
+            onVisible: () => {
+                if (typeof callback === "function") {
+                    callback();
+                }
             },
             onHidden: function () {
                 //console.log($(this));

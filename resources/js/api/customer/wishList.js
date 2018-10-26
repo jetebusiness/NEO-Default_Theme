@@ -5,7 +5,8 @@ import { _alert, _confirm } from "../../functions/message";
 import { getVariationIds } from "../product/card";
 
 $(document).ready(function () {
-    $(".wishlist-btn").click(function (e) {
+
+    $(document).delegate('.wishlist-btn', 'click', function () {
         var _data = {};
         var haveSku = $(this).find(".wishlist-item").attr('data-have-sku');
         var productID = $(this).find(".wishlist-item").attr('data-product-id');
@@ -35,6 +36,8 @@ $(document).ready(function () {
                 ValidateWishlist(_data, this, userAuthentication);
         }
     });
+
+
 });
 
 

@@ -8,11 +8,11 @@
         <meta name="distribution" content="Global">
         if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaDescription))
         {
-            <meta name="Description" content="@LojaCorp.Control.Company._Company.MetaDescription">
+            <meta name="Description" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaDescription)">
         }
         if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaKey))
         {
-            <meta name="Keywords" content="@LojaCorp.Control.Company._Company.MetaKey">
+            <meta name="Keywords" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaKey)">
         }
     }
 

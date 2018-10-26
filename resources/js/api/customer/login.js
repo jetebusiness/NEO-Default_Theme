@@ -309,46 +309,134 @@ $(document).ready(function () {
 			preLoginB2B();
 	});
 
-	$(document).on("click", "#Google", function (e) {
-		e.preventDefault()
-		$.ajax({
-			type: "POST",
-			url: "/Customer/Login",
-			data: {
-				__RequestVerificationToken: gettoken(),
-				provider: $(this).val()
-			},
-			dataType: "json",
-			success: function (response) {
-				if (response.success === true) {
-					window.location = response.redirectUrl
-				}
-			},
-			error: function (response) {
-				_alert("Mensagem", "Erro: " + response.message, "warning")
-			}
-		});
-	})
+    $(document).on("click", "#Google", function (e) {
+        $(this).addClass("loading");
+
+        var _googleResponse = null;
+        var _googleRecaptchaVersion = null;
+
+        if ($('#googleVersion').length > 0) {
+            _googleRecaptchaVersion = $('#googleVersion').val();
+        }
+
+        if (_googleRecaptchaVersion == '3') {
+            var googleSiteKey = $('#googleSiteKey').val();
+            $.ajaxSetup({ async: false });
+            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
+                        _googleResponse = tokenGoogleRecaptchaV3;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/Login",
+                            data: {
+                                __RequestVerificationToken: gettoken(),
+                                returnUrl: null,
+                                provider: $("#Google").val(),
+                                googleResponse: _googleResponse
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.success === true) {
+                                    $("#Google").removeClass("loading");
+                                    window.location = response.redirectUrl
+                                }
+                            },
+                            error: function (response) {
+                                $("#Google").removeClass("loading");
+                                _alert("Mensagem", "Erro: " + response.message, "warning")
+                            }
+                        });
+                    });
+                });
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/Customer/Login",
+                data: {
+                    __RequestVerificationToken: gettoken(),
+                    provider: $(this).val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success === true) {
+                        window.location = response.redirectUrl
+                    }
+                },
+                error: function (response) {
+                    _alert("Mensagem", "Erro: " + response.message, "warning")
+                }
+            });
+        }
+
+        return false;
+    })
 
 
-	$(document).on("click", "#Facebook", function (e) {
-		e.preventDefault()
-		$.ajax({
-			type: "POST",
-			url: "/Customer/Login",
-			data: {
-				__RequestVerificationToken: gettoken(),
-				provider: $(this).val()
-			},
-			dataType: "json",
-			success: function (response) {
-				if (response.success === true) {
-					window.location = response.redirectUrl
-				}
-			},
-			error: function (response) {
-				_alert("Mensagem", "Erro: " + response.message, "warning")
-			}
-		});
-	})
+    $(document).on("click", "#Facebook", function (e) {
+        $(this).addClass("loading");
+
+        var _googleResponse = null;
+        var _googleRecaptchaVersion = null;
+
+        if ($('#googleVersion').length > 0) {
+            _googleRecaptchaVersion = $('#googleVersion').val();
+        }
+
+        if (_googleRecaptchaVersion == '3') {
+            var googleSiteKey = $('#googleSiteKey').val();
+            $.ajaxSetup({ async: false });
+            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
+                        _googleResponse = tokenGoogleRecaptchaV3;
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/Login",
+                            data: {
+                                __RequestVerificationToken: gettoken(),
+                                returnUrl: null,
+                                provider: $("#Facebook").val(),
+                                googleResponse: _googleResponse
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.success === true) {
+                                    $("#Facebook").removeClass("loading");
+                                    window.location = response.redirectUrl
+                                }
+                            },
+                            error: function (response) {
+                                $("#Facebook").removeClass("loading");
+                                _alert("Mensagem", "Erro: " + response.message, "warning")
+                            }
+                        });
+                    });
+                });
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/Customer/Login",
+                data: {
+                    __RequestVerificationToken: gettoken(),
+                    provider: $(this).val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success === true) {
+                        window.location = response.redirectUrl
+                    }
+                },
+                error: function (response) {
+                    _alert("Mensagem", "Erro: " + response.message, "warning")
+                }
+            });
+        }
+
+        return false;
+    })
 })

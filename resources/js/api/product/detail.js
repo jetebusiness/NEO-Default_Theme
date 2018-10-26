@@ -55,9 +55,9 @@ $(document).ready(function () {
         },
         onSuccess: function (response) {
             $(".modal-block").append(response);
-            openModalQuickView($(this).attr("data-modal-open"), callback => {
+            openModalQuickView("avise", callback => {
                 getAllMask();
-        });
+            });
         },
         onFailure: function (response) {
             //console.log(response);
@@ -116,8 +116,8 @@ $(document).ready(function () {
     });
 
 
-    $(".ui.star.rating").click(function () {
-        var starsSelected = $(".ui.rating .icon.active").length;
+    $("#avaliar .ui.star.rating").click(function () {
+        var starsSelected = $("#avaliar .ui.rating .icon.active").length;
         $("#Rate").val(starsSelected);
     });
 
@@ -827,9 +827,9 @@ function AtualizarQuantidade() {
         $("#preco-antigo").text("");
     }
 
-    if(desconto_boleto > 0){
-        var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * desconto_boleto));
-        $("#preco_boleto").text(valor_boleto);
+    if (desconto_boleto !== "0,00") { 
+        var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * parseFloat(desconto_boleto)));
+        $("#preco_boleto").text(valor_boleto); 
     }
 
     var stock = $("#produto-stock").val();
