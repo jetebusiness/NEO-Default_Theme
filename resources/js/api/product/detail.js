@@ -844,7 +844,7 @@ function AtualizarQuantidade() {
     AtualizarCompreJunto();
     isLoading("body");
     $("#parcelamento_b2b").find(".active").removeClass("active");
-
+    
 }
 
 function AtualizarParcelamento(preco) {

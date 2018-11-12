@@ -1,6 +1,8 @@
+import {isMobile} from "../../functions/mobile"
+
 $(function () {
 
-    $(".slideshow").each(function () {
+    $(".slideshow").each(function() {
 
         var $arrows = ($(this).data("arrow") != null ? $(this).data("arrow") : true),
             $dots = ($(this).data("dots") != null ? $(this).data("dots") : false),
@@ -16,7 +18,7 @@ $(function () {
             accessibility: false,
             autoplay: $auto,
             autoplaySpeed: 6000,
-            infinite: false,
+            infinite:false,
             responsive: [
                 {
                     breakpoint: 935,
@@ -38,16 +40,12 @@ $(function () {
                 }
             ]
         };
-        var $sliderCard = jQuery(".card", this),
-            $slider = jQuery(this),
-            $width = jQuery(".pusher").width();
+        var $slider = jQuery(this);
 
-        if ($sliderCard.length >= 4 && $width >= 934) {
-            $slider.slick(settings);
-        } else if ($sliderCard.length >= 3 && $width < 934) {
-            $slider.slick(settings);
-        } else if ($sliderCard.length >= 2 && $width < 481) {
-            $slider.slick(settings);
+        if(!isMobile()) {
+            ($(this).children().length >= $qtd ? $slider.slick(settings) : "");
+        } else {
+            $slider.slick(settings)
         }
     });
 

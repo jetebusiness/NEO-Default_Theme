@@ -1,11 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    @{
-        Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
-        Response.Cache.SetNoStore();
-    }
-    <meta http-equiv="PRAGMA" content="NO-CACHE">
+<head>   
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
         @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })

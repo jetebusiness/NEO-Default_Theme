@@ -1,34 +1,45 @@
 .hideme {
-	display: none !important;
-  }
+    display: none !important;
+}
 
 .display {
-  &.block.mra.mla {
-    display: block;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
+    &.block.mra.mla {
+        display: block;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
 
-  &.grid {
-    display: grid !important;
-  }
+    &.grid {
+        display: grid !important;
+    }
 
-  &.block {
-      display: block !important;
-  }
+    &.block {
+        display: block !important;
+    }
+
+    &.flex {
+        display: flex !important;
+    }
 }
 
 .inline-flex {
-  display: inline-flex !important;
+    display: inline-flex !important;
+}
+
+.inline-block {
+    display: inline-block !important;
 }
 
 .no-pointer {
-  cursor: default !important;
+    cursor: default !important;
 }
 
-.inline-block{
-    display:inline-block !important;
-}
 .both {
-  clear: both;
+    clear: both;
+}
+
+.align-items {
+    &.center {
+        align-items: center;
+    }
 }

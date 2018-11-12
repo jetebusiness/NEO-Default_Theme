@@ -169,8 +169,14 @@
                         var categoriaDefault = Model.Categories.Find(c => c.Default == true);
                         if (categoriaDefault != null)
                         {
+                            var urlCategoria = "";
+                            foreach (var categoria in Model.Categories)
+                            {
+                                urlCategoria = urlCategoria + categoria.UrlFriendly.Replace("/categoria", "");
+                            }
+
                             <i class="right angle icon divider"></i>
-                            <a class="section" href="@categoriaDefault.Link">@categoriaDefault.Name</a>
+                            <a class="section" href="@string.Format("/categoria{0}", urlCategoria)">@categoriaDefault.Name</a>
                         }
                     }
                     <!-- FIM FOREACH CATEGORIAS-->
@@ -760,7 +766,7 @@
                                         <label>Mostrar Email?</label>
                                     </div>
                                 </div>
-                                <input type="hidden" name="Rate" id="Rate" value="1" />                    
+                                <input type="hidden" name="Rate" id="Rate" value="1" />
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>

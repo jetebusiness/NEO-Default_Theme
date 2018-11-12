@@ -307,7 +307,7 @@ $(document).ready(function () {
 	$(document).on("keypress", "#passwordb2b", function (e) {
 		if (e.which == 13)
 			preLoginB2B();
-	});
+    });
 
     $(document).on("click", "#Google", function (e) {
         $(this).addClass("loading");

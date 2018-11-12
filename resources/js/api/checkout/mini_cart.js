@@ -59,12 +59,13 @@ $(document).ready(function(){
                     $(".description.resultado").show();
 
                     ChangeFrete();
-                    var idCurrent = $("#GetShipping").val();
+                    var ponteiroCurrent = $("#GetShipping");
+                    var idCurrent = $(ponteiroCurrent).val();
                     var idShippingMode = idCurrent;
-                    var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-                    var carrier = $("#ship_"+idCurrent).data("carrier");
-                    var mode = $("#ship_"+idCurrent).data("mode");
-                    var hub =  $("#ship_"+idCurrent).data("hub");
+                    var deliveredByTheCorreiosService = $(ponteiroCurrent).children("option:selected").attr("data-correios");
+                    var carrier = $(ponteiroCurrent).children("option:selected").data("carrier");
+                    var mode = $(ponteiroCurrent).children("option:selected").data("mode");
+                    var hub = $(ponteiroCurrent).children("option:selected").data("hub");
 
                     $("#id_frete_selecionado").val(idShippingMode);
                     $("#cep_selecionado").val(zipCode);
@@ -89,16 +90,16 @@ $(document).ready(function(){
     });
 
 
-    $(document).on("change", "#GetShipping", function(event) {
+    $("#GetShipping").unbind().on("change", function(event) {
         var ponteiroCurrent = $(this);
         var idCurrent = $(ponteiroCurrent).val();
 
         var zipCode = $("#shipping").cleanVal();
         var idShippingMode = idCurrent;
-        var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-        var carrier = $("#ship_"+idCurrent).data("carrier");
-        var mode = $("#ship_"+idCurrent).data("mode");
-        var hub =  $("#ship_"+idCurrent).data("hub");
+        var deliveredByTheCorreiosService = $(ponteiroCurrent).children("option:selected").attr("data-correios");
+        var carrier = $(ponteiroCurrent).children("option:selected").data("carrier");
+        var mode = $(ponteiroCurrent).children("option:selected").data("mode");
+        var hub = $(ponteiroCurrent).children("option:selected").data("hub");
 
         SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
         ExibirDicadeFrete(idShippingMode, zipCode);
@@ -327,16 +328,16 @@ export function disparaAjaxUpdate(idCurrent, valorInput, action){
 }
 
 function ChangeFrete(){
-    $("#GetShipping").change(function(){
+    $("#GetShipping").unbind().change(function(){
         var ponteiroCurrent = $(this);
         var idCurrent = $(ponteiroCurrent).val();
 
         var zipCode = $("#shipping").cleanVal();
         var idShippingMode = idCurrent;
-        var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-        var carrier = $("#ship_"+idCurrent).data("carrier");
-        var mode = $("#ship_"+idCurrent).data("mode");
-        var hub =  $("#ship_"+idCurrent).data("hub");
+        var deliveredByTheCorreiosService = $(ponteiroCurrent).children("option:selected").attr("data-correios");
+        var carrier = $(ponteiroCurrent).children("option:selected").data("carrier");
+        var mode = $(ponteiroCurrent).children("option:selected").data("mode");
+        var hub = $(ponteiroCurrent).children("option:selected").data("hub");
 
         SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carrier, mode, hub);
     });
@@ -376,12 +377,13 @@ export function RecalcularFrete(zipCode){
                 $(".description.resultado").show();
 
                 ChangeFrete();
-                var idCurrent = $("#GetShipping").val();
+                var ponteiroCurrent = $("#GetShipping");
+                var idCurrent = $(ponteiroCurrent).val();
                 var idShippingMode = idCurrent;
-                var deliveredByTheCorreiosService = $("#ship_"+idCurrent).attr("data-correios");
-                var carrier = $("#ship_"+idCurrent).data("carrier");
-                var mode = $("#ship_"+idCurrent).data("mode");
-                var hub =  $("#ship_"+idCurrent).data("hub");
+                var deliveredByTheCorreiosService = $(ponteiroCurrent).children("option:selected").attr("data-correios");
+                var carrier = $(ponteiroCurrent).children("option:selected").data("carrier");
+                var mode = $(ponteiroCurrent).children("option:selected").data("mode");
+                var hub = $(ponteiroCurrent).children("option:selected").data("hub");
 
                 $("#id_frete_selecionado").val(idShippingMode);
                 $("#cep_selecionado").val(zipCode);

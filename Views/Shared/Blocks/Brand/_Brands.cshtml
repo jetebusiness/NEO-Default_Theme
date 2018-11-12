@@ -1,57 +1,27 @@
 ﻿@model IList<DomainProduct.Entities.Brand>
 
-
-
-
-<script>
-    jQuery(document).ready(function ($) {
-        $('.car-marcas').slick({
-            prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
-            nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
-            dots: false,
-            slidesToShow: 6,
-            accessibility: false,
-            responsive: [
-                {
-                    breakpoint: 933,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                },
-                {
-                    breakpoint: 723,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }
-            ]
-        });
-    });
-</script>
 @if (Model != null && Model.Count() > 0)
 {
-    <div class="ui container topsellers">
-        <div class="ui horizontal divider">
-            Marcas
-        </div>
-        <div class="ui grid">
-            <div class="ui column cards centered car-marcas slideshow">
+    <div class="ui container fluid topsellers margin top bottom large">
+        <div class="ui container">
+            <div class="ui horizontal divider">
+                MARCAS
+            </div>
+
+            <div class="ui equal width grid images middle aligned center aligned stackable slideshow" data-qtd="6">
+
                 @foreach (var brand in Model)
                 {
-                    <div class="ui card produto">
+                    <div class="column">
                         <a href="@brand.UrlFriendly" title="@brand.Name">
                             <img class="ui image centered brands" src="@brand.Logo" alt="@brand.Name" title="@brand.Name" onerror="imgError(this)">
                         </a>
                     </div>
                 }
+
             </div>
+
+            <div class="ui divider hidden"></div>
         </div>
-        <div class="ui divider hidden"></div>
     </div>
 }

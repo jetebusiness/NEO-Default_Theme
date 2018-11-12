@@ -2,6 +2,8 @@
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
 import {_alert, _confirm} from "../../functions/message";
 const toastr = require("toastr");
+var detalhes_maiorParc = 0, detalhes_valorParc = 0, detalhes_descricao = "";
+var carregar_resumo_parcelamento = true;
 
 $(document).ready(function () {
     $(".b2b_minus.detalhes, .b2b_plus.detalhes").click(function () {
@@ -100,14 +102,14 @@ $(document).ready(function () {
     });
 });
 
-export function CarregarParcelamento(isB2b){
+export function CarregarParcelamento(isB2b) {
     let json = "",
         html = "",
         json_string = "",
         json_content = "";
 
     json_string = BuscarJsonParcelamento(isB2b);
-    if(json_string != "0"){
+    if (json_string != "0") {
         json = JSON.parse(json_string);
         json_content = JSON.parse(json.Content);
         var total_parcelas_exibidas = 0;
@@ -116,15 +118,14 @@ export function CarregarParcelamento(isB2b){
             //METHODS
             for (var j = 0; j < json_content[i].paymentMethods.length; j++) {
                 //BRANDS
-                if(json_content[i].paymentMethods[j].status === true){
+                if (json_content[i].paymentMethods[j].status === true) {
                     for (var k = 0; k < json_content[i].paymentMethods[j].paymentBrands.length; k++) {
                         var total_parcelas = json_content[i].paymentMethods[j].paymentBrands[k].installments.length;
 
-                        if(total_parcelas > 0){
+                        if (total_parcelas > 0) {
                             total_parcelas_exibidas++;
 
-                            if(json_content[i].idPaymentGateway == 6)
-                            {
+                            if (json_content[i].idPaymentGateway == 6) {
                                 html += `<div class="title">
                                       <i class="dropdown icon"></i>
                                       ${json_content[i].paymentMethods[j].paymentBrands[k].name}
@@ -135,14 +136,18 @@ export function CarregarParcelamento(isB2b){
                                 html += `</div>
                                   </div>`
                             }
-                            else
-                            {
+                            else {
                                 html += `         <div class="title">
                                       <i class="dropdown icon"></i>
                                       ${json_content[i].paymentMethods[j].paymentBrands[k].name}
                                   </div>
                                   <div class="content">
                                       <div class="ui list">`
+
+                                detalhes_valorParc = 0;
+                                detalhes_descricao = "";
+                                detalhes_maiorParc = 0;
+
                                 for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
                                     html += `<span class="item parcelamentos">
                                                   <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
@@ -150,6 +155,14 @@ export function CarregarParcelamento(isB2b){
                                                   <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                   <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                               </span>`
+                                    var ret = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].interestRate * json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
+
+                                    if (detalhes_maiorParc < json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber && Math.round(ret) === 1)//maior parcela sem juros
+                                    {
+                                        detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
+                                        detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
+                                        detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
+                                    }
                                 }
                                 html += `</div>
                                   </div>`
@@ -160,18 +173,27 @@ export function CarregarParcelamento(isB2b){
             }
         }
 
-    }else {
+    } else {
         html += `<div class="title">
               <span>Não existem produtos selecionados</span>
           </div>`;
     }
-    if(total_parcelas_exibidas === 0){
+    if (total_parcelas_exibidas === 0) {
         html += `<div class="title">
                <span>Não existem parcelamento disponíveis</span>
             </div>`;
     }
     $("#parcelamento_info").html(html);
     CarregaParcelamentoPagSeguro();
+
+    if ($('#pagSeguroParcelamento').length) {
+        carregar_resumo_parcelamento = false;
+    }
+    if (carregar_resumo_parcelamento) {
+        $("#max-value").text(moneyPtBR(detalhes_valorParc));
+        $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
+        $("#description").text("(" + detalhes_descricao + ")");
+    }
 }
 
 function BuscarJsonParcelamento(isB2b){
@@ -339,10 +361,8 @@ function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
     });
 }
 
-export function CarregaParcelamentoPagSeguro()
-{
-    if($('.pagSeguroParcelamento').length > 0)
-    {
+export function CarregaParcelamentoPagSeguro() {
+    if ($('.pagSeguroParcelamento').length > 0) {
         $('.pagSeguroParcelamento').html("Carregando...");
         $.ajax({
             method: "GET",
@@ -361,13 +381,12 @@ export function CarregaParcelamentoPagSeguro()
 
                     var totalCheckout = 0;
 
-                    if($('#preco').length > 0)
+                    if ($('#preco').length > 0)
                         totalCheckout = $('#preco').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
                     else
                         totalCheckout = $('#conjunto-total-final').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
 
-                    $.each($('.pagSeguroParcelamento'), function(key, item)
-                    {
+                    $.each($('.pagSeguroParcelamento'), function (key, item) {
                         var divParcelamento = $(item);
                         var _brand = $(divParcelamento).data("brand");
 
@@ -385,15 +404,20 @@ export function CarregaParcelamentoPagSeguro()
 
                                     //taxaMensal = (jurosTotal / (auxTotalProduto * Number.parseFloat(item.quantity))) * 100;
                                     $("div.pagSeguroParcelamento[data-brand=" + key + "]").empty();
-                                    $.each(ResponseBrand, function(key2, item)
-                                    {
+                                    $.each(ResponseBrand, function (key2, item) {
+                                        if (detalhes_maiorParc < item.quantity && item.interestFree)//maior parcela sem juros
+                                        {
+                                            detalhes_maiorParc = item.quantity;
+                                            detalhes_valorParc = item.installmentAmount;
+                                            detalhes_descricao = "Sem juros";
+                                        }
                                         //if(item.quantity <= maximumInstallment)
                                         //{
                                         $("div.pagSeguroParcelamento[data-brand=" + key + "]").append(
                                             '<span class="item parcelamentos">' +
                                             '<span class="parcelas">' + item.quantity + ' x </span>' +
                                             '<span class="valor">' + item.installmentAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + ' </span>' +
-                                            '<span class="modelo">(' + ((item.interestFree)? 'Sem juros' : 'Com juros') + ')</span>' +
+                                            '<span class="modelo">(' + ((item.interestFree) ? 'Sem juros' : 'Com juros') + ')</span>' +
                                             //'<span class="modelo">(' + ((item.interestFree)? 'Sem Juros' : 'juros de ' + taxaMensal.toFixed(4) + '% ao mês') + ')</span>' +
                                             '<span class="total">Total Parcelado: ' + item.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + '</span>' +
                                             '</span>'
@@ -401,6 +425,9 @@ export function CarregaParcelamentoPagSeguro()
                                         //}
                                     });
                                 });
+                                $("#max-value").text(moneyPtBR(detalhes_valorParc));
+                                $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
+                                $("#description").text("(" + detalhes_descricao + ")");
                             },
                             error: function (responseInstallment) {
                                 console.log(responseInstallment);

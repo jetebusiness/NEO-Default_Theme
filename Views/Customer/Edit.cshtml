@@ -171,8 +171,14 @@
                                             </div>
                                             <div class="field">
                                                 <label>IE</label>
-                                                <div class="ui left input">
-                                                    <input type="text" value="@(Model.Rg_ie != "" ? Model.Rg_ie : "")" name="Rg_ie" placeholder="">
+                                                <div class="ui left input checkIe">
+                                                    <input type="text" value="@Html.Raw(!string.IsNullOrEmpty(Model.Rg_ie) ? Model.Rg_ie : "Isento")" name="Rg_ie" id="inscricaoEstadual" placeholder="Inscrição Estadual">
+                                                </div>
+                                                <div class="field margin top small">
+                                                    <div class="ui checkbox" id="checkIsento">
+                                                        <input type="checkbox" name="check_isento">
+                                                        <label id="labelIsento">Isento</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
