@@ -1751,7 +1751,7 @@ $(document).ready(function () {
         })();
 
         $('#ShoppingVoucherValue')
-            .maskMoney()
+            .mask('#.##0,00', { reverse: true })
             .keypress(function () {
                 var shoppingVoucherValue = new Number($(this).val().replace(".", "").replace(",", "."));
                 var subTotal = new Number($('.subtotal').html().replace('R$', '').replace(".", "").replace(",", "."));

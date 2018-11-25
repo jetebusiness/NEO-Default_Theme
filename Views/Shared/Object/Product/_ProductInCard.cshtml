@@ -19,7 +19,7 @@
                 @Html.Action("LoadWishListCookie", "Customer")
             }
 
-            wishList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DomainCustomer.Entities.Wishlist.WishlistItem>>(Request.Cookies["WishList"] != null ? Request.Cookies["WishList"].Value : string.Empty);
+            wishList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DomainCustomer.Entities.Wishlist.WishlistItem>>(Request.Cookies["WishList"] != null ? HttpUtility.UrlDecode(Request.Cookies["WishList"].Value) : string.Empty);
 
             if (wishList != null)
             {

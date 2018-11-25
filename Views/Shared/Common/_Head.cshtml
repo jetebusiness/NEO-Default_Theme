@@ -33,7 +33,7 @@
                                     }
 
                                     List<DomainCustomer.Entities.Wishlist.WishlistItem>
-                                        wishList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DomainCustomer.Entities.Wishlist.WishlistItem>>(Request.Cookies["WishList"] != null ? Request.Cookies["WishList"].Value : string.Empty);
+                                        wishList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DomainCustomer.Entities.Wishlist.WishlistItem>>(Request.Cookies["WishList"] != null ? HttpUtility.UrlDecode(Request.Cookies["WishList"].Value) : string.Empty);
                                     int wishListItemsCount = wishList != null ? wishList.Count() : 0;
                                 }
                                 <a id="wishListCount" href="/Customer/WishList" class="ui circular label" style="position: relative;bottom: 6px;left: 16px;min-width: 18px
