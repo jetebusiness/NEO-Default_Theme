@@ -40,8 +40,12 @@
     <!-- End Google Analytics -->
 
     @RenderSection("GoogleAdwords", required: false)
+
+    @RenderSection("CyberSourceHead", required: false) 
 </head>
 <body class="jetBg">
+    @RenderSection("CyberSourceBody", required: false)
+
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {
         <!-- Google Tag Manager (noscript) -->

@@ -86,6 +86,7 @@ $(document).on("click", ".btn_convidado_lista", function (e) {
     location.href = `/EventList/ManagerGuest?n=${$(".busca_convidado_lista").val()}`;
 });
 
+
 $(document).ready(function () {
     $('.ui.search').search({
         type: 'autoComplete',
@@ -93,7 +94,13 @@ $(document).ready(function () {
         showNoResults: true,
         apiSettings: {
             beforeSend: function (settings) {
-                settings.data.n = $(".prompt").val();
+                let promptValue = "";
+                $(".prompt").each(function () {
+                    if ($(this).val().length > 0) {
+                         promptValue = $(this).val();
+                    }
+                });
+                settings.data.n = promptValue;
                 // Quando for utilizar a busca com metadata separados por "|"
                 // settings.data.mdf = 'feature';
                 // settings.data.mdv = 'produto';

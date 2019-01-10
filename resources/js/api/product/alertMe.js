@@ -2,7 +2,7 @@
 import {_alert} from "../../functions/message";
 
 $(document).on("click", "#alertMe", function (e) {
-    var email = $("#email").val()
+    var email = $("#form-alert #email").val()
     
     if(!isValidEmail(email)){        
         _alert("", "Informe um e-mail válido.", "error")

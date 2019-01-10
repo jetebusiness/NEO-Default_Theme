@@ -9,6 +9,9 @@
     }
 
     var usaOneClick = ViewBag.UseOneClickMaxiPago != null ? ViewBag.UseOneClickMaxiPago : false;
+
+    //GRADE ABERTA B2C
+    var hasOpenSku = ViewBag.HasOpenSku != null ? ViewBag.HasOpenSku : false;
 }
 
 <script>
@@ -117,6 +120,9 @@
 <input type="hidden" id="principal-lista-sku" name="principal-lista-sku" value="@ListaSKU" />
 <input type="hidden" id="principal-referencias-selecionadas" name="principal-referencias-selecionadas" value="@variacaoSelecionada" />
 <input type="hidden" id="variacoesSelecionadas" value="" />
+<input type="hidden" id="has-open-sku" value="@((hasOpenSku == true)? "true" : "false")" />
+<input type="hidden" id="b2b" value="true" />
+
 <!-- FIM - Váriaveis Produto Principal-->
 <!-- COMEÇO - Váriaveis Produto Unitário-->
 <input type="hidden" value="@Model.Price" id="preco-unidade" name="preco-unidade" />
@@ -228,7 +234,6 @@
                         @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = Model.SKUPadrao != null ? Model.SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
-
                     <!--GRADE B2B-->
                     @if (Model.SKUs != null)
                     {
@@ -239,6 +244,42 @@
                         @Html.Partial("~/Views/Product/Details/_GradeSemSkuB2B.cshtml", Model, new ViewDataDictionary { { "useOneCLick", usaOneClick } })
                     }
                     <!-- GRADE B2B-->
+                    <!-- COMEÇO SIMULADOR FRETE-->
+                    <div class="row product-grid">
+                        <div class="column">
+                            <div id="grade_sku" class="ui middle aligned grid blue segment">
+                                <div class="ui grid">
+                                    <div class="row stackable three column">
+                                        <div class="column middle aligned">
+                                            <span>Calcular frete e prazo</span>
+                                        </div>
+                                        <div class="column">
+                                            <div class="ui input">
+                                                <input type="text" name="simular-frete-cep" id="simular-frete-cep" placeholder="00000-000">
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <button name="simular-frete-submit" id="simular-frete-submit" class="ui button primary">OK</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui divider"></div>
+                                <table class="ui very basic table">
+                                    <thead>
+                                        <tr>
+                                            <th>Entrega</th>
+                                            <th>Frete</th>
+                                            <th>Prazo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listSimulateFreight">
+                                        <tr><td colspan="3" class="center aligned">Digite um CEP e clique no botão OK.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FIM SIMULADOR FRETE-->
                 </div>
 
             </div>

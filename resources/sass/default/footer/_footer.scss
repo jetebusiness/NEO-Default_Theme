@@ -115,167 +115,170 @@
 }
 
 .footer {
-	background-color: $secondary-color !important;
-	padding-bottom: 20px !important;
+  background-color: $secondary-color !important;
+  padding-bottom: 20px !important;
 
-	> .ui.container {
-		>.ui.grid {		
-			> .column {
-				padding-bottom: 0 !important;
-			}
-		}
-	}
+  > .ui.container {
+    > .ui.grid {
+      > .column {
+        padding-bottom: 0 !important;
+      }
+    }
+  }
 
-	.listMobile {
-		.column {
-			@media screen and (max-width: $mobile-bp) {
-				border-bottom:1px solid lighten($secondary-color, 10);
-			}
-		}
+  .listMobile {
+    .column {
+      @media screen and (max-width: $mobile-bp) {
+        border-bottom: 1px solid lighten($secondary-color, 10);
+      }
+    }
+  }
 
-	}
+  .header {
+    text-transform: uppercase;
+    font-size: 14px !important;
+    margin: 0;
 
-	.header {
-		text-transform: uppercase;
-		font-size: 14px !important;
-		margin:0;
-		@media screen and (max-width: $mobile-bp) {
-			line-height: 30px;
-		}
+    @media screen and (max-width: $mobile-bp) {
+      line-height: 30px;
+    }
 
-		i.icon:only-child {
-			display:none;
-			float:right !important;
-			font-size: 1em;
-		}
-	}
-
-
-	socialbar {
-		margin-top: 10px;
-		display: inline-block;
-		a {
-			i.icon{
-				font-size: 1.7em;
-				line-height: 0.95em;
-			}
-		}
-	}
-
-	.list {
-		&.link {
-			a,
-			h5 {
-				color: #999999 !important;
-				font-size: 12px;
-				font-weight: bold;
-				margin: 0;
-				line-height: 20px;
-
-				&:hover,
-				&:focus,
-				&:checked,
-				&:active {
-					color: #fff !important;
-				}
-			}
-
-			@media screen and (max-width: $mobile-bp) {
-				padding: 1em;
-				text-align: left !important;
-				margin: 10px 0 0 0;
-				display: none;
-				background: lighten($secondary-color, 5);
-
-			}
-		}
-		
-		&.selos {
-			margin-top:10px;
-			margin-bottom: 30px;
-			
-			a ~ a {
-				margin-left:10px;
-			}
-		}
+    i.icon:only-child {
+      display: none;
+      float: right !important;
+      font-size: 1em;
+    }
+  }
 
 
-		
-		&.selos a img {
-				height: 100px;
-				display: inline-block;
-				background-size: cover;
-		}
-		
-	}
+  socialbar {
+    margin-top: 10px;
+    display: inline-block;
 
-	p {
-		color:#999999;
-		font-size: 12px;
-		font-weight: bold;
-	}
+    a {
+      i.icon {
+        font-size: 1.7em;
+        line-height: 0.95em;
+      }
+    }
+  }
 
-	h4,
-	h5{
-		font-weight: bold;
-		font-size: 16px;
-		color:$white;
-	}
+  .list {
+    &.link {
+      a,
+      h5 {
+        color: #999999 !important;
+        font-size: 12px;
+        font-weight: bold;
+        margin: 0;
+        line-height: 20px;
 
-	.tireDuvidas {
-		background: #fff;
-		h5 {
-			color: $black;
-			margin:0;
-			font-size: 1rem;
-		}
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active {
+          color: #fff !important;
+        }
+      }
 
-	}
+      @media screen and (max-width: $mobile-bp) {
+        padding: 1em;
+        text-align: left !important;
+        margin: 10px 0 0 0;
+        display: none;
+        background: lighten($secondary-color, 5);
+      }
+    }
 
+    &.selos {
+      margin-top: 10px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
 
-	.ui.form  {
+      @media screen and (min-width: $mobile-bp) {
+        justify-content: flex-start;
+      }
 
-
-		> .inline {
-			>.icon.input {
-				@media screen and (max-width: $mobile-bp) {
-					display:table;
-				}
-
-				.mail {
-					color:$black;
-					opacity: 1 !important;
-
-					@media screen and (max-width: $mobile-bp) {
-						top: 22px;
-						height:initial;
-					}
-				}
-
-				#email_news {
-					@media screen and (max-width: $mobile-bp) {
-						width: 100%;
-					}
-				}
-
-				#btn_news {
-					margin-left: 5px;
-					color: #000;
-					text-transform: uppercase;
-					background: #fff;
-
-					@media screen and (max-width: $mobile-bp) {
-						width: 100%;
-						margin:5px auto 0 auto;
-					}
-
-				}
-			}
-		}
-	}
+      a {
+        margin: 5px;
+      }
+    }
 
 
 
+    &.selos a img {
+      max-height: 100px;
+      display: inline-block;
+      background-size: cover;
+    }
+  }
+
+  p {
+    color: #999999;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  h4,
+  h5 {
+    font-weight: bold;
+    font-size: 16px;
+    color: $white;
+  }
+
+  .tireDuvidas {
+    background: #fff;
+
+    h5 {
+      color: $black;
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+
+
+  .ui.form {
+
+
+    > .inline {
+      > .icon.input {
+        @media screen and (max-width: $mobile-bp) {
+          display: table;
+        }
+
+        .mail {
+          color: $black;
+          opacity: 1 !important;
+
+          @media screen and (max-width: $mobile-bp) {
+            top: 22px;
+            height: initial;
+          }
+        }
+
+        #email_news {
+          @media screen and (max-width: $mobile-bp) {
+            width: 100%;
+          }
+        }
+
+        #btn_news {
+          margin-left: 5px;
+          color: #000;
+          text-transform: uppercase;
+          background: #fff;
+
+          @media screen and (max-width: $mobile-bp) {
+            width: 100%;
+            margin: 5px auto 0 auto;
+          }
+        }
+      }
+    }
+  }
 }
 
 .subFooter {

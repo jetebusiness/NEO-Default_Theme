@@ -13,6 +13,128 @@ import { HaveInWishList } from "../customer/wishlist";
 
 $(document).ready(function () {
     "use strict";
+
+    $('#simular-frete-cep').mask('00000-000');
+
+    $('#simular-frete-submit').click(function () {
+        let ZipCode = $('#simular-frete-cep').val();
+        let B2b = "false";
+        if ($("#b2b").val() != undefined) {
+            B2b = $("#b2b").val();
+        }
+
+        if (ZipCode != "")
+        {
+            $('#listSimulateFreight').empty().append('<tr><td colspan="3" class="center aligned">Carregando...</td></tr>');
+
+
+            let HasOpenSku = $('#has-open-sku').val();
+
+            let LstProductsFreight = new Array();
+
+            if ((B2b == "false" && (HasOpenSku == "false" || $('#produto-sku').val() == "0")) || (B2b == "true" && $('#produto-sku').val() == "0")) {
+                let objProductFreight = {
+                    IdProduct: $('#produto-id').val(),
+                    IdSku: $('#produto-sku').val(),
+                    Quantity: $('#quantidade').val()
+                };
+
+                LstProductsFreight.push(objProductFreight);
+            } else {
+                $.each($('.three.column.stackable.row.sku_b2b'), function (key, item) {
+                    let IdProduct = $(item).data("produto-id");
+                    let IdSku = $(item).data("sku-id");
+                    let Quantity = Number.parseInt($(item).find('input[name=quantidade]').val());
+
+                    if (Quantity > 0) {
+                        let objProductFreight = {
+                            IdProduct: IdProduct,
+                            IdSku: IdSku,
+                            Quantity: Quantity
+                        };
+                        LstProductsFreight.push(objProductFreight);
+                    }
+                });
+
+                if (LstProductsFreight.length == 0) {
+                    swal({
+                        title: '',
+                        text: 'Selecione ao menos uma variação para calcular o frete.',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+            }
+            
+            $.ajax({
+                url: '/Product/SimulateFreight',
+                method: 'POST',
+                data: {
+                    ProductShippings: LstProductsFreight,
+                    ZipCode: ZipCode,
+                    B2b: B2b
+                },
+                success: function (response) {
+                    $('#listSimulateFreight').empty();
+                    if (response.success == true) {
+                        $.each(response.lista, function (key, item) {
+
+                            let valueShipping = "Grátis";
+                            if (item.ValueShipping > 0) {
+                                valueShipping = item.ValueShipping.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                            }
+                            let usefulDay = "";
+                            if (item.ShippingMode.UsefulDay) {
+                                if (parseInt(item.ShippingMode.DeliveryTime,10) < 2) {
+                                    usefulDay = ' útil';
+                                } else {
+                                    usefulDay = ' úteis';
+                                }
+                            }
+
+                            var strTr = '<tr>' +
+                                '<td>' + item.ShippingMode.Name + '</td>' +
+                                '<td align="center">' + valueShipping + '</td>' +
+                                '<td align="center">' + item.ShippingMode.DeliveryTime + ' dia(s)' + usefulDay + '.</td>' +
+                                '</tr>';
+                            $('#listSimulateFreight').append(strTr);
+                        });
+                    } else {
+                        swal({
+                            title: '',
+                            text: response.message,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                        $('#simular-frete-cep').val('').focus();
+                    }
+                }
+            });
+        }
+        else
+        {
+            swal({
+                title: '',
+                text: 'Preencha o cep para realizar a simulação do frete.',
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+            $('#simular-frete-cep').val('').focus();
+        }
+
+        return false;
+    });
+
     VariacaoCor();
 
     /*if($('#preco').length > 0) {

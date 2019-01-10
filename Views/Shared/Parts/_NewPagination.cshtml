@@ -1,22 +1,23 @@
 ﻿@model DomainProduct.Settings
 
-<div class="ui pagination menu">
-    <a id="previousPage" class="@(Model.HasPreviousPage ? "" : "disabled") item" href="#" data-number="@(@Model.PageNumber - 1)">
-        <i class="angle left icon"></i>
-    </a>
+@{int _maxPagination = Request.Browser.IsMobileDevice ? 1 : 3;}
 
-    @for (int i = 1; i <= Model.PageCount; i++)
+<div class="ui pagination menu" data-teste="@Request.Browser.IsMobileDevice">
+  <a id="previousPage" class="@(Model.HasPreviousPage ? "" : "disabled") item" href="#" data-number="@(@Model.PageNumber - 1)">
+    <i class="angle left icon"></i>
+  </a>
+
+  @for (int i = 1; i <= Model.PageCount; i++)
+  {
+    if ((Model.PageCount <= _maxPagination) || (Model.PageCount > _maxPagination && (i >= Model.PageNumber - _maxPagination && i <= Model.PageNumber + _maxPagination)))
     {
-        if ((Model.PageCount <= 5) || (Model.PageCount > 5 && (i >= Model.PageNumber - 5 && i <= Model.PageNumber + 5)))
-        {
-            <a class="@((i) == Model.PageNumber ? "active" : "") btnPageNumber item" data-number="@(i)" href="#">
-                @(i)
-            </a>
-        }
+      <a class="@((i) == Model.PageNumber ? "active" : "") btnPageNumber item" data-number="@(i)" href="#">
+        @(i)
+      </a>
     }
+  }
 
-    <a id="nextPage" class="@(Model.HasNextPage ? "" : "disabled") item" href="#" data-number="@(@Model.PageNumber + 1)">
-        <i class="angle right icon"></i>
-    </a>
+  <a id="nextPage" class="@(Model.HasNextPage ? "" : "disabled") item" href="#" data-number="@(@Model.PageNumber + 1)">
+    <i class="angle right icon"></i>
+  </a>
 </div>
-

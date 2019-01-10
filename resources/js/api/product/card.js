@@ -53,9 +53,11 @@ $(document).on('change', 'input.conjunct_product', function () {
 });
 
 $(document).on("click", ".btn-comprar-card", function () {
-    $(this).addClass("loading");
-    CancelarCalculoFreteCart(1);
-    insertItemInCart($(this).data("idproduct"), this, true);
+	if (!$(this).hasClass("btn-comprar-card-b2b")) {
+		$(this).addClass("loading");
+		CancelarCalculoFreteCart(1);
+		insertItemInCart($(this).data("idproduct"), this, true);
+	}
 });
 
 $(document).on("click", ".add-event-list", function () {
@@ -215,7 +217,7 @@ $(document).ready(function () {
         });
         updateProductConjunctTable();
     } else {
-        $(".buy-conjunct").removeClass("ui animated primary button fluid")
+			$(".buy-conjunct").removeClass("ui animated action button fluid")
         $(".buy-conjunct").addClass("ui labeled icon button fluid grey disabled")
         $("#buttonText").text("Indisponível")
         $("#iconCart").remove()
@@ -280,12 +282,12 @@ function callAjaxGetSku(element) {
 
                 if (sku.Stock <= 0 || isExhausted(productId)) {
                     $parent.find("#btn-comprar-card-" + productId)
-                        .removeClass("primary btn-comprar-card")
+                        .removeClass("action btn-comprar-card")
                         .addClass("grey avise-card avise-me-modal")
                         .html('<i class="icon announcement"></i> Avise-me');
 
                     $parent.find("#add-event-list-" + productId)
-                        .removeClass("primary btn-comprar-card")
+											.removeClass("action btn-comprar-card")
                         .addClass("grey avise-card avise-me-modal")
                         .html('<i class="icon announcement"></i> Avise-me');
 
@@ -296,12 +298,12 @@ function callAjaxGetSku(element) {
                 else {
                     $parent.find("#btn-comprar-card-" + productId)
                         .removeClass("grey avise-card avise-me-modal")
-                        .addClass("primary btn-comprar-card")
+											.addClass("action btn-comprar-card")
                         .html('<i class="icon add to cart"></i> Comprar');
 
                     $parent.find("#add-event-list-" + productId)
                         .removeClass("grey avise-card avise-me-modal")
-                        .addClass("ui labeled icon button primary fluid add-event-list")
+											.addClass("ui labeled icon button action fluid add-event-list")
                         .html('<i class="icon add to cart"></i> Adicionar à Lista');
 
                     $parent.find("#produto-esgotado_" + productId).addClass("hideme");

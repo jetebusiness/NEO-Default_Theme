@@ -5,7 +5,7 @@
     reference: https://developers.google.com/search/docs/data-types/product
 *@
 
-<div id="Product_@Model.IdProduct" class="ui card produto" data-exhausted="@Model.FlagExhausted" itemscope itemtype="http://schema.org/Product">
+<div id="Product_@Model.IdProduct" data-id="Product_@Model.IdProduct" class="ui card produto" data-exhausted="@Model.FlagExhausted" itemscope itemtype="http://schema.org/Product">
     <input type="hidden" id="selected-references_@Model.IdProduct" />
     <meta itemprop="productID" content="@Model.IdProduct">
     <div class="content">

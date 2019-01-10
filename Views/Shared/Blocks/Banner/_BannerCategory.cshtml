@@ -17,9 +17,12 @@
                             <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
                         </a>
                     </div>
+                    @if (randombanner.Description != "")
+                    {
                     <div class="description">
                         @randombanner.Description
                     </div>
+                    }
                 </div>
             }
         </div>

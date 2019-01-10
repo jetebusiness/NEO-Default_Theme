@@ -1,6 +1,6 @@
-﻿import {isLoading} from "../api_config";
-import {_alert, _confirm} from "../../functions/message";
-import {lazyLoad} from "../../functions/lazy_load";
+﻿import { isLoading } from "../api_config";
+import { _alert, _confirm } from "../../functions/message";
+import { lazyLoad } from "../../functions/lazy_load";
 
 var genericoPageFilter = "";
 var idEventListFilter = "";
@@ -8,11 +8,11 @@ var viewListGlobal = "g";
 var urlBase = "/product/getproducts/";
 $(document).ready(function () {
     let filters = window.filterManipulation;
-    if($("#GenericPageFilter").length > 0){
+    if ($("#GenericPageFilter").length > 0) {
         genericoPageFilter = $("#GenericPageFilter").val();
     }
 
-    if(window.pageNumber > 1){
+    if (window.pageNumber > 1) {
         let data = {
             viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
             pageNumber: window.pageNumber === undefined ? "" : window.pageNumber,
@@ -32,7 +32,7 @@ $(document).ready(function () {
         updateAjax(data);
     }
 
-    if($("#idEventListFilter").length > 0){
+    if ($("#idEventListFilter").length > 0) {
         idEventListFilter = $("#idEventListFilter").val();
         viewListGlobal = "l";
         urlBase = "/product/GetProductsListEvents/";
@@ -86,7 +86,7 @@ function uiReload() {
 
 function makeLabel() {
     let labelVariation = window.filterManipulation.labelFilter;
-    let htmlTag        = "";
+    let htmlTag = "";
     for (let key in labelVariation) {
         if (labelVariation[key].type === "price") {
             htmlTag += `<a class="ui label filters" data-type="${labelVariation[key].type}" data-id="${labelVariation[key].id}" id="labelPrice">
@@ -102,13 +102,13 @@ function makeLabel() {
     $("#filter>div.ui.labels:first-child").html(htmlTag);
 
 
-    if(htmlTag.trim() == "") {
+    if (htmlTag.trim() == "") {
         $(".filterColumn").removeClass("ativo")
     }
 
 }
 
-function ValidateLabel(type, id){
+function ValidateLabel(type, id) {
     let labelVariation = window.filterManipulation.labelFilter
     for (let key in labelVariation) {
         if (labelVariation[key].type === type && labelVariation[key].id === id) {
@@ -118,8 +118,7 @@ function ValidateLabel(type, id){
     return false
 }
 
-function callAjaxFunction(filterType)
-{
+function callAjaxFunction(filterType) {
     isLoading("#list");
     let filters = window.filterManipulation;
 
@@ -153,7 +152,7 @@ function callAjaxFunction(filterType)
     updateAjax(data);
 }
 
-function updateAjax(data){
+function updateAjax(data) {
     var data_temp = JSON.stringify(window.filterManipulation.labelFilter);
     data.labelFilter = data_temp;
     $.ajax({
@@ -169,13 +168,13 @@ function updateAjax(data){
                 url: "/product/filtermenu/",
                 method: "GET",
                 data: {
-                    idEventListFilter : idEventListFilter
+                    idEventListFilter: idEventListFilter
                 },
                 dataType: "html",
                 success: function (response) {
                     $("#filter").remove();
                     $(".filterColumn>.filterBlock").html(response)
-                    if(window.filterManipulation.labelFilter.length === 0){
+                    if (window.filterManipulation.labelFilter.length === 0) {
                         window.filterManipulation.labelFilter = JSON.parse(data_temp);
                     }
                     uiReload();
@@ -192,10 +191,10 @@ function updateAjax(data){
     });
 }
 
-function labelFilter(filters, typeFilter, id){
+function labelFilter(filters, typeFilter, id) {
     for (let key in filters.labelFilter) {
         if (filters.labelFilter[key].id == id) {
-            switch(typeFilter) {
+            switch (typeFilter) {
                 case "default":
                     _.pull(filters.variationSelected, id.toString());
                 case "atributo":
@@ -236,7 +235,7 @@ $(document).on("click", "#viewgrid", function () {
 $(document).on("click", "#viewlist", function () {
     isLoading("#list");
     let filters = window.filterManipulation;
-    
+
     filters.viewList = "l";
 
     let data = {
@@ -262,7 +261,7 @@ $(document).on("click", ".checkColor", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.variationSelected.push($(this).prop("id"));
     }
-    if(!ValidateLabel("color", $(this).prop("id"))){
+    if (!ValidateLabel("color", $(this).prop("id"))) {
         window.filterManipulation.labelFilter.push({
             type: "color",
             id: $(this).prop("id"),
@@ -278,7 +277,7 @@ $(document).on("click", ".checkText", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.variationSelected.push($(this).prop("id"));
     }
-    if(!ValidateLabel("text", $(this).prop("id"))){
+    if (!ValidateLabel("text", $(this).prop("id"))) {
         window.filterManipulation.labelFilter.push({
             type: "text",
             id: $(this).prop("id"),
@@ -294,7 +293,7 @@ $(document).on("click", ".checkAtribute", function () {
     if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
         window.filterManipulation.atributeSelected.push($(this).prop("id"));
     }
-    if(!ValidateLabel("atributo", $(this).prop("id"))){
+    if (!ValidateLabel("atributo", $(this).prop("id"))) {
         window.filterManipulation.labelFilter.push({
             type: "atributo",
             id: $(this).prop("id"),
@@ -309,7 +308,7 @@ $(document).on("click", ".checkAtribute", function () {
 $(document).on("change", ".checkCategory", function () {
     window.filterManipulation.nameCategory = $(this).attr("name");
     window.filterManipulation.idCategory = $(this).attr("id");
-    if(!ValidateLabel("category", $(this).prop("id"))){
+    if (!ValidateLabel("category", $(this).prop("id"))) {
         window.filterManipulation.labelFilter.push({
             type: "category",
             id: window.filterManipulation.idCategory,
@@ -324,7 +323,7 @@ $(document).on("change", ".checkCategory", function () {
 $(document).on("change", ".checkBrand", function () {
     window.filterManipulation.nameBrand = $(this).attr("data-name");
     window.filterManipulation.idBrand = $(this).attr("id");
-    if(!ValidateLabel("brand", $(this).prop("id"))){
+    if (!ValidateLabel("brand", $(this).prop("id"))) {
         window.filterManipulation.labelFilter.push({
             type: "brand",
             id: window.filterManipulation.idBrand,
@@ -337,16 +336,16 @@ $(document).on("change", ".checkBrand", function () {
 });
 
 $(document).on("click", ".pricefilter", function () {
-    window.filterManipulation.initialPrice = $("#initialPrice").val().replace(".","").replace(",", ".");
-    window.filterManipulation.finalPrice = $("#finalPrice").val().replace(".","").replace(",", ".");
+    window.filterManipulation.initialPrice = $("#initialPrice").val().replace(".", "").replace(",", ".");
+    window.filterManipulation.finalPrice = $("#finalPrice").val().replace(".", "").replace(",", ".");
 
     if (window.filterManipulation.initialprice === "" || window.filterManipulation.finalPrice === "") {
         _alert("Atenção", "Informe preço mínimo e preço máximo!", "warning");
-        
+
         return;
     }
 
-    if(!ValidateLabel("price", $(this).prop("id"))){
+    if (!ValidateLabel("price", $(this).prop("id"))) {
         window.filterManipulation.labelFilter.push({
             type: "price",
             id: "",
@@ -357,13 +356,13 @@ $(document).on("click", ".pricefilter", function () {
 
     //ajaxPrice();
     callAjaxFunction("other");
-})
+});
 
 $(document).on("click", ".ui.label.filters", function () {
     let filters = window.filterManipulation;
 
     let type = $(this).data("type");
-    let id   = $(this).data("id");
+    let id = $(this).data("id");
     let filterType = "";
 
     if (type == "brand") {
@@ -378,16 +377,14 @@ $(document).on("click", ".ui.label.filters", function () {
         filterType = "other";
         //ajaxPrice();
     }
-    else if (type == "price")
-    {
+    else if (type == "price") {
         filters.initialPrice = "";
         filters.finalPrice = "";
         filters = labelFilter(filters, "price", id);
         filterType = "other";
         //ajaxCategory();
     }
-    else if (type == "atributo")
-    {
+    else if (type == "atributo") {
         filters.idAtribute = "";
         filters = labelFilter(filters, "atributo", id);
         filterType = "attribute";
@@ -405,12 +402,12 @@ $(document).on("click", ".ui.label.filters", function () {
     makeLabel();
 });
 
-$(document).on("keyup", ".filterListEventsProducts", function(event){
+$(document).on("keyup", ".filterListEventsProducts", function (event) {
     var wordCurrent = event.target.value;
     var totalCaracteres = wordCurrent.length;
     wordCurrent = totalCaracteres > 2 ? wordCurrent : "";
 
-    if(totalCaracteres > 2){
+    if (totalCaracteres > 2) {
         isLoading("#list");
     }
 

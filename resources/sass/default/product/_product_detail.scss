@@ -481,3 +481,38 @@ h6.codProduto {
         color: #666 !important;
     }
 }
+
+.simulador-frete {
+    border-bottom: 5px solid #ddd !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border-top: 1px solid #d4d4d5 !important;
+
+    &.ui.attached.segment {
+        padding: 0.5em 1em 1.5em;
+    }
+
+    span {
+        color: #000;
+        font-weight: 700;
+    }
+
+    table {
+        thead {
+            tr {
+                th {
+                    padding: 5px 5px 15px !important;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                td {
+                    padding: 15px 5px !important;
+                    font-weight: normal !important;
+                }
+            }
+        }
+    }
+}

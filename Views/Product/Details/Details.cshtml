@@ -170,13 +170,13 @@
                         if (categoriaDefault != null)
                         {
                             var urlCategoria = "";
-                            foreach (var categoria in Model.Categories)
+                            foreach (var categoria in Model.Categories.OrderBy(c => c.Level).ToList())
                             {
                                 urlCategoria = urlCategoria + categoria.UrlFriendly.Replace("/categoria", "");
                             }
 
                             <i class="right angle icon divider"></i>
-                            <a class="section" href="@string.Format("/categoria{0}", urlCategoria)">@categoriaDefault.Name</a>
+                            <a class="section" href="@categoriaDefault.UrlFriendly">@categoriaDefault.Name</a>
                         }
                     }
                     <!-- FIM FOREACH CATEGORIAS-->
@@ -212,6 +212,10 @@
 <input type="hidden" id="principal-lista-sku" name="principal-lista-sku" value="@ListaSKU" />
 <input type="hidden" id="principal-referencias-selecionadas" name="principal-referencias-selecionadas" value="@variacaoSelecionada" />
 <input type="hidden" id="variacoesSelecionadas" value="" />
+<input type="hidden" id="has-open-sku" value="@((hasOpenSku == true)? "true" : "false")" />
+<input type="hidden" id="b2b" value="false" />
+
+
 <!-- FIM - Váriaveis Produto Principal-->
 <!-- COMEÇO - Váriaveis Produto Unitário-->
 <input type="hidden" value="@Model.Price" id="preco-unidade" name="preco-unidade" />
@@ -571,7 +575,39 @@
                                 }
                             }
 
-
+                            <!-- COMEÇO SIMULADOR FRETE-->
+                            <div class="ui divider hidden"></div>
+                            <div class="column ui attached segment simulador-frete">
+                                <div class="ui grid">
+                                    <div class="row stackable three column">
+                                        <div class="column middle aligned">
+                                            <span>Calcular frete e prazo</span>
+                                        </div>
+                                        <div class="column">
+                                            <div class="ui input">
+                                                <input type="text" name="simular-frete-cep" id="simular-frete-cep" placeholder="00000-000">
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <button name="simular-frete-submit" id="simular-frete-submit" class="ui button primary">OK</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui divider"></div>
+                                <table class="ui very basic table">
+                                    <thead>
+                                        <tr>
+                                            <th>Entrega</th>
+                                            <th>Frete</th>
+                                            <th>Prazo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listSimulateFreight">
+                                        <tr><td colspan="3" class="center aligned">Digite um CEP e clique no botão OK.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- FIM SIMULADOR FRETE-->
                             <!-- COMEÇO REDES SOCIAIS-->
                             <div class="ui divider hidden"></div>
                             <div class="one column row">

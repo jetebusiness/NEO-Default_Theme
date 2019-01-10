@@ -45,7 +45,7 @@
                                         var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
                                         <br />
                                         <span>ou</span>
-                                            <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                        <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
                                     }
                                 </span>
                             }
@@ -65,7 +65,7 @@
                                         var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
                                         <br />
                                         <span>ou</span>
-                                            <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                        <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
                                     }
                                 </span>
                             }
@@ -78,56 +78,61 @@
             <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
             <div class="row">
                 <div class="column">
-                    @if (Model.Stock == 0 || Model.FlagExhausted)
-                    {
-                        <strong class="text color grey regular right text bold color red">Produto Esgotado</strong>
-                    }
-                    else if (!string.IsNullOrEmpty(@Model.DescriptionAvailabilityStatus))
-                    {
-                        <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
-                    }
+                    @{
+                        if (Model.Stock == 0 || Model.FlagExhausted)
+                        {
+                            <strong class="text color grey regular right text bold color red">Produto Esgotado</strong>
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.DescriptionAvailabilityStatus))
+                            {
+                                <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
+                            }
 
-                    <div class="row margin top medium">
-                        <div class="column">
-                            <a class="ui animated big action button fluid detalhes" id="btn_comprar_b2b">
-                                <div class="visible content">Comprar</div>
-                                <div class="hidden content">
-                                    <i class="add to cart icon"></i>
+                            <div class="row margin top medium">
+                                <div class="column">
+                                    <a class="ui animated big action button fluid detalhes" id="btn_comprar_b2b">
+                                        <div class="visible content">Comprar</div>
+                                        <div class="hidden content">
+                                            <i class="add to cart icon"></i>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    @if (useOneClick)
-                    { 
-                        <div class="row margin top medium">
-                            <div class="column">
-                                <a class="ui animated big action button fluid detalhes" id="btn_comprar_oneclick_b2b">
-                                    <div class="visible content">Comprar com 1-Click</div>
-                                    <div class="hidden content">
-                                        <i class="add to cart icon"></i>
-                                    </div>
-                                </a>
                             </div>
-                        </div>
-                    }
 
-                    <div class="row margin top medium">
-                        <div class="column">
-                            <a class="ui animated big blue button fluid" id="btn_comprar_continuar">
-                                <div class="visible content">Adicionar e Continuar Comprando</div>
-                                <div class="hidden content">
-                                    <i class="plus icon"></i>
+                            if (useOneClick)
+                            {
+                                <div class="row margin top medium">
+                                    <div class="column">
+                                        <a class="ui animated big action button fluid detalhes" id="btn_comprar_oneclick_b2b">
+                                            <div class="visible content">Comprar com 1-Click</div>
+                                            <div class="hidden content">
+                                                <i class="add to cart icon"></i>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
-                            </a>
-                        </div>
-                    </div>
+                            }
+
+                            <div class="row margin top medium">
+                                <div class="column">
+                                    <a class="ui animated big blue button fluid" id="btn_comprar_continuar">
+                                        <div class="visible content">Adicionar e Continuar Comprando</div>
+                                        <div class="hidden content">
+                                            <i class="plus icon"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
             <!--FIM DISPONIBILIDADE / CARRINHO-->
         </div>
         @if (!Model.FlagExhausted)
-            {
+        {
             <div id="pagamento-calculado">
                 @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                 {
@@ -140,7 +145,7 @@
             </div>
         }
         @if (Model.FlagExhausted || Model.Stock == 0)
-            {
+        {
             @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", true)
         }
         else

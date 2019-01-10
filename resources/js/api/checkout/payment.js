@@ -1,9 +1,9 @@
 ﻿import { _alert, _confirm } from '../../functions/message';
 import { buscaCep, atualizaCampos } from '../../api/customer/AddressManager';
-﻿import { isLoading } from "../../api/api_config";
+import { isLoading } from "../../api/api_config";
 import { debug, isNull, isNullOrUndefined } from 'util';
 
-﻿import { isMobile } from "../../functions/mobile";
+import { isMobile } from "../../functions/mobile";
 
 function gettoken() {
     var token = $("input[name='__RequestVerificationToken']").val();
@@ -232,7 +232,7 @@ function GerarPedidoCompleto(
                         $("#googleResponse").val('');
                     } else if (googleRecaptchaVersion == '3') {
                         var googleSiteKey = $('#googleSiteKey').val();
-                        $("#googleResponse").val('');                 
+                        $("#googleResponse").val('');
                         $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
                             grecaptcha.ready(function () {
                                 grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
@@ -307,22 +307,22 @@ function clickShipping() {
 
         $(".agendar").hide("slow");
         $('.hasDatepicker').datepicker('setDate', null);
-        
-            var ponteiroCurrent = $(".shippingGet", this);
-            $(".shippingGet").attr("checked", false);
-            $(ponteiroCurrent).attr("checked", true);
 
-            valorFrete = $(ponteiroCurrent).attr("data-value");
-            idFrete = $(ponteiroCurrent).attr("data-id");
-            correiosEntrega = $(ponteiroCurrent).attr("data-correios");
-            carrier = $(ponteiroCurrent).data("carrier");
-            mode = $(ponteiroCurrent).data("mode");
-            hub = $(ponteiroCurrent).data("hub");
+        var ponteiroCurrent = $(".shippingGet", this);
+        $(".shippingGet").attr("checked", false);
+        $(ponteiroCurrent).attr("checked", true);
 
-            entregaAgendada = $(ponteiroCurrent).attr("data-entregaagendada");
-            exclusivaEntregaAgendada = $(ponteiroCurrent).attr("data-exclusiva-entregaagendada");
-            $("#checkoutColumn2").addClass("disable_column");
-        
+        valorFrete = $(ponteiroCurrent).attr("data-value");
+        idFrete = $(ponteiroCurrent).attr("data-id");
+        correiosEntrega = $(ponteiroCurrent).attr("data-correios");
+        carrier = $(ponteiroCurrent).data("carrier");
+        mode = $(ponteiroCurrent).data("mode");
+        hub = $(ponteiroCurrent).data("hub");
+
+        entregaAgendada = $(ponteiroCurrent).attr("data-entregaagendada");
+        exclusivaEntregaAgendada = $(ponteiroCurrent).attr("data-exclusiva-entregaagendada");
+        $("#checkoutColumn2").addClass("disable_column");
+
 
         if ((valorFrete != "") && (idFrete != "") && (correiosEntrega != "") && (zipcode != "")) {
             var dataperiodoentregaescolhida = null;
@@ -380,9 +380,15 @@ function OrderCreate() {
         var tipoVerificacao = $(this).attr("data-Card");
         var card = $(this).prop("id") == "btnCardDebit" ? $("#DebitCard").val() : $("#CreditCard").val();
         var nameCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitName").val() : $("#Name").val();
-        var expDateCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitExpDate").val() : $("#ExpDate").val();
+        var dt = new Date();
+        var century = dt.getFullYear().toString().substring(0, 2);
+        var expDateCard = "";
+        if ($("#DebitExpDate").val() != null && $("#ExpDate").val() != null) {
+            expDateCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitExpDate").val().toString().replace("/", "/" + century) : $("#ExpDate").val().toString().replace("/", "/" + century);
+            expDateCard = expDateCard.replace(/\s/g, "");
+        }
         var validaMes = expDateCard != "" && expDateCard !== undefined ? new Number(expDateCard.split("/")[0]) : "";
-        var validaAno = expDateCard != "" && expDateCard !== undefined ? new Number("20" + expDateCard.split("/")[1].trim()) : "";
+        var validaAno = expDateCard != "" && expDateCard !== undefined ? new Number(century + expDateCard.split("/")[1].trim()) : "";
         var cvvCard = $("#CVV").val();
         var brandCard = $(this).prop("id") == "btnCardDebit" ? $("#debitBrandCard").val() : $("#brandCard").val();
         var document = $("#Document").val();
@@ -1201,7 +1207,7 @@ function atualizaEnderecos(responseChange) {
         url: "ListaFretePagamento",
         success: function success(data) {
             $("#updateShippingPayment").html(data);
-            clickShipping();            
+            clickShipping();
             HabilitaBlocoPagamento(false);
             CampoEntregaAgendada();
             $('.ui.modal').modal('hide');
@@ -1274,7 +1280,7 @@ function viewAddressLogged(form) {
 
         if (googleRecaptchaVersion == "3") {
             var googleSiteKey = $('#googleSiteKey').val();
-             $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
                 grecaptcha.ready(function () {
                     grecaptcha.execute(googleSiteKey, { action: 'Login' }).then(function (tokenGoogle) {
                         $("#googleResponse").val(tokenGoogle);
@@ -1586,7 +1592,7 @@ function ValeCompraRemover() {
         success: function (responseValeCompra) {
             if (responseValeCompra.success) {
                 isLoading(".ui.accordion.shopping-voucher");
-                ValeCompraRefresh();                
+                ValeCompraRefresh();
                 $('#ShoppingVoucherValue').val('');
                 $('#btnGerarPedidoValeCompra').attr("disabled", true);
                 $(".ui.accordion.shopping-voucher").accordion('close', 0);
@@ -1813,20 +1819,17 @@ $(document).ready(function () {
         });
     }
 
-    if ($('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != undefined) 
-    {
+    if ($('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != undefined) {
         $.ajax({
             async: false,
             method: "GET",
             url: "/Checkout/GetConfigPagSeguro",
             success: function (responseConfig) {
                 var urlJS = '';
-                if(responseConfig.config.production) 
-                {
+                if (responseConfig.config.production) {
                     urlJS = 'https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
                 }
-                else 
-                {
+                else {
                     urlJS = 'https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
                 }
 
@@ -1834,8 +1837,7 @@ $(document).ready(function () {
 
                 $('#MaximumInstallmentWithoutInterest').val(responseConfig.config.maximumInstallmentWithoutInterest);
 
-                if (responseConfig.session != null) 
-                {                  
+                if (responseConfig.session != null) {
                     $.getScript(urlJS, function () {
                         $('#PaymentSession').val(responseConfig.session.Id);
                         PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
@@ -1900,7 +1902,7 @@ $(document).ready(function () {
                         async: false,
                         method: "PUT",
                         url: "/Checkout/ValeCompraRemover",
-                        success: function (responseValeCompra) {}
+                        success: function (responseValeCompra) { }
                     });
                 }
 
@@ -2050,6 +2052,9 @@ $(document).ready(function () {
                         case 4:
                             BankSliptItauShopline(payment.paymentResponse.KeyAccessBankSlip)
                             break;
+                        case 5:
+                            BankSlipByLink(payment.paymentResponse.URLBoleto)
+                            break;
                         default:
                     }
                 } else {
@@ -2081,17 +2086,7 @@ $(document).ready(function () {
                     $("#modalPassword").modal('show')
                 }
                 else {
-                    //Envia Token                                
-                    if (SendCheckAccessKeyByEmail(email)) {
-                        //Exibir modal de Access Code (token enviado por e-mail)
-                        $("#KeyAccess").val("")
-                        $("#modalAccessCode").removeClass("hidden")
-                        $("#modalAccessCode").modal("show")
-                        $("#UserNameCode").val(email)
-                    }
-                    else {
-                        swal('', response.message, 'error');
-                    }
+                    PrintBankSlipSecurity()
                 }
             },
             error: function (response) {
