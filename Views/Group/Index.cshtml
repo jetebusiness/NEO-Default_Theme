@@ -52,7 +52,7 @@
 	<div class="four wide column filterColumn">
 		<div class="row one column filterBlock">
 			<!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
-			@Html.Action("FilterMenu", "Product", new { filter_funnel = true })
+			@Html.Action("FilterMenu", "Product")
 		</div>
 		<div class="row">
 			@Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'L' })
@@ -114,7 +114,23 @@
 		<!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
 		@if (Model != null)
 		{
-			@Html.Action("GetProducts", "Product", new { category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "", viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "", pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "", pageSize = 12, order = Request.QueryString["order"] != null ? Request.QueryString["order"] : "", brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "", group = Model.IdGroup, initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "", finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "", variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "", idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : "" })
+			@Html.Action(
+                "GetProducts",
+                "Product",
+                new {
+                    category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
+                    viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",
+                    pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "",
+                    pageSize = 12, order = Request.QueryString["order"] != null ?
+                    Request.QueryString["order"] : "",
+                    brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "",
+                    group = Model.IdGroup,
+                    initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "",
+                    finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "",
+                    variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "",
+                    idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : ""
+                }
+            )
 		}
 	</div>
 </div>

@@ -133,6 +133,22 @@ function callAjaxFunction(filterType) {
         }
     }
 
+    let idCategories = "";
+    if (filters.labelFilter.length > 0) {
+        $.each(filters.labelFilter, function (key, item) {
+            if (item.type == "category") {
+                idCategories += ((idCategories == "") ? item.id : "," + item.id);
+                filters.idCategory = genericoPageFilter;
+            } else if (item.type == "brand") {
+                if (filters.idBrand == undefined || filters.idBrand == "") {
+                    filters.idBrand = item.id;
+                } else if (filters.idBrand != "" && (filters.idBrand + "").search(item.id + "") == -1) {
+                    filters.idBrand += "," + item.id;
+                }
+            }
+        });
+    }
+
     let data = {
         viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: "1",
@@ -146,41 +162,36 @@ function callAjaxFunction(filterType) {
         group: filters.idGroup === undefined ? "" : filters.idGroup,
         keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
         idAttribute: filters.atributeSelected.toString(),
-        idEventList: idEventListFilter
+        idEventList: idEventListFilter,
+        idCategories: idCategories
     };
 
     updateAjax(data);
 }
 
-function updateAjax(data) {
+function updateAjax(_data) {
     var data_temp = JSON.stringify(window.filterManipulation.labelFilter);
-    data.labelFilter = data_temp;
+    _data.labelFilter = data_temp;
     $.ajax({
         url: urlBase,
         method: "GET",
         dataType: "html",
-        data: data,
+        data: _data,
         success: function (response) {
             $("#list").html(response);
             lazyLoad();
 
-            $.ajax({
-                url: "/product/filtermenu/",
-                method: "GET",
-                data: {
-                    idEventListFilter: idEventListFilter
-                },
-                dataType: "html",
-                success: function (response) {
-                    $("#filter").remove();
-                    $(".filterColumn>.filterBlock").html(response)
-                    if (window.filterManipulation.labelFilter.length === 0) {
-                        window.filterManipulation.labelFilter = JSON.parse(data_temp);
-                    }
-                    uiReload();
-                    makeLabel();
-                }
-            });
+
+            if(window.filterManipulation.labelFilter.length === 0){
+                window.filterManipulation.labelFilter = JSON.parse(data_temp);
+            }
+
+            $('#checkCategory_' + _data.category).parent().parent().remove();
+
+            uiReload();
+            makeLabel();
+
+            $('input[type=checkbox]').prop('checked', false);
         },
         onFailure: function onFailure(response) {
             //console.log("Falha aplicar filtro: " + response);
@@ -290,7 +301,7 @@ $(document).on("click", ".checkText", function () {
 });
 
 $(document).on("click", ".checkAtribute", function () {
-    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
+    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "" && jQuery.inArray($(this).prop("id"), window.filterManipulation.atributeSelected)) {
         window.filterManipulation.atributeSelected.push($(this).prop("id"));
     }
     if (!ValidateLabel("atributo", $(this).prop("id"))) {

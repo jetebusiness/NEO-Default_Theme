@@ -383,7 +383,7 @@ function OrderCreate() {
         var dt = new Date();
         var century = dt.getFullYear().toString().substring(0, 2);
         var expDateCard = "";
-        if ($("#DebitExpDate").val() != null && $("#ExpDate").val() != null) {
+        if ($("#DebitExpDate").val() != null || $("#ExpDate").val() != null) {
             expDateCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitExpDate").val().toString().replace("/", "/" + century) : $("#ExpDate").val().toString().replace("/", "/" + century);
             expDateCard = expDateCard.replace(/\s/g, "");
         }
