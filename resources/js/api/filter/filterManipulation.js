@@ -6,12 +6,22 @@ var genericoPageFilter = "";
 var idEventListFilter = "";
 var viewListGlobal = "g";
 var urlBase = "/product/getproducts/";
+var ViewProductFiltersUrl = false;
 $(document).ready(function () {
+    if ($("#ViewProductFiltersUrl").val() == "True") {
+        ViewProductFiltersUrl = true;
+    }
+
     let filters = window.filterManipulation;
     if ($("#GenericPageFilter").length > 0) {
         genericoPageFilter = $("#GenericPageFilter").val();
     }
 
+    if (window.filterManipulation.idCategory != undefined && window.filterManipulation.idCategory != "") {
+        $('#checkCategory_' + window.filterManipulation.idCategory).parent().parent().hide();
+    }
+
+   
     if (window.pageNumber > 1) {
         let data = {
             viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
@@ -44,6 +54,28 @@ $(document).ready(function () {
         window.filterManipulation.atributeSelected = [];
     }
 
+    if (ViewProductFiltersUrl == true && window.location.search != "") {
+        let queryString = QueryStringToJSON();
+
+        window.filterManipulation.viewList = queryString.viewList === undefined ? viewListGlobal : queryString.viewList;
+        window.filterManipulation.pageNumber = queryString.pageNumber === undefined ? "" : queryString.pageNumber;
+        window.filterManipulation.pageSize = queryString.pageSize === undefined ? "" : filters.pageSize;
+        window.filterManipulation.order = queryString.order === undefined ? "" : queryString.order;
+        window.filterManipulation.brand = queryString.brand === undefined ? "" : queryString.brand;
+        window.filterManipulation.category = queryString.category === undefined ? genericoPageFilter : queryString.category;
+        window.filterManipulation.initialprice = queryString.initialprice === undefined ? "" : queryString.initialprice;
+        window.filterManipulation.finalprice = queryString.finalprice === undefined ? "" : queryString.finalprice;
+        window.filterManipulation.variations = queryString.variations === undefined ? "" : queryString.variations;
+        window.filterManipulation.group = queryString.group === undefined ? "" : queryString.group;
+        window.filterManipulation.keyWord = ((queryString.keyWord === undefined) ? ((queryString.n === undefined) ? "" : queryString.n) : queryString.keyWord);
+        window.filterManipulation.idAttribute = queryString.idAttribute === undefined ? "" : queryString.idAttribute;
+        window.filterManipulation.idEventList = idEventListFilter;
+        window.filterManipulation.idCategories = queryString.idCategories === undefined ? "" : queryString.idCategories;
+        window.filterManipulation.labelFilter = queryString.labelFilter === undefined ? [] : JSON.parse(queryString.labelFilter);
+
+        makeLabel();
+    }
+
     $(".dropdownorder").dropdown({
         onChange: function () {
             isLoading("#list");
@@ -72,6 +104,18 @@ $(document).ready(function () {
         }
     });
 });
+
+function QueryStringToJSON() {
+    var pairs = location.search.slice(1).split('&');
+
+    var result = {};
+    pairs.forEach(function (pair) {
+        pair = pair.split('=');
+        result[pair[0]] = decodeURIComponent(pair[1] || '');
+    });
+
+    return JSON.parse(JSON.stringify(result));
+}
 
 function uiReload() {
     $('.ui.accordion').accordion("refresh");
@@ -169,6 +213,28 @@ function callAjaxFunction(filterType) {
     updateAjax(data);
 }
 
+/*
+function updateQueryString(_data) {
+    let queryString = window.location.origin + window.location.pathname + "?" + $.param(_data, true);
+    window.history.pushState(null, null, queryString);
+    return false;
+}
+*/
+
+function updateQueryString(json) {
+    let queryString = window.location.origin + window.location.pathname + '?' +
+        Object.keys(json).map(function (key) {
+        if (key != "" && json[key] != "") {
+            return ((key == "keyWord") ? "n" : encodeURIComponent(key)) + '=' + encodeURIComponent(json[key]);
+        } else {
+            return "";
+        }
+    }).filter(x => typeof x === 'string' && x.length > 0).join('&');
+
+    window.history.pushState(null, null, queryString);
+    return false;
+}
+
 function updateAjax(_data) {
     var data_temp = JSON.stringify(window.filterManipulation.labelFilter);
     _data.labelFilter = data_temp;
@@ -181,6 +247,9 @@ function updateAjax(_data) {
             $("#list").html(response);
             lazyLoad();
 
+            if (ViewProductFiltersUrl == true) {
+                updateQueryString(_data);
+            }
 
             if(window.filterManipulation.labelFilter.length === 0){
                 window.filterManipulation.labelFilter = JSON.parse(data_temp);

@@ -53,16 +53,23 @@
 }
 
 @section filters {
-	<div class="four wide column filterColumn">
-		<div class="row one column filterBlock">
-			<!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
-			@Html.Action("FilterMenu", "Product")
-		</div>
-		<div class="row">
-			<!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
-			@Html.Action("SideHalfBannerBrand", "Banner", new { brandId = Model.IdBrand })
-		</div>
-	</div>
+    <div class="four wide column filterColumn">
+        <div class="row one column filterBlock">
+            <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
+            @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
+            {
+                @Html.Action("FilterMenuNew", "Product", new { category = "", brand = Model.IdBrand, group = "", keyword = "" })
+            }
+            else
+            {
+                @Html.Action("FilterMenu", "Product")
+            }
+            </div>
+        <div class="row">
+            <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
+            @Html.Action("SideHalfBannerBrand", "Banner", new { brandId = Model.IdBrand })
+        </div>
+    </div>
 }
 
 <div class="twelve wide column">
@@ -103,39 +110,41 @@
                         </div>
 
 
-					</div>
-				</div>
-				<button id="viewgrid" class="ui icon button basic small viewgrid mobile hide" data-tooltip="Grid" data-inverted="">
-					<i class="grid layout icon"></i>
-				</button>
-				<button id="viewlist" class="ui icon button basic small viewlist mobile hide" data-tooltip="Lista" data-inverted="">
-					<i class="list layout icon"></i>
-				</button>
-			</div>
-		</div>
-	</div>
-	<div id="list">
-		@if (Model != null)
-		{
-			<div class="brandProducts">
-				@Html.Action("GetProducts", "Product", new
-           {
-               category = Request.QueryString["c"] ?? "",
-               viewList = Request.QueryString["v"] ?? "",
-               pageNumber = Request.QueryString["p"] ?? "",
-               pageSize = 12,
-               order = Request.QueryString["o"] ?? "",
-               brand = Model.IdBrand,
-               group = Request.QueryString["g"] ?? "",
-               idAttribute = Request.QueryString["idAttribute"] ?? ""
-           })
-			</div>
-		}
-	</div>
+                    </div>
+                </div>
+                <button id="viewgrid" class="ui icon button basic small viewgrid mobile hide" data-tooltip="Grid" data-inverted="">
+                    <i class="grid layout icon"></i>
+                </button>
+                <button id="viewlist" class="ui icon button basic small viewlist mobile hide" data-tooltip="Lista" data-inverted="">
+                    <i class="list layout icon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="list">
+        @if (Model != null)
+        {
+            <div class="brandProducts">
+                @Html.Action("GetProducts", "Product", new
+                {
+                    category = Request.QueryString["c"] ?? "",
+                    viewList = Request.QueryString["v"] ?? "",
+                    pageNumber = Request.QueryString["p"] ?? "",
+                    pageSize = 12,
+                    order = Request.QueryString["o"] ?? "",
+                    brand = Model.IdBrand,
+                    group = Request.QueryString["g"] ?? "",
+                    idAttribute = Request.QueryString["idAttribute"] ?? "",
+                    idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
+                })
+            </div>
+        }
+    </div>
 </div>
 <div class="sixteen wide column">
     @Html.Action("BannerBrand", "Banner", new { brandID = Model.IdBrand, bannerType = 'R' })
 </div>
+<input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
 
 @section custom_js{
     <script>

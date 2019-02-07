@@ -14,25 +14,19 @@ export function getAllMask() {
 
 export function getMaskMultiplePhone() {
 
-	let init_mask = $(".mask_phone").length > 0 ? true : false;
-	if ($(".mask_phone").length > 0) $('.mask_phone').mask('(00) 0000-0000#');
+  let options = {
+    onKeyPress: function (value, e, field, options) {
+      let value_clean = value.replace(/\D/g, ''),
+        masks = ['(00) 0000-0000#', "(00) 00000-0000"],
+        mask = (value_clean.length > 10) ? masks[1] : masks[0];
 
-	$(document).on("keypress", ".mask_phone", function () {
-		if (!init_mask) {
-			$('.mask_phone').mask('(00) 0000-0000#');
-			init_mask = true;
-		}
-		let tel = $(".mask_phone").cleanVal();
-		if (tel.length > 9) {
-			$(".mask_phone").mask("(00) 00000-0000");
-			let valor_ = $(this).val();
-			$(this).focus().val('').val(valor_);
-		} else {
-			$('.mask_phone').mask('(00) 0000-0000#');
-		}
-	});
+      field.mask(mask, options);
+    }
+  };
 
-	$('.mask_phone1').mask('(00) 00000-0000');
+  $('.mask_phone').mask('(00) 0000-0000#', options);
+  $('.mask_phone_fix').mask('(00) 0000-0000');
+  $('.mask_phone_mobile').mask('(00) 00000-0000');
 
 }
 

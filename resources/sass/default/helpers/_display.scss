@@ -3,23 +3,27 @@
 }
 
 .display {
-    &.block.mra.mla {
-        display: block;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
+  &.block.mra.mla {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 
-    &.grid {
-        display: grid !important;
-    }
+  &.grid {
+    display: grid !important;
+  }
 
-    &.block {
-        display: block !important;
-    }
+  &.block {
+    display: block !important;
+  }
 
-    &.flex {
-        display: flex !important;
+  &.flex {
+    display: flex !important;
+
+    &.align-stretch {
+      align-items: stretch;
     }
+  }
 }
 
 .inline-flex {
