@@ -1,46 +1,5 @@
 ﻿@model DomainProduct.Result
-<script>
-        jQuery(document).ready(function($) {
-            var settings = {
-                prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
-                nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
-                dots: false,
-                slidesToShow: 4,
-                accessibility: false,
-                responsive: [
-                    {
-                        breakpoint: 935,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 724,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 480,
-                        settings: {
-                            slidesToShow: 1
-                        }
-                    }
-                ]
-            };
-            var $sliderCard = jQuery(".car-maisvendidos .card"),
-                $slider = jQuery(".car-maisvendidos"),
-                $width = jQuery(".pusher").width();
 
-            if ($sliderCard.length >= 4 && $width > 934) {
-                $slider.slick(settings);
-            } else if ($sliderCard.length >= 3 && ($width <= 768 || $width <= 934)) {
-                $slider.slick(settings);
-            } else if ($sliderCard.length >= 2 && ($width <= 481)) {
-                $slider.slick(settings);
-            }
-        });
-</script>
 @if (Model != null && Model.Products.Any())
 {
     <div class="ui container topsellers">
@@ -49,7 +8,7 @@
         </div>
 
         <div class="ui grid">
-            <div class="ui column cards centered slideshow car-maisvendidos">
+            <div class="ui column cards centered slideshow car-maisvendidos" data-arrow="true" data-dots="false" data-qtd="4">
 
                 @{
                     var contador = 0;

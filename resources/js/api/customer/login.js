@@ -129,7 +129,7 @@ function Login() {
 							grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
 								$("#googleResponse").val(tokenGoogleRecaptchaV3);
 							});
-						});
+						}); 
 					});
 				}
 				$(".ui.message.form-message p").text(response.message);
@@ -216,9 +216,9 @@ function LoginB2B() {
 		},
 		error: function () {
 			if (response.success == false) {
-				if (googleRecaptchaVersion == '2') {
+				if (googleRecaptchaVersion === '2') {
 					grecaptcha.reset();
-				} else if (googleRecaptchaVersion == '3') {
+				} else if (googleRecaptchaVersion === '3') {
 					var googleSiteKey = $('#googleSiteKey').val();
 					$("#googleResponse").val('');
 					$.ajaxSetup({ async: false });
@@ -251,8 +251,7 @@ $(document).ready(function () {
 
 	$(document).on("click", "#loginB2B", function () {
 		preLoginB2B();
-	})
-
+    })
 
 	$(document).on("click", "#btnCancelar", function (e) {
 		$("#loginB2B").show()

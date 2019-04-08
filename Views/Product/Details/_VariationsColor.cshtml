@@ -131,11 +131,19 @@
                             classeBtn += " selecionado";
                         }
 
-                        <button class="@classeBtn" style="background-color: @variacoes.Color !important;" data-tooltip="@variacoes.Name" value="@Model.IdReference-@variacoes.IdVariation" data-id-reference="@Model.IdReference" data-tipo="color" data-order="@ordem"></button>
-                        <div class="ui checkbox hideme">
-                            <input type="radio" name="radio" value="@variacoes.Color">
-                            <label></label>
-                        </div>
+                        bool showVariation = true;
+                        if (!LojaCorp.Control.Company._Company.ShowProductOutOfStock)
+                        {
+                            if (skuTodasVariacoes.Count <= 0) { showVariation = false; }
+                        }
+                        if (showVariation)
+                        {
+                            <button class="@classeBtn" style="background-color: @variacoes.Color !important;" data-tooltip="@variacoes.Name" value="@Model.IdReference-@variacoes.IdVariation" data-id-reference="@Model.IdReference" data-tipo="color" data-order="@ordem"></button>
+                            <div class="ui checkbox hideme">
+                                <input type="radio" name="radio" value="@variacoes.Color">
+                                <label></label>
+                            </div>
+                        }
                     }
                     else
                     {

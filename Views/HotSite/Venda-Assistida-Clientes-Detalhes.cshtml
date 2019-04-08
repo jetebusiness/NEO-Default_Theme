@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Detalhes do Cliente";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Vendedor</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Lista de Clientes</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Detalhes do Clientes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row two column stackable">
+            <div class="column">
+                <div class="ui padded segment">
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="user icon"></i>
+                            <div class="content">
+                                <div class="font-weight bold">Thiago Costa</div>
+                                <div>thiago@jet.com.br</div>
+                                <div>CPF: 527.295.255-30</div>
+                            </div>
+                        </div>
+                        <div class="item margin top small">
+                            <i class="phone icon"></i>
+                            <div class="content">
+                                <div>(16) 3211-7000</div>
+                            </div>
+                        </div>
+                        <div class="item margin top small">
+                            <i class="building icon"></i>
+                            <div class="content">
+                                <div>Rua Galileu Galilei, 1800</div>
+                                <div>Ribeirão Preto - SP​​​​​​​</div>
+                                <div>CEP: 14020-620</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row one column margin top medium">
+                        <button class="ui primary button">
+                            <i class="pencil icon"></i>
+                            Editar Dados
+                        </button>
+                        <button href="#" class="ui green button">
+                            <i class="cart icon"></i>
+                            Iniciar Venda
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row one column">
+            <div class="column">
+                <div class="ui grid middle aligned left aligned">
+                    <div class="row one column stackable">
+                        <div class="column">
+                            <h4>Pedidos anteriores:</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <table class="ui padded table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Data</th>
+                                        <th>Total</th>
+                                        <th>Forma de Pagamento</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1234</td>
+                                        <td>29/01/2019 16:18:13</td>
+                                        <td>R$ 600,11</td>
+                                        <td>Cartão de Crédito</td>
+                                        <td>Tracking</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="#" data-tooltip="Visualizar Pedido">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1234</td>
+                                        <td>29/01/2019 16:18:13</td>
+                                        <td>R$ 600,11</td>
+                                        <td>Cartão de Débito</td>
+                                        <td>Cancelado</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="#" data-tooltip="Visualizar Pedido">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1234</td>
+                                        <td>29/01/2019 16:18:13</td>
+                                        <td>R$ 600,11</td>
+                                        <td>Boleto Bancário</td>
+                                        <td>Concluído</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="#" data-tooltip="Visualizar Pedido">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui center aligned grid ">
+                    <div class="center aligned row">
+                        <div class="column">
+                            <div class="ui pagination menu">
+                                <a class="disabled item" href="#">
+                                    <i class="angle left icon"></i>
+                                </a>
+                                <a class="active item">
+                                    1
+                                </a>
+                                <a class="item" href="#">
+                                    2
+                                </a>
+                                <a class="item" href="#">
+                                    3
+                                </a>
+                                <a class="item" href="#">
+                                    <i class="angle right icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

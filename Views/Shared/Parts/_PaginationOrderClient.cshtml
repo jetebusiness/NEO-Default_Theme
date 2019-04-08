@@ -1,0 +1,56 @@
+﻿@model DomainOrder.Result
+
+@{
+    var orderParam = Request.QueryString["o"] != null ? string.Concat("&o=", Request.QueryString["o"] != null ? Request.QueryString["o"].ToString() : string.Empty) : string.Empty;
+    var viewParam = Request.QueryString["v"] != null ? string.Concat("&v=", Request.QueryString["v"] != null ? Request.QueryString["v"].ToString() : string.Empty) : string.Empty;
+
+    var queryParameters = string.Concat(orderParam, viewParam);
+
+    if (ViewData["Url"] == null)
+    {
+        ViewData["Url"] = Request.FilePath;
+    }
+}
+<div class="ui pagination menu">
+    @if (Model.Settings.HasPreviousPage)
+    {
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), "?idClient=",  Request.QueryString["idClient"], "&p=", Model.Settings.PageNumber - 1, queryParameters)">
+            <i class="angle left icon"></i>
+        </a>
+    }
+    else
+    {
+        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), "?idClient=",  Request.QueryString["idClient"], "&p=", Model.Settings.PageNumber - 1, queryParameters)">
+            <i class="angle left icon"></i>
+        </a>
+    }
+
+    @for (int i = 0; i < Model.Settings.PageCount; i++)
+    {
+        if ((i + 1) == Model.Settings.PageNumber)
+        {
+            <a class="active item">
+                @(i + 1)
+            </a>
+        }
+        else
+        {
+            <a class="item" href="@string.Concat(ViewData["Url"].ToString(), "?idClient=",  Request.QueryString["idClient"], "&p=", (i+1), queryParameters)">
+                @(i + 1)
+            </a>
+        }
+    }
+
+    @if (Model.Settings.HasNextPage)
+    {
+        <a class="item" href="@string.Concat(ViewData["Url"].ToString(), "?idClient=",  Request.QueryString["idClient"], "&p=", Model.Settings.PageNumber + 1, queryParameters)">
+            <i class="angle right icon"></i>
+        </a>
+    }
+    else
+    {
+        <a class="disabled item" href="@string.Concat(ViewData["Url"].ToString(), "?idClient=",  Request.QueryString["idClient"], "&p=", Model.Settings.PageNumber + 1, queryParameters)">
+            <i class="angle right icon"></i>
+        </a>
+    }
+</div>

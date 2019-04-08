@@ -9,7 +9,10 @@ $(document).ready(function () {
 
     $("#recuperaEmail").click(function () {
         forgotByCpfPassword();
-    });
+  });
+
+
+
 
 });
 
@@ -44,6 +47,7 @@ function forgotByEmail() {
         _alert("", "Informe um e-mail válido.", "error")
     }
 }
+
 
 function forgotByCpfPassword() {
 

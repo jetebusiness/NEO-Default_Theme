@@ -1,9 +1,9 @@
 @media screen and (max-width: $mobile-bp) {
-      .logo {
-        display: block !important;
-        margin: 0 auto;
-      }
-    }
+  .logo {
+    display: block !important;
+    margin: 0 auto;
+  }
+}
 .input-datepicker .agendar{
     width:120px;
 }
@@ -23,20 +23,23 @@
 .jet.checkout {
   .success {
     .icon {
-      color: $dark-green;
+      color: $bg-checkout-success-dark;
     }
   }
 
   &.jBreadCrumb {
     @extend .flexCenter;
+
     @media screen and (max-width: $mobile-bp) {
       display: none;
     }
+
     .jCrumb {
       @extend .flexCenter;
       flex-wrap: wrap;
       margin: 0 10px;
       z-index: 2;
+
       .jBullet {
         @extend .flexCenter;
         background: #fefefe linear-gradient(to right, #fefefe 0, #e3e3e3 100%);
@@ -44,12 +47,13 @@
         color: #ffffff;
         height: 50px;
         width: 50px;
+
         @media screen and (max-width: $mobile-bp) {
           height: 35px;
           width: 35px;
         }
-
       }
+
       .jButton {
         background: #ddd;
         border: 2px solid #ffffff;
@@ -57,25 +61,30 @@
         height: 40px;
         text-align: center;
         width: 40px;
+
         @media screen and (max-width: $mobile-bp) {
           height: 30px;
           width: 30px;
         }
+
         span {
           font-size: 20px;
           line-height: 34px;
+
           @media screen and (max-width: $mobile-bp) {
             font-size: 15px;
             line-height: 28px;
           }
         }
       }
+
       h4 {
         clear: both;
         flex: none;
         margin-top: 10px;
         text-transform: uppercase;
         width: 100%;
+
         @media screen and (max-width: $mobile-bp) {
           display: none;
         }
@@ -85,6 +94,7 @@
         .jButton {
           background: $primary-color;
         }
+
         h4 {
           color: $primary-color;
         }
@@ -93,18 +103,20 @@
       &.completed {
         .jButton {
           background: $primary-color;
+
           span {
             color: white;
+
             i {
               margin-left: 4px;
             }
           }
         }
+
         h4 {
           color: $primary-color;
         }
       }
-
     }
 
     &:after {
@@ -114,6 +126,7 @@
       position: absolute;
       top: 23px;
       z-index: 1;
+
       @media screen and (max-width: $mobile-bp) {
         content: "";
         border-bottom: 3px solid #f6f6f6;
@@ -140,6 +153,7 @@
     border: 0px;
     border-bottom: 1px solid rgba(34, 36, 38, 0.15);
     border-radius: 0px !important;
+
     &.fluid {
       min-width: 60%;
       width: 100%;

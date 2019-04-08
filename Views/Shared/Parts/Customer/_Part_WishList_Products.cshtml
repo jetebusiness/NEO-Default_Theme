@@ -9,8 +9,8 @@
       <div class="row">
         <div class="column">
           <div class="ui grid stackable wishlistProduct">
-            <div class="row five column">
-              <div class="column center aligned">
+            <div class="row four column">
+              <div class="column center aligned display-flex-m-d justify-content-center-m-d">
                 @{
                   string image = "";
                   if (item.Sku != null && item.Sku.Count() > 0)
@@ -38,32 +38,34 @@
                 }
                 <a href="@Html.Raw(!string.IsNullOrEmpty(item.UrlFriendlyCustom) ? item.UrlFriendlyCustom : item.UrlFriendly)"><img class="ui image small" src="@image" onerror="imgError(this)"></a>
               </div>
-              <div class="column middle aligned content">
-                <a href="@Html.Raw(!string.IsNullOrEmpty(item.UrlFriendlyCustom) ? item.UrlFriendlyCustom : item.UrlFriendly)">
+              <div class="column middle aligned content display-flex-m-d justify-content-center-m-d">
+                <a href="@Html.Raw(!string.IsNullOrEmpty(item.UrlFriendlyCustom) ? item.UrlFriendlyCustom : item.UrlFriendly)" class="display-flex-m-d flex-column-m-d align-items-center-m-d">
                   <div class="header">@item.ProductName</div>
                   <div class="description">Adicionado em @item.DateInsert</div>
                 </a>
-                @{
-                  if (item.Sku != null && item.Sku.Count() > 0)
+                
+                  @if (item.Sku != null && item.Sku.Count() > 0)
                   {
-                    var colorVariation = item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault() != null ? item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault().Color : "";
+                    <div class="display-flex align-items-center justify-content-center-m-d">
 
-                    if (colorVariation != "")
+                   @{ var colorVariation = item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault() != null ? item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault().Color : ""; }
+
+                    @if (colorVariation != "")
                     {
                       <div class="ui left floated margin top small">
-                        <button class="ui basic button radio variacao cor none padding" style="background-color: @colorVariation  !important;" data-tooltip="Cor: @item.Sku.FirstOrDefault().Variations.Where(v=>v.Color != null).FirstOrDefault().Name"></button>
+                        <button class="ui basic button radio variacao cor none padding" style="background-color: @colorVariation  !important;" data-tooltip="Cor: @item.Sku.FirstOrDefault().Variations.Where(v=>v.Color != null).FirstOrDefault().Name">&nbsp;</button>
                       </div>
                     }
 
-                    if (item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault() != null)
+                  @if (item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault() != null)
                     {
                       <div class="ui left floated margin top small">
                         <button class="ui primary button radio variacao cor none padding" data-tooltip="@item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault().Name">@item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault().Name</button>
                       </div>
                     }
-
+                    </div>
                   }
-                }
+
               </div>
               @if (item.IsProductActive || item.IsSkuActive)
               {

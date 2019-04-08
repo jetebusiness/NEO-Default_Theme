@@ -1,0 +1,88 @@
+﻿/*
+*
+== Flexbox Class ==
+*
+*/
+@mixin flex($id-class, $id-media) {
+  .display-flex#{$id-class}#{$id-media}, .flex-container#{$id-class}#{$id-media} {
+    display: flex !important;
+  }
+  .flex-row#{$id-class}#{$id-media} {
+    flex-direction: row !important;
+  }
+  .flex-column#{$id-class}#{$id-media} {
+    flex-direction: column !important;
+  }
+  .flex-wrap#{$id-class}#{$id-media} {
+    flex-wrap: wrap !important;
+  }
+  .flex-nowrap#{$id-class}#{$id-media} {
+    flex-wrap: nowrap !important;
+  }
+  .justify-content-start#{$id-class}#{$id-media} {
+    justify-content: flex-start !important;
+  }
+  .justify-content-end#{$id-class}#{$id-media} {
+    justify-content: flex-end !important;
+  }
+  .justify-content-center#{$id-class}#{$id-media} {
+    justify-content: center !important;
+  }
+  .justify-content-between#{$id-class}#{$id-media} {
+    justify-content: space-between !important;
+  }
+  .justify-content-around#{$id-class}#{$id-media} {
+    justify-content: space-around !important;
+  }
+  .align-items-start#{$id-class}#{$id-media} {
+    align-items: flex-start !important;
+  }
+  .align-items-end#{$id-class}#{$id-media} {
+    align-items: flex-end !important;
+  }
+  .align-items-center#{$id-class}#{$id-media} {
+    align-items: center !important;
+  }
+  .align-items-baseline#{$id-class}#{$id-media} {
+    align-items: baseline !important;
+  }
+  .align-items-stretch#{$id-class}#{$id-media} {
+    align-items: stretch !important;
+  }
+  .align-content-start#{$id-class}#{$id-media} {
+    align-content: flex-start !important;
+  }
+  .align-content-end#{$id-class}#{$id-media} {
+    align-content: flex-end !important;
+  }
+  .align-content-center#{$id-class}#{$id-media} {
+    align-content: center !important;
+  }
+  .align-content-between#{$id-class}#{$id-media} {
+    align-content: space-between !important;
+  }
+  .align-content-around#{$id-class}#{$id-media} {
+    align-content: space-around !important;
+  }
+  .align-content-stretch#{$id-class}#{$id-media} {
+    align-content: stretch !important;
+  }
+  .align-self-auto#{$id-class}#{$id-media} {
+    align-self: auto !important;
+  }
+  .align-self-start#{$id-class}#{$id-media} {
+    align-self: flex-start !important;
+  }
+  .align-self-end#{$id-class}#{$id-media} {
+    align-self: flex-end !important;
+  }
+  .align-self-center#{$id-class}#{$id-media} {
+    align-self: center !important;
+  }
+  .align-self-baseline#{$id-class}#{$id-media} {
+    align-self: baseline !important;
+  }
+  .align-self-stretch#{$id-class}#{$id-media} {
+    align-self: stretch !important;
+  }
+}

@@ -1,9 +1,18 @@
 .menuclient {
-
-	.item {
-
-	  .ui.icon {
-		margin-right: 20px;
-	  }
-	}
+  .item {
+    .ui.icon {
+      margin-right: 20px;
+    }
   }
+
+  &.customerMenu {
+    .item {
+      .ui.icon {
+        @media screen and (max-width: $tablet-bp-min) {
+          margin-right: 0px !important;
+          margin-bottom: .5em !important;
+        }
+      }
+    }
+  }
+}

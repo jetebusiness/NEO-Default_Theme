@@ -140,12 +140,21 @@
                             classeDiv += " checked";
                         }
 
-                        //ADICIONA O ELEMENTO
-                        <button class="@classeBtn" value="@Model.IdReference-@variacoes.IdVariation" data-tipo="check" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</button>
-                        <div class="@classeDiv">
-                            <input type="radio" name="@Model.IdReference" value="@variacoes.Name">
-                            <label></label>
-                        </div>
+
+                        bool showVariation = true;
+                        if (!LojaCorp.Control.Company._Company.ShowProductOutOfStock)
+                        {
+                            if (skuTodasVariacoes.Count <= 0) { showVariation = false; }
+                        }
+                        if (showVariation)
+                        {
+                            //ADICIONA O ELEMENTO
+                            <button class="@classeBtn" value="@Model.IdReference-@variacoes.IdVariation" data-tipo="check" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</button>
+                            <div class="@classeDiv">
+                                <input type="radio" name="@Model.IdReference" value="@variacoes.Name">
+                                <label></label>
+                            </div>
+                        }
                     }
                     else
                     {

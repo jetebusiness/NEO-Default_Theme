@@ -1,0 +1,66 @@
+﻿@model DomainOrder.Result
+
+@if (Model == null || Model.OrderSimples.Count() == 0)
+{
+    <div class="row two column">
+        Não foram encontrados pedidos
+    </div>
+}
+else
+{
+    <div class="row one column">
+        <div class="column">
+            <div class="ui grid middle aligned left aligned">
+                <div class="row one column stackable">
+                    <div class="column">
+                        <h4>Pedidos anteriores:</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <table class="ui padded table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Data</th>
+                                    <th>Total</th>
+                                    <th>Forma de Pagamento</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.OrderSimples)
+                                {
+                                    <tr>
+                                        <td>@order.IdOrder</td>
+                                        <td>@order.DateOrder</td>
+                                        <td>@string.Format("{0:c}", order.Total)</td>
+                                        <td>@order.NamePaymentMethodGateway</td>
+                                        <td>@order.NameStatus</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="/assistedsale/OrderDetails?id=@order.IdOrder" data-tooltip="Visualizar Pedido">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Settings.PageCount > 1)
+{
+    <div class="ui center aligned grid ">
+        <div class="center aligned row">
+            <div class="column">
+                @Html.Partial("~/Views/Shared/Parts/_PaginationOrderClient.cshtml", Model)
+            </div>
+        </div>
+    </div>
+}

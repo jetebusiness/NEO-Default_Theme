@@ -756,7 +756,29 @@ function buscarSKU(seletor, produtoID) {
                 }
 
             } else {
-                AtualizarGrade(data);
+                if (data != "") {
+                    $("#btn_comprejunto").removeClass("disabled");
+                    //$("#pagamento-calculado").removeClass("detalhes hideme");
+                    $("#avise_me").addClass("detalhes hideme");
+                    $(".btn-comprar div").html("ADICIONAR AO CARRINHO");
+                    $(".btn-comprar").removeClass("disabled");
+                    $(".btn-comprar-oneclick").removeClass("disabled");
+                    $("#calculo-frete").removeClass("detalhes hideme");
+                    $("#calculo-parcelamento").removeClass("detalhes hideme");
+                    AtualizarGrade(data);
+                }
+                else {
+                    $("#avise_me").removeClass("detalhes hideme");
+                    $("#btn_comprejunto").addClass("disabled");
+                    $(".btn-comprar div").html("PRODUTO ESGOTADO");
+                    $(".btn-comprar").addClass("disabled");
+                    $(".btn-comprar-oneclick").addClass("disabled");
+                    $(".btn-add-event-list").addClass("disabled");
+                    $("#calculo-frete").addClass("detalhes hideme");
+                    $("#calculo-parcelamento").addClass("detalhes hideme");
+
+                    return;
+                }
             }
 
             AtualizarDicaCompreJunto($("#produto-id").val(), data.IdSku);
@@ -1323,18 +1345,40 @@ function MontarHtmlVariacao(seletor, posicao, ListaReferenciaJson, listaReferenc
                         skU = ValidaVariacao(ListaReferenciaJson[i].Variations[j].IdVariation, listaReferenciaSkuJson, ListaReferenciaJson[i].IdReference);
                     }
 
-                    if (tipoBtn == "color") {
-                        html += MontaTipoCor(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
-                    } else if (tipoBtn == "check") {
-                        html += MontaTipoCheckBox(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
-                    } else if (tipoBtn == "drop") {
-                        var ObjetoCompleto = MontaTipoDropdown(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
-                        html += ObjetoCompleto.html;
-                        selecionar += ObjetoCompleto.selecionar;
-                        lista_desabilitar += ObjetoCompleto.lista_desabilitar;
-                        lista_esconder += ObjetoCompleto.lista_esconder;
-                    } else if (tipoBtn == "image") {
-                        html += MontaTipoImagem(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
+                    // Validar se a variação deve ser exibida ou não
+                    var idGradeReferencia = valorSelecionado.split('-')[0],
+                        montarVariacao = false;
+                    if ($('#hdnShowProductOutOfStock').val() == "0") {
+                        if (idGradeReferencia != ListaReferenciaJson[i].IdReference) {
+                            for (var sku = 0; sku < listaReferenciaSkuJson.length; sku++) {
+                                if (listaReferenciaSkuJson[sku].IdReference != idGradeReferencia) {
+                                    for (var skuvar = 0; skuvar < listaReferenciaSkuJson[sku].Variations.length; skuvar++) {
+                                        if (listaReferenciaSkuJson[sku].Variations[skuvar].IdVariation == ListaReferenciaJson[i].Variations[j].IdVariation) {
+                                            montarVariacao = true;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            montarVariacao = true;
+                        }
+                    } else {
+                        montarVariacao = true;
+                    }
+                    if (montarVariacao) {
+                        if (tipoBtn == "color") {
+                            html += MontaTipoCor(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
+                        } else if (tipoBtn == "check") {
+                            html += MontaTipoCheckBox(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
+                        } else if (tipoBtn == "drop") {
+                            var ObjetoCompleto = MontaTipoDropdown(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
+                            html += ObjetoCompleto.html;
+                            selecionar += ObjetoCompleto.selecionar;
+                            lista_desabilitar += ObjetoCompleto.lista_desabilitar;
+                            lista_esconder += ObjetoCompleto.lista_esconder;
+                        } else if (tipoBtn == "image") {
+                            html += MontaTipoImagem(skU, seletor_produto, ListaReferenciaJson[i], ListaReferenciaJson[i].Variations[j], variacoes_selecionadas_bkp, flag_buscar_sku, posicao);
+                        }
                     }
                 }
             }

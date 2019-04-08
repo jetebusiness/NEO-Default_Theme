@@ -38,7 +38,7 @@
 
 .header {
   &.titleList {
-    @media screen and (max-width: $tablet-bp-max) and (min-width: $table-bp-min){
+    @media screen and (max-width: $tablet-bp-max) and (min-width: $tablet-bp-min){
       max-width: 160px;
     }
     
@@ -83,6 +83,15 @@
   table {
     @media screen and (max-width: $mobile-bp){
       text-align: center;
+    }
+  }
+}
+
+.listEventList {
+  .ui.icon {
+    @media screen and (max-width: $tablet-bp-min) {
+      margin-right: 0px !important;
+      margin-bottom: .5em !important;
     }
   }
 }

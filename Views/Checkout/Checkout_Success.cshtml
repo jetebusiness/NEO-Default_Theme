@@ -18,7 +18,7 @@
 
     if (Request.QueryString["s"] == null)
     {
-        bgColor = Request.QueryString["m"] == null ? "bg-green" : "bg-red";
+        bgColor = Request.QueryString["m"] == null ? "bg-checkout-success" : "bg-checkout-error";
         tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
         msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
     }
@@ -26,7 +26,7 @@
     {
         if (Request.QueryString["s"] == "true")
         {
-            bgColor = "bg-green";
+            bgColor = "bg-checkout-success";
             tituloSucesso = "Pedido Confirmado";
             msgSucesso = string.Format("Seu pedido foi realizado com sucesso. {0}", Request.QueryString["m"] == null ? "Agora falta pouco para receber seus produtos" : LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
         }
@@ -138,7 +138,7 @@
 
 @if (ViewBag.ShowRegister)
 {
-    <div class="ui fluid container bg-dark-green">
+    <div class="ui fluid container bg-checkout-success-dark">
         <div class="ui container">
             <div class="ui grid">
                 <div class="two column row">

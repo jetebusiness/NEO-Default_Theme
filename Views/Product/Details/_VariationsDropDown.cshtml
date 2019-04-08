@@ -43,7 +43,7 @@
                 //SE SKU PADRÂO = NULL APENAS EXIBE AS VARIAÇÔES (COMPRE JUNTO)
                 if (SKUPadrao == null || VariacoesSelecionadas == null)
                 {
-                    <option class="variacao-drop" @(Model.IdReference+"-"+variacoes.IdVariation == ReferenciaPadrao ? "selected" : "") value="@Model.IdReference-@variacoes.IdVariation" data-tipo="drop" data-variation-id="@variacoes.IdVariation" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
+                    <option class="variacao-drop" @(Model.IdReference + "-" + variacoes.IdVariation == ReferenciaPadrao ? "selected" : "") value="@Model.IdReference-@variacoes.IdVariation" data-tipo="drop" data-variation-id="@variacoes.IdVariation" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
                 }
                 else
                 {
@@ -63,7 +63,8 @@
                                 ListaSkusDisponiveis = ListaSku;
                             }
                         }
-                        else {
+                        else
+                        {
                             foreach (var skuL in ListaSku)
                             {
                                 int flag = 0;
@@ -146,8 +147,15 @@
                             }
                         }
 
-
-                        <option class="variacao-drop" @(Model.IdReference+"-"+variacoes.IdVariation == ReferenciaPadrao ? "selected" : "") value="@Model.IdReference-@variacoes.IdVariation" data-variation-id="@variacoes.IdVariation" data-tipo="drop" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
+                        bool showVariation = true;
+                        if (!LojaCorp.Control.Company._Company.ShowProductOutOfStock)
+                        {
+                            if (skuTodasVariacoes.Count <= 0) { showVariation = false; }
+                        }
+                        if (showVariation)
+                        {
+                            <option class="variacao-drop" @(Model.IdReference + "-" + variacoes.IdVariation == ReferenciaPadrao ? "selected" : "") value="@Model.IdReference-@variacoes.IdVariation" data-variation-id="@variacoes.IdVariation" data-tipo="drop" data-order="@ordem" data-id-reference="@Model.IdReference">@variacoes.Name</option>
+                        }
                     }
                 }
             }

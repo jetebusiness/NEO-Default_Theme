@@ -140,14 +140,22 @@
                         classeDiv += " checked";
                     }
 
-                    //ADICIONA O ELEMENTO
-                    <div class="@classeBtn">
-                        <img src="@variacoes.Image" alt="@variacoes.Name" class="variacao-imagem" data-value="@Model.IdReference-@variacoes.IdVariation" data-tipo="image" data-order="@ordem" data-id-reference="@Model.IdReference">
-                        <div class="@classeDiv">
-                            <input type="radio" name="@Model.IdReference">
-                            <label></label>
+                    bool showVariation = true;
+                    if (!LojaCorp.Control.Company._Company.ShowProductOutOfStock)
+                    {
+                        if (skuTodasVariacoes.Count <= 0) { showVariation = false; }
+                    }
+                    if (showVariation)
+                    {
+                        //ADICIONA O ELEMENTO
+                        <div class="@classeBtn">
+                            <img src="@variacoes.Image" alt="@variacoes.Name" class="variacao-imagem" data-value="@Model.IdReference-@variacoes.IdVariation" data-tipo="image" data-order="@ordem" data-id-reference="@Model.IdReference">
+                            <div class="@classeDiv">
+                                <input type="radio" name="@Model.IdReference">
+                                <label></label>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
                 else
                 {

@@ -1,0 +1,28 @@
+﻿$devices-breakpoints: ( 
+	all: 0, 
+	dxl: $desktop-xl, // desktop-xl
+	dlg: $desktop-bp, //desktop-lg
+	d: $desktop-bp-min, // desktop
+	t: $tablet-bp-min, // tablet
+	m: $mobile-bp // mobile
+);
+
+@each $item-key in map-keys($devices-breakpoints) {
+  $item-value: map-get($devices-breakpoints, $item-key);
+  $id-class: "";
+
+  @if $item-value == 0 {
+    @include flex($id-class, "");
+  }
+  @else {
+    $id-class: -#{$item-key};
+
+    @media screen and (max-width: $item-value) {
+      @include flex($id-class, "-d");
+    }
+
+    @media screen and (min-width: $item-value) {
+      @include flex($id-class, "-u");
+    }
+  }
+}

@@ -1,4 +1,6 @@
-﻿function printDiv(divID) {
+﻿import { isLoading } from "../../api/api_config";
+
+function printDiv(divID) {
   var divElements = document.getElementById(divID).innerHTML;
   var oldPage = document.body.innerHTML;
 
@@ -8,6 +10,10 @@
     divElements + "</body>";
   window.print();
   document.body.innerHTML = oldPage;
+  if ($("#htmlOrderPrint").length > 0) {
+    isLoading("body");
+    $("#htmlOrderPrint").html("");
+  }
 }
 
 function openShopline(clearShopline = false) {
@@ -132,11 +138,11 @@ $(document).ready(function () {
     })
   })
 
-/*
- * 
-  Funcao para imprimir o boleto MaxiPago diretamente na listagem dos pedidos
-  *
-*/
+  /*
+   * 
+    Funcao para imprimir o boleto MaxiPago diretamente na listagem dos pedidos
+    *
+  */
 
   $(document).on("click", ".__reprintBankSlipMaxiPago", function () {
     createHtmlMaxiPago($(this)).then((idOrder) => {
@@ -181,4 +187,27 @@ $(document).ready(function () {
       }
     }
   });
+
+  /*
+   * 
+   Funcao para imprimir pedido na página de listagem de pedidos
+   *
+  */
+  $(document).on("click", ".printOrder", function () {
+    $.ajax({
+      method: "GET",
+      url: "/Order/PrintOrder",
+      dataType: "html",
+      data: {
+        orderId: $(this).attr("data-id-order")
+      },
+      success: function (data) {
+        isLoading("body");
+        $("#htmlOrderPrint").html("").append(data);
+        printDiv("pagePrint");
+      },
+      error: function (data) { }
+    })
+  });
+
 })

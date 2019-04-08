@@ -8,6 +8,7 @@ let genericPageFilter = "";
 let viewListGlobal = "g";
 let data;
 var ViewProductFiltersUrl = false;
+var pageSizeDefault = 12;
 
 $(document).ready(function () {
     if ($("#ViewProductFiltersUrl").val() == "True") {
@@ -118,7 +119,7 @@ function loadData() {
         $.each(filters.labelFilter, function (key, item) {
             if (item.type == "category") {
                 idCategories += ((idCategories == "") ? item.id : "," + item.id);
-                filters.idCategory = genericoPageFilter;
+                filters.idCategory = genericPageFilter;
             } else if (item.type == "brand") {
                 if (filters.idBrand == undefined || filters.idBrand == "") {
                     filters.idBrand = item.id;
@@ -132,7 +133,7 @@ function loadData() {
     data = {
         viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: filters.pageNumber === undefined ? "1" : filters.pageNumber,
-        pageSize: "12",
+        pageSize: pageSizeDefault,
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
         category: filters.idCategory === undefined ? genericPageFilter : filters.idCategory,

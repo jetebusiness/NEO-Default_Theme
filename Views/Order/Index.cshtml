@@ -93,6 +93,9 @@
                         }
                       }
                     }
+                    <a class="ui icon action small button printOrder margin top bottom" data-tooltip="Imprimir Pedido" data-id-order="@order.IdOrder">
+                      <i class="print icon"></i>
+                    </a>
                     <a class="ui icon teal small button" href="~/Order/Details/@order.IdOrder" data-tooltip="Visualizar Pedido">
                       <i class="unhide icon"></i>
                     </a>
@@ -117,3 +120,5 @@
     </div>
   </div>
 }
+
+<div id="htmlOrderPrint" class="hideme"></div>

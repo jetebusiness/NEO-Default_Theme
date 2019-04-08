@@ -3,17 +3,86 @@
 @{
     ViewBag.Title = "Carrinho de Compras";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+    bool permiteVenda = true;
 }
 
 <div class="ui container">
 
-    <div class="ui one column grid stackable middle aligned">
+    <div class="ui two column grid stackable middle aligned">
         <div class="row">
-            <div class="column">
-                <h1>@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</h1>
-                <div class="ui clearing divider"></div>
+            <div class="column ui ten wide computer six wide tablet">
+                <h1 class="meu-carrinho">@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</h1>
+            </div>
+            <div class="column ui six wide computer ten wide tablet">
+
+                @if (Session["UserAuthenticated"] != null && Session["Seller"] != null)
+                {
+                    if (((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).User.UserName != null)
+                    {
+                        <!-- Comeco Venda Assistida (Com Cliente) -->
+                        <div class="ui two column grid stackable middle aligned venda-assistida">
+                            <div class="row">
+                                <div class="column">
+                                    <div class="info">
+                                        <div class="ui items">
+                                            <div class="item">
+                                                <div class="cliente-vinculado">
+                                                    <i class="user circle outline icon"></i> <span>Cliente</span>
+                                                </div>
+                                                <div class="content align-self-center">
+                                                    <div class="header">@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name.ToString())</div>
+                                                    <div class="description">
+                                                        <p>@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Email.ToString())</p>
+                                                        <p>CPF: @(Convert.ToUInt64(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Cpf_cnpj).ToString(@"000\.000\.000\-00"))</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column middle aligned">
+                                    <a href="/assistedsale/index" class="ui black button position-button">
+                                        Alterar o cliente
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fim Venda Assistida -->
+                    }
+                }
+                @if (Session["Seller"] != null && ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name == null)
+                {
+                    permiteVenda = false;
+                    <!-- Comeco Venda Assistida (Sem Cliente) -->
+                    <div class="ui two column grid stackable middle aligned venda-assistida">
+                        <div class="row">
+                            <div class="column">
+                                <div class="info">
+                                    <div class="ui items">
+                                        <div class="item">
+                                            <div class="cliente-vinculado">
+                                                <i class="user circle outline icon"></i> <span>Cliente</span>
+                                            </div>
+                                            <div class="content align-self-center">
+                                                <div class="header">Sem cliente vinculado</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column middle aligned">
+                                <a href="/assistedsale/index" class="ui black button position-button">
+                                    <i class="user plus icon"></i> Vincular cliente
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim Venda Assistida -->
+                }
+                <input type="hidden" id="permiteVenda" value="@permiteVenda.ToString()" />
             </div>
         </div>
+        <div class="ui clearing divider"></div>
     </div>
 
     <div class="ui grid divided horizontal" id="ListProductsCheckoutCompleto">
@@ -22,23 +91,23 @@
 
             @if (Model != null && Model.CartItems != null)
             {
-                <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
-                    <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
-                        @if (Model != null && Model.CartItems != null)
+            <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
+                <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
+                    @if (Model != null && Model.CartItems != null)
+                    {
+                        foreach (var product in Model.CartItems)
                         {
-                            foreach (var product in Model.CartItems)
-                            {
-                                <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
-                                @Html.Partial("~/Views/Shared/Object/Product/_ProductCartItem.cshtml", product)
-                            }
+                            <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
+                            @Html.Partial("~/Views/Shared/Object/Product/_ProductCartItem.cshtml", product)
                         }
-                    </div>
-                    <div class="ui divider"></div>
-                    <button class="ui button basic large"
-                            id="ClearCart" tabindex="0">
-                        Limpar Carrinho
-                    </button>
+                    }
                 </div>
+                <div class="ui divider"></div>
+                <button class="ui button basic large"
+                        id="ClearCart" tabindex="0">
+                    Limpar Carrinho
+                </button>
+            </div>
                 <div class="column six wide computer sixteen wide tablet sixteen wide mobile right aligned detalhes compra">
                     <div class="ui sticky box detalhes">
                         <div class="ui divided items">
@@ -65,7 +134,7 @@
                                                     <label>Calcular Frete</label>
                                                     <div class="ui action input">
                                                         <input type="text" placeholder="00000-000"
-                                                               class="masked" size="9" name="shipping"
+                                                               class="masked mask_zipcode" size="9" name="shipping"
                                                                value="@Model.ZipCode"
                                                                id="shipping">
                                                         <button class="ui right labeled icon button frete calcular" id="CallServiceShipping">
@@ -146,4 +215,3 @@
         </div>
     </div>
 </div>
-

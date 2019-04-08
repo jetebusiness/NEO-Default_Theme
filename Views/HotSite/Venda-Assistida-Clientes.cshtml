@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Lista de Clientes";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Vendedor</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Lista de Clientes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row one column">
+            <div class="column">
+                <div class="ui grid middle aligned left aligned">
+                    <div class="row one column stackable">
+                        <div class="column">
+                            <div class="ui category searchOrder">
+                                <div class="ui icon input">
+                                    <input type="text" placeholder="Buscar">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <table class="ui padded table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nome do Cliente</th>
+                                        <th>CPF</th>
+                                        <th>E-mail</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1234</td>
+                                        <td>Thiago Costa</td>
+                                        <td>527.295.255-30</td>
+                                        <td>thiago@jet.com.br</td>
+                                        <td>Ativo</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="#" data-tooltip="Selecionar Cliente">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1234</td>
+                                        <td>Thiago Costa</td>
+                                        <td>527.295.255-30</td>
+                                        <td>thiago@jet.com.br</td>
+                                        <td>Ativo</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="#" data-tooltip="Selecionar Cliente">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1234</td>
+                                        <td>Thiago Costa</td>
+                                        <td>527.295.255-30</td>
+                                        <td>thiago@jet.com.br</td>
+                                        <td>Ativo</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal button" href="#" data-tooltip="Selecionar Cliente">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui center aligned grid ">
+                    <div class="center aligned row">
+                        <div class="column">
+                            <div class="ui pagination menu">
+                                <a class="disabled item" href="#">
+                                    <i class="angle left icon"></i>
+                                </a>
+                                <a class="active item">
+                                    1
+                                </a>
+                                <a class="item" href="#">
+                                    2
+                                </a>
+                                <a class="item" href="#">
+                                    3
+                                </a>
+                                <a class="item" href="#">
+                                    <i class="angle right icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

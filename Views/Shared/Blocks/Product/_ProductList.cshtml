@@ -3,22 +3,13 @@
     <div class="ui grid">
         <div class="row one column">
             <div class="column">
-                <div class="ui doubling four cards centered">
+                <div class="ui doubling four cards centered slideshow" data-arrow="true" data-dots="false" data-qtd="4">
                     @foreach (DomainProduct.Entities.Product product in Model)
                     {
                         <!-- Page: ~/Views/Shared/Object/Product/_ProductInCard.cshtml -->
                         @Html.Partial("Object/Product/_ProductInCard", product)
                     }
                 </div>
-                @*{% if paginate.pages > 1 %}
-            <div class="ui centered grid ">
-                <div class="center aligned row">
-                    <div class="column">
-                        @Html.Partial("Parts/_Pagination")
-                    </div>
-                </div>
-            </div>
-            {% endif %}*@
             </div>
         </div>
     </div>

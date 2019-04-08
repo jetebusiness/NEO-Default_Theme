@@ -15,62 +15,70 @@
 }
 
 .slick-slider {
-    &:not(.slick-dotted) {
-        margin-bottom: 40px !important;
+
+  &.centralized {
+    .slick-track {
+      display: flex !important;
+      align-items: center !important;
+    }
+  }
+
+  &:not(.slick-dotted) {
+    margin-bottom: 40px !important;
+  }
+
+  .slick-prev {
+    left: 25px;
+  }
+
+  .slick-prev[dir="rtl"] {
+    left: auto;
+    right: 25px;
+  }
+
+  .slick-next {
+    right: 25px;
+  }
+
+  .slick-next[dir="rtl"] {
+    left: 25px;
+    right: auto;
+  }
+
+  .slick-prev, .slick-next {
+    @media screen and(max-width: $mobile-bp) {
+      display: none;
     }
 
-    .slick-prev {
-        left: 25px;
-    }
+    opacity: 0.5;
+    transition: 0.3s;
+    z-index: 9;
+  }
 
-    .slick-prev[dir="rtl"] {
-        left: auto;
-        right: 25px;
-    }
+  .slick-prev,
+  .slick-next {
+    position: absolute;
+    z-index: 9;
+    bottom: -30px;
 
-    .slick-next {
-        right: 25px;
+    &:hover,
+    &:focus {
+      opacity: 1;
+      outline: none;
     }
+  }
 
-    .slick-next[dir="rtl"] {
-        left: 25px;
-        right: auto;
-    }
+  .slick-prev {
+    left: calc(100% - 90px);
+  }
 
-    .slick-prev, .slick-next {
-        @media screen and(max-width: $mobile-bp) {
-            display: none;
-        }
+  .slick-next {
+    right: 20px;
+  }
 
-        opacity: 0.5;
-        transition: 0.3s;
-        z-index: 9;
-    }
-
-    .slick-prev,
-    .slick-next {
-        position: absolute;
-        z-index: 9;
-        bottom: -30px;
-
-        &:hover,
-        &:focus {
-            opacity: 1;
-            outline: none;
-        }
-    }
-
-    .slick-prev {
-        left: calc(100% - 90px);
-    }
-
-    .slick-next {
-        right: 20px;
-    }
-    
-    a {
-        outline: none;
-    }
+  a {
+    outline: none;
+  }
 }
 
 .slick-dotted.slick-slider {
@@ -146,4 +154,11 @@
             font-size: 35px;
         }
     }
+}
+
+// == Tratativa para evitar quebra do carrossel no Edge
+.container-product-cards {
+  .slick-slide {
+    padding: 2px !important;
+  }
 }

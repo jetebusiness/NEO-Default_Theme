@@ -1,5 +1,8 @@
-/*Colors*/
-
+/*
+  *
+  General Colors
+  *
+*/
 $primary-color: #2C3E50;
 $secondary-color: #2C3E50;
 $active-color: #2C3E50;
@@ -8,6 +11,19 @@ $ascent-2-color: #F39C12;
 $ascent-3-color: #C0392B;
 $ascent-4-color: #1D2A37;
 $ascent-5-color: #131C24;
-$dark-green:#0e4f1d;
 $action: #21ba45;
 
+
+/*
+  *
+  Checkout Colors
+  *
+*/
+$bg-checkout-success: #21ba45;
+$text-checkout-success: #FFF;
+
+$bg-checkout-success-dark: #0e4f1d;
+$text-checkout-success-dark: #FFF;
+
+$bg-checkout-error: #DB2828;
+$text-checkout-error: #FFF;

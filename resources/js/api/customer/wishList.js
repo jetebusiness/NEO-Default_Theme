@@ -204,8 +204,11 @@ function ValidateWishlist(_data, element, userAuthentication) {
           el.find(".wishlist-item").removeClass('red').addClass('grey');
 
           el.attr("data-tooltip", "Adicionar à lista de desejos");
-				});
-				_alert("", result.message, "warning");
+        });
+
+        let message = result.message !== "" && result.message != undefined ? result.message : "Não foi possível adicionar à lista de desejos";
+        _alert("", message, "warning");
+
 			}
 		} else {
 			result = RemoveWishlist(_data);
@@ -223,7 +226,8 @@ function ValidateWishlist(_data, element, userAuthentication) {
         el.find(".wishlist-item").removeClass('grey').addClass('red');
         el.attr("data-tooltip", "Remover da lista de desejos");
 
-				_alert("", result.message, "warning");
+        let message = result.message !== "" && result.message != undefined ? result.message : "Não foi possível remover da lista de desejos";
+        _alert("", message, "warning");
 			}
 		}
 

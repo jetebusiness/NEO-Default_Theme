@@ -366,6 +366,8 @@ $(document).on("click", ".form_refresh", function () {
     })
     .on("click", ".button.checkbox", function () {
         $(this).toggleClass("basic").next().checkbox("toggle");
+        if ($(this).closest("#filtroList").length > 0)
+          $(this).attr("disabled", "disabled")
     })
     .on("click", ".button.radio", function () {
         $(this).closest(".field").find(".button.radio:not(.basic)").addClass("basic");

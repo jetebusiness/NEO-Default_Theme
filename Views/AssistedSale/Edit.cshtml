@@ -1,0 +1,470 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Alterar Dados Cadastrais";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small uppercase">
+                        <a class="section" href="/">Home</a>
+                        <div class="divider"> / </div>
+                        <a class="section" href="/assistedsale/">Área do Vendedor</a>
+                        <div class="divider"> / </div>
+                        <a class="section" href="/assistedsale/">Lista de Clientes</a>
+                        <div class="divider"> / </div>
+                        <a class="active section">Cadastro de Cliente</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@section banner {
+
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+            @using (Ajax.BeginForm("Edit", "AssistedSale", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "edicao_cliente" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.IdCustomer, new { name = "IdCustomer" })
+                @Html.HiddenFor(m => m.TypeCustomer, new { name = "TypeCustomer" })
+
+                <div class="ui segment">
+                    <div class="ui grid stackable top aligned left aligned grid">
+                        <div class="row two column divided horizontal">
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Informações Pessoais</h4>
+                                    @if (Model.TypeCustomer == DomainCustomer.Entities.Customer.enumTypeCustomer.fisica)
+                                    {
+                                        <div class="field required">
+                                            <label>Nome</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input type="text" name="name" placeholder="Seu Nome"
+                                                       value="@Model.Name">
+                                            </div>
+                                        </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label>CPF</label>
+                                                <div class="ui left icon input">
+                                                    <i class="certificate icon"></i>
+                                                    <input type="text" name="Cpf_cnpj" class="masked mask_cpf"
+                                                           placeholder="000.000.000-00"
+                                                           value="@Model.Cpf_cnpj">
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label>RG</label>
+                                                <div class="ui left icon input">
+                                                    <i class="certificate icon"></i>
+                                                    <input type="text" name="Rg_ie" placeholder="" value="@Model.Rg_ie">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="three fields">
+                                            <div class="field required">
+                                                <label>Data de Nascimento</label>
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date"
+                                                           id="inputDateBirthEdit"
+                                                           value="@Model.DateBirth"
+                                                           name="DateBirth">
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label>Sexo</label>
+                                                <select class="ui dropdown" name="Gender">
+                                                    <option value="">Selecione</option>
+                                                    @if (Model.Gender != null)
+                                                    {
+                                                        <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.masculino)" value="0">
+                                                            <i class="male icon"></i>Masculino
+                                                        </option>
+                                                        <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.feminino)" value="@Model.Gender.Value">
+                                                            <i class="female icon"></i>Feminino
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="0">
+                                                            <i class="male icon"></i>Masculino
+                                                        </option>
+                                                        <option value="1">
+                                                            <i class="female icon"></i>Feminino
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label>Estado Civil</label>
+                                                <select class="ui dropdown" name="MaritalStatus">
+                                                    <option value="">Selecione</option>
+                                                    @if (Model.MaritalStatus != null)
+                                                    {
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.solteiro)" value="1">Solteiro(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.casado)" value="0">Casado(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.viúvo)" value="3">Viúvo(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.desquitado)" value="2">Desquitado(a)</option>
+                                                        <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.separado)" value="4">Separado(a)</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="0">Solteiro(a)</option>
+                                                        <option value="1">Casado(a)</option>
+                                                        <option value="2">Viúvo(a)</option>
+                                                        <option value="3">Desquitado(a)</option>
+                                                        <option value="4">Separado(a)</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="field required">
+                                            <label>Responsável</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input type="text" name="contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant"
+                                                       value="@(Model.Contact != "" ? Model.Contact : "")">
+                                            </div>
+                                        </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label>Razão Social</label>
+                                                <div class="ui left icon input">
+                                                    <i class="suitcase icon"></i>
+                                                    <input type="text" name="name" placeholder="Razão Social da Empresa"
+                                                           value="@(Model.Name != "" ? Model.Name : "")" data-validate="businessName">
+                                                </div>
+                                            </div>
+                                            <div class="field required">
+                                                <label>Nome Fantasia</label>
+                                                <div class="ui left icon input">
+                                                    <i class="suitcase icon"></i>
+                                                    <input type="text" data-validate="fantasyName" name="FantasyName" placeholder="Nome Fantasia da Empresa"
+                                                           value="@(Model.FantasyName != "" ? Model.FantasyName : "")">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="two fields">
+                                            <div class="field required">
+                                                <label>CNPJ</label>
+                                                <div class="ui left input">
+                                                    <input type="text" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked mask_cnpj"
+                                                           placeholder="00.000.000/0000-00"
+                                                           data-validate="cnpj">
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label>IE</label>
+                                                <div class="ui left input checkIe">
+                                                    <input type="text" value="@Html.Raw(!string.IsNullOrEmpty(Model.Rg_ie) ? Model.Rg_ie : "Isento")" name="Rg_ie" id="inscricaoEstadual" placeholder="Inscrição Estadual">
+                                                </div>
+                                                <div class="field margin top small">
+                                                    <div class="ui checkbox" id="checkIsento">
+                                                        <input type="checkbox" name="check_isento">
+                                                        <label id="labelIsento">Isento</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="field required">
+                                        <label>E-mail</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input readonly type="text" name="Email" placeholder="Seu Email"
+                                                   value="@Model.User.UserName">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Telefone</label>
+                                            <div class="ui left icon input">
+                                                <i class="phone icon"></i>
+                                                <input type="text" name="Phone.Phone1"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       value="@Model.Phone.Phone1">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Celuar</label>
+                                            <div class="ui left icon input">
+                                                <i class="mobile icon"></i>
+                                                <input type="text" name="Phone.Phone2"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       value="@Model.Phone.Phone2">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @{
+                                        if (ViewBag.CadastroCheckout != null)
+                                        {
+                                            if (ViewBag.CadastroCheckout == "S")
+                                            {
+                                                <!--CRIAR CONTA-->
+                                                <h4 class="ui dividing header">Crie sua conta</h4>
+
+                                                <div class="two fields">
+                                                    <div class="field required">
+                                                        <label>E-mail</label>
+                                                        <div class="ui left icon input">
+                                                            <i class="mail icon"></i>
+                                                            <input type="text" name="User.Email" id="UserEmail" placeholder="Seu Email"
+                                                                   value="@Model.User.UserName" data-validate="email">
+                                                        </div>
+                                                    </div>
+                                                    <div class="field required">
+                                                        <label>Senha</label>
+                                                        <div class="ui right action left icon input">
+                                                            <i class="lock icon"></i>
+                                                            <input type="password" name="User.password"
+                                                                   placeholder="*******" data-validate="password" class="password_box">
+                                                            <div class="ui basic icon button password_unhide">
+                                                                <i class="unhide icon"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--CRIAR CONTA-->
+                                            }
+                                        }
+                                    }
+
+
+                                </div>
+                            </div>
+
+                            <!--Endereço-->
+                            <input type="hidden" name="Address[0].IdAddress" value="@(Model.Address.Count() > 0 ? Model.Address[0].IdAddress : 0)" />
+                            <input type="hidden" name="Address[0].Default" value="@(Model.Address.Count() > 0 && Model.Address[0].Default ? "true" :"false")" />
+                            <input type="hidden" name="Address[0].Billing" value="@(Model.Address.Count() > 0 && Model.Address[0].Billing ? "true" :"false")" />
+                            <input type="hidden" name="Address[0].Country" value="@(Model.Address.Count() > 0 ? Model.Address[0].Country : "BRASIL")" />
+
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Endereço</h4>
+                                    <div class="two fields required">
+                                        <div class="field">
+                                            <label>CEP</label>
+                                            <div class="ui left icon input">
+                                                <i class="marker icon"></i>
+                                                <input type="text" name="Address[0].ZipCode" value="@(Model.Address.Count() > 0 ? Model.Address[0].ZipCode : string.Empty)"
+                                                       placeholder="00000-000"
+                                                       class="masked mask_zipcode" data-validate="zipcode">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="busca cep">
+                                                <p>
+                                                    Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
+                                                                           target="_blank">Consulte Aqui</a>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Endereço</label>
+                                        <div class="ui input">
+                                            <input type="text" name="Address[0].StreetAddress" value="@(Model.Address.Count() > 0 ? Model.Address[0].StreetAddress : string.Empty)"
+                                                   placeholder="Endereço" data-validate="empty">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        <div class="field required">
+                                            <label>Número</label>
+                                            <div class="ui input">
+                                                <input type="text" name="Address[0].Number" placeholder="Número" value="@(Model.Address.Count() > 0 ? Model.Address[0].Number : string.Empty)"
+                                                       data-validate="empty">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Complemento</label>
+                                            <div class="ui input">
+                                                <input type="text" name="Address[0].Complement" value="@(Model.Address.Count() > 0 ? Model.Address[0].Complement : string.Empty)"
+                                                       placeholder="Ex: ap. 123">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Bairro</label>
+                                            <div class="ui input">
+                                                <input type="text" placeholder="Bairro" value="@(Model.Address.Count() > 0 ? Model.Address[0].Neighbourhood : string.Empty)"
+                                                       name="Address[0].Neighbourhood"
+                                                       data-validate="empty">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Cidade</label>
+                                            <div class="ui input">
+                                                <input type="text" name="Address[0].City" placeholder="Cidade" value="@(Model.Address.Count() > 0 ? Model.Address[0].City : string.Empty)"
+                                                       data-validate="empty">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Estado</label>
+                                            <select class="ui dropdown search" id="estado_0"
+                                                    name="Address[0].State" data-validate="select">
+                                                <option value="">Selecione</option>
+                                                @if (Model.Address != null && Model.Address.Count() > 0)
+                                                {
+                                                    <option selected="@(@Model.Address[0].State == "AC")" value="AC">Acre</option>
+                                                    <option selected="@(@Model.Address[0].State == "AL")" value="AL">Alagoas</option>
+                                                    <option selected="@(@Model.Address[0].State == "AP")" value="AP">Amapá</option>
+                                                    <option selected="@(@Model.Address[0].State == "AM")" value="AM">Amazonas</option>
+                                                    <option selected="@(@Model.Address[0].State == "BA")" value="BA">Bahia</option>
+                                                    <option selected="@(@Model.Address[0].State == "CE")" value="CE">Ceará</option>
+                                                    <option selected="@(@Model.Address[0].State == "DF")" value="DF">Distrito Federal</option>
+                                                    <option selected="@(@Model.Address[0].State == "ES")" value="ES">Espírito Santo</option>
+                                                    <option selected="@(@Model.Address[0].State == "GO")" value="GO">Goiás</option>
+                                                    <option selected="@(@Model.Address[0].State == "MA")" value="MA">Maranhão</option>
+                                                    <option selected="@(@Model.Address[0].State == "MT")" value="MT">Mato Grosso</option>
+                                                    <option selected="@(@Model.Address[0].State == "MS")" value="MS">Mato Grosso do Sul</option>
+                                                    <option selected="@(@Model.Address[0].State == "MG")" value="MG">Minas Gerais</option>
+                                                    <option selected="@(@Model.Address[0].State == "PA")" value="PA">Pará</option>
+                                                    <option selected="@(@Model.Address[0].State == "PB")" value="PB">Paraíba</option>
+                                                    <option selected="@(@Model.Address[0].State == "PR")" value="PR">Paraná</option>
+                                                    <option selected="@(@Model.Address[0].State == "PE")" value="PE">Pernambuco</option>
+                                                    <option selected="@(@Model.Address[0].State == "PI")" value="PI">Piauí</option>
+                                                    <option selected="@(@Model.Address[0].State == "RJ")" value="RJ">Rio de Janeiro</option>
+                                                    <option selected="@(@Model.Address[0].State == "RN")" value="RN">Rio Grande do Norte</option>
+                                                    <option selected="@(@Model.Address[0].State == "RS")" value="RS">Rio Grande do Sul</option>
+                                                    <option selected="@(@Model.Address[0].State == "RO")" value="RO">Rondônia</option>
+                                                    <option selected="@(@Model.Address[0].State == "RR")" value="RR">Roraima</option>
+                                                    <option selected="@(@Model.Address[0].State == "SC")" value="SC">Santa Catarina</option>
+                                                    <option selected="@(@Model.Address[0].State == "SP")" value="SP">São Paulo</option>
+                                                    <option selected="@(@Model.Address[0].State == "SE")" value="SE">Sergipe</option>
+                                                    <option selected="@(@Model.Address[0].State == "TO")" value="TO">Tocantins</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="AC">Acre</option>
+                                                    <option value="AL">Alagoas</option>
+                                                    <option value="AP">Amapá</option>
+                                                    <option value="AM">Amazonas</option>
+                                                    <option value="BA">Bahia</option>
+                                                    <option value="CE">Ceará</option>
+                                                    <option value="DF">Distrito Federal</option>
+                                                    <option value="ES">Espírito Santo</option>
+                                                    <option value="GO">Goiás</option>
+                                                    <option value="MA">Maranhão</option>
+                                                    <option value="MT">Mato Grosso</option>
+                                                    <option value="MS">Mato Grosso do Sul</option>
+                                                    <option value="MG">Minas Gerais</option>
+                                                    <option value="PA">Pará</option>
+                                                    <option value="PB">Paraíba</option>
+                                                    <option value="PR">Paraná</option>
+                                                    <option value="PE">Pernambuco</option>
+                                                    <option value="PI">Piauí</option>
+                                                    <option value="RJ">Rio de Janeiro</option>
+                                                    <option value="RN">Rio Grande do Norte</option>
+                                                    <option value="RS">Rio Grande do Sul</option>
+                                                    <option value="RO">Rondônia</option>
+                                                    <option value="RR">Roraima</option>
+                                                    <option value="SC">Santa Catarina</option>
+                                                    <option value="SP">São Paulo</option>
+                                                    <option value="SE">Sergipe</option>
+                                                    <option value="TO">Tocantins</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <a href="#" class="ui animated button basic left floated" onclick="window.history.go(-1);">
+                                    <div class="visible content">Cancelar</div>
+                                    <div class="hidden content">
+                                        <i class="remove icon"></i>
+                                    </div>
+                                </a>
+                                <button type="submit"
+                                        class="ui animated button submit primary right floated"
+                                        tabindex="0">
+                                    <div class="visible content">Alterar</div>
+                                    <div class="hidden content">
+                                        <i class="checkmark icon"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        $(document).ready(function () {
+            $(document).on("change", "#checkBillingAddress", function () {
+                $("#billingAddress").hide()
+            })
+        })
+
+        function OnSuccess(response) {
+            if (response.Success == true) {
+                swal({
+                    title: '',
+                    text: response.Message,
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    window.location.href = "/assistedsale/index";
+                });
+            } else {
+                swal({
+                    title: '',
+                    text: response.Message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                })
+            }
+        }
+
+        function OnFailure(response) {
+            if (response.Success == false) {
+                swal({
+                    title: '',
+                    text: response.Message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    window.location.href = "/assistedsale/index";
+                });
+            }
+        }
+    </script>
+}

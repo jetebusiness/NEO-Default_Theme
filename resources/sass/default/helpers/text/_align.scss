@@ -1,0 +1,35 @@
+﻿$devices-breakpoints: ( 
+	all: 0, 
+	dxl: $desktop-xl, // desktop-xl
+	dlg: $desktop-bp, //desktop-lg
+	d: $desktop-bp-min, // desktop
+	t: $tablet-bp-min, // tablet
+	m: $mobile-bp // mobile
+);
+
+$directions: ( 
+	left: "left", 
+	center: "center",
+  right: "right"
+);
+
+@each $item-key in map-keys($devices-breakpoints) {
+  $item-value: map-get($devices-breakpoints, $item-key);
+  @each $direction-key in map-keys($directions) {
+    $direction-value: map-get($directions, $direction-key);
+    @if $item-value == 0 {
+      @include text_align($direction-value, $direction-value);
+    }
+    @else {
+      $id-class: #{$direction-value}-#{$item-key};
+
+      @media screen and (max-width: $item-value) {
+        @include text_align($direction-value, #{$id-class}-d);
+      }
+
+      @media screen and (min-width: $item-value) {
+        @include text_align($direction-value, #{$id-class}-u);
+      }
+    }
+  }
+}

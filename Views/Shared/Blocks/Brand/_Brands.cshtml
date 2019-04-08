@@ -2,26 +2,26 @@
 
 @if (Model != null && Model.Count() > 0)
 {
-    <div class="ui container fluid topsellers margin top bottom large">
-        <div class="ui container">
-            <div class="ui horizontal divider">
-                MARCAS
-            </div>
+  <div class="ui container fluid topsellers margin top bottom large">
+    <div class="ui container">
+      <div class="ui horizontal divider">
+        MARCAS
+      </div>
 
-            <div class="ui equal width grid images middle aligned center aligned stackable slideshow" data-qtd="6">
+      <div class="ui equal width grid images middle aligned center aligned stackable slideshow" data-qtd="6">
 
-                @foreach (var brand in Model)
-                {
-                    <div class="column">
-                        <a href="@brand.UrlFriendly" title="@brand.Name">
-                            <img class="ui image centered brands" src="@brand.Logo" alt="@brand.Name" title="@brand.Name" onerror="imgError(this)">
-                        </a>
-                    </div>
-                }
+        @foreach (var brand in Model)
+        {
+          <div class="column slideshow-item">
+            <a href="@brand.UrlFriendly" title="@brand.Name">
+              <img class="ui image centered brands" src="@brand.Logo" alt="@brand.Name" title="@brand.Name" onerror="imgError(this)">
+            </a>
+          </div>
+        }
 
-            </div>
+      </div>
 
-            <div class="ui divider hidden"></div>
-        </div>
+      <div class="ui divider hidden"></div>
     </div>
+  </div>
 }

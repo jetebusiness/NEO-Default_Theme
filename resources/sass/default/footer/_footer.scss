@@ -56,7 +56,7 @@
 		}
 
 		.textNews {
-			@media screen and (min-width: $table-bp-min) and (max-width: $tablet-bp-max) {
+			@media screen and (min-width: $tablet-bp-min) and (max-width: $tablet-bp-max) {
 				max-width: 180px;
 
 			}

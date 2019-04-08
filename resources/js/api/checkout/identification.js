@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
 	checkEmail();
-	ConfirmaEmail();
+    ConfirmaEmail();
 });
 
 function checkEmail() {

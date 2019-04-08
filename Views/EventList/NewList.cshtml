@@ -34,7 +34,7 @@
                     <h4>Selecione o tipo de lista adequado ao seu evento.</h4>
                     <div class="row one column">
                         <div class="column">
-                            <div class="ui two items very relaxed divided menuclient">
+                            <div class="ui two items very relaxed divided menuclient listEventList">
                                 @if (Model != null && Model.Any())
                                 {
                                     foreach (var type in Model)
@@ -59,14 +59,14 @@
                                                 break;
                                         }
 
-                                        <a class="item" href="/EventList/ManagerList?typeId=@type.IdType">
+                                        <a class="item text-align center-t-d" href="/EventList/ManagerList?typeId=@type.IdType">
                                             <div class="ui small">
                                                 <i class="ui icon big @icon"></i>
                                             </div>
                                             <div class="content">
-                                                <div class="header">@type.Title</div>
+                                                <div class="header">@Html.Raw(type.Title)</div>
                                                 <div class="description">
-                                                    <p>@type.Desc</p>
+                                                  <p>@Html.Raw(type.Desc)</p>
                                                 </div>
                                             </div>
                                         </a>

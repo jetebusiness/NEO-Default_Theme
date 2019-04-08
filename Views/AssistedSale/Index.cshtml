@@ -1,0 +1,63 @@
+﻿@model DomainAssistedSale.Entities.Results.ResultsAssistedSale<DomainAssistedSale.Entities.Customer.Customer>
+
+@{
+    ViewBag.Title = "Lista de Clientes";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Vendedor</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Lista de Clientes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row one column">
+            <div class="column">
+                <div class="ui grid middle aligned left aligned">
+                    <div class="row one column stackable">
+                        <div class="column">
+                            <div class="ui category searchOrder">
+                                <div class="ui icon input fluid">
+                                    <input class="busca_lista_cliente" type="text" placeholder="Buscar cliente">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row one column">
+                        <div class="column">
+                            <a href="/assistedsale/register" class="ui button large submit primary">
+                                Cadastrar novo cliente
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- ~/Views/Shared/Blocks/Client/_ClientListVendor.cshtml -->
+
+                    @Html.Action("ListClients", "AssistedSale", new {
+                       search = Request.QueryString["search"] != null ? Request.QueryString["search"] : "",
+                       page = Request.QueryString["page"] != null ? Request.QueryString["page"] : "",
+                       pageSize = 12
+                   }) 
+                    
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
