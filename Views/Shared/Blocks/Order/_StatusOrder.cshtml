@@ -5,6 +5,7 @@
         <div class="ui accordion">
             @if (Model != null)
             {
+                <h3>Detalhes de Rastreamento</h3>
                 foreach (var item in Model.Select(m => m.dateEvent.ToShortDateString()).Distinct())
                 {
                     <div class="title">
@@ -20,6 +21,8 @@
                                 {
                                     <li class="divider-delivery-item"></li>
                                     <li><a class="ui circular label circular-delivery-item"><i class="clock outline icon icon-delivery-item"></i></a><b class="green-delivery">@eventStatus.dateEvent.ToShortTimeString() </b>@eventStatus.description</li>
+                                    <li><a class="ui circular"><i class="outline icon icon-delivery-item"></i></a><b class="green-delivery">Nome da Transportadora: </b>@eventStatus.TransporterName</li>
+                                    <li><a class="ui circular"><i class="outline icon icon-delivery-item"></i></a><b class="green-delivery">Modalidade: </b>@eventStatus.ShippingMethod</li>
                                 }
                             </ul>
                         </div>

@@ -708,8 +708,11 @@ function GetPaymentGateway(nameBrand, typeForm) {
     return 0;
 }
 
-function GetPaymentBrandExternalCode(nameBrand) {
-    var objPaymentMethod = $('#validCardCredit').data('paymentmethod'); //jQuery.parseJSON($('#validCardCredit').data('paymentgateway'));
+function GetPaymentBrandExternalCode(nameBrand, typeForm) {
+    var seletorJson = typeForm == 'D' ? '#validCardDebit' : '#validCardCredit';
+
+    var objPaymentMethod = $(seletorJson).data('paymentmethod'); //jQuery.parseJSON($('#validCardCredit').data('paymentgateway'));
+
     //console.log(objPaymentGateway);
     for (var i = 0; i < objPaymentMethod.PaymentBrands.length; i++) {
         var auxNameBrand = objPaymentMethod.PaymentBrands[i].Name.toLowerCase();
@@ -733,7 +736,7 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
             numeroCartao = $(this).find("option:selected").text().substring(0, 4);
             cartao = $(this).find("option:selected").data("brand").toLowerCase();
             codigoBandeira = GetPaymentGateway(cartao, typeForm);
-            externalCode = GetPaymentBrandExternalCode(cartao);
+            externalCode = GetPaymentBrandExternalCode(cartao, typeForm);
             $(btnCard).attr({
                 "data-idBrand": codigoBandeira,
                 "data-externalcode": externalCode
@@ -763,7 +766,7 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
             for (var cartao in cartoes) {
                 if (numeroCartao.match(cartoes[cartao])) {
                     codigoBandeira = GetPaymentGateway(cartao, typeForm);
-                    externalCode = GetPaymentBrandExternalCode(cartao);
+                    externalCode = GetPaymentBrandExternalCode(cartao, typeForm);
                     $(btnCard).attr({
                         "data-idBrand": codigoBandeira,
                         "data-externalcode": externalCode
@@ -1488,7 +1491,7 @@ function ReEnviarCodigoEmail() {
 }
 
 function RecoverPasswordByEmail(form) {
-    $("#RecoverPasswordByEmail").click(function () {
+    $(".RecoverPasswordByEmail").click(function () {
         $.ajax({
             method: "POST",
             url: "/customer/RecoverPasswordByEmail",
@@ -2055,7 +2058,12 @@ $(document).ready(function () {
                         case 5:
                             BankSlipByLink(payment.paymentResponse.URLBoleto)
                             break;
+                        case 6:
+                            BankSlipByLink(payment.paymentResponse.URLBoleto)
+                            break;
                         default:
+                            BankSlipByLink(payment.paymentResponse.URLBoleto)
+                            break;
                     }
                 } else {
                     swal('', response, 'error');

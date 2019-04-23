@@ -762,6 +762,7 @@ function buscarSKU(seletor, produtoID) {
                     $("#avise_me").addClass("detalhes hideme");
                     $(".btn-comprar div").html("ADICIONAR AO CARRINHO");
                     $(".btn-comprar").removeClass("disabled");
+                    $(".btn-add-event-list").removeClass("disabled");
                     $(".btn-comprar-oneclick").removeClass("disabled");
                     $("#calculo-frete").removeClass("detalhes hideme");
                     $("#calculo-parcelamento").removeClass("detalhes hideme");

@@ -25,9 +25,14 @@
                                     @if (product.Discount > 0)
                                     {
                                         <span class="valorDe">de @(string.Format("{0:c}", product.Price)) por</span>
+                                        <span class="valorPor">@(string.Format("{0:c}", product.PricePromotion))</span>
+                                        <span class="kit">no kit</span>
                                     }
-                                    <span class="valorPor">@(string.Format("{0:c}", product.PricePromotion))</span>
-                                    <span class="kit">no kit</span>
+                                    else
+                                    {
+                                        <span class="valorPor">@(string.Format("{0:c}", product.Price))</span>
+                                        <span class="kit">no kit</span>
+                                    }
                                 </div>
                                 @if (product.AvailableReferences != null && product.AvailableReferences.Any())
                                 {
