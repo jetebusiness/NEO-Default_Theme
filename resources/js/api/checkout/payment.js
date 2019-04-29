@@ -383,12 +383,12 @@ function OrderCreate() {
         var dt = new Date();
         var century = dt.getFullYear().toString().substring(0, 2);
         var expDateCard = "";
-        if ($("#DebitExpDate").val() != null || $("#ExpDate").val() != null) {
+        if (($("#DebitExpDate").val() != undefined && $("#DebitExpDate").val() != "") || ($("#ExpDate").val() != undefined && $("#ExpDate").val() != "")) {
             expDateCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitExpDate").val().toString().replace("/", "/" + century) : $("#ExpDate").val().toString().replace("/", "/" + century);
             expDateCard = expDateCard.replace(/\s/g, "");
         }
         var validaMes = expDateCard != "" && expDateCard !== undefined ? new Number(expDateCard.split("/")[0]) : "";
-        var validaAno = expDateCard != "" && expDateCard !== undefined ? new Number(century + expDateCard.split("/")[1].trim()) : "";
+        var validaAno = expDateCard != "" && expDateCard !== undefined ? new Number(((expDateCard.split("/")[1].trim().length <= 2) ? century + expDateCard.split("/")[1].trim() : expDateCard.split("/")[1].trim())) : "";
         var cvvCard = $("#CVV").val();
         var brandCard = $(this).prop("id") == "btnCardDebit" ? $("#debitBrandCard").val() : $("#brandCard").val();
         var document = $("#Document").val();
@@ -757,7 +757,7 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, typeForm, c
                 amex: /^3[47][0-9]{13}$/,
                 aura: /^5078[0-9]{12,15}$/,
                 //mastercard: /^5[1-5][0-9]{14}$/,
-                mastercard: /^(5[1-5][0-9]{14})|(2[2-7][0-9]{14})$/,
+                mastercard: /^(5[1-5][0-9]{14})|(2[2-7][0-9]{14})|(5021[0-9]{12})$/,
                 visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
                 jcb: /^35(2+[8-9]|3+[0-9]|4+[0-9]|5+[0-9]|6+[0-9]|7+[0-9]|8+[0-9])+[0-9]{12,15}$/,
                 credz: /^(636760|637032)+[0-9]{10}$/
