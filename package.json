@@ -16,7 +16,7 @@
         "easyzoom": "^2.5.0",
         "jetcheckout": "^1.0.10",
         "jetroute": "^1.0.3",
-        "jquery": "^3.3.1",
+        "jquery": "^3.4.0",
         "jquery-ajax-unobtrusive": "^3.2.4",
         "jquery-datepicker": "^1.12.3",
         "jquery-mask-plugin": "^1.14.13",
@@ -31,7 +31,7 @@
         "toastr": "^2.1.2"
     },
     "devDependencies": {
-        "browser-sync": "^2.26.3",
+        "browser-sync": "^2.26.5",
         "browser-sync-webpack-plugin": "^1.2.0",
         "cross-env": "^5.2.0",
         "laravel-mix-jet": "^1.5.1-3",

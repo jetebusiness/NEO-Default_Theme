@@ -15,6 +15,7 @@ require("./checkout/identification");
 require("./checkout/register.js");
 require("./checkout/payment.js");
 require("./checkout/success.js");
+require("./order/reorder.js");
 
 /**
  * Customers API Calls

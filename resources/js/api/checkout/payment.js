@@ -383,8 +383,18 @@ function OrderCreate() {
         var dt = new Date();
         var century = dt.getFullYear().toString().substring(0, 2);
         var expDateCard = "";
-        if (($("#DebitExpDate").val() != undefined && $("#DebitExpDate").val() != "") || ($("#ExpDate").val() != undefined && $("#ExpDate").val() != "")) {
-            expDateCard = $(this).prop("id") == "btnCardDebit" ? $("#DebitExpDate").val().toString().replace("/", "/" + century) : $("#ExpDate").val().toString().replace("/", "/" + century);
+        if ($("#DebitExpDate").val() != null || $("#ExpDate").val() != null) {
+            var DebitExpDate = "";
+            if ($("#DebitExpDate").val() != undefined) {
+                DebitExpDate = $("#DebitExpDate").val();
+            }
+
+            var ExpDate = "";
+            if ($("#ExpDate").val() != undefined) {
+                ExpDate = $("#ExpDate").val();
+            }
+
+            expDateCard = $(this).prop("id") == "btnCardDebit" ? DebitExpDate.toString().replace("/", "/" + century) : ExpDate.toString().replace("/", "/" + century);
             expDateCard = expDateCard.replace(/\s/g, "");
         }
         var validaMes = expDateCard != "" && expDateCard !== undefined ? new Number(expDateCard.split("/")[0]) : "";
@@ -1656,6 +1666,7 @@ function CampoEntregaAgendada() {
             var hub;
             var valorSomaFrete = "";
             var data_selecionada = "";
+            var value = "";
             var ponteiroCurrent = $(".shippingGet", this);
             $(".shippingGet").attr("checked", false);
             $(ponteiroCurrent).attr("checked", true);
