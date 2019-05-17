@@ -24,7 +24,7 @@
                 <div class="content">
                     <div class="description">
                         <div class="ui radio checkbox @_classCheckFrete">
-                            <input type="radio" name="radio" id="radio_@item.ShippingMode.IdShippingMode" class="shippingGet" value="@item.ShippingMode.IdShippingMode" data-id="@item.ShippingMode.IdShippingMode" data-value="@string.Format("{0}", item.ValueShipping)" data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" data-entregaagendada="@item.ShippingMode.ScheduledDelivery" data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery" data-carrier="@item.ShippingMode.carrier" data-mode="@item.ShippingMode.mode" data-hub="@item.ShippingMode.hub" @_checkFrete>
+                            <input type="radio" name="radio" id="radio_@item.ShippingMode.IdShippingMode" class="shippingGet" value="@item.ShippingMode.IdShippingMode" data-id="@item.ShippingMode.IdShippingMode" data-value="@string.Format("{0}", item.ValueShipping)" data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" data-entregaagendada="@item.ShippingMode.ScheduledDelivery" data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery" data-carrier="@item.ShippingMode.carrier" data-mode="@item.ShippingMode.mode" data-hub="@item.ShippingMode.hub" data-deliverytime="@item.ShippingMode.DeliveryTime" data-usefullday="@((item.ShippingMode.UsefulDay == true) ? "1" : "0")" @_checkFrete>
                             @if (item.ShippingMode.ScheduledDelivery)
                             {
                                 <label>@(item.ShippingMode.Name + " (*)") </label>

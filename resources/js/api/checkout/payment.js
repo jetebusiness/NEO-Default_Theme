@@ -144,7 +144,8 @@ var useAntiFraudMaxiPago = false
 
 function GerarPedidoCompleto(
     idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
-    saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse
+    saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
+    googleResponse, deliveryTime, usefulDay
 ) {
     $.ajax({
         method: "POST",
@@ -176,7 +177,9 @@ function GerarPedidoCompleto(
             installmentValue: installmentValue,
             installmentTotal: installmentTotal,
             cardToken: cardToken,
-            googleResponse: googleResponse
+            googleResponse: googleResponse,
+            deliveryTime: deliveryTime,
+            usefulDay: usefulDay
         },
         success: function (response) {
             if (response.success === true) {
@@ -431,6 +434,13 @@ function OrderCreate() {
             msgErrors += "<br />Erro no recaptcha, por favor tente novamente mais tarde.";
         }
 
+        var deliveryTime = null;
+        var usefulDay = null;
+        if ($('input[name=radio]:checked').length > 0) {
+            deliveryTime = $('input[name=radio]:checked').data('deliverytime');
+            usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1")? true : false);
+        }
+
         var validaFrete = "";
 
         switch ($(this).prop("id")) {
@@ -601,7 +611,7 @@ function OrderCreate() {
                 if (useAntiFraudMaxiPago && kind != "oneclick") {
                     LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
                     //Gerar pedido completo com atraso de 5 segundos
-                    setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse) }, 5000);
+                    setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay); }, 5000);
                 }
                 else if (tipoVerificacao == "S" && $(this).attr("data-gateway") == "pagseguro") {
 
@@ -614,7 +624,7 @@ function OrderCreate() {
                         success: function (response) {
                             cardToken = response.card.token;
 
-                            GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse);
+                            GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay);
                         },
                         error: function (response) {
                             swal({
@@ -634,7 +644,7 @@ function OrderCreate() {
                 }
                 else//Caso não utilize, segue o fluxo de gerar pedido normalmente sem iframe e sem atraso   
                 {
-                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse);
+                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay);
                 }
 
             }
