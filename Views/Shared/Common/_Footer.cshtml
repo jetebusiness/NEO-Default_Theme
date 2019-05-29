@@ -149,6 +149,8 @@
                 <div class="column text small textoEmpresa">
                     <h6>@LojaCorp.Control.Company._Company.FantasyName</h6> -
                     <address>
+                        @LojaCorp.Control.Company._Company.ComplementText
+                        <br />
                         @{
                             string complementAddress = LojaCorp.Control.Company._Company.Complement != "" ? " " + LojaCorp.Control.Company._Company.Complement + ", " : "";
                         }

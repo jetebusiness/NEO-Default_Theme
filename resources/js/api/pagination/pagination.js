@@ -133,7 +133,7 @@ function loadData() {
     data = {
         viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
         pageNumber: filters.pageNumber === undefined ? "1" : filters.pageNumber,
-        pageSize: pageSizeDefault,
+        pageSize: filters.pageSize === undefined ? pageSizeDefault : filters.pageSize,
         order: filters.order === undefined ? "" : filters.order,
         brand: filters.idBrand === undefined ? "" : filters.idBrand,
         category: filters.idCategory === undefined ? genericPageFilter : filters.idCategory,
