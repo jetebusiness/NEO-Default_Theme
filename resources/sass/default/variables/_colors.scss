@@ -19,11 +19,15 @@ $action: #21ba45;
   Checkout Colors
   *
 */
-$bg-checkout-success: #21ba45;
+$bg-checkout-success: $primary-color; //#21ba45;
 $text-checkout-success: #FFF;
 
-$bg-checkout-success-dark: #0e4f1d;
+$bg-checkout-success-dark: darken($primary-color, 5); //#0e4f1d;
 $text-checkout-success-dark: #FFF;
+
+$button-bg-checkout-success-dark: transparent;
+$button-border-checkout-success-dark: #FFF;
+$button-text-checkout-success-dark: #FFF;
 
 $bg-checkout-error: #DB2828;
 $text-checkout-error: #FFF;

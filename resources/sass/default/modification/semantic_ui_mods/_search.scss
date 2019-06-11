@@ -1,16 +1,29 @@
 .ui {
-  
+
   &.filterListEventsProducts {
     .prompt {
       border-radius: 500rem;
-    }    
+    }
   }
 
-  &.search{
+  &.search {
 
-    > .results{
+    > .results {
 
-      @media screen and (max-width: $tablet-bp-max) and (min-width: $tablet-bp-min){
+      &.results-clone {
+
+        &:not(.closed) {
+          display: block !important;
+          visibility: visible !important;
+          animation: none !important;
+        }
+
+        &.hidden {
+          border: 0px !important;
+        }
+      }
+
+      @media screen and (max-width: $tablet-bp-max) and (min-width: $tablet-bp-min) {
         left: 50%;
         margin-left: -19.75em;
       }
@@ -21,14 +34,13 @@
       }
 
 
-      .result
-      {
+      .result {
         .imagem + .content {
           margin: 0em 0em 0em 1em;
         }
 
         .imagem,
-        .contents{
+        .contents {
           display: flex;
           align-items: center;
         }
@@ -47,6 +59,7 @@
           img {
             display: block;
             max-width: 6rem;
+
             @media screen and (max-width: $mobile-bp) {
               max-width: 100%;
             }

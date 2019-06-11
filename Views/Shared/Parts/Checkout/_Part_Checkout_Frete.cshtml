@@ -29,9 +29,13 @@
                             {
                                 <label>@(item.ShippingMode.Name + " (*)") </label>
                             }
+                            else if (item.ShippingMode.DeliveryTime == null)
+                            {
+                                <label>@item.ShippingMode.Name (Envio Imediato) </label>
+                            }
                             else
                             {
-                                <label>@item.ShippingMode.Name (@item.ShippingMode.DeliveryTime dia(s) @string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? "úteis": "útil") : "")) </label>
+                                <label>@item.ShippingMode.Name (@item.ShippingMode.DeliveryTime dia(s) @string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? "úteis" : "útil") : "")) </label>
                             }
 
                         </div>

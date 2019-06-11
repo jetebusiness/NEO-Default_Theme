@@ -17,32 +17,31 @@ export function _alert(titulo, texto, tipo, allowOutsideClick = true) {
         });
     }
 }
-    /**
-     *
-     * @object params
-     * {
-     * title: @string,
-     * text: @string,
-     * type: @string,
-     * confirm:{
-     * color:@hexcolor
-     * text: @string
-     * },
-     * cancel:{
-     * color:@hexcolor,
-     * text:@string
-     * }
-     * callback: function(){}
-     * @private
-     */
+/**
+ *
+ * @object params
+ * {
+ * title: @string,
+ * text: @string,
+ * type: @string,
+ * confirm:{
+ * color:@hexcolor
+ * text: @string
+ * },
+ * cancel:{
+ * color:@hexcolor,
+ * text:@string
+ * }
+ * callback: function(){}
+ * @private
+ */
 
-export function _confirm(params){
-    "use strict";
+export function _confirm(params, showCancelButton = true){
     swal({
         title: params.title,
         text: params.text,
         type: params.type,
-        showCancelButton: true,
+        showCancelButton: showCancelButton,
         confirmButtonColor: params.confirm.color || "#16ab39",
         cancelButtonColor: params.cancel.color || "#DB2828",
         confirmButtonText: params.confirm.text || "Remover",

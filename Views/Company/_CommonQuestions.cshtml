@@ -23,8 +23,8 @@
             <div class="ui items">
                 @if (Model != null)
                 {
-                    foreach (var faq in Model)
-                    {
+                  foreach (var faq in Model)
+                  {
                         <div class="item">
                             <div class="content">
                                 <p class="header">@faq.Question</p>
@@ -35,7 +35,11 @@
                                 </div>
                             </div>
                         </div>
-                    }
+                  }
+                }
+                else
+                {
+                  <div class="text center">Até o momento não exisem dúvidas frequentes.</div>
                 }
             </div>
         </div>
