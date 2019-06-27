@@ -1,15 +1,11 @@
 ﻿@{
-    ViewBag.Title = "Pedido Finalizado";
+    ViewBag.Title = ViewBag.Titulo;
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
 
-    string cor = "";
-    string titulo = "";
-    string descricao = "";
-
-    cor = "bg-green";
-    titulo = "Pedido Confirmado";
-    descricao = "Pedido efetuado com sucesso. Para obter maiores detalhes do pedido, efetue o login na loja.";
-
+    string cor = ViewBag.Cor;
+    string titulo = ViewBag.Titulo;
+    string descricao = ViewBag.Descricao;
+    string link = ViewBag.Link;
 }
 
 @section steps{
@@ -57,7 +53,7 @@
                     <div class="ui horizontal list">
                         <div class="item">
                             <div class="content">
-                                <p>@descricao</p><a class="ui no-p  action button floated left" href="/customer">Clique Aqui</a>
+                                <p>@descricao</p>@Html.Raw(link)
                             </div>
                         </div>
                     </div>

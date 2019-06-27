@@ -42,7 +42,7 @@
 
 @section filters {
   <div class="four wide column filterColumn">
-    <div class="row one column filterBlock">
+    <div class="row one column filterBlock" id="filterBlock">
 
       <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
       @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
@@ -122,27 +122,27 @@
     </div>
   </div>
   <div id="list">
-    <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryList.cshtml -->
-    <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
-    @Html.Action("GetProducts", "Product", new {
-       keyWord = Request.QueryString["n"] != null ? Request.QueryString["n"] : "",
-       category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
-       viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",
-       pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "",
-       pageSize = 12,
-       order = Request.QueryString["order"] != null ? Request.QueryString["order"] : "",
-       brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "",
-       group = Request.QueryString["group"] != null ? Request.QueryString["group"] : "",
-       initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "",
-       finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "",
-       variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "",
-       idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : "",
-       idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
-   })
+    <div class="searchProducts">
+        @Html.Action("GetProducts", "Product", new {
+         keyWord = Request.QueryString["n"] != null ? Request.QueryString["n"] : "",
+         category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
+         viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",
+         pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "",
+         pageSize = 12,
+         order = Request.QueryString["order"] != null ? Request.QueryString["order"] : "",
+         brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "",
+         group = Request.QueryString["group"] != null ? Request.QueryString["group"] : "",
+         initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "",
+         finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "",
+         variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "",
+         idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : "",
+         idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
+        })
+    </div>
   </div>
 </div>
+<input type="hidden" name="CurrentPage" id="CurrentPage" value="search" />
 <input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
-
 
 @section custom_js {
   <script>

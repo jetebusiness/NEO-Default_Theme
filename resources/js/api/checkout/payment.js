@@ -147,6 +147,11 @@ function GerarPedidoCompleto(
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
     googleResponse, deliveryTime, usefulDay
 ) {
+    var stop = false;
+    stop = ValidCart(stop);
+
+    if (stop) return;
+
     $.ajax({
         method: "POST",
         url: "GerarPedidoCompleto",
@@ -438,7 +443,7 @@ function OrderCreate() {
         var usefulDay = null;
         if ($('input[name=radio]:checked').length > 0) {
             deliveryTime = $('input[name=radio]:checked').data('deliverytime');
-            usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1")? true : false);
+            usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1") ? true : false);
         }
 
         var validaFrete = "";
@@ -1747,6 +1752,45 @@ function CampoEntregaAgendada() {
 
 }
 
+function ValidCart(stop) {
+    $.ajax({
+        method: "GET",
+        url: "/Checkout/ValidCart",
+        async: false,
+        cache: false,
+        dataType: "json",
+        success: function (response) {
+            if (!response.success) {
+                stop = true;
+                _confirm({
+                    title: "",
+                    text: response.message,
+                    type: "error",
+                    confirm: {
+                        text: "OK"
+                    },
+                    cancel: {
+                        text: "Cancelar",
+                        color: "#95979b"
+                    },
+                    showCancelButton: false,
+                    callback: function () {
+                        location.reload();
+                    }
+                }, false);
+                $(".GerarPedido").removeClass("loading");
+                $(".GerarPedido").removeClass("disabled");
+            } else
+                stop = false;
+        },
+        error: function (response) {
+            swal('', response.message, 'error');
+            stop = false;
+        }
+    });
+
+    return stop;
+}
 var availableDates = [];
 var verifyPaymentMethod = [];
 

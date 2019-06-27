@@ -48,8 +48,5 @@ require('./search/searchGuest');
 //--------------------[ Event List ]----------------//
 require('./eventlist/manager_event_list');
 
-//--------------------[ Pagination ]----------------//
-require('./pagination/pagination');
-
 //--------------------[ AssistedSale ]----------------//
 require('./assistedsale/assistedsale');

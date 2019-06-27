@@ -357,7 +357,7 @@ $(document).ready(function () {
 
     $(".buy-together .variacao-imagem").click(function (e) {
         var produtoID = $(this).closest("#buy-together").attr('data-id');
-        ValidaVariacaoSelecionada($(this).val(), +produtoID + '-buy-together');
+        ValidaVariacaoSelecionada($(this).data("value"), +produtoID + '-buy-together');
         buscarSKU(produtoID + '-buy-together', produtoID);
     });
 
@@ -1075,7 +1075,7 @@ function AtualizarCarrinhoCompreJunto(valor, valorP, operador) {
 
             $("#compre-junto-desconto").text(moneyPtBR(parseFloat(desconto) - parseFloat(descontoP)));
             if (valorP != "" && parseFloat(valorP) > 0) {
-                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) - parseFloat(valorP)));
+                $("#compre-junto-total").text(moneyPtBR(parseFloat(total) - parseFloat(valorP) - parseFloat(descontoP)));
                 $("#compre-junto-total-final").text(moneyPtBR(parseFloat(total_final) - parseFloat(valorP)));
             } else {
                 $("#compre-junto-total").text(moneyPtBR(parseFloat(total) - parseFloat(valor)));

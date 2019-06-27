@@ -17,7 +17,7 @@
               <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
             </a>
           </div>
-          @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>", String.Empty).Trim() != "")
+          @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
           {
             <div class="description">
               <div class="html">@Html.Raw(randombanner.Description)</div>

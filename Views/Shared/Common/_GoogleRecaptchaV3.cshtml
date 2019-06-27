@@ -1,5 +1,5 @@
 ﻿@model Tuple<string, DomainCompany.Entities.Recaptcha>
-@if (Model != null)
+@if (Model != null && Model.Item2 != null)
 {
     if (Model.Item2.Status && Model.Item2.Tipo.Contains(Model.Item1))
     {

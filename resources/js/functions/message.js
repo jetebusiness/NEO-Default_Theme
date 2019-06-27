@@ -8,7 +8,7 @@
  */
 export function _alert(titulo, texto, tipo, allowOutsideClick = true) {
     var modal_count = $("body").find(".swal2-show").length;
-    if(modal_count === 0){
+    if (modal_count === 0) {
         swal({
             title: titulo,
             text: texto,
@@ -47,7 +47,7 @@ export function _confirm(params, showCancelButton = true){
         confirmButtonText: params.confirm.text || "Remover",
         cancelButtonText: params.cancel.text || "Cancelar"
     }).then(function () {
-        if (params.callback && typeof(params.callback) === "function") {
+        if (params.callback && typeof (params.callback) === "function") {
             params.callback();
         }
     });

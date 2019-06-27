@@ -1,8 +1,9 @@
 import { isMobile } from '../../functions/mobile';
+import { _alert } from '../../functions/message';
 
 const minCharacters = 3,
   mobileResults = () => isMobile() && $(".search").length > 0 ? true : false;
- 
+
 $.fn.search.settings.templates.message = function (message, type) {
   var html = "";
   if (message !== undefined && type !== undefined) {
@@ -62,10 +63,11 @@ $.fn.search.settings.templates.autoComplete = function (response, fields) {
 };
 
 $(document).on("keypress", ".prompt", function (e) {
-  if (e.which === 13) {
-    location.href = `/busca?n=${$(".prompt").val()}&mdf=${$("#metaDataField").val()}&mdv=${$("#metaDataValue").val()}`;
-  }
+  let value = $(".searchMobile").is(":visible") ? $(".searchMobile .prompt").val() : $(".prompt").val();
+  if (e.which === 13)
+    location.href = `/busca?n=${value}&mdf=${$("#metaDataField").val()}&mdv=${$("#metaDataValue").val()}`;
 });
+
 
 $(document).on("keypress", ".busca_lista", function (e) {
   if (e.which === 13) {
@@ -76,6 +78,15 @@ $(document).on("keypress", ".busca_lista", function (e) {
 
 $(document).on("click", ".busca_lista_btn", function (e) {
   location.href = `/EventList/ManagerProducts?n=${$(".busca_lista").val()}`;
+});
+
+
+$(document).on("click", ".searchMobile .search-results", function (e) {
+  if ($(".searchMobile .prompt").val().length >= minCharacters)
+    location.href = `/busca?n=${$(".searchMobile .prompt").val()}&mdf=${$("#metaDataField").val()}&mdv=${$("#metaDataValue").val()}`;
+  else
+    _alert("Busca", `Informe ao mínimo ${minCharacters} caracteres para efetuar a busca`, "warning");
+
 });
 
 

@@ -1,12 +1,12 @@
 ﻿@model List<DomainCompany.Entities.Banner>
 @if (Model != null && Model.Any())
 {
-<div class="column text center mobile-hide">
+<div class="column text center mobile-hide side-halfbanner">
     <div class="ui images">
         @foreach (var banner in Model)
         {
             <a href="@banner.Link"  title="@banner.Name">
-                <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" alt="@banner.Name" title="@banner.Name" class="ui image fluid" onerror="imgError(this)">
+                <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" alt="@banner.Name" title="@banner.Name" class="ui image fluid side-halfbanner-image" onerror="imgError(this)">
             </a>
         } 
     </div>

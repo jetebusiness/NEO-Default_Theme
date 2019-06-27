@@ -95,7 +95,7 @@
                     </div>
                 }
 
-                
+
 
             </div>
             <div class="ui divider small hidden"></div>
@@ -134,6 +134,25 @@
 
     <a id="bannerEbit" class="ui grid centered"></a>
     <script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.CompreConfie))
+{
+    string productName = "", productQuantity = "", productValue = "", productSKU = "";
+    if (Model != null && Model.OrderItems != null)
+    {
+        foreach (var item in Model.OrderItems)
+        {
+            productName += item.Name + "|";
+            productQuantity += item.Quantity + "|";
+            productValue += item.Total + "|";
+            productSKU += item.IdSku + "|";
+        }
+    }
+
+    <param id="TagEConfy" value="orderID=@Model.IdOrder&orderDate=@Model.DateOrder&orderPlatform=Jet-NEO&orderSellerID=@ViewBag.CompreConfie&orderBankEmissor=@Model.NameBank&orderCardFlag=@Model.CreditCardFlag&orderDeliveryType=@Model.NameShipping&orderPaymentType=@Model.OrderType&orderParcels=@Model.TotalInstallment&orderTotalSpent=@Model.TotalShipping&consumerCPF=@Model.Cpf_cnpj&consumerEmail=@Model.Email&consumerName=@Model.NameCustomer&consumerPhone=@Model.Address.PhoneContact&consumerZipcode=@Model.Address.ZipCode&billingCPF=@Model.Cpf_cnpj&billingEmail=@Model.Email&billingName=@Model.NameCustomer&billingPhone=@Model.Address.PhoneContact&billingZipcode=@Model.Address.ZipCode&productName=@productName&productQuantity=@productQuantity&productValue=@productValue&productDiscount=@Model.TotalDiscount&productDeliveryType=@Model.NameShipping&productSKU=@productSKU" />
+    <a id="bannerEconfy"></a>
+    <script type="text/javascript" id="getData" src="https://banner.compreconfie.com.br/scripts/getData.js?sellerId=@ViewBag.CompreConfie&lightbox=true"></script>
 }
 
 @if (ViewBag.ShowRegister)
@@ -267,9 +286,9 @@
                             </div>
                             @if (ViewBag.PaymentType == 3)
                             {
-                            <div class="column">
-                                <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
-                            </div>
+                                <div class="column">
+                                    <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
+                                </div>
                             }
                         </div>
                     </div>

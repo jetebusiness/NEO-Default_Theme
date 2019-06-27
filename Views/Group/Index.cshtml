@@ -35,7 +35,6 @@
       </div>
     </div>
   </div>
-  <div class="ui divider"></div>
 }
 
 
@@ -50,9 +49,8 @@
 }
 @section filters {
   <div class="four wide column filterColumn">
-    <div class="row one column filterBlock">
+    <div class="row one column filterBlock" id="filterBlock">
       <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
-
       @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
       {
         @Html.Action("FilterMenuNew", "Product", new { category = "", brand = "", group = Model.IdGroup, keyword = "" })
@@ -140,24 +138,26 @@
     <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
     @if (Model != null)
     {
-      @Html.Action(
-          "GetProducts",
-          "Product",
-          new {
-              category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
-              viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",
-              pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "",
-              pageSize = 12, order = Request.QueryString["order"] != null ?
-              Request.QueryString["order"] : "",
-              brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "",
-              group = Model.IdGroup,
-              initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "",
-              finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "",
-              variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "",
-              idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : "",
-              idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
-          }
-      )
+      <div class="groupProducts">
+        
+          @Html.Action("GetProducts", "Product",
+                   new
+                   {
+                     category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
+                     viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",
+                     pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "",
+                     pageSize = 12,
+                     order = Request.QueryString["order"] != null ? Request.QueryString["order"] : "",
+                     brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "",
+                     group = Model.IdGroup,
+                     initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "",
+                     finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "",
+                     variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "",
+                     idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : "",
+                     idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
+                   }
+               )
+      </div>
     }
   </div>
 </div>
@@ -165,6 +165,7 @@
   <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
   @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'R' })
 </div>
+<input type="hidden" name="CurrentPage" id="CurrentPage" value="group" />
 <input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
 
 @section custom_js{

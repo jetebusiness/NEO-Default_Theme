@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "@babel/polyfill": "^7.0.0",
-        "axios": "^0.17.1",
+        "axios": "^0.19.0",
         "card": "^2.4.0",
         "easyzoom": "^2.5.0",
         "jetcheckout": "^1.0.10",

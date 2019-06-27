@@ -1,6 +1,6 @@
 ﻿@model DomainCompany.Entities.Company
 
-@if(Model.StatusB2B)
+@if(Model != null && Model.StatusB2B)
 {
     <div class="item">
         <a href="/customer/loginB2B" title="Área Restrita"><i class="lock icon"></i> <span class="text">Área Restrita</span></a>

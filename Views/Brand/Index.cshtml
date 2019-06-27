@@ -39,22 +39,26 @@
       </div>
     </div>
   </div>
-  <div class="ui divider"></div>
 }
 
 @section banner {
   @if (Model != null)
   {
     <div class="ui grid">
-      <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
       @Html.Action("BannerBrand", "Banner", new { brandID = Model.IdBrand, bannerType = 'F' })
     </div>
   }
 }
 
+
+@section footerHalfbanner {
+  @Html.Action("BannerBrand", "Banner", new { brandID = Model.IdBrand, bannerType = 'R' })
+}
+
+
 @section filters {
   <div class="four wide column filterColumn">
-    <div class="row one column filterBlock">
+    <div class="row one column filterBlock" id="filterBlock">
       <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
       @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
       {
@@ -145,23 +149,24 @@
       <div class="brandProducts">
         @Html.Action("GetProducts", "Product", new
         {
-            category = Request.QueryString["c"] ?? "",
-            viewList = Request.QueryString["v"] ?? "",
-            pageNumber = Request.QueryString["p"] ?? "",
-            pageSize = 12,
-            order = Request.QueryString["o"] ?? "",
-            brand = Model.IdBrand,
-            group = Request.QueryString["g"] ?? "",
-            idAttribute = Request.QueryString["idAttribute"] ?? "",
-            idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
+         category = Request.QueryString["category"] ?? "",
+         viewList = Request.QueryString["viewList"] ?? "",
+         pageNumber = Request.QueryString["pageNumber"] ?? "",
+         pageSize = 12,
+         order = Request.QueryString["order"] ?? "",
+         brand = Request.QueryString["brand"] ?? "",
+         group = Request.QueryString["group"] ?? "",
+         initialPrice = Request.QueryString["initialPrice"] ?? "",
+         finalPrice = Request.QueryString["finalPrice"] ?? "",
+         variations = Request.QueryString["variations"] ?? "",
+         idAttribute = Request.QueryString["idAttribute"] ?? "",
+         idCategories = Request.QueryString["idCategories"] ?? ""
         })
       </div>
     }
   </div>
 </div>
-<div class="sixteen wide column">
-  @Html.Action("BannerBrand", "Banner", new { brandID = Model.IdBrand, bannerType = 'R' })
-</div>
+<input type="hidden" name="CurrentPage" id="CurrentPage" value="brand" />
 <input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
 
 @section custom_js{

@@ -18,7 +18,7 @@
             </a>
           </div>
 
-          @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>", String.Empty).Trim() != "")
+          @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
           {
             <div class="description">
               <div class="html">@Html.Raw(randombanner.Description)</div>

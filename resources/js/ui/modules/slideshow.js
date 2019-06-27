@@ -1,6 +1,6 @@
-$(function () {
+window.addEventListener('load', function () {
   Slideshow($(".slideshow"));
-});
+})
 
 export function Slideshow(elements) {
   elements.each(function () {
