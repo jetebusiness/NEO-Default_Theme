@@ -260,7 +260,7 @@
                         <div class="item detalhes">
                             <div class="content">
                                 <div class="description">
-                                    <strong>@Model.NameShipping : @string.Format("{0:c}", Model != null ? Model.TotalShipping : 0)</strong>
+                                    <strong>@Html.Raw(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping) : @string.Format("{0:c}", Model != null ? Model.TotalShipping : 0)</strong>
                                 </div>
                             </div>
                         </div>

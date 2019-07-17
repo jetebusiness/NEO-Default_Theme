@@ -361,7 +361,7 @@ function getFilters(callUpdateAjax = false, dataFilter = {}) {
     }
   } else {
     let page = $("#CurrentPage").val();
-    if(window)
+    if (window)
       data = {
         category: page == "category" ? storageData.category : "",
         brand: page == "brand" ? storageData.brand : "",
