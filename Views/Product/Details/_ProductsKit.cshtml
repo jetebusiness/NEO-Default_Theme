@@ -36,6 +36,7 @@
                                 </div>
                                 @if (product.AvailableReferences != null && product.AvailableReferences.Any())
                                 {
+                                    string references = string.Empty;
                                     string variations = string.Empty;
 
                                     <div class="variacao">
@@ -46,14 +47,20 @@
                                                 <button class="ui basic button radio variacao cor " style="background-color: @reference.Variations.FirstOrDefault().Color !important;" data-tooltip="@reference.Variations.FirstOrDefault().Name" data-tipo="color" data-order="@reference.Variations.FirstOrDefault().DisplayOrder"></button>
                                             }
 
-                                            variations += string.Concat(string.IsNullOrEmpty(variations) ? "" : " - ", reference.Name, ": ", reference.Variations.FirstOrDefault().Name);
+                                            references = string.Concat(string.IsNullOrEmpty(references) ? "" : " - ", reference.Name);
                                         }
-                                        <span>@variations</span>
+
+                                        @foreach (var variation in product.SKUs)
+                                        {
+                                            variations = string.Concat(string.IsNullOrEmpty(variations) ? "" : " - ", variation.Variations.FirstOrDefault().Name);
+                                        }
+
+                                        <span>@references - @variations</span>
                                     </div>
                                 }
                                 <div class="quantidade">Quantidade: @product.Quantity</div>
                             </div>
-                        </div>
+                                </div>
                     </div>
                     }
                 }

@@ -606,8 +606,9 @@ $(document).on("change", ".checkBrand", function () {
 
 
 $(document).on("click", ".pricefilter", function () {
-  window.filterManipulation.initialprice = $("#initialPrice").val().replace(".", "").replace(",", ".");
-  window.filterManipulation.finalprice = $("#finalPrice").val().replace(".", "").replace(",", ".");
+    window.filterManipulation.labelFilter = [];
+    window.filterManipulation.initialprice = $("#initialPrice").val().replace(".", "").replace(",", ".");
+    window.filterManipulation.finalprice = $("#finalPrice").val().replace(".", "").replace(",", ".");
 
   if (window.filterManipulation.initialprice === "" || window.filterManipulation.finalprice === "") {
     _alert("Atenção", "Informe preço mínimo e preço máximo!", "warning");

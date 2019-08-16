@@ -154,7 +154,7 @@
          pageNumber = Request.QueryString["pageNumber"] ?? "",
          pageSize = 12,
          order = Request.QueryString["order"] ?? "",
-         brand = Request.QueryString["brand"] ?? "",
+         brand = Model.IdBrand,
          group = Request.QueryString["group"] ?? "",
          initialPrice = Request.QueryString["initialPrice"] ?? "",
          finalPrice = Request.QueryString["finalPrice"] ?? "",

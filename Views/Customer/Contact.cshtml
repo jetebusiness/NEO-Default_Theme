@@ -138,6 +138,11 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="column text right">
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Contact" })
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="column">
                                 <a href="/Home" class="ui animated button large basic left floated form_refresh">
                                     <div class="visible content">Voltar</div>
@@ -178,6 +183,23 @@
                 });
             }
             else {
+
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else if (googleRecaptchaVersion == '3') {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $("#googleResponse").val('');
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
                 swal({                    
                     text: response.message,
                     type: 'warning',
@@ -191,6 +213,23 @@
 
         function onFailure(response) {
             if (response.success == false) {
+
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else if (googleRecaptchaVersion == '3') {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $("#googleResponse").val('');
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
                 swal({
                     text: response.message,
                     type: 'error',
