@@ -1,35 +1,6 @@
 ﻿@model IEnumerable<DomainProduct.Entities.ProductImage>
 
-<script>
-    jQuery(document).ready(function ($) {
-        slickGallery();
-    });
-    function checkImagesSize(imageQuantity) {
-        var images = $(".car-gallery .ui.image").length;
-        if (images >= imageQuantity) {
-            return imageQuantity;
-        } else {
-            return images;
-        }
-    }
 
-    function destroyCarousel() {
-        $('.car-gallery').slick('destroy');
-    }
-
-
-    function slickGallery() {
-        $('.car-gallery').slick({
-            prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
-            nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
-            dots: false,
-            slidesToShow: 3,
-            mobileFirst:true,
-            useTransform:false,
-            infinite:false
-        });
-    }
-</script>
 <div class="car-gallery thumbnails slick-dotted">
     @foreach (var item in Model)
     {

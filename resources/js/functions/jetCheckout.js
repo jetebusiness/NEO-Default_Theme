@@ -1,3 +1,6 @@
+
+import { isMobile } from "./mobile";
+
 /**
  * JetCheckout Plugin
  * Author: Heitor Ramon Ribeiro
@@ -9,7 +12,7 @@
 
     "use strict";
     const pluginName  = "jetCheckout",
-          cleanString = (value) => value.replace(/[^\d]+/g, ""),
+        cleanString = (value) => value.replace(/[^\d]+/g, ""),
         defaults    = {
             debug: false,
             fieldSelector: ".field",
@@ -60,7 +63,7 @@
                 },
                 creditcard: {
                     type: "regex",
-                    pattern: /\d{4}-?\d{4}-?\d{4}-?\d{4}/u,
+                    pattern: /\d{4}-?\d{4}-?\d{4}-?\d{4}-?\d{3}/u,
                     message: "Cartão de crédito inválido."
                 },
                 cpfCnpj: {
@@ -69,7 +72,7 @@
                 },
                 email: {
                     type: "regex",
-                    pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/u,
+                    pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g,
                     message: "E-mail inválido. Ex: seuemail@provedor.com"
                 },
                 empty: {
@@ -139,12 +142,15 @@
 
             this.tabIndex = 0;
 
-            $element.find(`${groupSelector}:not([data-jet-active="true"]), ${fieldSelector}:not([data-jet-active="true"]), [data-jet-active="false"]`)
-                .hide()
-                .find("input")
-                .each(function () {
-                    $(this).attr("disabled", true);
-                });
+            if(!isMobile()) {
+                $element.find(`${groupSelector}:not([data-jet-active="true"]), ${fieldSelector}:not([data-jet-active="true"]), [data-jet-active="false"]`)
+                    .hide()
+                    .find("input")
+                    .each(function () {
+                        $(this).attr("disabled", true);
+                    });
+            }
+
 
             $element.show();
 
@@ -169,11 +175,15 @@
 
                 $input.keypress((e) => {
                     let keyCode = e.keyCode || e.which;
+
+                if(keyCode === 10 || keyCode === 13)
+                    return false;
+
                 if (keyCode === 9) {
                     if (!jet.validateField($this)) {
                         e.preventDefault();
                         $input.focus();
-                    }
+                    } 
                 }
                 keypressDelay(function () {
                     if (jet.validateField($this)) {
@@ -193,6 +203,10 @@
                     }
                 }
             });
+
+                $input.on("blur", function() {
+                    $('.field.required:visible:not(.success)').first().find("input:not(.search)").focus()
+                });
             });
 
             return this;
@@ -248,7 +262,7 @@
                             regex = validateOptions.toValidate();
                         }
                         else if (validateOptions.type === "name") {
-                            if (/[^-\s]\s/g.test(value)) {
+                            if (/^[A-zÀ-ÿ'][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-zÀ-ÿ'][A-zÀ-ÿ']+$/g.test(value)) {
                                 regex = validateOptions.pattern.test(value);
                             }
                         }
@@ -421,7 +435,6 @@
                     incomplete: $incomplete
                 }
             };
-
         },
         endOfForm: function () {
             let jet    = this,
@@ -467,6 +480,7 @@
             }
             else {
                 jet.validateShowField($nextElement);
+                
                 return false;
             }
         },
@@ -665,8 +679,8 @@
             });
 
             let mod = multiplied.reduce(function (buffer, number) {
-                    return buffer + number;
-                }) % 11;
+                return buffer + number;
+            }) % 11;
 
             return (mod < 2 ? 0 : 11 - mod);
         };
@@ -699,11 +713,11 @@
      * Show the error message based on the config.
      *
      * @param params{
-         * id: (data-jet-checkout-id of the element it will be appended the message)
-         * class: class of the message that will be added
-         * message: string of the message,
-         * remove: {boolean} true: remove the message
-         * }
+     * id: (data-jet-checkout-id of the element it will be appended the message)
+     * class: class of the message that will be added
+     * message: string of the message,
+     * remove: {boolean} true: remove the message
+     * }
      */
     $.fn[pluginName].showErrorMsg = function (params) {
         let $field = $(`[data-jet-checkout-id="${params.id}"]`);

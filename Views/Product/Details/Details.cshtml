@@ -8,8 +8,16 @@
     string ListaImagens = string.Empty;
     string ListaSKU = string.Empty;
     string AvailableReferences = string.Empty;
+    string JsonDetail = string.Empty;
     string variacaoSelecionada = string.Empty;
     string skuSelecionado = string.Empty;
+
+    ViewModels.ViewModelStore.Produto.TreeReference treeReference = (ViewModels.ViewModelStore.Produto.TreeReference)TempData["TreeReference"];
+
+    if (treeReference != null)
+    {
+        JsonDetail = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(treeReference);
+    }
 
     if (Model.ProductImages != null)
     {
@@ -239,6 +247,7 @@
     <input type="hidden" value="@Model.InstallmentMax.Description" id="pagamento-descricao" name="pagamento-descricao" />
 }
 <input type="hidden" value="@AvailableReferences" id="principal-produto-referecias" name="principal-produto-referecias" />
+<input type="hidden" value="@JsonDetail" id="json-detail" name="json-detail" />
 <input type="hidden" value="@ViewBag.DescontoBoleto" id="desconto_boleto" name="desconto_boleto" />
 <!-- FIM - Váriaveis Produto Unitário-->
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
@@ -355,7 +364,17 @@
                                     if (!Model.FlagExhausted)
                                     {
                                         <input type="hidden" id="hdnShowProductOutOfStock" value="@(!LojaCorp.Control.Company._Company.ShowProductOutOfStock ? 0 : 1)" />
-                                        @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })
+
+                                        if (Model.AvailableReferences != null)
+                                        {
+                                            <div class="one column ui attached segment">
+                                                <div class="column">
+                                                    <div id="variations-container"></div>
+                                                </div>
+                                            </div>
+                                        }
+                                       
+                                        @*@Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })*@
                                     }
                                     <!--FIM VARIAÇÔES-->
 
@@ -396,39 +415,42 @@
                                                             if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
                                                             {
                                                                 decimal dec = (decimal)@SKUPadrao.PricePromotion;
-                                                                <span class="precoAntigo"><span>de: </span><span id="preco-antigo">@SKUPadrao.Price.ToString("C")</span><span> por</span></span>
+                                                                <span id="preco-antigo">@SKUPadrao.Price.ToString("C")</span>
                                                                 <span itemprop="price" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
-                                                                <span class="infoPreco">
-                                                                    <span>em</span>
-                                                                    <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de</span></span>
-                                                                    <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                                    <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
-                                                                    @if (ViewBag.DescontoBoleto > 0)
-                                                                    {
-                                                                        var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
 
-                                                                        <br />
-                                                                        <span>ou</span>
-                                                                        <span><span id="preco_boleto">@string.Format("R${0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                    }
-                                                                </span>
+                                                                if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
+                                                                {
+                                                                    <div class="infoPreco">
+                                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber</span>
+                                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
+                                                                        <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
+                                                                    </div>
+                                                                }                                                                                                                                             
+                                                                
+                                                                
+                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                 {
+                                                                     var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
+                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                                 }
                                                             }
                                                             else
                                                             {
                                                                 <span itemprop="price" class="preco" id="preco" data-preco-inicial="@SKUPadrao.Price">@SKUPadrao.Price.ToString("C")</span>
-                                                                <span class="infoPreco">
-                                                                    <span>em</span>
-                                                                    <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de</span></span>
-                                                                    <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                                    <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
-                                                                    @if (ViewBag.DescontoBoleto > 0)
-                                                                    {
-                                                                        var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
-                                                                        <br />
-                                                                        <span>ou</span>
-                                                                        <span><span id="preco_boleto">@string.Format("R${0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                    }
-                                                                </span>
+                                                                if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
+                                                                {
+                                                                    <div class="infoPreco">
+                                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de</span></span>
+                                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
+                                                                        <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
+                                                                    </div>
+                                                                }
+                                                                
+                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                 {
+                                                                     var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
+                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                                 }
                                                             }
                                                         }
                                                         else
@@ -436,43 +458,39 @@
                                                             if (Model.PricePromotion != null && Model.PricePromotion > 0)
                                                             {
                                                                 decimal dec = (decimal)@Model.PricePromotion;
-                                                                <span class="precoAntigo"><span>de: </span><span id="preco-antigo">@Model.Price.ToString("C")</span><span> por</span></span>
+                                                                <span id="preco-antigo">@Model.Price.ToString("C")</span>
                                                                 <span itemprop="price" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
-                                                                if (Model.InstallmentMax != null)
+                                                                if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {
-                                                                    <span class="infoPreco">
-                                                                        <span>em</span>
+                                                                    <div class="infoPreco">
                                                                         <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de</span></span>
                                                                         <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
                                                                         <span id="description">(@Model.InstallmentMax.Description)</span>
-                                                                        @if (ViewBag.DescontoBoleto > 0)
-                                                                        {
-                                                                            var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
-                                                                            <br />
-                                                                            <span>ou</span>
-                                                                            <span><span id="preco_boleto">@string.Format("R${0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                        }
-                                                                    </span>
+                                                                    </div>
+                                                                    
+                                                                }
+                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                {
+                                                                    var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
+                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
                                                                 }
                                                             }
                                                             else
                                                             {
                                                                 <span itemprop="price" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
-                                                                if (Model.InstallmentMax != null)
+                                                                if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {
-                                                                    <span class="infoPreco">
-                                                                        <span>em</span>
+                                                                    <div class="infoPreco">
                                                                         <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de</span></span>
                                                                         <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
                                                                         <span id="description">(@Model.InstallmentMax.Description)</span>
-                                                                        @if (ViewBag.DescontoBoleto > 0)
-                                                                        {
-                                                                            var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
-                                                                            <br />
-                                                                            <span>ou</span>
-                                                                            <span><span id="preco_boleto">@string.Format("R${0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                        }
-                                                                    </span>
+                                                                    </div>
+                                                                    
+                                                                }
+                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                {
+                                                                    var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
+                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
                                                                 }
                                                             }
                                                         }

@@ -1,7 +1,11 @@
 ﻿import {moneyPtBR} from "../../functions/money";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
 import {_alert, _confirm} from "../../functions/message";
+import {SomenteNumeros} from './detail'
+
+
 const toastr = require("toastr");
+
 var detalhes_maiorParc = 0, detalhes_valorParc = 0, detalhes_descricao = "";
 var carregar_resumo_parcelamento = true;
 
@@ -246,8 +250,8 @@ function AtualizaValoresGerais(){
     $("#grade_sku .sku_b2b").each(function(posicao) {
         let valor_str = $(this).find(".preco").text();
         let quantidade_str = $(this).find(".quantidade_b2b").val();
-        let quantidade_float = somenteNumeros(quantidade_str);
-        let valor_float = somenteNumeros(valor_str);
+        let quantidade_float = SomenteNumeros(quantidade_str);
+        let valor_float = SomenteNumeros(valor_str);
         total_qtd_skus_selecionados += quantidade_float;
         if(quantidade_float > 0){
             total_real_skus_selecionados += valor_float;
@@ -313,18 +317,8 @@ function AviseMe (produtoID, skuID){
         }
     });
 }
-function somenteNumeros(valor){
-    var str = valor.replace("R$", "").replace(".","").replace(",",".");
-    var retValue = 0;
-    if(str !== null) {
-        if(str.length > 0) {
-            if (!isNaN(str)) {
-                retValue = parseFloat(str);
-            }
-        }
-    }
-    return retValue;
-}
+
+
 function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
     $.ajax({
         url: '/Product/InsertItemCart',
@@ -363,11 +357,15 @@ function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
 
 export function CarregaParcelamentoPagSeguro() {
     if ($('.pagSeguroParcelamento').length > 0) {
+
+
+        detalhes_maiorParc = 0;
+        
         $('.pagSeguroParcelamento').html("Carregando...");
         $.ajax({
             method: "GET",
             url: "/Checkout/GetConfigPagSeguro",
-            success: function (responseConfig) {
+            success: function (responseConfig) {                
                 var urlJS = '';
                 if (responseConfig.config.production) {
                     urlJS = 'https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
@@ -380,36 +378,48 @@ export function CarregaParcelamentoPagSeguro() {
                     PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
 
                     var totalCheckout = 0;
+                    
+                    
 
                     if ($('#preco').length > 0)
-                        totalCheckout = $('#preco').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
+                        totalCheckout = SomenteNumeros($('#preco').text());
                     else
-                        totalCheckout = $('#conjunto-total-final').html().replace('R$', '').replace('&nbsp;', '').replace('.', '').replace(',', '.');
+                        totalCheckout = SomenteNumeros($('#conjunto-total-final').text());
 
-                    $.each($('.pagSeguroParcelamento'), function (key, item) {
+                    $.each($('.pagSeguroParcelamento'), function (key, item) {                        
                         var divParcelamento = $(item);
-                        var _brand = $(divParcelamento).data("brand");
+                        var _brand = $(divParcelamento).data("brand");    
 
                         PagSeguroDirectPayment.getInstallments({
                             amount: totalCheckout,
                             brand: _brand,
                             maxInstallmentNoInterest: responseConfig.config.maximumInstallmentWithoutInterest,
                             success: function (responseInstallment) {
+                                
+                               
+                                
                                 //var auxTotalProduto = Number.parseFloat(totalCheckout);
                                 //var jurosTotal = 0;
                                 //var taxaMensal = 0;
-                                var maximumInstallment = Number.parseInt(responseConfig.config.maximumInstallment);
+                                var maximumInstallment = parseInt($("#qtd-parcela-maxima-unidade").val());
+                                
                                 $.each(responseInstallment.installments, function (key, ResponseBrand) {
                                     //jurosTotal = Number.parseFloat(item.totalAmount) - auxTotalProduto;
 
                                     //taxaMensal = (jurosTotal / (auxTotalProduto * Number.parseFloat(item.quantity))) * 100;
                                     $("div.pagSeguroParcelamento[data-brand=" + key + "]").empty();
+
+                                    
+
                                     $.each(ResponseBrand, function (key2, item) {
+
+                                                                
                                         if (detalhes_maiorParc < item.quantity && item.interestFree)//maior parcela sem juros
                                         {
                                             detalhes_maiorParc = item.quantity;
                                             detalhes_valorParc = item.installmentAmount;
                                             detalhes_descricao = "Sem juros";
+
                                         }
                                         //if(item.quantity <= maximumInstallment)
                                         //{
@@ -425,9 +435,13 @@ export function CarregaParcelamentoPagSeguro() {
                                         //}
                                     });
                                 });
-                                $("#max-value").text(moneyPtBR(detalhes_valorParc));
-                                $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
-                                $("#description").text("(" + detalhes_descricao + ")");
+                                
+                                if(detalhes_maiorParc > maximumInstallment) {
+                                    $("#max-value").text(moneyPtBR(detalhes_valorParc));
+                                    $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
+                                    $("#description").text("(" + detalhes_descricao + ")");
+                                }
+                                
                             },
                             error: function (responseInstallment) {
                                 console.log(responseInstallment);

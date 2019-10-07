@@ -27,7 +27,7 @@ $(document).ready(function () {
 
   if (typeof (window.filterManipulation) !== "undefined") {
     if (window.filterManipulation.idCategory != undefined && window.filterManipulation.idCategory != "") {
-      $('#checkCategory_' + window.filterManipulation.idCategory).parent().parent().hide();
+      $('#checkCategory_' + window.filterManipulation.idCategory).prop("checked", true)
     }
   }
 
@@ -38,12 +38,15 @@ $(document).ready(function () {
 
       //Verificar condições para atualizar os produtos
       let update = false;
-      if (typeof (storageData.labelFilter) !== "undefined" ||
-        storageData.order !== "" ||
-        parseInt(storageData.pageSize) !== parseInt(pageSizeDefault) ||
-        parseInt(storageData.pageNumber) > 1 ||
-        storageData.viewList !== viewListGlobal )
-        update = true;
+      if ((typeof (storageData.labelFilter) !== "undefined" ||
+          storageData.order !== "" ||
+          parseInt(storageData.pageSize) !== parseInt(pageSizeDefault) ||
+          parseInt(storageData.pageNumber) > 1 ||
+          storageData.viewList !== viewListGlobal) &&
+          storageData.keyWord == (window.filterManipulation.keyWord == undefined ? "" : window.filterManipulation.keyWord)) {
+          
+          update = true;
+      }
 
       if (update) {
         //Antes de atualizar os produtos, sincroniza o filterManipulation com a sessão
@@ -177,6 +180,7 @@ function makeLabel(uncheck = false) {
   }
 
   for (let key in labelVariation) {
+if(labelVariation[key] != null) {
     if (labelVariation[key].type === "price") {
       htmlTag += `<a class="ui label filters" data-type="${labelVariation[key].type}" data-id="${labelVariation[key].id}" id="labelPrice">
                             ${labelVariation[key].name}: ${labelVariation[key].value}
@@ -193,6 +197,7 @@ function makeLabel(uncheck = false) {
       }
 
     }
+  }
   }
   $("#filter>div.ui.labels:first-child").html(htmlTag);
 
@@ -274,12 +279,13 @@ function updateAjax(_data) {
       if (window.filterManipulation.labelFilter !== undefined && window.filterManipulation.labelFilter.length === 0)
         window.filterManipulation.labelFilter = typeof (labelFilter) !== "object" ? JSON.parse(labelFilter) : labelFilter;
 
-      $('#checkCategory_' + _data.category).parent().parent().remove();
+      //$('#checkCategory_' + _data.category).parent().parent().remove();
 
       uiReload();
       makeLabel();
 
       $('input[type=checkbox]').prop('checked', false);
+      $('#checkCategory_' + window.filterManipulation.idCategory).prop("checked", true)
     },
     onFailure: function onFailure(response) {
       //console.log("Falha aplicar filtro: " + response);
@@ -564,8 +570,14 @@ $(document).on("change", ".checkCategory", function () {
   else
     window.filterManipulation.idCategories += "," + $(this).attr("id");
 
-
   if (!ValidateLabel("category", $(this).prop("id"))) {
+
+    for (let key in window.filterManipulation.labelFilter) {
+      if(window.filterManipulation.labelFilter[key].type == "category")
+        delete window.filterManipulation.labelFilter[key]
+    }
+    
+    
     window.filterManipulation.labelFilter.push({
       type: "category",
       id: window.filterManipulation.idCategory,

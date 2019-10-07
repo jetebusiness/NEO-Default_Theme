@@ -2,7 +2,6 @@
  * Client Register View
  */
 
-import {completaCEP} from "../../functions/correios";
 
 import{formSettings} from "../starters/formManipulation";
 
@@ -51,11 +50,25 @@ $(document).ready(function () {
         $(element).buscaCep(options);
     }
 
+    var ZipCode1,
+        ZipCode2;
+
+
+    $("input[name='Address[0].ZipCode']").change(function() {
+        ZipCode1 = $(this).val()
+    });
+
+    $("input[name='Address[1].ZipCode']").change(function() {
+        ZipCode2 = $(this).val()
+    });
+
     $("input[name='Address[0].ZipCode']").focusout(function() {
-        buscaCep($(this), 0);
+        if($(this).val() != ZipCode1)
+            buscaCep($(this), 0);
     });
     $("input[name='Address[1].ZipCode']").focusout(function() {
-        buscaCep($(this), 1);
+        if($(this).val() != ZipCode2)
+            buscaCep($(this), 1);
     });
 
 

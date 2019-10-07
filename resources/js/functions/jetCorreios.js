@@ -69,11 +69,11 @@
                     if (data.erro){
                         if (window.swal) {
                             window.swal('Erro', 'CEP não encontrado.', 'error');
-                            limpaForm();
+                            //limpaForm();
                         }
                         else {
                             alert("CEP não encontrado.");
-                            limpaForm();
+                            //limpaForm();
                         }   
                     }else{
                         atualizaCampos(data);
@@ -84,11 +84,11 @@
                     //console.log(error);
                     if (window.swal) {
                         window.swal('Erro', 'CEP não encontrado.', 'error');
-                        limpaForm();
+                        //limpaForm();
                     }
                     else {
                         alert("CEP não encontrado.");
-                        limpaForm();
+                        //limpaForm();
                     }
                 });
         }

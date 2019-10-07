@@ -1200,6 +1200,7 @@ function atualizaResumoCarrinho(oneclick) {
             var idFrete = $("#GetShippping .item .checkbox.checked input").val();
             var exclusivaEntregaAgendada = $("#radio_" + idFrete).attr("data-exclusiva-entregaagendada");
 
+            pagamentocomDesconto();
             if (exclusivaEntregaAgendada == "True") {
                 if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != ""))
                     HabilitaBlocoPagamento(true)
@@ -1217,18 +1218,47 @@ function atualizaResumoCarrinho(oneclick) {
     });
 }
 
-function atualizaEnderecos(responseChange) {
-    updateAddress();
+function pagamentocomDesconto() {
+    $.ajax({
+        method: "POST",
+        url: "PagamentoComDesconto",
+        success: function success(data) {
+            if (data.pagamentoDesconto) {
+                $("#formas-pagamento").children().children().addClass("hideme");
+                $("#pagamento-desconto").removeClass("hideme");
+                if ($(".shopping-voucher").length > 0) {
+                    let valueShoppingVoucher = Number.parseFloat($("#desconto_shopping_voucher").text().replace('R$', '').replace('.', '').replace(',', '.'));
+                    let totalCheckout = Number.parseFloat($("#total_checkout").text().replace('R$', '').replace('.', '').replace(',', '.'));
 
-    $("#idAddress").val(responseChange.idAddress);
-    $("#streetClient").text(responseChange.streetClient);
-    $("#numberClient").text(responseChange.numberClient);
-    $("#complementClient").text(responseChange.complementClient);
-    $("#neighbourhoodClient").text(responseChange.neighbourhoodClient);
-    $("#cityClient").text(responseChange.cityClient);
-    $("#stateClient").text(responseChange.stateClient);
-    $("#zipCodeClient").text(responseChange.zipCodeClient);
-    $("#zipcode").val(responseChange.zipCodeClient);
+                    if (valueShoppingVoucher == 0 || totalCheckout > 0) {
+                        $(".shopping-voucher").addClass("hideme");
+                    }
+                }
+            } else {
+                $("#formas-pagamento").children().children().removeClass("hideme");
+                $("#pagamento-desconto").addClass("hideme");
+                if ($(".shopping-voucher").length > 0) {
+                    $(".shopping-voucher").removeClass("hideme");
+                }
+            }
+        }
+    });
+}
+
+function atualizaEnderecos(responseChange) {
+    if (responseChange != undefined) {
+        updateAddress();
+
+        $("#idAddress").val(responseChange.idAddress);
+        $("#streetClient").text(responseChange.streetClient);
+        $("#numberClient").text(responseChange.numberClient);
+        $("#complementClient").text(responseChange.complementClient);
+        $("#neighbourhoodClient").text(responseChange.neighbourhoodClient);
+        $("#cityClient").text(responseChange.cityClient);
+        $("#stateClient").text(responseChange.stateClient);
+        $("#zipCodeClient").text(responseChange.zipCodeClient);
+        $("#zipcode").val(responseChange.zipCodeClient);
+    }
 
     $.ajax({
         method: "POST",
@@ -1264,7 +1294,12 @@ function applyDiscount() {
                         if ($('.ui.accordion.shopping-voucher').length > 0) {
                             ValeCompraRemover();
                         }
-                        _alert("Cupom de Desconto!", response.msg, "success");
+                        if (response.couponfreeshipping) {
+                            atualizaEnderecos();
+                            _alert("Cupom aplicado com sucesso!", response.msg, "success");
+                        } else {
+                            _alert("Cupom de Desconto!", response.msg, "success");
+                        }
                     }
                     else {
                         $("#key").val("");

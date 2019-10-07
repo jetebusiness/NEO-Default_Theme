@@ -1,7 +1,7 @@
 import { _alert } from '../../functions/message';
 import { isMobile } from '../../functions/mobile';
 
-require("jetcheckout");
+require("../../functions/jetCheckout");
 require("card/dist/jquery.card");
 
 $(document).ready(function () {

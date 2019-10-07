@@ -78,14 +78,14 @@
                                                        autocomplete="off">
                                             </div>
                                         </div>
-                                        <div class="field pessoa fisica">
-                                            <label>RG</label>
+                                        <div class="field required">
+                                            <label>Telefone</label>
                                             <div class="ui left icon input">
-                                                <i class="icon id card"></i>
-                                                <input class="rg_checkout" type="text" name="Rg_ie" placeholder=""
-                                                       maxlength="15"
-                                                       tabindex="2"
-                                                       autocomplete="off">
+                                                <i class="phone icon"></i>
+                                                <input type="tel" name="Phone.Phone1"
+                                                       placeholder="(00) 0000-0000" class="masked mask_phone"
+                                                       data-jet-validate="phone"
+                                                       tabindex="8">
                                             </div>
                                         </div>
                                         <div class="field required pessoa fisica">
@@ -142,21 +142,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="two fields">
-                                        <div class="field required">
-                                            <label>Telefone</label>
-                                            <div class="ui left icon input">
-                                                <i class="phone icon"></i>
-                                                <input type="tel" name="Phone.Phone1"
-                                                       placeholder="(00) 0000-0000" class="masked mask_phone"
-                                                       data-jet-validate="phone"
-                                                       tabindex="8">
-                                            </div>
-                                        </div>
-                                    </div>
                                     <h4 class="ui dividing header" data-jet-active="false">Endereço</h4>
                                     <div class="three fields required">
-                                        <div class="field" data-jet-revel="true">
+                                        <div class="field required" data-jet-revel="true">
                                             <label>CEP</label>
                                             <div class="ui left icon input">
                                                 <i class="icon marker"></i>

@@ -116,7 +116,7 @@
                             <div class="content">
                                 <a href="@(item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly)" class="header">@item.Name</a>
                                 <div class="meta">
-                                    @if (@Model.Brand != null)
+                                    @if (item.Brand != null)
                                     {
                                         <span>@item.Brand.Name</span>
                                     }

@@ -28,7 +28,7 @@
         {
             bgColor = "bg-checkout-success";
             tituloSucesso = "Pedido Confirmado";
-            msgSucesso = string.Format("Seu pedido foi realizado com sucesso. {0}", Request.QueryString["m"] == null ? "Agora falta pouco para receber seus produtos" : LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+            msgSucesso = string.Format("Seu pedido foi realizado com sucesso! Agora falta pouco para receber seus produtos.");
         }
         else
         {
@@ -150,9 +150,9 @@
         }
     }
 
-    <param id="TagEConfy" value="orderID=@Model.IdOrder&orderDate=@Model.DateOrder&orderPlatform=Jet-NEO&orderSellerID=@ViewBag.CompreConfie&orderBankEmissor=@Model.NameBank&orderCardFlag=@Model.CreditCardFlag&orderDeliveryType=@Model.NameShipping&orderPaymentType=@Model.OrderType&orderParcels=@Model.TotalInstallment&orderTotalSpent=@Model.TotalShipping&consumerCPF=@Model.Cpf_cnpj&consumerEmail=@Model.Email&consumerName=@Model.NameCustomer&consumerPhone=@Model.Address.PhoneContact&consumerZipcode=@Model.Address.ZipCode&billingCPF=@Model.Cpf_cnpj&billingEmail=@Model.Email&billingName=@Model.NameCustomer&billingPhone=@Model.Address.PhoneContact&billingZipcode=@Model.Address.ZipCode&productName=@productName&productQuantity=@productQuantity&productValue=@productValue&productDiscount=@Model.TotalDiscount&productDeliveryType=@Model.NameShipping&productSKU=@productSKU" />
     <a id="bannerEconfy"></a>
-    <script type="text/javascript" id="getData" src="https://banner.compreconfie.com.br/scripts/getData.js?sellerId=@ViewBag.CompreConfie&lightbox=true"></script>
+    <param id="TagEConfy" value="orderID=@Model.IdOrder&orderDate=@Model.DateOrder&orderPlatform=Jet-NEO&orderSellerID=@ViewBag.CompreConfie&orderBankEmissor=@Model.NameBank&orderCardFlag=@Model.CreditCardFlag&orderDeliveryType=@Model.NameShipping&orderPaymentType=@Model.OrderType&orderParcels=@Model.TotalInstallment&orderTotalSpent=@Model.TotalShipping&consumerCPF=@Model.Cpf_cnpj&consumerEmail=@Model.Email&consumerName=@Model.NameCustomer&consumerPhone=@Model.Address.PhoneContact&consumerZipcode=@Model.Address.ZipCode&billingCPF=@Model.Cpf_cnpj&billingEmail=@Model.Email&billingName=@Model.NameCustomer&billingPhone=@Model.Address.PhoneContact&billingZipcode=@Model.Address.ZipCode&productName=@productName&productQuantity=@productQuantity&productValue=@productValue&productDiscount=@Model.TotalDiscount&productDeliveryType=@Model.NameShipping&productSKU=@productSKU" />
+    <script type="text/javascript" id="getData" src="https://banner.compreconfie.com.br/scripts/tagBanner.min.js?@ViewBag.CompreConfie&lightbox=true"></script>
 }
 
 @if (ViewBag.ShowRegister)

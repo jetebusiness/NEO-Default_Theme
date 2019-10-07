@@ -167,6 +167,8 @@
   }
 }
 
+
+
 #jetCheckout-Logo {
     #logo {
         fill: #00B04C;
@@ -198,4 +200,10 @@
 
 .no-border {
     border: 0 none !important;
+}
+
+@media screen and (max-width: $tablet-bp-max) {
+  .jetCheckout {
+    margin-bottom: 1em !important;
+  }
 }
