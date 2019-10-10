@@ -54,11 +54,11 @@ $(document).ready(function () {
         ZipCode2;
 
 
-    $("input[name='Address[0].ZipCode']").change(function() {
+    $("input[name='Address[0].ZipCode']").keypress(function() {
         ZipCode1 = $(this).val()
     });
 
-    $("input[name='Address[1].ZipCode']").change(function() {
+    $("input[name='Address[1].ZipCode']").keypress(function() {
         ZipCode2 = $(this).val()
     });
 
