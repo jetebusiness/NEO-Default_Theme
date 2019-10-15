@@ -40,7 +40,9 @@ variations = {
             this.verifyContent()//iniciamos a criacao das variacoes
             this.clickBtn() //setamos as acoes do click das variacoes
             this.hideVariations() //escondemos as variacoes que nao pertencem a variacao selecionada           
-            
+
+        } else {
+            this.gallery()
         }
 
     },
@@ -59,7 +61,6 @@ variations = {
             //se os itens estiverem ok, siguimos com a criacao das variacoes
                 this.createVariations();
         }
-
     },
     //funcao responsavel por retornar mensagens de qualquer problema encontrado
     error: function(message) {
@@ -223,7 +224,7 @@ variations = {
 
     },
     //funcao para criar as acoes do click de cada variacao
-    clickBtn: function() {        
+    clickBtn: function() {
 
         container = $(this.config.container);
 
@@ -231,7 +232,7 @@ variations = {
 
             //removendo o sku selecionado
             $(variations.config.productSKU).val('')
-            
+
 
             //removendo a mensagem de estoque
             $('#' + variations.config.stock.messageStockContainer).remove()
@@ -245,7 +246,7 @@ variations = {
                 variations.reloadValues($(this))
 
             } else {
-                
+
                 $(variations.config.itensDisable.btnBuy).addClass("disabled")
 
                 //verificando se e a primeira referencia e recuperando o ID inicial
@@ -327,6 +328,11 @@ variations = {
             }
         });
     },
+    isDevice: function() {
+
+        var isiDevice = /ipad|iphone|ipod/i.test(navigator.userAgent.toLowerCase());
+        return isiDevice;
+    },
     slickZoom: function() {
 
         //apos buscar as imagens, aplicamos o lazyload e o slideshow
@@ -338,16 +344,65 @@ variations = {
             once:true
         });
 
+        if(!this.isDevice()) {
+            $(".easyzoom").easyZoom().init();
+        } else {
+            this.toggleZoom()
+        }
+        this.gallery()
+
+    },
+    gallery: function() {
         ($('.car-gallery').hasClass("slick-slider") ? $('.car-gallery').slick('destroy') : "");
 
         $('.car-gallery').slick({
             prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
             nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
             dots: false,
-            slidesToShow: 3,
+            slidesToShow: 6,
             mobileFirst:true,
             useTransform:false,
             infinite:false
+        });
+
+        this.thumbAction()
+    },
+    thumbAction: function() {
+
+        $('.thumbnails a').on('click', function(e) {
+
+            var $this = $(this),
+                $toggle = $('.toggleZoom'),
+                $easyzoom = $(".easyzoom");
+
+            e.preventDefault();
+
+            $this.parents(".slick-slide").siblings().removeClass("slick-current")
+            $this.parents(".slick-slide").addClass("slick-current")
+
+            if ($toggle.data("active") === true || !variations.isDevice()) {
+                $easyzoom.easyZoom().filter('.easyzoom--with-thumbnails').data('easyZoom').swap($this.data('standard'), $this.attr('href'));
+            } else {
+                $(">a", ".easyzoom").attr("href", $this.data('standard'))
+                $(">a>img", ".easyzoom").attr("src", $this.data('standard'))
+            }
+
+        });
+    },
+    toggleZoom: function() {
+        $('.toggleZoom').on('click', function(e) {
+
+            var $this = $(this),
+                $easyzoom = $(".easyzoom");
+
+
+            if ($this.attr("data-active") === true || $this.attr("data-active") === "true") {
+                $this.text("Habilitar Zoom").attr("data-active", false);
+                $easyzoom.easyZoom().filter('.easyzoom--with-toggle').data('easyZoom').teardown();
+            } else {
+                $this.text("Desativar Zoom").attr("data-active", true);
+                $easyzoom.easyZoom().init();
+            }
         });
     },
     //formatando numeros em moeda
@@ -437,7 +492,7 @@ variations = {
             $.each(this.config.itensDisable, function (index, el) {
                 $(el).addClass('disabled')
             });
-            
+
             $('.visible', this.config.itensDisable.btnBuy).text('PRODUTO ESGOTADO')
 
             $(this.config.alertMe).removeClass("hideme")
