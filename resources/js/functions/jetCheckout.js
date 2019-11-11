@@ -103,6 +103,12 @@ import { isMobile } from "./mobile";
                     message: "CEP inválido.",
                     onValidateInputComplete: function () {
                     }
+                },
+                datebirth: {
+                    type: "datebirth",
+                    message: "Data de Nascimento inválida.",
+                    onValidateInputComplete: function () {
+                    }
                 }
             },
             onValidateClear: function () {
@@ -151,8 +157,15 @@ import { isMobile } from "./mobile";
                     });
             }
 
-
             $element.show();
+            
+            if($(".cpf_cnpj_checkout").is(":visible")) {
+                
+                var $thisProfile = $(".cpf_cnpj_checkout").val()                
+                if (cleanString($thisProfile).length === 14) {
+                    jet.changeProfile("pj");
+                }
+            }
 
             $element.find(groupSelector).each(function () {
                 $(this).attr('data-jet-field-group', true);
@@ -175,6 +188,9 @@ import { isMobile } from "./mobile";
 
                 $input.keypress((e) => {
                     let keyCode = e.keyCode || e.which;
+
+                $input.keyup((e) => {
+                    $input.val($input.val().replace(/\s+/g, ' '))});
 
                 if(keyCode === 10 || keyCode === 13)
                     return false;
@@ -271,8 +287,8 @@ import { isMobile } from "./mobile";
                         }
                         else if (validateOptions.type === "select") {
                             $input = $field.find("select:first");
-                            type   = $input.attr("data-jet-validate");
-                            value  = $input.val();
+                            type = $input.attr("data-jet-validate");
+                            value = $input.val();
                             if (!!value) {
                                 jet.fieldIsInvalid($field, id);
                                 return false;
@@ -284,13 +300,39 @@ import { isMobile } from "./mobile";
                         }
                         else if (validateOptions.type === "zipcode") {
                             let validacep = /^[0-9]{8}$/;
-                            value         = cleanString(value);
+                            value = cleanString(value);
                             if (value === "" || value.length >= 1 && !validacep.test(value)) {
                                 regex = false;
                             }
                             else if (validacep.test(value)) {
                                 regex = true;
                                 validateOptions.onValidateInputComplete();
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                        else if (validateOptions.type === "datebirth") {
+                            let validaData = /((([0][1-9]|[12][\d])|[3][01])[-/]([0][13578]|[1][02])[-/][1-9]\d\d\d)|((([0][1-9]|[12][\d])|[3][0])[-/]([0][13456789]|[1][012])[-/][1-9]\d\d\d)|(([0][1-9]|[12][\d])[-/][0][2][-/][1-9]\d([02468][048]|[13579][26]))|(([0][1-9]|[12][0-8])[-/][0][2][-/][1-9]\d\d\d)/u;
+                            if (value === "" || !validaData.test(value)) {
+                                regex = false;
+                            }
+                            else if (validaData.test(value)) {
+                                var dateNow = new Date();
+                                var dateSplited;
+                                var dataFinal;
+                                regex = false;
+                                if (value.length == 10) {
+                                    dateSplited = value.split("/");
+                                    dataFinal = new Date(dateSplited[1] + '/' + dateSplited[0] + '/' + dateSplited[2]);
+                                    if (dataFinal < dateNow) {
+                                        regex = true;
+                                        validateOptions.onValidateInputComplete();
+                                    }
+                                }
+                                else {
+                                    regex = false
+                                }
                             }
                             else {
                                 return false;

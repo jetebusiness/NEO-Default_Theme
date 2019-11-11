@@ -6,3 +6,13 @@
     else
         return false
 }
+
+export function validarEmail(email) {
+    // filtros
+    var emailFilter = /^.+@.+\..{2,}$/;
+    var illegalChars = /[\(\)\ \<\>\,\;\:\\\/\"\[\]]/;
+
+    if (!(emailFilter.test(email)) || email.match(illegalChars)) return false;
+
+    return true;
+}

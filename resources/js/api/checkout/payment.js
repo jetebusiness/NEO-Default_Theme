@@ -49,7 +49,7 @@ function BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAge
         method: "POST",
         url: "EntregaAgendada",
         data: {
-            idShippingMode: new Number(idFrete),
+            idShippingMode: new Number(idFrete)
         },
         success: function (response) {
             var DataAgendadas = JSON.parse(response.msg);

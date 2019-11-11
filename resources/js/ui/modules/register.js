@@ -81,7 +81,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".tipo.cliente").dropdown('set selected', '0')
+    $(".tipo.cliente").dropdown('set selected', ($("#TypeCustomer").length > 0 ? $("#TypeCustomer").val() : 0))
         .dropdown({
             allowReselection: true,
             action: 'activate',
@@ -98,4 +98,12 @@ $(document).ready(function () {
                 }
             }
         });
+
+    if($("#TypeCustomer").length > 0){
+        if($("#TypeCustomer").val() > 0) {
+            hideProfile(".pessoa.fisica");
+            showProfile(".pessoa.juridica");
+        }
+    }
+    
 });

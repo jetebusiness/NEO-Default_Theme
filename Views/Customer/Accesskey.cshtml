@@ -25,18 +25,17 @@
 <div class="ui grid middle aligned center aligned">
     <div class="row">
         <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
-            @using (Ajax.BeginForm("Accesskey", "Customer", new AjaxOptions {HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure", OnComplete = "OnComplete"}, new {@class = "ui large form"}))
-            {
+            <form action="/Customer/Accesskey" class="ui large form" id="form-accesskey" method="post">
                 @Html.AntiForgeryToken()
                 <div class="ui segment">
                     <div class="ui grid  very relaxed stackable middle aligned grid">
                         <div class="row left aligned">
                             <div class="column">
                                 <div class="field required">
-                                    <label>E-mail</label>
+                                    <label>E-mail, cpf ou cnpj.</label>
                                     <div class="ui left icon input">
                                         <i class="user icon"></i>
-                                        <input type="text" autocomplete="off" name="email" value='@Session["Email"]' id="email" placeholder="E-mail" />
+                                        <input type="text" autocomplete="off" name="login" id="login" value="@Session["Login"]" placeholder="E-mail, cpf ou cnpj." />
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +61,7 @@
                     </div>
                 </div>
                 <div class="ui error message"></div>
-            }
+             </form>
         </div>
     </div>
 </div>
@@ -94,56 +93,3 @@
         </div>
     </div>
 </div>
-
-
-@section custom_js {
-    <script>
-        function OnSuccess(response) {
-            if (response.Success == true && response.Message == "Login") {
-                $("#UserName").val($('#email').val())
-                $('.ui.modal').modal('show');
-            } else if (response.Success == true && response.Message == "CadastrarSenha") {
-                window.location.href = "/Customer/CheckAccessKey";
-            } else if (response.Success == true && response.Message == "Cadastro") {
-                window.location.href = "/Customer/Register";
-            } else {
-                swal({         
-                    text: response.Message,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonColor: '#16ab39',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                });
-            }
-        }
-
-        function OnFailure(response) {
-            if (response.Success == false) {
-                swal({
-                    title: '',
-                    text: response.Message,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonColor: '#16ab39',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                });
-            }
-        }
-
-        function OnFailureLogin(response) {
-            if (response.Success == false) {
-                swal({
-                    title: '',
-                    text: response.Message,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonColor: '#16ab39',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                });
-            }
-        }
-    </script>
-}

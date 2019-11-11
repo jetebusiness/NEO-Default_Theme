@@ -44,7 +44,7 @@
                                     <label>E-mail</label>
                                     <div class="ui left icon input">
                                         <i class="user icon"></i>
-                                        <input class="field disabled" type="text" autocomplete="off" readonly name="Email" id="Email" placeholder="Email">
+                                        <input class="field disabled" type="text" autocomplete="off" readonly name="Email" id="Email" value="@ViewBag.EmailUser" placeholder="Email">
                                     </div>
                                 </div>
                                 <div class="field required">
@@ -98,7 +98,7 @@
         }
 
         $(document).ready(function () {
-            $("#Email").val(emailCustomer)
+            //$("#Email").val(emailCustomer)
 
             $(document).on("click",
                 "#Confirmar",

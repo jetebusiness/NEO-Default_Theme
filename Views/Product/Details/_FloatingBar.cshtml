@@ -93,7 +93,11 @@
             <div class="one column row product-grid" id="floating-bar">
                 @if (Model.AvailableReferences != null)
                 {
-                    @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao })
+                    <div class="one column ui attached segment">
+                        <div class="column">
+                            <div id="variations-floating" class="grid-variations"></div>
+                        </div>
+                    </div>
                 }
             </div>
         </div>

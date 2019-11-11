@@ -31,7 +31,11 @@ export function getMaskMultiplePhone() {
 }
 
 export function getMaskMultipleDocument() {
-	$('.mask_document').mask('000.000.000-00#');
+    
+    var $element = $('.mask_document');
+    ($element.hasClass("mask_document_cnpj") && $element.val().split('').length > 14  ? $element.mask('00.000.000/0000-00') : $element.mask('000.000.000-00#'));
+	
+	
 	$(".mask_document").keypress(function () {
 		var doc = $(".mask_document").val();
 		if (doc.length > 14) {

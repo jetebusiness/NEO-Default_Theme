@@ -14,18 +14,20 @@
         <div class="row">
             <div class="twelve wide computer sixteen wide tablet sixteen wide mobile column">
                 <form action="" method="POST" id="identificationForm" class="ui large form jet checkout">
+                    <input type="hidden" name="email" id="email" value="" />
+                    <input type="hidden" name="cpfCnpj" id="cpfCnpj" value="" />
                     <div class="ui segment">
                         <div class="ui grid very relaxed stackable">
                             <div class="row one column left aligned">
                                 <div class="column">
                                     <div class="field required">
-                                        <label for="">Digite seu e-mail</label>
+                                        <label for="">Digite seu e-mail, cpf ou cnpj</label>
                                         <div class="ui left icon huge input">
                                             <i class="mail icon"></i>
-                                            <input type="text" id="email" name="email" placeholder="E-mail">
+                                            <input type="text" id="login" name="login" placeholder="E-mail, Cpf ou Cnpj.">
                                         </div>
                                     </div>
-                                    <button type="submit" id="checkEmail" class="ui animated button large submit action right floated"
+                                    <button type="submit" id="checkLogin" class="ui animated button large submit action right floated"
                                             tabindex="0">
                                         <div class="visible content">Continuar</div>
                                         <div class="hidden content">

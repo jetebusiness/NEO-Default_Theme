@@ -9,7 +9,13 @@
     {
         termo = WebUtility.HtmlDecode(@ViewBag.Termo); ;
     }
+
+    string emailDefault = !string.IsNullOrEmpty((string)Session["Email"]) ? (string)Session["Email"] : "";
+    string cpfCnpj = !string.IsNullOrEmpty((string)Session["CpfCnpj"]) ? Session["CpfCnpj"].ToString().Replace(".", "").Replace("/", "").Replace("-", "") : "";
 }
+
+
+
 
 @section breadcrumbs {
     <div class="ui container">
@@ -45,7 +51,6 @@
                 @Html.AntiForgeryToken()
 
                 <input type="hidden" name="Address[0].Country" value="BRASIL" />
-
                 <div class="ui segment">
                     <div class="ui grid stackable top aligned left aligned grid">
                         <div class="row two column divided horizontal">
@@ -56,7 +61,7 @@
                                     <div class="field required">
                                         <label>Perfil</label>
                                         <div class="ui dropdown selection tipo cliente">
-                                            <input type="hidden" id="TypeCustomer" name="TypeCustomer">
+                                            <input type="hidden" id="TypeCustomer" name="TypeCustomer" value="@(cpfCnpj.Length == 14 ? 1 : 0)">
                                             <div class="default text">Perfil de Cliente</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
@@ -103,7 +108,7 @@
                                         <div class="field required pessoa fisica">
                                             <label>CPF</label>
                                             <div class="ui left input">
-                                                <input type="tel" value="" name="Cpf_cnpj" class="masked mask_cpf"
+                                                <input type="tel" value="@Html.Raw(cpfCnpj)" name="Cpf_cnpj" class="masked mask_cpf"
                                                        placeholder="000.000.000-00"
                                                        data-validate="cpf" id="_cpf">
                                             </div>
@@ -117,7 +122,7 @@
                                         <div class="field required pessoa juridica">
                                             <label>CNPJ</label>
                                             <div class="ui left input">
-                                                <input type="tel" value="@(Model.Cpf_cnpj != "" ? Model.Cpf_cnpj : "")" name="Cpf_cnpj" class="masked mask_cnpj"
+                                                <input type="tel" value="@Html.Raw(cpfCnpj)" name="Cpf_cnpj" class="masked mask_cnpj"
                                                        placeholder="00.000.000/0000-00" data-validate="cnpj" id="_cnpj">
                                             </div>
                                         </div>
@@ -199,7 +204,7 @@
                                             <div class="ui left icon input">
                                                 <i class="mail icon"></i>
                                                 <input type="text" name="Email" id="Email" placeholder="E-mail"
-                                                       value="@(string.IsNullOrEmpty((string)Session["Email"]) ? @Html.Raw("") : @Html.Raw((string)Session["Email"]))" data-validate="email">
+                                                       value="@Html.Raw(emailDefault)" data-validate="email">
                                             </div>
                                         </div>
                                         <div class="field required">

@@ -438,9 +438,10 @@ function getParamsFilters(filters) {
 $(document).on("click", "#previousPage", function () {
   var isdisabled = $(this).hasClass("disabled");
   if (!isdisabled) {
-    paginationFilter = true
-    let page = $(this).data("number");;
-    updateAjaxPagination(page);
+      paginationFilter = true;
+    let page = $(this).data("number");
+      updateAjaxPagination(page);
+      window.scrollTo(0, 0);
   }
 });
 
@@ -449,14 +450,16 @@ $(document).on("click", "#nextPage", function () {
   if (!isdisabled) {
     paginationFilter = true;
     let page = $(this).data("number");
-    updateAjaxPagination(page);
+      updateAjaxPagination(page);
+      window.scrollTo(0, 0);
   }
 });
 
 $(document).on("click", ".btnPageNumber", function () {
   paginationFilter = true;
   let page = $(this).data("number");
-  updateAjaxPagination(page);
+    updateAjaxPagination(page);
+    window.scrollTo(0, 0);
 });
 
 

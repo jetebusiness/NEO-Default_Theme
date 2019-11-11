@@ -12,13 +12,14 @@ variations = {
         productSKU: '#produto-sku', //hidden que contem o id do SKU para adicionar ao carrinho
         itensDisable: { //itens que receberao a classe 'disabled' quando o stock for 0
             btnBuy : '.btn-comprar',
+            btnBuyNow: '.btn-comprar-oneclick'
         },
         alertMe: "#avise_me", //id do avise quando o stock for 0
         stock: { // opcao que contempla a exibicao de uma mensagem com estoque da variacao selecionada
             showMessageStock: true, //se true a mensagem sera exibida
             messageStockContainer: 'messageStock', // div que recebera o html da mensagem
-            maxStockValue: 10, //quando o estoque for menor ou igual ao valor, a mensagem sera exibida 
-            messageStockHtml: '<i class="icon bell"></i>Temos apenas ${value} itens desse produto em estoque', //html da mensagem
+            maxStockValue: 3, //quando o estoque for menor ou igual ao valor, a mensagem sera exibida 
+            messageStockHtml: '<i class="icon bell"></i>Temos apenas <strong>0${value}</strong> em estoque', //html da mensagem
         },
         htmlPrice : { //itens que contem os valores da variacao
             containerValues: '#variacao-preco', //div que recebe as informacoes
@@ -38,7 +39,7 @@ variations = {
 
         if($(this.config.references).length > 0 && $(this.config.container).length > 0) {
             this.verifyContent()//iniciamos a criacao das variacoes
-            this.clickBtn() //setamos as acoes do click das variacoes
+            this.clickBtn($(this.config.container)) //setamos as acoes do click das variacoes
             this.hideVariations() //escondemos as variacoes que nao pertencem a variacao selecionada           
 
         } else {
@@ -61,6 +62,7 @@ variations = {
             //se os itens estiverem ok, siguimos com a criacao das variacoes
                 this.createVariations();
         }
+
     },
     //funcao responsavel por retornar mensagens de qualquer problema encontrado
     error: function(message) {
@@ -110,7 +112,7 @@ variations = {
                     reference = obj[key]['SubTreeReference'].IdReference;
 
                     //criamos a nova div com a nova referencia
-                    if($("[data-reference='" + reference +"']").length == 0)
+                    if($("[data-reference='" + reference +"']", container).length == 0)
                         container.append("<div class='references' data-reference='" + reference +"'><span class='title'>"+ obj[key]['SubTreeReference'].Name +"</span><div class='variations'></div></div>")
                 }
 
@@ -128,7 +130,7 @@ variations = {
                     $.each(obj[key]['Sku'].Variations, function (i, el) {
                         $(variations.config.productSKU).val(obj[key]['Sku'].IdSku)
 
-                        $("[data-variation='"+ el.IdVariation +"']").addClass("select")
+                        $("[data-variation='"+ el.IdVariation +"']", container).addClass("select")
                     });
                 }
 
@@ -137,12 +139,12 @@ variations = {
 
                     if(obj[key]['Sku'].Variations.length == i+1) {
 
-                        if($('.references').length == 1)
+                        if($('.references', container).length == 1)
                             identifier = "[data-variation='"+ el.IdVariation +"']"
                         else
                             identifier = "[data-reference='"+ obj[key].IdVariationFather +"'][data-variation='"+ el.IdVariation +"']"
 
-                        $(identifier).attr({
+                        $(identifier, container).attr({
                             "data-IdSku"             : obj[key]['Sku'].IdSku,
                             "data-Price"             : obj[key]['Sku'].Price,
                             "data-PricePromotion"    : obj[key]['Sku'].PricePromotion,
@@ -166,7 +168,7 @@ variations = {
 
             btn = '\n\
                 <div class="ui variacao img" data-variation="'+ IdVariation +'" '+IdVariationFather+'>\n\
-                    <img src="' + imageURL + '" alt="' + Name + '">\n\
+                    <img src="' + imageURL + '" alt="' + Name + '" data-tooltip="'+ Name +'">\n\
                     <div class="ui checkbox hideme checked">\n\
                         <input type="radio" name="' + Name + '" class="hidden">\n\
                         <label></label>\n\
@@ -198,35 +200,37 @@ variations = {
     //funcao responsavel por esconder as variacoes iniciais
     hideVariations: function() {
 
+        container = $(this.config.container);
+
         var selectInitial = new Array();
 
         //caso nao exista uma grade default, setamos a primeira opcao
-        if($('.references .variacao.select').length == 0) {
+        if($('.references .variacao.select', container).length == 0) {
 
-            $(".references[data-active] .variacao:eq(0)").click();
+            $(".references[data-active] .variacao:eq(0)", container).click();
 
-            $('.references:not([data-active])').each(function(index, el) {
+            $('.references:not([data-active])', container).each(function(index, el) {
                 $('.variacao:eq(0)', this).click()
             });
 
         } else {
             //recuperando a grade padrao e escondendo as demais
-            $('.references:not([data-active]) .variacao.select').each(function() {
+            $('.references:not([data-active]) .variacao.select', container).each(function() {
                 selectInitial.push($(this).data('reference') + ':' + $(this).data('variation'))
             });
 
-            $(".references[data-active] .variacao.select").click();
+            $(".references[data-active] .variacao.select", container).click();
 
             $.each(selectInitial, function(index, el) {
-                $(".references:not([data-active]) .variacao[data-reference='"+ el.split(":")[0] +"'][data-variation='"+ el.split(":")[1] +"']").click();
+                $(".references:not([data-active]) .variacao[data-reference='"+ el.split(":")[0] +"'][data-variation='"+ el.split(":")[1] +"']", container).click();
             })
         }
 
+        container.addClass("loaded")
+
     },
     //funcao para criar as acoes do click de cada variacao
-    clickBtn: function() {
-
-        container = $(this.config.container);
+    clickBtn: function(container) {
 
         $('.variacao', container).click(function() {
 
@@ -252,6 +256,8 @@ variations = {
                 //verificando se e a primeira referencia e recuperando o ID inicial
                 if($(this).closest(".references[data-active]").length > 0) {
 
+                    $(".references", container).removeClass("active")
+
                     var _idFather = "";
 
                     $('.ui.variacao', container).removeClass('select')
@@ -261,12 +267,16 @@ variations = {
 
                 } else {
 
+                    //removendo as referencias ativas e variacoes selecionadas
+                    $(this).closest(".references:not([data-active])").removeClass("active").next(".references:not([data-active])").find('.variacao').removeClass("select")
+
                     //montando o ID da referencia para mostrar ou esconder as variacoes
-                    _idFather = $(".references[data-active] .variacao.select").data('variation');
+                    _idFather = $(".references[data-active] .variacao.select", container).data('variation');
                     $(this).siblings().removeClass("select");
                     $(this).addClass("select")
+                    $(this).closest(".references").addClass("active")
 
-                    $('.references:not([data-active]) .ui.variacao:not([data-skucode]).select').each(function(index, el) {
+                    $('.references:not([data-active]) .variacao:not([data-skucode]).select', container).each(function(index, el) {
                         _idFather = _idFather + "-" + ($(this).data('variation'));
 
                     });
@@ -274,11 +284,11 @@ variations = {
                 }
 
                 //mostrando e escondendo variacoes atreladas a referencia
-                $(".references:not([data-active])").find('.ui.variacao').each(function(index, el) {
+                $(".references:not([data-active]):not(.active)", container).find('.variacao').each(function(index, el) {
 
                     itens = $(this).attr('data-reference');
 
-                    if(itens.toString() !== _idFather.toString() && itens.toString() !== $(".references[data-active] .variacao.select").data('variation').toString()) {
+                    if(itens.toString() !== _idFather.toString() && itens.toString() !== $(".references[data-active] .variacao.select", container).data('variation').toString()) {
                         $(this).hide();
                     } else {
                         $(this).show()
@@ -289,7 +299,8 @@ variations = {
             }
 
             //buscando as imagens da variacao
-            variations.getImageThumbnail();
+            if(container.hasClass("loaded"))
+                variations.getImageThumbnail();
 
         })
     },
@@ -359,7 +370,7 @@ variations = {
             prevArrow: '<a class="slick-prev ui mini button basic black icon"><i class="chevron left icon"></i></a>',
             nextArrow: '<a class="slick-next ui mini button basic black icon"><i class="chevron right icon"></i></a>',
             dots: false,
-            slidesToShow: 6,
+            slidesToShow: 3,
             mobileFirst:true,
             useTransform:false,
             infinite:false
@@ -482,7 +493,7 @@ variations = {
 
             if(Stock >= 1 && Stock <= this.config.stock.maxStockValue )
                 if($('#' + this.config.stock.messageStockContainer).length == 0)
-                    $(this.config.container).append('<div class="ui message" id="'+ this.config.stock.messageStockContainer +'">'+ this.config.stock.messageStockHtml.replace('${value}', Stock) +'</div>')
+                    $(this.config.container).append('<div class="ui label text regular basic margin top bottom medium" id="'+ this.config.stock.messageStockContainer +'">'+ this.config.stock.messageStockHtml.replace('${value}', Stock) +'</div>')
                 else
                     $('#' + this.config.stock.messageStockContainer).html(this.config.stock.messageStockHtml.replace('${value}', Stock))
 

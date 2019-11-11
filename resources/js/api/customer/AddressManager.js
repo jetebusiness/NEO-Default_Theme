@@ -2,11 +2,11 @@
 
 export function atualizaCampos(dados) {
     var obj = $.parseJSON(JSON.stringify(dados));
-    $("#StreetAddress").val(obj.logradouro)
-    $("#Neighbourhood").val(obj.bairro)
-    $("#City").val(obj.localidade)
-    $(".state").dropdown('set value',obj.uf)
-    $(".state").dropdown('set text',obj.uf)
+    $("#StreetAddress").val(obj.streetAddress)
+    $("#Neighbourhood").val(obj.neighbourhood)
+    $("#City").val(obj.city)
+    $(".state").dropdown('set value', obj.state)
+    $(".state").dropdown('set text', obj.state)
 }
 
 export function buscaCep(cep) {
@@ -16,15 +16,22 @@ export function buscaCep(cep) {
         buscaCep($(this), 0);
     });
 
-    $.getJSON("//viacep.com.br/ws/" + cep + "/json/unicode", function (dados) {
-        if (dados.erro) {
-            if (window.swal) {
-                window.swal('Erro', 'CEP não encontrado.', 'error');
+    $.ajax({
+        method: "GET",
+        url: "/customer/LocalizaCep",
+        data: {
+            cep: cep
+        },
+        success: function success(response) {
+            if (response.success) {
+                var obj = $.parseJSON(response.message);
+                atualizaCampos(obj);
             } else {
-                alert("CEP não encontrado.");
+                _alert("", response.message, "warning");
             }
-        } else {
-            atualizaCampos(dados);
+        },
+        error: function () {
+            alert('Erro');
         }
     });
 }

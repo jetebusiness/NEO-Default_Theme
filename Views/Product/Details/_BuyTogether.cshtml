@@ -63,8 +63,8 @@
                             </div>
                             <div class="description">
                                 @if (Model.AvailableReferences != null)
-                                {
-                                    @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao })
+                                {    
+                                    <div id="variations-buy-together" class="grid-variations"></div>
                                 }
                             </div>
                             <div class="extra"></div>
@@ -247,14 +247,14 @@
                     {
                         if (SKUPadrao.Stock > 0)
                         {
-                            <a href="" class="ui button action fluid buy-together text uppercase" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
                         }
                         else
                         {
-                            <a href="" class="ui button action fluid buy-together disabled text uppercase" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
@@ -264,14 +264,14 @@
                     {
                         if (Model.Stock > 0)
                         {
-                            <a href="" class="ui button action fluid buy-together text uppercase" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
                         }
                         else
                         {
-                            <a href="" class="ui button action fluid buy-together disabled text uppercase" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>

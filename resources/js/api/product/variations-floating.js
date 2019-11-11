@@ -110,6 +110,7 @@ $(function() {
 
 
     $("button[id^='adicionar-compre-junto']").click(function () {
+
         var variacoes               = $(this).attr('data-variacoes');
         var jaAdicionado            = $(this).hasClass('adicionado');
         var id_product              = $(this).attr('data-id');
@@ -127,6 +128,7 @@ $(function() {
 
         if (!jaAdicionado && sku_selecionado !== "") {
             $(this).addClass('adicionado');
+            $("#btn_comprejunto").removeClass("disabled")
             if (skusJaSelecionados == "") {
                 $('#buy-together-skus').val(id_product + '-' + sku_selecionado + '-' + 1);
                 AtualizarCarrinhoCompreJunto(preco_corrente, preco_promocao_corrente, '+');
@@ -146,6 +148,7 @@ $(function() {
             }
         } else if (sku_selecionado !== "") {
             $(this).removeClass('adicionado');
+            $("#btn_comprejunto").addClass("disabled")
             if (skusJaSelecionados.indexOf(produto_sku_selecionado) != -1) {
                 for (var i = 0; i < ArrskusJaSelecionados.length; i++) {
 
@@ -157,6 +160,7 @@ $(function() {
                 AtualizarCarrinhoCompreJunto(preco_corrente, preco_promocao_corrente, '-');
             }
         } else {
+            $("#btn_comprejunto").addClass("disabled")
             $(this).removeClass('active');
             $(this).children().removeClass('checkmark');
             $(this).children().addClass('plus');
@@ -164,7 +168,7 @@ $(function() {
 
             swal({
                 title: '',
-                text: 'Variação Obrigatória',
+                text: 'Selecione uma varição disponível',
                 type: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
@@ -628,19 +632,12 @@ function buscarSKU(seletor, produtoID) {
                 if (data.Visible === true && data.Stock > 0) {
                     AtualizarGradeCompreJunto(data, produtoID, referenciasJaSelecionadas);
                 } else {
-                    swal({
-                        title: '',
-                        text: 'Variação inválida ou produto sem estoque!',
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'OK'
-                    }).then(function () {
-                        $("adicionar-compre-junto-" + produtoID).removeClass('adicionado');
-                        $("adicionar-compre-junto-" + produtoID).removeClass('active');
-                        $("#" + produtoID + "-buy-together-sku").val("");
-                    });
+
+                    $("#adicionar-compre-junto-" + produtoID).removeClass('adicionado active');
+                    $("#adicionar-compre-junto-" + produtoID + " i").removeClass('checkmark').addClass("plus");
+                    $("#btn_comprejunto").addClass("disabled")
+
+                    $("#" + produtoID + "-buy-together-sku").val("");
                 }
 
             } else {

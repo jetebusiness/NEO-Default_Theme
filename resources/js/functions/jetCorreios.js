@@ -26,7 +26,7 @@
             for (let key in sel) {
                 if (sel[key] !== "") {
                     if (sel[key].isDropDown) {
-                        sel[key].changing(dados[key]);
+                        sel[key].changing(dados.state);
                     }
                     if (key === "numero" && sel[key] !== "") {
                         $(sel[key]).focus();
@@ -35,7 +35,13 @@
                         $(sel[key]).val("");
                     }
                     else {
-                        $(sel[key]).val(dados[key]).change();
+                        if (key === "logradouro") {
+                            $(sel[key]).val(dados.streetAddress).change();
+                        } else if (key === "bairro") {
+                            $(sel[key]).val(dados.neighbourhood).change();
+                        } else if (key === "localidade") {
+                            $(sel[key]).val(dados.city).change();
+                        }
                     }
 
 
@@ -64,33 +70,24 @@
 
         function buscaCep(cep) {
             cep = cleanString(cep);
-            axios.get("//viacep.com.br/ws/" + cep + "/json/unicode")
-                .then(({data}) => {
-                    if (data.erro){
-                        if (window.swal) {
-                            window.swal('Erro', 'CEP não encontrado.', 'error');
-                            //limpaForm();
-                        }
-                        else {
-                            alert("CEP não encontrado.");
-                            //limpaForm();
-                        }   
-                    }else{
-                        atualizaCampos(data);
+            $.ajax({
+                method: "GET",
+                url: "/customer/LocalizaCep",
+                data: {
+                    cep: cep
+                },
+                success: function success(response) {
+                    if (response.success) {
+                        var obj = $.parseJSON(response.message);
+                        atualizaCampos(obj);
+                    } else {
+                        _alert("", response.message, "warning");
                     }
-                })
-                .catch(error => {
-                    //console.log("JET CORREIOS - Chamada AJAX");
-                    //console.log(error);
-                    if (window.swal) {
-                        window.swal('Erro', 'CEP não encontrado.', 'error');
-                        //limpaForm();
-                    }
-                    else {
-                        alert("CEP não encontrado.");
-                        //limpaForm();
-                    }
-                });
+                },
+                error: function () {
+                    alert('Erro');
+                }
+            });
         }
 
         carregando();

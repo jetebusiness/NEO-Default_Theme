@@ -50,34 +50,74 @@
                             <div class="row">
                                 <div class="column" data-jet-master="true">
                                     <h4 class="ui dividing header">Informações Pessoais &ensp;&ensp;<a href="ChangeUserPayment" class="text small">Não é você? Sair</a></h4>
-                                    <div class="field required success" data-jet-active="true">
-                                        <div class="ui left icon input disabled ">
-                                            <i class="checkmark box icon"></i>
-                                            <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
-                                                   value="@ViewBag.EmailUser" data-jet-validate="email" autocomplete="off">
-                                        </div>
-                                    </div>
+                                    @{
+                                        if (ViewBag.EmailUser != null && ViewBag.EmailUser != "")
+                                        {
+                                            <div class="field required success" data-jet-active="true">
+                                                <div class="ui left icon input disabled ">
+                                                    <i class="checkmark box icon"></i>
+                                                    <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
+                                                           value="@ViewBag.EmailUser" data-jet-validate="email" autocomplete="off">
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="field required success" id="valid_cpf_cnpj"  data-jet-active="true">
+                                                <div class="ui left icon input disabled ">
+                                                    <i class="icon id card"></i>
+                                                    <input id="cpf_cnpj" type="text" name="Cpf_cnpj" value="@ViewBag.CpfCnpjUser" class="masked mask_document mask_document_cnpj cpf_cnpj_checkout"
+                                                           placeholder="CPF / CNPJ"
+                                                           data-jet-validate="cpfCnpj"
+                                                           data-jet-type="profileChanger"
+                                                           tabindex="1"
+                                                           autocomplete="off">
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    
                                     <div class="field required" data-jet-active="true">
                                         <label>Nome Completo</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
                                             <input type="text" name="Name" placeholder="Seu Nome Completo"
-                                                   value="" data-jet-validate="name" tabindex="0">
+                                                   value=""
+                                                   data-jet-validate="name"
+                                                   tabindex="0">
                                         </div>
                                     </div>
                                     <div class="three fields">
-                                        <div class="field required" id="valid_cpf_cnpj">
-                                            <label>CPF / CNPJ</label>
-                                            <div class="ui left icon input">
-                                                <i class="icon id card"></i>
-                                                <input id="cpf_cnpj" type="text" name="Cpf_cnpj" class="masked mask_document cpf_cnpj_checkout"
-                                                       placeholder="CPF / CNPJ"
-                                                       data-jet-validate="cpfCnpj"
-                                                       data-jet-type="profileChanger"
-                                                       tabindex="1"
-                                                       autocomplete="off">
-                                            </div>
-                                        </div>
+                                        @{
+                                            if (ViewBag.EmailUser != null && ViewBag.EmailUser == "")
+                                            {
+                                                <div class="field required">
+                                                    <label>Seu Email</label>
+                                                    <div class="ui left icon input ">
+                                                        <i class="checkmark box icon"></i>
+                                                        <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
+                                                               data-jet-validate="email"
+                                                               autocomplete="false">
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="field required" id="valid_cpf_cnpj">
+                                                    <label>CPF / CNPJ</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="icon id card"></i>
+                                                        <input id="cpf_cnpj" type="text" name="Cpf_cnpj" class="masked mask_document cpf_cnpj_checkout"
+                                                               placeholder="CPF / CNPJ"
+                                                               data-jet-validate="cpfCnpj"
+                                                               data-jet-type="profileChanger"
+                                                               tabindex="1"
+                                                               autocomplete="off">
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                                                            
                                         <div class="field required">
                                             <label>Telefone</label>
                                             <div class="ui left icon input">
@@ -94,7 +134,7 @@
                                                 <i class="calendar icon"></i>
                                                 <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date"
                                                        name="DateBirth"
-                                                       data-jet-validate="date"
+                                                       data-jet-validate="datebirth"
                                                        tabindex="3">
                                             </div>
                                         </div>
@@ -314,7 +354,8 @@
 </div>
 
 @section custom_js {
-    <script type="text/javascript">
+    
+    <script type="text/javascript">   
 
         function onCheckgCaptcha() {
             var googleRecaptchaVersion = "";

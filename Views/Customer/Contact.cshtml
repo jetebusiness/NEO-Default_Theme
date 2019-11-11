@@ -170,9 +170,10 @@
 @section custom_js {
     <script>
         function onSuccess(response) {
+            googleRecaptchaVersion = $('#googleVersion').val();
             if (response.success == true) {
                 swal({                 
-                    text: response.message,
+                    text: response.Message,
                     type: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#16ab39',
@@ -201,7 +202,7 @@
                 }
 
                 swal({                    
-                    text: response.message,
+                    text: response.Message,
                     type: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: '#16ab39',
@@ -212,6 +213,7 @@
         }
 
         function onFailure(response) {
+            googleRecaptchaVersion = $('#googleVersion').val();
             if (response.success == false) {
 
                 if (googleRecaptchaVersion == '2') {
@@ -231,7 +233,7 @@
                 }
 
                 swal({
-                    text: response.message,
+                    text: response.Message,
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#16ab39',

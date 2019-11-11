@@ -20,7 +20,7 @@ export function BuscaFreteEntregaAgendada() {
         method: "POST",
         url: "EntregaAgendada",
         data: {
-            idShippingMode: new Number(idFrete),
+            idShippingMode: new Number(idFrete)
         },
         success: function (response) {
             $(".agendar").hide("slow");

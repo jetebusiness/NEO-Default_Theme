@@ -34,6 +34,8 @@ $(document).on("click", "#previousPage", function() {
         loadData();
 
         getProducts(data);
+
+        window.scrollTo(0, 0);
     }
 });
 
@@ -46,6 +48,8 @@ $(document).on("click", "#nextPage", function() {
         loadData();
 
         getProducts(data);
+
+        window.scrollTo(0, 0);
     }
 });
 
@@ -56,6 +60,8 @@ $(document).on("click", ".btnPageNumber", function() {
     loadData();
 
     getProducts(data);
+
+    window.scrollTo(0, 0);
 });
 
 function getProducts(data) {

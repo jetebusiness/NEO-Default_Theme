@@ -162,12 +162,39 @@ $(document).ready(function () {
         calcShipping()
         
         //floating-bar
-        if($("#floating-bar").length > 0 || $("#buy-together").length > 0) {
+            
+        if($("#buy-together").length > 0) {
+
+            var defaults = {
+                config: {
+                    container: '#variations-buy-together'
+                }                    
+            } 
+
+            $.extend(true, variations, defaults);
+            
+            variations.init()
+
             VariacaoCor();
             VariacaoRadio();
             VariacaoDropDown();
             VariacaoImagem();
         }
+
+        if($("#floating-bar").length > 0) {
+
+            var defaults = {
+                config: {
+                    container: '#variations-floating'
+                }
+            }
+
+            $.extend(true, variations, defaults);
+
+            variations.init()
+        }
+
+
         
         
     })
@@ -689,7 +716,7 @@ function calcShipping() {
                             var strTr = '<tr>' +
                                 '<td>' + item.ShippingMode.Name + '</td>' +
                                 '<td align="center">' + valueShipping + '</td>' +
-                                '<td align="center">' + item.ShippingMode.DeliveryTime + ' dia(s)' + usefulDay + '.</td>' +
+                                '<td align="center">' + ((item.ShippingMode.ScheduledDelivery) ? '(*)' : ((item.ShippingMode.DeliveryTime == null) ? '( Envio Imediato )' : item.ShippingMode.DeliveryTime + ' dia(s)' + usefulDay + '.')) + '</td>' +
                                 '</tr>';
                             $('#listSimulateFreight').append(strTr);
                         });
