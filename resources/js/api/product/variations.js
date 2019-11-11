@@ -341,7 +341,7 @@ variations = {
     },
     isDevice: function() {
 
-        var isiDevice = /ipad|iphone|ipod/i.test(navigator.userAgent.toLowerCase());
+        var isiDevice = /android|webos|iphone|ipad|ipod|blackberry|windows|phone/i.test(navigator.userAgent.toLowerCase());
         return isiDevice;
     },
     slickZoom: function() {
