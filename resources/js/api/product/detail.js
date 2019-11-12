@@ -17,7 +17,7 @@ $(document).ready(function () {
     //nova estrutura de variacao do produto
     variations.init()    
     
-    $(window).on("load", function() {
+    window.onload = function() { 
 
         $("#quantidade").keyup(function (e) {
             var valor_final = SomenteNumerosPositivos($(this).val());
@@ -197,7 +197,7 @@ $(document).ready(function () {
 
         
         
-    })
+     }();
 });
 
 $(document).on("click", "#dica_promocional", function () {
