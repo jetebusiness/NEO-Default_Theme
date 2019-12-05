@@ -230,6 +230,7 @@ variations = {
         
         if(!this.isDevice()) {
             $(".easyzoom").easyZoom().init();
+            this.getImageThumbnail();
         }
 
     },
