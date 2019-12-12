@@ -227,11 +227,11 @@ variations = {
         }
 
         container.addClass("loaded")
-        
+
         if(!this.isDevice()) {
             $(".easyzoom").easyZoom().init();
-            this.getImageThumbnail();
         }
+        this.getImageThumbnail();
 
     },
     //funcao para criar as acoes do click de cada variacao
