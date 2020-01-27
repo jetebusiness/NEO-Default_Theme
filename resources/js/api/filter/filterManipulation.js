@@ -34,7 +34,7 @@ $(document).ready(function () {
     if (!ViewProductFiltersUrl && window.filterManipulation !== undefined) {
 
 
-        if (sessionStorage.length == 1 && !checkStorage(keyStorage)) {
+        if (!checkStorage(keyStorage)) {
             sessionStorage.clear()
         }
 
