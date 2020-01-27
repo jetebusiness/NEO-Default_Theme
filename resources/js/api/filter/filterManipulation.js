@@ -47,7 +47,7 @@ $(document).ready(function () {
                 storageData.order !== "" ||
                 parseInt(storageData.pageSize) !== parseInt(pageSizeDefault) ||
                 parseInt(storageData.pageNumber) > 1 ||
-                storageData.viewList !== viewListGlobal) &&
+                storageData.viewList !== viewListGlobal) ||
                 storageData.keyWord == (window.filterManipulation.keyWord == undefined ? "" : window.filterManipulation.keyWord)) {
 
                 update = true;
