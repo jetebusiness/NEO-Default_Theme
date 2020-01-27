@@ -4,7 +4,7 @@
 {
     <div class="sixteen wide mobile sixteen wide tablet six wide computer column" id="formas-pagamento">
         <div class="ui styled fluid accordion jetCheckout margin top">
-            @foreach (var itemM in Model)
+            @foreach (var itemM in Model.OrderBy(p => p.Name))
             {
                 switch (itemM.IdPaymentMethod)
                 {

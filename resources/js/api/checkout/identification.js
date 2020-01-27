@@ -20,11 +20,11 @@ function checkLogin() {
 
         // condição
         if (strLogin === "") {
-            _alert("", "Informe um e-mail, cpf ou cnpj.", "warning");
+            _alert("", "Informe um E-mail, CPF ou CNPJ", "warning");
             $("#checkLogin").removeClass("loading");
         }
         else if (!isValidEmail && !isValidCpf && !isValidCnpj) {
-            _alert("", "Informe um e-mail, cpf ou cnpj válido.", "error");
+            _alert("", "Informe um E-mail, CPF ou CNPJ válido.", "error");
             $("#checkLogin").removeClass("loading");
         } else {
             $.ajax({

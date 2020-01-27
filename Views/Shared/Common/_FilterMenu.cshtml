@@ -16,6 +16,12 @@
                 </div>
                 <div class="column">
                     <div class="ui accordion" id="filtroList">
+                        @if (Model.GroupingTypes != null && Model.GroupingTypes.Count() > 0)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Product/_GroupingTypesFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Product/_GroupingTypesFilters.cshtml", Model.GroupingTypes)
+                        }
+
                         @if (Model.References != null && Model.References.Count() > 0)
                         {
                             <!-- Page: ~/Views/Shared/Blocks/Product/_ReferencesFilters.cshtml -->

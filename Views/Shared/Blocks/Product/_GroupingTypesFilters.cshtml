@@ -1,0 +1,28 @@
+﻿@model IList<DomainProduct.Entities.GroupingType>
+
+
+@if (Model != null && Model.Count() > 0)
+{
+<div class="active title" id="grouping_type" data-title="Cor">Cor<i class="dropdown icon"></i></div>
+<div class="active content">
+    <div class="ui form">
+        <div class="grouped fields">
+            <div class="field">
+                @foreach (var groupingType in Model)
+                {
+
+                    <button type="button" id="@groupingType.IdGroupingType" class="ui basic button checkbox checkGroupingType cor" style="background-color: @groupingType.Description !important;" data-groupingtype="@groupingType.Description">
+                        &ensp;
+                    </button>
+                    <div id="grouping_type_@groupingType.IdGroupingType" class="ui checkbox hideme">
+                        <input type="checkbox" name="grouping_type" id="checkGroupingType_@groupingType.IdGroupingType">
+                        <label></label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+

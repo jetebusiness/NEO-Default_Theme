@@ -18,20 +18,20 @@
                     <div class="ui left icon input">
                         <i class="tag icon"></i>
                         <input 
-                               class="no-border" 
-                               type="text" 
-                               name="ShoppingVoucherValue" 
-                               id="ShoppingVoucherValue" 
-                               value="" 
-                               data-symbol="R$ " 
-                               data-thousands="." 
-                               data-decimal="," 
-                               data-balance="@Model.balanceAmount"
-                               placeholder="R$" 
-                               autocomplete="off">
+                            type="text" 
+                            name="ShoppingVoucherValue" 
+                            id="ShoppingVoucherValue" 
+                            value="" 
+                            data-symbol="R$ " 
+                            data-thousands="." 
+                            data-decimal="," 
+                            data-balance="@Model.balanceAmount"
+                            placeholder="R$" 
+                            autocomplete="off">
+                        <button class="ui button basic primary margin none tiny" id="ApplyVoucher">APLICAR</button>
                     </div>
+                    
                 </div>
-                <div class="ui divider no-p no-m"></div>
                 <div class="field">
                     <div class="ui basic red pointing prompt label">Valor Sugerido: <span id="ValeCompra_suggestedAmount">@Model.suggestedAmount.ToString("C")</span></div>
                 </div>
@@ -51,7 +51,8 @@
                     </div>
                 </div>
                 <div class="field">
-                    <button class="ui labeled icon green large fluid button GerarPedido" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" disabled="disabled" data-externalcode="">
+                    <input type="hidden" name="freteGratisValeCompra" id="freteGratisValeCompra" value="@(LojaCorp.Control.Company._Company.FreeShippingVoucher ? "1" : "0")" />
+                    <button class="ui labeled icon green large fluid button GerarPedido" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" disabled="disabled" data-externalcode="" data-Card="N">
                         <i class="tag icon"></i>
                         Finalizar com Vale Compras
                     </button>

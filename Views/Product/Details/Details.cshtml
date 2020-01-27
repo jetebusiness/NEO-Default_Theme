@@ -364,16 +364,30 @@
                                     if (!Model.FlagExhausted)
                                     {
                                         <input type="hidden" id="hdnShowProductOutOfStock" value="@(!LojaCorp.Control.Company._Company.ShowProductOutOfStock ? 0 : 1)" />
-
                                         if (Model.AvailableReferences != null)
                                         {
                                             <div class="one column ui attached segment">
+                                                @if (Model.ProductGrouping != null)
+                                                {
+                                                    @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
+                                                }
                                                 <div class="column">
                                                     <div id="variations-container" class="grid-variations"></div>
                                                 </div>
                                             </div>
                                         }
-                                       
+                                        else
+                                        {
+                                            if (Model.ProductGrouping != null)
+                                            {
+                                                <div class="one column ui attached segment">
+                                                    <div class="column">
+                                                        @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+
                                         @*@Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })*@
                                     }
                                     <!--FIM VARIAÇÔES-->
@@ -425,14 +439,14 @@
                                                                         <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
                                                                         <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
                                                                     </div>
-                                                                }                                                                                                                                             
-                                                                
-                                                                
+                                                                }
+
+
                                                                 if (ViewBag.DescontoBoleto > 0)
-                                                                 {
-                                                                     var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
-                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                 }
+                                                                {
+                                                                    var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
+                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                                }
                                                             }
                                                             else
                                                             {
@@ -445,12 +459,12 @@
                                                                         <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
                                                                     </div>
                                                                 }
-                                                                
+
                                                                 if (ViewBag.DescontoBoleto > 0)
-                                                                 {
-                                                                     var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
-                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                 }
+                                                                {
+                                                                    var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
+                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                                                }
                                                             }
                                                         }
                                                         else
@@ -467,7 +481,7 @@
                                                                         <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
                                                                         <span id="description">(@Model.InstallmentMax.Description)</span>
                                                                     </div>
-                                                                    
+
                                                                 }
                                                                 if (ViewBag.DescontoBoleto > 0)
                                                                 {
@@ -485,7 +499,7 @@
                                                                         <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
                                                                         <span id="description">(@Model.InstallmentMax.Description)</span>
                                                                     </div>
-                                                                    
+
                                                                 }
                                                                 if (ViewBag.DescontoBoleto > 0)
                                                                 {

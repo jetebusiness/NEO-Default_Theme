@@ -443,3 +443,12 @@ $image-minicart: 125px;
         }
     }
 }
+
+
+.checkout .hide {
+    display: none !important;
+}
+
+#validCardCredit .ui.segment[class*="bottom attached"]:last-child {
+    margin-bottom: 1rem !important;
+}

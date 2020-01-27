@@ -1,0 +1,38 @@
+﻿@model DomainProduct.Entities.Grouping
+
+@{
+  var ProdutosAgrupamento = Model.Products != null ? Model.Products.OrderBy(o => o.Order).ToList() : null;
+  string checkedClass = "";
+
+  if (ProdutosAgrupamento != null)
+  {
+    <!--COMEÇO AGRUPAMENTO DE PRODUTO-->
+    <div class="margin bottom small grouping">
+      <div class="margin bottom small grouping-name">@(Model.Name)</div>
+      <div class="ui grid margin none grouping-grid">
+        @foreach (var prod in ProdutosAgrupamento)
+        {
+          checkedClass = Request.Url.AbsolutePath.Trim() == prod.UrlFriendly.Trim() ? "checked" : "";
+
+          <div class="grouping-grid-item item-@Model.Type.ToLower() @checkedClass">
+            @if (Model.Type == "Cor")
+            {
+              <a href="@prod.UrlFriendly" class="grouping-grid-item-link" style="background-color: @(prod.Description) !important"></a>
+            }
+            else if (Model.Type == "Texto")
+            {
+              <a class="grouping-grid-item-link" href="@prod.UrlFriendly">@(prod.Description)</a>
+            }
+            else
+            {
+              <a class="grouping-grid-item-link" href="@prod.UrlFriendly">
+                <img class="ui image" src="@(prod.Description)" />
+              </a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    <!--FIM AGRUPAMENTO DE PRODUTO-->
+  }
+}

@@ -60,7 +60,7 @@
                                 }
                             </div>
                         </div>
-                        @if (sku.Stock > 0)
+                        @if (sku.Stock > 0 && Model.FlagExhausted == false)
                         {
                             <div class="column center aligned">
                                 <div class="ui qtd action mini input">
@@ -104,18 +104,21 @@
                 <strong id="total_geral" data-total-geral="0">Total: R$ 0,00</strong>
             </div>
         </div>
-        <div class="row margin top medium">
-            <div class="column">
-                <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_b2b">
-                    <div class="visible content">Comprar</div>
-                    <div class="hidden content">
-                        <i class="add to cart icon"></i>
-                    </div>
-                </a>
+        @if (Model.FlagExhausted == false)
+        {
+            <div class="row margin top medium">
+                <div class="column">
+                    <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_b2b">
+                        <div class="visible content">Comprar</div>
+                        <div class="hidden content">
+                            <i class="add to cart icon"></i>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
+        }
 
-        @if (useOneClick)
+        @if (useOneClick && Model.FlagExhausted == false)
         {
             <div class="row margin top medium">
                 <div class="column">

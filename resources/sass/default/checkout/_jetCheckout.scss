@@ -188,14 +188,26 @@
 }
 
 .success-debit-pagseguro {
-    background-color: white; 
-    color: black; 
-    padding: 15px; 
+    background-color: white;
+    color: black;
+    padding: 15px;
     border-radius: 5px;
 }
 
 .success-debit-pagseguro h3 {
     text-align: center;
+}
+
+.shopping-voucher {
+    .ui.input {
+        width: 100%;
+        
+        input {
+            border-color: #fff;
+            border-bottom-color: #ddd;
+        }
+        
+    }
 }
 
 .no-border {

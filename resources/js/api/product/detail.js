@@ -15,8 +15,9 @@ $(document).ready(function () {
     "use strict";
     
     //nova estrutura de variacao do produto
-    variations.init()    
-    
+    variations.init();
+
+
     window.onload = function() { 
 
         $("#quantidade").keyup(function (e) {
@@ -149,9 +150,8 @@ $(document).ready(function () {
 
         $("#btn_carregar_avaliacoes").click(function () {
             CarregarMaisAvaliacoes();
-        });   
-        
-        
+        });
+
         //parcelamento PAGSEGURO
         CarregaParcelamentoPagSeguro();        
         
@@ -194,10 +194,7 @@ $(document).ready(function () {
             variations.init()
         }
 
-
-        
-        
-     }();
+    }();
 });
 
 $(document).on("click", "#dica_promocional", function () {

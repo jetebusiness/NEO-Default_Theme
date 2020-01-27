@@ -285,7 +285,7 @@
 
 @if (Model != null)
 {
-    @Html.Action("StatusOrder", "AssistedSale", new { order = Model })
+    @Html.Action("StatusOrder", "AssistedSale", new { orderId = Model.IdOrder })
 
     <br />
     <div class="row">

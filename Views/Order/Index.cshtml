@@ -72,6 +72,20 @@
                                     <td>@order.NamePaymentMethodGateway</td>
                                     <td>@order.NameStatus</td>
                                     <td class="right aligned">
+                                        @{
+
+                                            if (!order.NameStatus.ToLower().Contains("novo") && !order.NameStatus.ToLower().Contains("aprovação") && !order.NameStatus.ToLower().Contains("cancelado"))
+                                            {
+
+                                                if (ViewBag.Yami.Trim() != "")
+                                                {
+                                                    string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", order.IdOrder, "/", ViewBag.OrderEmail, "/");
+                                                    <a href="@urlYami" class="ui icon orange small button margin top bottom btn-yami" data-tooltip="Troca ou Devolução">
+                                                        <i class="exchange icon"></i>
+                                                    </a>
+                                                }
+                                            }
+                                        }
                                         <a class="ui icon grey small button margin top bottom" id="reOrder" data-tooltip="Refazer pedido" data-idorder="@order.IdOrder">
                                             <i class="cart icon"></i>
                                         </a>
@@ -125,3 +139,15 @@
 }
 
 <div id="htmlOrderPrint" class="hideme"></div>
+
+<div class="ui modal yami">
+    <!--<div class="header">
+        Troca ou Devolução
+    </div>-->
+    <div class="scrolling content iframe-modal">
+
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">Fechar</div>
+    </div>
+</div>

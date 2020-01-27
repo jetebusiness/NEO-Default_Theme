@@ -37,3 +37,30 @@
     }
   }
 }
+
+.ui.list > .item > .column {
+    display: inline-block;
+}
+.ui.list > .item > .column:first-child {
+    margin-right: 2em;
+}
+
+.ui.list > .item > .column > h5 {
+    margin: 1em 0em 1em;
+}
+
+.ui.list > .item > .column > .item > i.icon {
+    display: table-cell;
+    margin: 0em;
+    padding-top: 0em;
+    padding-right: 0.28571429em;
+    vertical-align: top;
+    -webkit-transition: color 0.1s ease;
+    transition: color 0.1s ease;
+}
+
+.ui.list > .item > .column > .item > .icon + .content {
+    display: table-cell;
+    padding: 0em 0em 0em 0.5em;
+    vertical-align: top;
+}

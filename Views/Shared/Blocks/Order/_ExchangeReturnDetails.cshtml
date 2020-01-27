@@ -1,0 +1,73 @@
+﻿@model List<DomainExchangeReturn.Entities.ExchangeReturn>
+
+<div class="row margin top large">
+    <div class="column">
+        <div class="ui accordion">
+            @if (Model != null && Model.Count > 0)
+            {
+                <h3>Detalhes de troca/devolução</h3>
+
+                foreach (var item in Model.Select(m => m.DateTime.ToString()).Distinct())
+                {
+                    <div class="title">
+                        <a class="ui circular label circular-delivery"><i class="calendar icon icon-delivery"></i></a>
+                        <span class="data-status"><b>@item</b><i class="dropdown icon"></i></span>
+                        <span class="divider-delivery-item"></span>
+                    </div>
+
+                    <div class="content status-entrega">
+                        <div class="transition hidden">
+                            <ul>
+                                @foreach (var eventDetail in Model.Where(m => m.DateTime.ToString() == item))
+                                {
+                                    string Descricao = "";
+                                    if (eventDetail.Type == 1)
+                                    {
+                                        Descricao = "Devolução Total";
+                                    }
+                                    else if (eventDetail.Type == 2)
+                                    {
+                                        Descricao = "Devolução Parcial";
+                                    }
+                                    else if (eventDetail.Type == 3)
+                                    {
+                                        Descricao = "Lançamento de crédito";
+                                    }
+
+                                    <li class="divider-delivery-item"></li>
+                                    <li><b class="green-delivery">@Descricao.ToString()</b></li>
+                                    <li>
+                                        <div>
+                                            <span>Valor: </span>@eventDetail.Price
+                                        </div>
+                                    </li>
+                                    if (eventDetail.Products.Count() > 0)
+                                    {
+                                        if (eventDetail.Products.FirstOrDefault().IdProduct > 0)
+                                        {
+                                            <li><b class="green-delivery">Lista de Produtos</b></li>
+                                            foreach (var _produtos in eventDetail.Products)
+                                            {
+                                            <li>
+                                                <div>
+                                                    <span>Código Produto:</span>@_produtos.IdProduct<br />
+                                                    @if ((int)_produtos.IdSku > 0)
+                                                    {
+                                                        <span>Código SKU:</span>@_produtos.IdProduct<br />
+                                                    }
+                                                    <span>Nome do produto:</span>@_produtos.Name.ToString()<br />
+                                                    <span>Quantidade:</span>@_produtos.Qtd<br />
+                                                </div>
+                                            </li>
+                                            }
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
