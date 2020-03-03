@@ -5,7 +5,7 @@
  **/
 
 export function lazyLoad() {
-    $('img[data-src]').visibility({
+    $('img[src^="/assets/image/"][data-src]').visibility({
         type       : 'image',
         transition : 'fade in',
         duration   : 1000,

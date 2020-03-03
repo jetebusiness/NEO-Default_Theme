@@ -1,4 +1,45 @@
 
+#filterBlock {
+    .ui.labels {
+        &.containerFilter {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+
+            .label {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                cursor: pointer;
+
+                button {
+                    margin-right: 0;
+                    margin-left: .5rem;
+                }
+
+                img {
+                    margin-left: .5rem;
+                }
+            }
+        }
+    }
+    
+    #filtroList {
+        .field {
+            &.default {
+
+            }
+            &.children {
+                margin-left:1.5rem;
+            }
+        }
+    }
+}
+
+
+
+
+
 .filterbar, #filtrosClose {
   display: none;
 }
@@ -142,8 +183,4 @@
       }
     }
   }
-}
-
-.ui.form .grouped.fields .field {
-    margin: 0.51em 0em !important;
 }

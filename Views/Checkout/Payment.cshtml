@@ -100,10 +100,7 @@
                 <div class="ui divider hidden medium"></div>
 
                 <div class="padding margin top">
-                    @{
-                        Tuple<string, DomainCompany.Entities.Recaptcha> _tuple = Tuple.Create<string, DomainCompany.Entities.Recaptcha>("Payment", ViewBag.recaptchaData);
-                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_GoogleRecaptcha.cshtml", _tuple)
-                    }
+                    @Html.Action("GetRecaptchaV3", "Company", new { Module = "Payment" })
                 </div>
 
             </div>

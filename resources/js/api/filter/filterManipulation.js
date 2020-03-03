@@ -1,795 +1,662 @@
-﻿import { isLoading } from "../api_config";
+﻿import { lazyLoad } from "../../functions/lazy_load";
+import { isLoading } from "../api_config";
 import { _alert, _confirm } from "../../functions/message";
-import { lazyLoad } from "../../functions/lazy_load";
-import { getFromStorage, setInStorage, checkStorage } from "../../functions/storage";
 
-const keyStorage = window.location.host + window.location.pathname;
-
-var firstLoad = true;
-var setStorage = false;
-var paginationFilter = true;
-var idEventListFilter = "";
-var viewListGlobal = "g";
-var urlBase = "/product/getproducts/";
-var storageData = checkStorage(keyStorage) ? JSON.parse(getFromStorage(keyStorage)) : null;
-var urlFilter = checkStorage(keyStorage) ? "/product/filtermenunew/" : "/product/filtermenu/";
-var pageSizeDefault = 12;
-var ViewProductFiltersUrl;
-var genericPageFilter;
-
-$(document).ready(function () {
-
-    let filters = window.filterManipulation,
-        data;
-
-    ViewProductFiltersUrl = $("#ViewProductFiltersUrl").val() == "True" ? true : false;
-    genericPageFilter = $("#GenericPageFilter").length > 0 ? $("#GenericPageFilter").val() : "";
-
-    if (typeof (window.filterManipulation) !== "undefined") {
-        if (window.filterManipulation.idCategory != undefined && window.filterManipulation.idCategory != "") {
-            $('#checkCategory_' + window.filterManipulation.idCategory).prop("checked", true)
+var configFilter = {
+    config: {
+        url: '/product/getproducts/', //url para buscar os produtos        
+        father: "#list", //div que recebe o conteudo
+        container: '#filtroList', //div responsavel por receber as referencias
+        filters: {
+            container: '.containerFilter', //div que recebera os filtros selecionados pelo usuario
+            types : { //tipos de filtros
+                variations: '.checkText, .checkColor, .checkImage', //referencias - cor, tamnho, etc
+                brand: '.checkBrand', //filtro de marca
+                idAttribute: '.checkAtribute', // filtro de atributos
+                idCategories: '.checkCategory', // filtro de categorias
+                idGroupingType: '.checkGroupingType', // agrupamento de produtos
+                order: '.dropdownorder', //ordenacao de produtos
+                pageSize: '.dropdownitens',// quantidade de itens por pagina
+                priceFilter: '.pricefilter', // filtro de preco
+                viewList: '.viewgrid, .viewlist' //tipo de listagem
+            }
+        },
+        infinity: '#infinityPage', //ativa a rolagem infinita,
+        pageQuantity: '#itensPage', //quantidade de itens por pagina
+        initialPrice: '#initialPrice', //preco inicial
+        finalPrice: '#finalPrice', //preco final
+        viewUrl: '#ViewProductFiltersUrl', //visualiza filtros na url
+        currentPage: '#CurrentPage', //pagina atual
+        currentValue: '#GenericPageFilter', //valor da pagina atual
+        eventList: '#idEventListFilter', //caso seja uma lista de evento
+        nameSession: 'filterNew', //nome da sessao dos filtros
+        nameSessionPosition: 'scrollPosition', //nome da sessao para armazenar a posicao do usuario
+        pagination: {
+            prev: '#previousPage',//pagina anterior
+            next: '#nextPage',//proxima pagina
+            number: '.btnPageNumber', //numero da pagina
+            htmlInfinity: '<div class="ui container"><div class="ui button basic primary margin none loading">Carregando...</div></div>' //botao de loading ao rolar a pagina
         }
     }
+};
 
-    if (!ViewProductFiltersUrl && window.filterManipulation !== undefined) {
 
-
-        if (!checkStorage(keyStorage)) {
-            sessionStorage.clear()
+var newFilter = {
+    init: function() {
+        
+        if(window.location.pathname.indexOf("/produto") === -1) {
+            this.setSession()//verificando sessao para criar ou recuperar valores
+            this.actionFilter() //criando acoes dos filtros
+            this.pagination() //criando paginacao
         }
 
-        // Se tiver algo na sessão,faz um update nos produtos
-        if (storageData !== null) {
+    },
+    setSession: function(reset) {
 
-            //Verificar condições para atualizar os produtos
-            let update = false;
-            if ((typeof (storageData.labelFilter) !== "undefined" ||
-                storageData.order !== "" ||
-                parseInt(storageData.pageSize) !== parseInt(pageSizeDefault) ||
-                parseInt(storageData.pageNumber) > 1 ||
-                storageData.viewList !== viewListGlobal) ||
-                storageData.keyWord == (window.filterManipulation.keyWord == undefined ? "" : window.filterManipulation.keyWord)) {
+        if(sessionStorage.getItem(configFilter.config.nameSession) == null || sessionStorage.getItem(configFilter.config.nameSession) === undefined || reset)
+            sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(this.resetFilter())); //criando valores
+        else
+            this.getFilter(); //recuperando valores
 
-                update = true;
+    },
+    actionFilter: function() { //atribuindo acoes aos filtros das paginas de listagem
+
+        Object.entries(configFilter.config.filters.types).forEach(function (key) { //enquanto existir tipos de filtros
+            var drop = (key[0] === "order" || key[0] === "pageSize");
+
+            if(drop) { //se for ordenacao ou quantidade de itens por pagina
+
+                $(key[1]).dropdown({
+                    onChange: function () {
+
+                        var params = {
+                            [key[0]]: $(this).dropdown("get value"),
+                            pageNumber: 1
+                        }
+
+                        newFilter.getFilter(params);
+                    }
+                });
+
+            } else if(key[0] === "viewList") { //se for tipo de lista
+
+                $(key[1]).on("click", function () {
+
+                    var params = {
+                        viewList : ($(this).attr("id") === "viewgrid" ? "g" : "l"),
+                        pageNumber: 1
+                    }
+
+                    newFilter.getFilter(params);
+
+                });
+
+            } else if(key[0] === "priceFilter") { //se for filtro de preco
+
+                $(key[1]).on("click", function () {
+
+                    var initial = $(configFilter.config.initialPrice).val().replace(".", "").replace(",", ".");
+                    var final = $(configFilter.config.finalPrice).val().replace(".", "").replace(",", ".");
+
+                    if(initial !== "" || final !== "") {
+
+                        if(initial !== "" && final !== "" && parseFloat(initial) > parseFloat(final))
+                            _alert("Atenção", "Preço 'DE' não pode ser maior que o preço 'ATÉ'", "warning");
+
+                        if(initial === "")
+                            initial = "0.01"
+
+                        if(final === "")
+                            final = "99999999"
+
+                        var params = {
+                            initialPrice: initial, //preco inicial
+                            finalPrice: final, //preco final
+                            pageNumber: 1
+                        }
+
+                        newFilter.getFilter(params);
+
+                    } else {
+                        _alert("Atenção", "Informe preço mínimo e/ou preço máximo!", "warning");
+                    }
+
+                });
+
+            } else {
+
+                $(key[1]).on("click", function () { //filtro por referencia, categoria, agrupamento, etc
+
+                    var selected = {};
+
+                    $(this).toggleClass("filter-selected basic").blur()
+
+                    if($(".filter-selected", configFilter.config.container).length > 0) {
+
+                        $(".filter-selected", configFilter.config.container).each(function () {
+
+                            if (selected[$(this).data("type")] === undefined) {
+
+                                selected[$(this).data("type")] = $(this).attr("id");
+
+                            } else {
+
+                                if (selected[$(this).data("type")].indexOf($(this).attr("id")) === -1) {
+                                    selected[$(this).data("type")] = selected[$(this).data("type")] + "," + $(this).attr("id")
+                                }
+
+                            }
+
+                        });
+
+                        selected["pageNumber"] = 1;
+
+                        Object.keys(configFilter.config.filters.types).forEach(function (key) {
+                            if(selected[key] === undefined && key !== "viewList" && key !== "pageSize")
+                                selected[key] = "";
+                        });
+
+                        newFilter.getFilter(selected);
+
+                    } else {
+
+                        newFilter.setSession(true);
+                        selected["pageNumber"] = 1;
+                        newFilter.getFilter(selected);
+
+                    }
+                })
+
             }
+
+        });
+    },
+    verifyPage: function(url) { //verificando a pagina para manter os filtros na sessao
+
+        var urlClient = window.location.pathname;
+
+        if(urlClient.indexOf("/categoria") > -1 ||
+            urlClient.indexOf("/grupo") > -1 ||
+            urlClient.indexOf("/busca") > -1 ||
+            urlClient.indexOf("/marca") > -1) { //se for categoria, grupo, busca ou marca, compara com a pagina na sessao
+
+            if(urlClient === url) {//se a pagina atual for igual a sessao continua caso contrario retorna falso       
+                return true;
+            } else {
+                return false;
+            }
+
+        } else if(urlClient.indexOf("/produto") > -1) { //se for pagina de produto, mantem os filtros na sessao
+
+            return true;
+
+        } else {
+
+            return false;
+        }
+
+    },
+    resetFilter: function() { //limpando filtros
+
+        return {
+            path : window.location.pathname, //pagina atual
+            viewList: "g", //g = grid, l = list
+            pageNumber: 1, //pagina inicial
+            pageSize: (parseInt($(configFilter.config.pageQuantity).val()) === 0 ? 12 : parseInt($(configFilter.config.pageQuantity).val())) , //quantidade por pagina inicial
+            order: "", //ordenacao dos produtos
+            brand: ($(configFilter.config.currentPage).val() === "brand" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da marca se existir
+            category: ($(configFilter.config.currentPage).val() === "category" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da categoria se existir
+            group: ($(configFilter.config.currentPage).val() === "group" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor do grupo se existir
+            keyWord: ($(configFilter.config.currentPage).val() === "keyWord" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da busca se existir
+            initialPrice: "", //preco inicial
+            finalPrice: "", //preco final
+            variations: "", //variacoes selecionadas
+            idAttribute : "", //atributos selecionados
+            idEventList : ($(configFilter.config.eventList).length > 0 ? $(configFilter.config.eventList).val() : ""), //id da lista de evento
+            idCategories : "", //id das categorias selecionadas
+            idGroupingType : "" //ids dos agrupamentos selecionados
+        }
+    },
+    checkFilter: function() { //funcao responsavel por recuperar os filtros da sessao e atribuir a classe de ativo
+
+        var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
+
+        Object.keys(configFilter.config.filters.types).forEach(function (key) {
+
+            if(filters[key] !== "" && filters[key] !== undefined && key !== "pageSize" && key !== "viewList") {
+
+                if(filters[key].indexOf(",") > -1) {
+
+                    var itens = filters[key].split(","),
+                        element = "";
+
+                    for(var i = 0; i < itens.length; i++) {
+
+                        element = $("[data-type='"+key+"'][id='"+itens[i]+"']");
+
+                        if(key === "variations") {
+
+                            element
+                                .removeClass("basic")
+                                .addClass("checked filter-selected")
+                                .next(".checkbox.hideme")
+                                .addClass("checked")
+                                .find("input")
+                                .attr("checked", true)
+
+                        } else {
+
+                            element
+                                .addClass("checked filter-selected")
+                                .find("input")
+                                .attr("checked", true)
+                        }
+
+                    }
+                } else {
+
+                    element = $("[data-type='"+key+"'][id='"+filters[key]+"']");
+
+                    if(key === "variations") {
+
+                        element
+                            .removeClass("basic")
+                            .addClass("checked filter-selected")
+                            .next(".checkbox.hideme")
+                            .addClass("checked")
+                            .find("input")
+                            .attr("checked", true)
+
+                    } else {
+
+                        element
+                            .addClass("checked filter-selected")
+                            .find("input")
+                            .attr("checked", true)
+
+                    }
+                }
+            }
+
+        });
+
+    },
+    createLabel: function() { //criando o label dos filtros selecionados e ou presentes na sessao
+
+        var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
+
+        $(configFilter.config.filters.container).html('')
+
+        Object.keys(configFilter.config.filters.types).forEach(function (key) {
+
+            if(filters[key] !== "" && filters[key] !== undefined && key !== "pageSize" && key !== "viewList") {
+
+
+                if(filters[key].indexOf(",") > -1) {
+
+                    var itens = filters[key].split(","),
+                        element = "",
+                        text = "";
+
+                    for(var i = 0; i < itens.length; i++) {
+
+                        element = $("[data-type='"+key+"'][id='"+itens[i]+"']");
+
+                        text = (element.text().trim().indexOf(" (") > -1 ?
+                            element.text().trim().replace(/[(0-9)]/g, "") :
+                            element.text().trim())
+
+                        if(text.trim() === "") {
+                            if(element.attr("style"))
+                                text = '<button class="ui button circular icon mini" style="'+element.attr("style")+'"></button>';
+                            else
+                                text = element.html()
+                        }
+                    
+                        $(configFilter.config.filters.container).append("<label class='ui label basic text capitalize' " +
+                            "data-type='"+key+"' " +
+                            "data-id='"+itens[i]+"'>" +
+                            ""+element.data("reference") + ": " + text +"" +
+                            "<i class='icon close'></i>"+
+                            "</label>");
+
+                    }
+
+                } else {
+
+                    element = $("[data-type='"+key+"'][id='"+filters[key]+"']");
+                    
+                    text = (element.text().trim().indexOf(" (") > -1 ?
+                        element.text().trim().replace(/[(0-9)]/g, "") :
+                        element.text().trim())
+
+                    if(text.trim() === "") {
+                        if(element.attr("style"))
+                            text = '<button class="ui button circular icon mini" style="'+element.attr("style")+'"></button>';
+                        else
+                            text = element.html()
+                    }                       
+
+                    $(configFilter.config.filters.container).append("<label class='ui label basic text capitalize' " +
+                        "data-type='"+key+"' " +
+                        "data-id='"+filters[key]+"'>" +
+                        ""+element.data("reference") + ": " + text +"" +
+                        "<i class='icon close'></i>"+
+                        "</label>");
+                    
+                }
+            }
+
+        });
+
+        if((filters["initialPrice"] !== "" && filters["initialPrice"] !== undefined) || (filters["finalPrice"] !== "" && filters["finalPrice"] !== undefined)) {
+
+            var initial = filters["initialPrice"];
+            var final = filters["finalPrice"];
+
+            $(configFilter.config.filters.container).append("<label class='ui label basic' " +
+                "data-type='priceFilter' " +
+                "data-id='priceFilter'>" +
+                "Preço: " + initial +" a " + final +
+                "<i class='icon close'></i>"+
+                "</label>");
+
+        }
+
+
+        $("label[data-type][data-id]", configFilter.config.filters.container).one("click", function() {
+
+            var type = $(this).data("type"),
+                id = $(this).data("id");
+
+            $(this).remove()
+
+            if(id === "priceFilter") {
+
+                var params = {
+                    initialPrice: "", //preco inicial
+                    finalPrice: "", //preco final
+                    pageNumber: 1
+                }
+
+                newFilter.getFilter(params);
+
+            } else {
+                $("[data-type='"+type+"'][id='"+id+"']", configFilter.config.container).click()
+            }
+
+            $(window).scrollTop($(configFilter.config.father).offset().top - 200)
+
+        });
+
+    },
+    filterURL: function(action) { //funcao responsavel por atribuir os filtros selecionados na url
+
+        if($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true") {
+
+            var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
+
+            if (action) {
+
+                var queryString = window.location.origin + window.location.pathname + '?' +
+                    Object.keys(filters).map(function (key) {
+                        if (key !== "" && filters[key] !== "" && key !== "path") {
+                            return ((key === "keyWord") ? "n" : encodeURIComponent(key)) + '=' + encodeURIComponent(filters[key]);
+                        } else {
+                            return "";
+                        }
+                    }).filter(x => typeof x === 'string' && x.length > 0).join('&');
+
+                window.history.pushState(null, null, queryString);
+
+            } else {
+
+                var queryString = location.search.slice(1).split('&');
+
+                if(queryString.length > 1) {
+                    var result = {};
+                    queryString.forEach(function (query) {
+                        query = query.split('=');
+
+                        if(query[0] !== "mdf" && query[0] !== "mdv") {
+                            try {
+                                result[(query[0] === "n" ? "keyWord" : query[0])] = decodeURIComponent(query[1] || '');
+                            } catch (ex) {
+                                result[query[0]] = query[1] || '';
+                            }
+                        }
+
+                    });
+
+                    result.path = window.location.pathname;
+
+                    sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(result)); //criando valores
+                }
+
+            }
+        }
+    },
+    getFilter: function(params) { //verificando se existe conteudo para atualizar
+
+        var update = true;
+
+        if($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true" && !params) {
+            this.filterURL();
+            update = false;
+        }
+
+        var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
+
+        if(params) {
+
+            Object.entries(params).forEach(function (key, value) {
+                filters[key[0]] = key[1];
+            });
+
+            update = false;
+
+        }
+
+        if(this.verifyPage(filters.path)) //verificando se a pagina possui filtros
+            ((JSON.stringify(filters) !== JSON.stringify(this.resetFilter()) || params) //comparando os valores do filtro com os default
+                ? this.updateProducts(filters, update) : //se os filtros na sessao forem diferentes do valor default entao atualizamos os produtos
+                "")
+        else
+            this.setSession(true);
+
+    },
+    updateProducts: function(filters, update) {  //atualizando o conteudo 
+
+        if($(configFilter.config.infinity).length > 0 && $(configFilter.config.infinity).val().toLowerCase() === "true") {
+
+            var forPage = parseInt(filters.pageNumber),
+                pageInit = 1,
+                containers = "";
 
             if (update) {
-                //Antes de atualizar os produtos, sincroniza o filterManipulation com a sessão
-                Object.keys(storageData).forEach(function (key) {
-                    window.filterManipulation[key] = storageData[key];
-                });
-                data = getParamsFilters(storageData);
-                isLoading("#list");
-                updateAjax(data);
-            }
 
-        }
-
-    } else if (window.pageNumber > 1) {
-        data = getParamsFilters(filters);
-        updateAjax(data);
-    }
-
-
-    if ($("#idEventListFilter").length > 0) {
-        idEventListFilter = $("#idEventListFilter").val();
-        viewListGlobal = "l";
-        urlBase = "/product/GetProductsListEvents/";
-    }
-
-    if (window.filterManipulation !== undefined) {
-        window.filterManipulation.variationSelected = [];
-        window.filterManipulation.labelFilter = [];
-        window.filterManipulation.atributeSelected = [];
-    }
-
-    if (ViewProductFiltersUrl == true && window.location.search != "") {
-        let queryString = QueryStringToJSON();
-
-        window.filterManipulation.viewList = queryString.viewList === undefined ? viewListGlobal : queryString.viewList;
-        window.filterManipulation.pageNumber = queryString.pageNumber === undefined ? "" : queryString.pageNumber;
-        window.filterManipulation.pageSize = queryString.pageSize === undefined ? pageSizeDefault : filters.pageSize;
-        window.filterManipulation.order = queryString.order === undefined ? "" : queryString.order;
-        window.filterManipulation.brand = queryString.brand === undefined ? "" : queryString.brand;
-        window.filterManipulation.category = queryString.category === undefined ? genericPageFilter : queryString.category;
-        window.filterManipulation.initialprice = queryString.initialprice === undefined ? "" : queryString.initialprice;
-        window.filterManipulation.finalprice = queryString.finalprice === undefined ? "" : queryString.finalprice;
-        window.filterManipulation.variations = queryString.variations === undefined ? "" : queryString.variations;
-        window.filterManipulation.group = queryString.group === undefined ? "" : queryString.group;
-        window.filterManipulation.keyWord = ((queryString.keyWord === undefined) ? ((queryString.n === undefined) ? "" : queryString.n) : queryString.keyWord);
-        window.filterManipulation.idAttribute = queryString.idAttribute === undefined ? "" : queryString.idAttribute;
-        window.filterManipulation.idEventList = idEventListFilter;
-        window.filterManipulation.idCategories = queryString.idCategories === undefined ? "" : queryString.idCategories;
-        window.filterManipulation.idGroupingType = queryString.idGroupingType === undefined ? "" : queryString.idGroupingType;
-        window.filterManipulation.labelFilter = queryString.labelFilter === undefined ? [] : JSON.parse(queryString.labelFilter);
-
-        makeLabel();
-    }
-
-    $(".dropdownorder").dropdown({
-        onChange: function () {
-            isLoading("#list");
-            setStorage = true;
-            paginationFilter = false;
-            let filters = window.filterManipulation;
-            filters.order = $(this).dropdown("get value");
-            let data = getParamsFilters(filters);
-            updateAjax(data);
-        }
-    });
-
-    $(".dropdownitens").dropdown({
-        onChange: function () {
-            isLoading("#list");
-            setStorage = true;
-            paginationFilter = false;
-            let filters = window.filterManipulation;
-            filters.pageSize = $(this).dropdown("get value");
-            filters.pageNumber = 1;
-            let data = getParamsFilters(filters);
-            updateAjax(data);
-        }
-    });
-
-});
-
-function QueryStringToJSON() {
-    var pairs = location.search.slice(1).split('&');
-
-    var result = {};
-    pairs.forEach(function (pair) {
-        pair = pair.split('=');
-        try {
-            result[pair[0]] = decodeURIComponent(pair[1] || '');
-        } catch (ex) {
-            result[pair[0]] = pair[1] || '';
-        }
-    });
-
-    return JSON.parse(JSON.stringify(result));
-}
-
-function uiReload() {
-    $('.ui.accordion').accordion("refresh");
-    $(".ui.dropdown").dropdown("refresh");
-    $(".ui.checkbox").checkbox("refresh");
-
-    $(".ui.rating").rating({
-        maxRating: 5,
-        interactive: false
-    });
-}
-
-function makeLabel(uncheck = false) {
-
-    let labelVariation = window.filterManipulation.labelFilter,
-        htmlTag = "",
-        idCheck,
-        verification;
-
-    if (labelVariation.length === 0) {
-        if (storageData !== null)
-            labelVariation = typeof (storageData.labelFilter) === "string" ? JSON.parse(storageData.labelFilter) : storageData.labelFilter
-    }
-
-
-    if (uncheck) {
-        $("#filter .ui.labels .filters").each(function () {
-            idCheck = $(this).attr("data-id");
-            verification = window.filterManipulation.labelFilter.filter((item) => {
-                return item.id == idCheck
-            });
-            if (verification.length == 0 && idCheck !== "") {
-                $(`.ui.button#${idCheck}`).removeClass("checked selecionado").addClass("basic").removeAttr("disabled");
-            }
-        });
-    }
-
-    for (let key in labelVariation) {
-        if (labelVariation[key] != null) {
-            if (labelVariation[key].type === "price") {
-                htmlTag += `<a class="ui label filters" data-type="${labelVariation[key].type}" data-id="${labelVariation[key].id}" id="labelPrice">
-                            ${labelVariation[key].name}: ${labelVariation[key].value}
-                        <i class="icon close close-filter"></i></a>`;
-            } else if (labelVariation[key].type === "groupingType") {
-                htmlTag += `<a class="ui label filters" data-type="${labelVariation[key].type}" data-id="${labelVariation[key].id}" id="labelPrice">
-                            ${labelVariation[key].name}: <span style="background-color: ${labelVariation[key].value}; width: 15px; height: 10px; display: inline-block;">&nbsp;</span>
-                        <i class="icon close close-filter"></i></a>`;
-            } else {
-                htmlTag += `<a class="ui label filters" data-type="${labelVariation[key].type}" data-id="${labelVariation[key].id}" id="labelVariation_${labelVariation[key].id}">
-                                ${labelVariation[key].name}: ${labelVariation[key].value}
-                            <i id="icon-close-" + ${labelVariation[key].id} class="icon close close-filter"></i></a>`;
-
-
-                if (firstLoad && (window.location.search != "" && window.location.search != undefined)) {
-                    $(`.ui.button#${labelVariation[key].id}`).addClass("checked selecionado").removeClass("basic").attr("disabled", "disabled");
+                for (var i = 1; i <= forPage; i++) {
+                    containers += "<div class='content' data-grid-number='" + i + "'></div>";
                 }
 
-            }
-        }
-    }
-    $("#filter>div.ui.labels:first-child").html(htmlTag);
+                $(configFilter.config.father).html(containers)
 
-    if (htmlTag.trim() == "") {
-        $(".filterColumn").removeClass("ativo")
-    }
-}
+                while (pageInit <= forPage) {
 
-function ValidateLabel(type, id) {
-    let labelVariation = window.filterManipulation.labelFilter
-    for (let key in labelVariation) {
-        if (labelVariation[key].type === type && labelVariation[key].id === id) {
-            return true
-        }
-    }
-    return false
-}
+                    filters.pageNumber = pageInit;
 
-function callAjaxFunction(filterType) {
-    isLoading("#list");
-    let data = getParamsFilters(window.filterManipulation);
+                    $.when(
+                        $.ajax({
+                            url: configFilter.config.url,
+                            method: "GET",
+                            dataType: "html",
+                            data: filters
+                        })
+                    ).then(function (data, status, response) {
+                        var content = response.responseText.match(/data-grid-number\=\"([0-9]*)\"/i)[1];
 
-    updateAjax(data);
-}
+                        if (content == 0)
+                            $(configFilter.config.father).append(data);
+                        else
+                            $(".content[data-grid-number='" + content + "']", configFilter.config.father).append(data);
 
-/*
-function updateQueryString(_data) {
-    let queryString = window.location.origin + window.location.pathname + "?" + $.param(_data, true);
-    window.history.pushState(null, null, queryString);
-    return false;
-}
-*/
+                        if(sessionStorage.getItem(configFilter.config.nameSessionPosition) && forPage > 1)
+                            $('html, body').animate({ scrollTop: sessionStorage.getItem(configFilter.config.nameSessionPosition)}, 1000);
 
-function updateQueryString(json) {
-
-    if (ViewProductFiltersUrl)
-        json.labelFilter = getLabelFilter();
-
-    let queryString = window.location.origin + window.location.pathname + '?' +
-        Object.keys(json).map(function (key) {
-            if (key != "" && json[key] != "") {
-                return ((key == "keyWord") ? "n" : encodeURIComponent(key)) + '=' + encodeURIComponent(json[key]);
-            } else {
-                return "";
-            }
-        }).filter(x => typeof x === 'string' && x.length > 0).join('&');
-
-    window.history.pushState(null, null, queryString);
-    return false;
-}
-
-function updateAjax(_data) {
-
-    var labelFilter = getLabelFilter();
-    _data.labelFilter = labelFilter;
-
-    //if (!ViewProductFiltersUrl)
-    _data.pageNumber = !paginationFilter ? "1" : _data.pageNumber; // sempre que houver uma atualização no filtro e não é paginação, volto pra pag. 1
+                        if(content < forPage)
+                            $("#container-paginate:not(.disabled)", configFilter.config.father).remove()
+                        else
+                            $("#container-paginate.disabled", configFilter.config.father).remove()
 
 
-    $.ajax({
-        url: urlBase,
-        method: "GET",
-        dataType: "html",
-        data: _data,
-        success: function (response) {
-            $("#list").html(response);
-            lazyLoad();
+                        lazyLoad()
+                        $(".ui.dropdown", configFilter.config.father).dropdown();
+                    });
 
-            if (ViewProductFiltersUrl == true) {
-                updateQueryString(_data);
-            } else {
-                if (setStorage) {
-                    setInStorage(keyStorage, JSON.stringify(_data));
-                    storageData = _data;
+                    pageInit++;
                 }
-            }
 
-            if (window.filterManipulation.labelFilter !== undefined && window.filterManipulation.labelFilter.length === 0)
-                window.filterManipulation.labelFilter = typeof (labelFilter) !== "object" ? JSON.parse(labelFilter) : labelFilter;
-
-            //$('#checkCategory_' + _data.category).parent().parent().remove();
-
-            uiReload();
-            makeLabel();
-
-            $('input[type=checkbox]').prop('checked', false);
-            $('#checkCategory_' + window.filterManipulation.idCategory).prop("checked", true)
-        },
-        onFailure: function onFailure(response) {
-            //console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            //console.log("Erro aplicar filtro: " + response);
-        }
-    });
-}
-
-function getLabelFilter() {
-    let labelFilter;
-
-    if (ViewProductFiltersUrl) {
-        labelFilter = window.filterManipulation.labelFilter !== undefined ? JSON.stringify(window.filterManipulation.labelFilter) : [];
-    } else {
-        if (!setStorage) {
-            if (!ViewProductFiltersUrl && storageData !== null && typeof (storageData.labelFilter) !== "undefined") {
-                labelFilter = typeof (storageData.labelFilter) === "string" ? storageData.labelFilter : JSON.stringify((storageData.labelFilter));
             } else {
-                labelFilter = [];
+
+                $.ajax({
+                    url: configFilter.config.url,
+                    method: "GET",
+                    dataType: "html",
+                    data: filters,
+                    success: function (data) {
+
+                        if(filters.pageNumber === 1) {
+                            $(configFilter.config.father).html(data);                         
+                        } else {
+                            $(data).insertAfter($(".type-grid, .type-list", configFilter.config.father).last());
+                            $("#container-paginate:last-child", configFilter.config.father).remove()
+                        }
+
+                        lazyLoad();
+                        $(".ui.dropdown", configFilter.config.father).dropdown();
+                    }
+                })
             }
         } else {
-            labelFilter = window.filterManipulation.labelFilter !== undefined ? JSON.stringify(window.filterManipulation.labelFilter) : [];
-        }
-    }
 
-    return labelFilter;
-}
+            $('html, body').animate({ scrollTop: $(configFilter.config.father).offset().top - 200 }, 1000);
 
+            isLoading(configFilter.config.father);
 
-function updateAjaxPagination(page) {
-
-    isLoading("#list");
-    let filters = window.filterManipulation;
-    filters.pageNumber = page;
-    var data = getParamsFilters(filters);
-
-    $.ajax({
-        url: urlBase,
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#list").html(response);
-            lazyLoad();
-            $(".ui.rating").rating({
-                maxRating: 5,
-                interactive: false
+            $.ajax({
+                url: configFilter.config.url,
+                method: "GET",
+                dataType: "html",
+                data: filters,
+                success: function (response) {
+                    $(configFilter.config.father).html(response);
+                    lazyLoad();
+                    $(".ui.dropdown", configFilter.config.father).dropdown();
+                }
             });
 
-            if (ViewProductFiltersUrl == true) {
-                updateQueryString(data);
-            } else {
-                setInStorage(keyStorage, JSON.stringify(data));
-                storageData = data;
+        }
+
+        sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(filters)); //criando valores        
+        this.createLabel();
+        this.checkFilter();
+        this.pagination();
+        this.filterURL(true);
+    },
+    pagination: function() {
+
+        if($(configFilter.config.infinity).length > 0 && $(configFilter.config.infinity).val().toLowerCase() === "true") {
+
+            this.activeScroll()
+            this.position()
+
+        } else {
+
+            $(document).one('click', configFilter.config.pagination.prev, function() {
+                var isDisabled = $(this).hasClass("disabled");
+                if (!isDisabled) {
+                    var params = {
+                        pageNumber: $(this).data("number")
+                    }
+                    $(this).addClass("disabled")
+                    newFilter.getFilter(params);
+                }
+            })
+
+            $(document).one('click', configFilter.config.pagination.next, function() {
+                var isDisabled = $(this).hasClass("disabled");
+                if (!isDisabled) {
+                    var params = {
+                        pageNumber: $(this).data("number")
+                    }
+                    $(this).addClass("disabled")
+                    newFilter.getFilter(params);
+                }
+            })
+
+            $(document).one('click', configFilter.config.pagination.number, function() {
+                var isDisabled = $(this).hasClass("disabled"),
+                    isActive = $(this).hasClass("active");
+                if (!isDisabled && !isActive) {
+                    var params = {
+                        pageNumber: $(this).data("number")
+                    }
+                    $(this).addClass("disabled")
+                    newFilter.getFilter(params);
+                }
+            })
+
+        }
+    },
+    activeScroll: function() {
+
+        $(window).scroll(function() {
+            if($(".type-grid, .type-list", configFilter.config.father).length > 0 &&
+                $("#container-paginate", configFilter.config.father).length > 0 &&
+                $(window).scrollTop() > $(".type-grid, .type-list", configFilter.config.father).last().offset().top - 500) {
+                if(!$(configFilter.config.pagination.next).hasClass("disabled")) {
+                    $(configFilter.config.pagination.next).addClass("disabled");
+
+
+                    var lastPage = $(configFilter.config.pagination.next).data("last-page"),
+                        page = $(configFilter.config.pagination.next).data("number"),
+                        params = {
+                            pageNumber: page
+                        };
+
+                    $("#container-paginate", configFilter.config.father).html(configFilter.config.pagination.htmlInfinity);
+
+                    if(page !== undefined && page <= lastPage) {
+
+                        newFilter.getFilter(params);
+
+                        setTimeout(function() {
+                            $(configFilter.config.pagination.next).removeClass("disabled")
+                        },3000)
+                    } else {
+                        $("#container-paginate.disabled", configFilter.config.father).remove()
+                    }
+
+                }
             }
-        },
-        onFailure: function onFailure(response) {
-            //console.log("Falha ao acessar a página: " + response);
-        },
-        onError: function onError(response) {
-            //console.log("Erro ao acessar a página: " + response);
-        },
-        complete: function (response) {
-            uiReload();
-        }
-    });
-}
+        })
 
-function getFilters(callUpdateAjax = false, dataFilter = {}) {
+    },
+    position: function() {
 
-    let data;
-
-    if (urlFilter == "/product/filtermenu/") {
-        data = {
-            idEventListFilter: "",
-            currentPage: ""
-        }
-    } else {
-        let page = $("#CurrentPage").val();
-        if (window)
-            data = {
-                category: page == "category" ? storageData.category : "",
-                brand: page == "brand" ? storageData.brand : "",
-                group: page == "group" ? storageData.group : "",
-                keyword: page == "search" ? storageData.keyWord : ""
-            }
-    }
-
-    $.ajax({
-        url: urlFilter,
-        method: "GET",
-        dataType: "html",
-        data: data,
-        success: function (response) {
-            $("#filterBlock").html(response);
-            if (callUpdateAjax)
-                updateAjax(dataFilter)
-        },
-        onFailure: function onFailure(response) {
-            //console.log("Falha aplicar filtro: " + response);
-        },
-        onError: function onError(response) {
-            //console.log("Erro aplicar filtro: " + response);
-        }
-    });
-
-}
-
-
-function labelFilter(filters, typeFilter, id) {
-    for (let key in filters.labelFilter) {
-        if (filters.labelFilter[key].id == id) {
-            switch (typeFilter) {
-                case "default":
-                    _.pull(filters.variationSelected, id.toString());
-                    break;
-                case "atributo":
-                    _.pull(filters.atributeSelected, id.toString());
-                    break;
-            }
-            _.pullAt(filters.labelFilter, [key]);
-        }
-    }
-
-    return filters;
-}
-
-
-function getParamsFilters(filters) {
-    return {
-        viewList: filters.viewList === undefined ? viewListGlobal : filters.viewList,
-        pageNumber: filters.pageNumber === undefined ? (window.pageNumber === undefined ? "1" : window.pageNumber) : filters.pageNumber,
-        pageSize: filters.pageSize === undefined || filters.pageSize === "" ? pageSizeDefault : filters.pageSize,
-        order: filters.order === undefined ? "" : filters.order,
-        brand: filters.brand === undefined || filters.brand === "" ? (filters.idBrand === undefined ? "" : filters.idBrand) : filters.brand,
-        category: filters.category === undefined || filters.category === "" ? (filters.idCategory === undefined ? genericPageFilter : filters.idCategory) : filters.category,
-        initialprice: filters.initialprice === undefined ? "" : filters.initialprice,
-        finalprice: filters.finalprice === undefined ? "" : filters.finalprice,
-        variations: filters.variations === undefined || filters.variations === "" ? (filters.variationSelected !== undefined ? filters.variationSelected.toString() : "") : filters.variations,
-        group: filters.group === undefined || filters.group === "" ? (filters.idGroup === undefined ? "" : filters.idGroup) : filters.group,
-        keyWord: filters.keyWord === undefined ? "" : filters.keyWord,
-        idAttribute: filters.idAttribute === undefined || filters.idAttribute === "" ? (filters.atributeSelected !== undefined ? filters.atributeSelected.toString() : "") : filters.idAttribute,
-        idEventList: idEventListFilter,
-        idCategories: filters.idCategories === undefined ? "" : filters.idCategories,
-        idGroupingType: filters.idGroupingType === undefined ? "" : filters.idGroupingType,
-    }
-}
-
-$(document).on("click", "#previousPage", function () {
-    var isdisabled = $(this).hasClass("disabled");
-    if (!isdisabled) {
-        paginationFilter = true;
-        let page = $(this).data("number");
-        updateAjaxPagination(page);
-        window.scrollTo(0, 0);
-    }
-});
-
-$(document).on("click", "#nextPage", function () {
-    var isdisabled = $(this).hasClass("disabled");
-    if (!isdisabled) {
-        paginationFilter = true;
-        let page = $(this).data("number");
-        updateAjaxPagination(page);
-        window.scrollTo(0, 0);
-    }
-});
-
-$(document).on("click", ".btnPageNumber", function () {
-    paginationFilter = true;
-    let page = $(this).data("number");
-    updateAjaxPagination(page);
-    window.scrollTo(0, 0);
-});
-
-
-$(document).on("click", "#viewgrid", function () {
-    isLoading("#list");
-    let filters = window.filterManipulation;
-    filters.viewList = "g";
-    let data = getParamsFilters(filters);
-
-
-    setStorage = true;
-    paginationFilter = false;
-    updateAjax(data);
-});
-
-$(document).on("click", "#viewlist", function () {
-    isLoading("#list");
-    let filters = window.filterManipulation;
-    filters.viewList = "l";
-    let data = getParamsFilters(filters);
-
-    setStorage = true;
-    paginationFilter = false;
-    updateAjax(data);
-});
-
-
-$(document).on("click", ".checkColor", function () {
-    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
-        window.filterManipulation.variationSelected.push($(this).prop("id"));
-
-        if (window.filterManipulation.variations === undefined || window.filterManipulation.variations === "")
-            window.filterManipulation.variations = window.filterManipulation.variationSelected.toString();
-        else
-            window.filterManipulation.variations += "," + $(this).prop("id");
-    }
-
-    if (!ValidateLabel("color", $(this).prop("id"))) {
-        window.filterManipulation.labelFilter.push({
-            type: "color",
-            id: $(this).prop("id"),
-            name: $(this).data("reference"),
-            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
+        $(document).on("click", "[id^=Product_]", function () {
+            sessionStorage.setItem(configFilter.config.nameSessionPosition, $(window).scrollTop()); //criando valores   
         });
-    }
-    //ajaxColor();
-    firstLoad = false;
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("variation");
-});
-
-
-$(document).on("click", ".checkText", function () {
-    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
-        window.filterManipulation.variationSelected.push($(this).prop("id"));
-
-        if (window.filterManipulation.variations === undefined || window.filterManipulation.variations === "")
-            window.filterManipulation.variations = window.filterManipulation.variationSelected.toString();
-        else
-            window.filterManipulation.variations += "," + $(this).prop("id");
-    }
-    if (!ValidateLabel("text", $(this).prop("id"))) {
-        window.filterManipulation.labelFilter.push({
-            type: "text",
-            id: $(this).prop("id"),
-            name: $(this).data("reference"),
-            value: $(".fields").find("#variation_" + $(this).prop("id")).prop("name")
-        });
-    }
-    //ajaxText();
-    firstLoad = false;
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("variation");
-});
-
-
-$(document).on("click", ".checkAtribute", function () {
-    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "" && jQuery.inArray($(this).prop("id"), window.filterManipulation.atributeSelected)) {
-        window.filterManipulation.atributeSelected.push($(this).prop("id"));
-
-        if (window.filterManipulation.idAttribute === undefined || window.filterManipulation.idAttribute === "")
-            window.filterManipulation.idAttribute = window.filterManipulation.atributeSelected.toString();
-        else
-            window.filterManipulation.idAttribute += "," + $(this).prop("id");
-
-    }
-    if (!ValidateLabel("atributo", $(this).prop("id"))) {
-        window.filterManipulation.labelFilter.push({
-            type: "atributo",
-            id: $(this).prop("id"),
-            name: "atributo",
-            value: $(".fields").find("#checkAtribute_" + $(this).prop("id")).prop("name")
-        });
-    }
-    //ajaxAttribute();
-    firstLoad = false;
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("attribute");
-});
-
-
-$(document).on("change", ".checkCategory", function () {
-    window.filterManipulation.nameCategory = $(this).attr("name");
-    window.filterManipulation.idCategory = $(this).attr("id");
-
-    if (window.filterManipulation.idCategories === undefined || window.filterManipulation.idCategories === "")
-        window.filterManipulation.idCategories = $(this).attr("id");
-    else
-        window.filterManipulation.idCategories += "," + $(this).attr("id");
-
-    if (!ValidateLabel("category", $(this).prop("id"))) {
-
-        for (let key in window.filterManipulation.labelFilter) {
-            if (window.filterManipulation.labelFilter[key].type == "category")
-                delete window.filterManipulation.labelFilter[key]
-        }
-
-
-        window.filterManipulation.labelFilter.push({
-            type: "category",
-            id: window.filterManipulation.idCategory,
-            name: "Categorias",
-            value: window.filterManipulation.nameCategory
-        });
-    }
-    //ajaxCategory()
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("other");
-});
-
-$(document).on("click", ".checkGroupingType", function () {
-
-    if ($(this).prop("id") !== undefined && $(this).prop("id") !== "") {
-        if (window.filterManipulation.idGroupingType === undefined || window.filterManipulation.idGroupingType === "")
-            window.filterManipulation.idGroupingType = $(this).attr("id");
-        else
-            window.filterManipulation.idGroupingType += "," + $(this).attr("id");
-
-        if (!ValidateLabel("groupingType", $(this).prop("id"))) {
-            window.filterManipulation.labelFilter.push({
-                type: "groupingType",
-                id: $(this).prop("id"),
-                name: "Cor",
-                value: $(this).attr("data-groupingtype")
-            });
-        }
 
     }
 
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("other");
-});
-
-$(document).on("change", ".checkBrand", function () {
-    window.filterManipulation.nameBrand = $(this).attr("data-name");
-    window.filterManipulation.idBrand = $(this).attr("id");
-
-    if (window.filterManipulation.brand === undefined || window.filterManipulation.brand === "")
-        window.filterManipulation.brand = $(this).attr("id");
-    else
-        window.filterManipulation.brand += "," + $(this).attr("id");
+};
 
 
-    if (!ValidateLabel("brand", $(this).prop("id"))) {
-        window.filterManipulation.labelFilter.push({
-            type: "brand",
-            id: window.filterManipulation.idBrand,
-            name: "Marcas",
-            value: window.filterManipulation.nameBrand
-        });
-    }
-    //ajaxBrand();
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("other");
-});
+$(function () {
 
 
-$(document).on("click", ".pricefilter", function () {
-    window.filterManipulation.labelFilter = [];
-    window.filterManipulation.initialprice = $("#initialPrice").val().replace(".", "").replace(",", ".");
-    window.filterManipulation.finalprice = $("#finalPrice").val().replace(".", "").replace(",", ".");
+    newFilter.init();
 
-    if (window.filterManipulation.initialprice === "" || window.filterManipulation.finalprice === "") {
-        _alert("Atenção", "Informe preço mínimo e preço máximo!", "warning");
+})
 
-        return;
-    }
-
-    if (!ValidateLabel("price", $(this).prop("id"))) {
-        window.filterManipulation.labelFilter.push({
-            type: "price",
-            id: "",
-            name: "Preço",
-            value: `${window.filterManipulation.initialprice} a ${window.filterManipulation.finalprice}`
-        });
-    }
-
-    //ajaxPrice();
-    firstLoad = false;
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction("other");
-});
-
-$(document).on("click", ".ui.label.filters", function () {
-    let filters = window.filterManipulation;
-
-    console.log($(this));
-
-    let type = $(this).data("type");
-    let id = $(this).data("id");
-    let filterType = "";
-
-    if (type == "brand") {
-        filters.idBrand = "";
-        filters.nameBrand = "";
-        filters = labelFilter(filters, "brand", id);
-        filterType = "other";
-
-        let brands = window.filterManipulation.brand.split(",").filter((item) => {
-            return parseInt(item) !== parseInt(id);
-        }).toString();
-
-        filters.brand = brands;
-        window.filterManipulation.brand = brands;
-    }
-    else if (type == "category") {
-        filters.idCategory = genericPageFilter;
-        filters = labelFilter(filters, "category", id);
-        filterType = "other";
-
-        let categories = window.filterManipulation.idCategories.split(",").filter((item) => {
-            return parseInt(item) !== parseInt(id);
-        }).toString();
-
-        filters.idCategories = categories;
-        window.filterManipulation.idCategories = categories;
-
-    }
-    else if (type == "price") {
-        filters.initialprice = "";
-        filters.finalprice = "";
-        filters = labelFilter(filters, "price", id);
-        filterType = "other";
-    }
-    else if (type == "atributo") {
-        filters.idAtribute = "";
-        filters = labelFilter(filters, "atributo", id);
-        filterType = "attribute";
-
-        let atribute = window.filterManipulation.idAttribute.split(",").filter((item) => {
-            return parseInt(item) !== parseInt(id);
-        }).toString();
-
-        filters.idAttribute = atribute;
-        window.filterManipulation.idAttribute = atribute;
-    }
-    else if (type == "groupingType") {
-        filters.idAtribute = "";
-        filters = labelFilter(filters, "groupingType", id);
-        filterType = "groupingType";
-
-        let groupingType = window.filterManipulation.idGroupingType.split(",").filter((item) => {
-            return parseInt(item) !== parseInt(id);
-        }).toString();
-
-        filters.idGroupingType = groupingType;
-        window.filterManipulation.idGroupingType = groupingType;
-    }
-    else {
-        filters.idVariation = "";
-        filters = labelFilter(filters, "default", id);
-        filterType = "variation";
-
-        let variations = window.filterManipulation.variations.split(",").filter((item) => {
-            return parseInt(item) !== parseInt(id);
-        }).toString();
-
-        filters.variations = variations;
-        window.filterManipulation.variations = variations;
-    }
-
-    setStorage = true;
-    paginationFilter = false;
-    callAjaxFunction(filterType);
-
-    firstLoad = false;
-    makeLabel(true);
-});
-
-$(document).on("keyup", ".filterListEventsProducts", function (event) {
-    var wordCurrent = event.target.value;
-    var totalCaracteres = wordCurrent.length;
-    wordCurrent = totalCaracteres > 2 ? wordCurrent : "";
-
-    if (totalCaracteres > 2) {
-        isLoading("#list");
-    }
-
-    let data = {
-        viewList: viewListGlobal,
-        pageNumber: "1",
-        pageSize: pageSizeDefault,
-        order: "",
-        brand: "",
-        category: "",
-        initialprice: "",
-        finalprice: "",
-        variations: "",
-        group: "",
-        keyWord: wordCurrent,
-        idAttribute: "",
-        idEventList: idEventListFilter
-    };
-
-    updateAjax(data);
-});

@@ -206,7 +206,10 @@
                                         if (ViewBag.Yami != null && ViewBag.Yami.Trim() != "")
                                         {
                                             string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
-                                            <a href="@urlYami" class="ui button orange right floated btn-yami">Solicitar troca ou devolução</a>
+                                            <a href="@urlYami" class="ui button orange right floated btn-yami">Solicitar troca/devolução</a>
+
+                                            string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
+                                            <a href="@urlYamiAcompanha" class="ui button basic orange right floated btn-yami-acompanha">Acompanhar Troca/Devolução</a>
                                         }
                                     }
                                     break;

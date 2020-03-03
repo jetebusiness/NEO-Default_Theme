@@ -1,4 +1,5 @@
 import {montaListaProdutos} from "../../ui/modules/mini_cart";
+import { generateRecaptcha }  from "../../ui/modules/recaptcha";
 
 export const formSettings = {
     debug: false,
@@ -257,6 +258,18 @@ export const formSettings = {
             }]
         }
 
+    },
+    onSuccess: function() {        
+        if($("[id^=googleResponse]", $(this)).length > 0 && $("[id^=googleVersion]", $(this)).val() === '3') {
+            
+            var form = $(this),
+                module = $("[id^=googleModule]", form).val();
+            
+            window.setTimeout(function() {
+                generateRecaptcha(module, form);
+            },1500)
+        }        
+        
     }
 };
 
@@ -364,31 +377,7 @@ $(document).on("click", ".form_refresh", function () {
         }
 
     })
-    .on("click", ".button.checkbox", function () {
-        $(this).toggleClass("basic").next().checkbox("toggle");
-        if ($(this).closest("#filtroList").length > 0)
-          $(this).attr("disabled", "disabled")
-    })
-    .on("click", ".button.radio", function () {
-        $(this).closest(".field").find(".button.radio:not(.basic)").addClass("basic");
-        $(this).toggleClass("basic").next().checkbox("toggle");
-    })
-    .on("click", ".variacao.cor.checkbox", function () {
-        $(this).toggleClass("selecionado").next().checkbox("toggle");
-    })
-    .on("click", ".variacao.cor.radio", function () {
-        $(this).closest(".field").find(".selecionado").removeClass("selecionado");
-        $(this).toggleClass("selecionado").next().checkbox("toggle");
-    })
-    .on("click", ".variacao.image", function () {
-        if ($(this).children(".ui.checkbox").find("input[type='radio']").length === 1) {
-            $(this.parentElement).find(".img-selecionado").removeClass("img-selecionado");
-            $(this).toggleClass("img-selecionado").children(".ui.checkbox").checkbox("toggle");
-        } else {
-            $(this).toggleClass("img-selecionado").children(".ui.checkbox").checkbox("toggle");
-        }
-
-    })
+   
     .on("click", ".searchMobile>.button", function () {
         $(".blocoBusca").toggleClass("active");
     })

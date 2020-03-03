@@ -11,6 +11,8 @@ import {CarregarParcelamento, CarregaParcelamentoPagSeguro} from "../../api/prod
 
 import { VariacaoDropDown, VariacaoCor, VariacaoImagem, VariacaoRadio, AtualizarCompreJunto  } from "./variations-floating";
 
+import { generateRecaptcha }  from "../../ui/modules/recaptcha";
+
 $(document).ready(function () {
     "use strict";
     
@@ -41,35 +43,43 @@ $(document).ready(function () {
         });
 
         $(".btn-avaliar").click(function () {
-            var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false;
-            var googleRecaptchaVersion = "";
 
-            if ($('#googleVersion').length > 0) {
-                googleRecaptchaVersion = $('#googleVersion').val();
-            }
 
-            if (googleRecaptchaVersion == "2") {
-                if (googleRecaptchaStatus) {
-                    if (grecaptcha.getResponse() != "") {
-                        $("#googleResponse").val(grecaptcha.getResponse());
+            var count = 0,
+                form = $("#avaliar");
+            
+            $("textarea:not(.g-recaptcha-response), input:visible:not([type='checkbox']):not(.search)", form).each(function() {
+                if($(this).val().trim() === "")
+                    count++;
+
+                if($(this).val().trim() === "")
+                    console.log($(this))
+            });
+
+            $('.dropdown:not(.icon)', form).each(function() {
+                if($(this).dropdown("get value").trim() === "")
+                    count++;
+            });
+                        
+            if(count === 0) {
+                if($("[id^=googleVersion]", form).val() === "2") {
+                    if (generateRecaptcha($("[id^=googleModule]", form).val(), form))
                         AvaliarProduto();
-                    } else {
-                        grecaptcha.reset();
-                    }
                 } else {
                     AvaliarProduto();
                 }
-            } else if (googleRecaptchaVersion == "3") {
-                var googleSiteKey = $('#googleSiteKey').val();
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                        $("#googleResponse").val(token);
-                        AvaliarProduto();
-                    });
-                });
             } else {
-                AvaliarProduto();
+                swal({
+                    title: 'Ops...',
+                    text: "Preencha todos os campos corretamente",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             }
+       
         });
 
         $("#avaliar .ui.star.rating").click(function () {
@@ -236,14 +246,9 @@ function CarregarMaisAvaliacoes() {
 
 
 function AvaliarProduto() {
+    
     var form = $('#avaliar');
-    var googleRecaptcha = $("#googleResponse").length > 0 ? $("#googleResponse").val() : "";
-    var googleRecaptchaStatus = $("#avaliar #gCaptcha").length > 0 ? true : false
-    var googleRecaptchaVersion = "";
-
-    if ($('#googleVersion').length > 0) {
-        googleRecaptchaVersion = $('#googleVersion').val();
-    }
+    var googleRecaptcha = $("[id^=googleResponse]", form).length > 0 ? $("[id^=googleResponse]", form).val() : "";
 
     $.ajax({
         url: '/Product/ProductRating?googleResponse=' + googleRecaptcha,
@@ -264,11 +269,7 @@ function AvaliarProduto() {
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    $("#Comment").val("");
-                    $("#Email").val("");
-                    $("#Name").val("");
-                    $("#cidade").val("");
-                    $("#Title").val("");
+                    $("#Comment, #Email, #Name, #cidade, #Title").val("");
                     $('#avaliar .ui.checkbox').checkbox("uncheck");
                     $('#avaliar .dropdown').dropdown("clear");
                     $("#rating_st .ui.star.rating").rating("clear rating");
@@ -283,38 +284,20 @@ function AvaliarProduto() {
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
-                }).then(function () {
-                    if (googleRecaptchaVersion == '2') {
-                        grecaptcha.reset();
-                    } else if (googleRecaptchaVersion == '3') {
-                        var googleSiteKey = $('#googleSiteKey').val();
-                        $("#googleResponse").val('');
-                        $.ajaxSetup({ async: false });
-                        $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                            grecaptcha.ready(function () {
-                                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                                    $("#googleResponse").val(token);
-                                });
-                            });
-                        });
-                    }
                 });
             }
         },
         error: function (request, error) {
-            if (googleRecaptchaVersion == '2') {
-                grecaptcha.reset();
-            } else if (googleRecaptchaVersion == '3') {
-                var googleSiteKey = $('#googleSiteKey').val();
-                $("#googleResponse").val('');
-                $.ajaxSetup({ async: false });
-                $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                    grecaptcha.ready(function () {
-                        grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                            $("#googleResponse").val(token);
-                        });
-                    });
-                });
+           
+        },
+        complete: function () {
+
+            if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                    (form.parents(".modal-login").length > 0 ? grecaptcha.reset(1) : grecaptcha.reset())
+                } else {
+                    generateRecaptcha($("[id^=googleModule]").val(), form);
+                }
             }
         }
     });

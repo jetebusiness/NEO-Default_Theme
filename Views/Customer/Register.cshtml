@@ -509,26 +509,6 @@
             });
         }
         else {
-            var googleRecaptchaVersion = "";
-
-            if ($('#googleVersion').length > 0) {
-                googleRecaptchaVersion = $('#googleVersion').val();
-            }
-
-            if (googleRecaptchaVersion == '2') {
-                $("#googleResponse").val('');
-                grecaptcha.reset();
-            } else {
-                var googleSiteKey = $('#googleSiteKey').val();
-                $.ajaxSetup({ async: false });
-                $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                    grecaptcha.ready(function () {
-                        grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                            $("#googleResponse").val(token);
-                        });
-                    });
-                });
-            }
 
             swal({
                 title: '',
@@ -543,27 +523,8 @@
     }
 
     function OnFailure(response) {
-        var googleRecaptchaVersion = "";
-
-        if ($('#googleVersion').length > 0) {
-            googleRecaptchaVersion = $('#googleVersion').val();
-        }
 
         if (response.Success == false) {
-            if (googleRecaptchaVersion == '2') {
-                $("#googleResponse").val('');
-                grecaptcha.reset();
-            } else {
-                var googleSiteKey = $('#googleSiteKey').val();
-                $.ajaxSetup({ async: false });
-                $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                    grecaptcha.ready(function () {
-                        grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                            $("#googleResponse").val(token);
-                        });
-                    });
-                });
-            }
 
             swal({
                 title: '',

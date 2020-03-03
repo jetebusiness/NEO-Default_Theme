@@ -1,5 +1,6 @@
 ﻿import { _alert, _confirm } from "../../functions/message";
 import { validarEmail } from "../../functions/validate";
+import { generateRecaptcha }  from "../../ui/modules/recaptcha";
 
 $(document).ready(function () {
     if ($("#login").val() == "") {
@@ -19,28 +20,41 @@ $(document).ready(function () {
     $(document).on("click", "#Entrar", function () {
         var userName = $("#UserName").val();
         var password = $("#Password").val();
+        var $this = $(this);
 
-        if ($("#googleSiteKey").length > 0) {
-            var googleSiteKey = $('#googleSiteKey').val();
-            $("#googleResponse").val('');
-            $.ajaxSetup({ async: false });
-            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-                        $("#googleResponse").val(tokenGoogleRecaptchaV3);
-                        if (password != "")
-                            customerLogin(userName, password, tokenGoogleRecaptchaV3);
-                        else
-                            _alert("", "Informe sua senha.", "warning")
-                    });
-                });
-            });
-        } else {
-            if (password != "")
+        var form = $('#formAccessKey');
+        var googleRecaptchaStatus = !$("[id^=googleResponse]", form).length;
+
+
+        if (userName.length > 0 && password.length > 0) {
+
+
+            $this.addClass("loading");
+
+            if (googleRecaptchaStatus) {
                 customerLogin(userName, password);
-            else
-                _alert("", "Informe sua senha.", "warning")
+            } else{
+
+                if($("[id^=googleVersion]", form).val() === "2") {
+                    if(generateRecaptcha($("[id^=googleModule]", form).val(), form))
+                        customerLogin(userName, password);
+                    else
+                        $this.removeClass("loading");
+                } else {
+                    customerLogin(userName, password, $("[id^=googleResponse]").val());
+                }
+
+
+            }
+        } else {
+            if (!googleRecaptchaStatus)
+                (typeof grecaptcha !== "undefined" && $("[id^=googleVersion_]").eq(0).val() === "2" ? grecaptcha.reset() : "")
+
+            _alert("", "É necessário informar os dados de acesso.", "warning")
+
+            $this.removeClass("loading");
         }
+        
     });
 
 
@@ -93,6 +107,9 @@ function gettoken() {
 }
 
 function customerLogin(userName, password, tokenGoogleRecaptchaV3 = "") {
+
+    var form = $('#formAccessKey');
+    
     $.ajax({
         method: "POST",
         url: "/Customer/Login",
@@ -111,6 +128,17 @@ function customerLogin(userName, password, tokenGoogleRecaptchaV3 = "") {
         },
         error: function (data) {
             _alert("", data.message, "error")
+        },
+        complete: function() {
+            $("#Entrar").removeClass("loading")
+
+            if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                    (form.parents(".modal-login").length > 0 ? grecaptcha.reset(1) : grecaptcha.reset())
+                } else {
+                    generateRecaptcha($("[id^=googleModule]").val(), form);
+                }
+            }
         }
     });
 }

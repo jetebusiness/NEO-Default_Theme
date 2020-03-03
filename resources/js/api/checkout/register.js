@@ -1,24 +1,6 @@
 ﻿import { _alert, _confirm } from "../../functions/message";
 
 $(document).ready(function () {
-    if ($('#googleModule').length > 0) {
-        if ($('#googleModule').val() == 'Register') {
-            var googleRecaptchaVersionRegisterCheckout = "";
-
-            if ($('#googleVersion').length > 0) {
-                googleRecaptchaVersionRegisterCheckout = $('#googleVersion').val();
-            }
-
-            if (googleRecaptchaVersionRegisterCheckout == '3') {
-                var googleSiteKey = $('#googleSiteKey').val();
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                        $("#googleResponse").val(token);
-                    });
-                });
-            }
-        }
-    }
 
     $(".cpf_cnpj_checkout").change(function () {
         let field = $(this).val().toString();
@@ -73,48 +55,4 @@ $(document).ready(function () {
     });
 });
 
-
-function OnBegin(response) {
-    var googleRecaptchaVersion = "";
-
-    if ($('#googleVersion').length > 0) {
-        googleRecaptchaVersion = $('#googleVersion').val();
-    }
-
-    if (googleRecaptchaVersion == '2') {
-        if ($("#googleResponse").val() == '') {
-            // if error I post a message in a div
-            //$('#reCaptchaError').html('<p>Please verify youare human</p>');
-            swal({
-                title: '',
-                html: 'Por favor, verifique que não é um robo.',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#16ab39',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-            return false;
-        }
-    } else if (googleRecaptchaVersion == '3') {
-        if ($("#googleResponse").val() == '') {
-            // if error I post a message in a div
-            //$('#reCaptchaError').html('<p>Please verify youare human</p>');
-            swal({
-                title: '',
-                html: 'Por favor, ocorreu um erro no google recaptcha.',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#16ab39',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-            return false;
-        }
-    }
-}
-
-function OnComplete() {
-
-}
 

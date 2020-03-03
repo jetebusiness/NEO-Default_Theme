@@ -14,7 +14,7 @@ $(document).ready(function () {
     hideProfile(".pessoa.juridica");
     hideADDR();
 
-    $("#registro_cliente").form(formSettings);
+    $("#registro_cliente").form(formSettings);    
 
     function buscaCep(element, id) {
         let options = {

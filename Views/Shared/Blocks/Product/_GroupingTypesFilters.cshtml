@@ -3,26 +3,46 @@
 
 @if (Model != null && Model.Count() > 0)
 {
-<div class="active title" id="grouping_type" data-title="Cor">Cor<i class="dropdown icon"></i></div>
-<div class="active content">
-    <div class="ui form">
-        <div class="grouped fields">
-            <div class="field">
-                @foreach (var groupingType in Model)
-                {
+    string titleGrouping = "Filtros";
+    
+    <div class="active title" id="grouping_type" data-title="@titleGrouping">@titleGrouping<i class="dropdown icon"></i></div>
+    <div class="active content">
+    @foreach (var types in Model.GroupBy(c => c.Type))
+    {
+        <div class="ui form">
+            <div class="grouped fields">
+                <div class="field">
+                    @foreach (var groupingType in types)
+                    {
 
-                    <button type="button" id="@groupingType.IdGroupingType" class="ui basic button checkbox checkGroupingType cor" style="background-color: @groupingType.Description !important;" data-groupingtype="@groupingType.Description">
-                        &ensp;
-                    </button>
-                    <div id="grouping_type_@groupingType.IdGroupingType" class="ui checkbox hideme">
-                        <input type="checkbox" name="grouping_type" id="checkGroupingType_@groupingType.IdGroupingType">
-                        <label></label>
-                    </div>
-                }
+                        if (groupingType.Type.ToLower() == "cor")
+                        {
+                            <button type="button" id="@groupingType.IdGroupingType" class="ui basic button checkbox checkGroupingType variacao cor" data-type="idGroupingType" data-groupingtype="@groupingType.Description" data-reference="@titleGrouping" style="background-color: @(groupingType.Description.Contains("#") ? groupingType.Description : "#" + groupingType.Description) !important;"></button>
+                        } 
+                        else 
+                        {
+                            <button type="button" id="@groupingType.IdGroupingType" class="ui basic button checkbox checkGroupingType cor" data-type="idGroupingType" data-groupingtype="@groupingType.Description" data-reference="@titleGrouping">
+                                @if (groupingType.Type.ToLower() == "imagem")
+                                {
+                                    <img src="@groupingType.Description" onerror="imgError(this)" class="ui image mini">
+                                }
+                                else
+                                {
+                                    @groupingType.Description
+                                }
+                            </button>
+                            
+                        }
+                        <div id="grouping_type_@groupingType.IdGroupingType" class="ui checkbox hideme">
+                            <input type="checkbox" name="grouping_type" id="checkGroupingType_@groupingType.IdGroupingType">
+                            <label></label>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
+        
+    }
     </div>
-</div>
+   
 }
-
-

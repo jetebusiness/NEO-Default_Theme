@@ -832,7 +832,7 @@
                                 </div>
                                 <div class="field required" id="rating_st">
                                     <label>Nota</label>
-                                    <div class="ui huge star rating"></div>
+                                    <div class="ui huge star rating" data-value="5" data-rating="5"></div>
                                 </div>
                                 <div class="field required">
                                     <label>Título</label>
@@ -849,6 +849,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="1" />
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Evaluation" })
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>

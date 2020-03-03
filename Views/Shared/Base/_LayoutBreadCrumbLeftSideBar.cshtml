@@ -87,6 +87,12 @@
         </div>
     @RenderSection("remarketing", required: false)
 
+
+
+
+
+@if (Session["UserAuthenticated"] == null && Session["Seller"] == null)
+{
     <div class="ui modal login">
         <i class="close icon"></i>
         <div class="header ui center aligned segment">Faça login ou cadastre-se para continuar</div>
@@ -94,5 +100,8 @@
             @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={Request.Url.AbsoluteUri}" })
         </div>
     </div>
+}
+
+
 </body>
 </html>

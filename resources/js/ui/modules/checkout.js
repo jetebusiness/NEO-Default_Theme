@@ -1,12 +1,15 @@
-import { _alert } from '../../functions/message';
+import { generateRecaptcha }  from "./recaptcha";
 import { isMobile } from '../../functions/mobile';
 
 require("../../functions/jetCheckout");
 require("card/dist/jquery.card");
 
 $(document).ready(function () {
+    
+    
+    var form = $("form.jet.checkout.register");
 
-    $("form.jet.checkout.register").jetCheckout({
+    form.jetCheckout({
         onValidateClear: function () {
             $(this).find("i.icon:first").removeClass("checkmark box");
         },
@@ -26,6 +29,19 @@ $(document).ready(function () {
             $(".row.barra-finalizacao").hide();
         }
     });
+
+
+    $("#goPayment").on("click", function() {
+
+        if($("[id^=googleResponse]", form).length > 0 && $("[id^=googleVersion]", form).val() === '3') {
+
+            var module = $("[id^=googleModule]", form).val();
+
+            window.setTimeout(function() {
+                generateRecaptcha(module, form);
+            },1500)
+        }
+    })
 
     var creditcard_config = {
         numberInput: "[id='CreditCard']", // optional — default input[name="number"]

@@ -149,24 +149,27 @@
       <div class="brandProducts">
         @Html.Action("GetProducts", "Product", new
         {
-         category = Request.QueryString["category"] ?? "",
-         viewList = Request.QueryString["viewList"] ?? "",
-         pageNumber = Request.QueryString["pageNumber"] ?? "",
-         pageSize = 12,
-         order = Request.QueryString["order"] ?? "",
-         brand = Model.IdBrand,
-         group = Request.QueryString["group"] ?? "",
-         initialPrice = Request.QueryString["initialPrice"] ?? "",
-         finalPrice = Request.QueryString["finalPrice"] ?? "",
-         variations = Request.QueryString["variations"] ?? "",
-         idAttribute = Request.QueryString["idAttribute"] ?? "",
-         idCategories = Request.QueryString["idCategories"] ?? ""
+            category = Request.QueryString["category"] ?? "",
+            viewList = Request.QueryString["viewList"] ?? "",
+            pageNumber = Request.QueryString["pageNumber"] ?? "",
+            pageSize = LojaCorp.Control.Company._Company.QuantityItemsPage > 0 ? LojaCorp.Control.Company._Company.QuantityItemsPage : 12,
+            order = Request.QueryString["order"] ?? "",
+            brand = Model.IdBrand,
+            group = Request.QueryString["group"] ?? "",
+            initialPrice = Request.QueryString["initialPrice"] ?? "",
+            finalPrice = Request.QueryString["finalPrice"] ?? "",
+            variations = Request.QueryString["variations"] ?? "",
+            idAttribute = Request.QueryString["idAttribute"] ?? "",
+            idCategories = Request.QueryString["idCategories"] ?? ""
         })
       </div>
     }
   </div>
 </div>
 <input type="hidden" name="CurrentPage" id="CurrentPage" value="brand" />
+<input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdBrand" />
+<input type="hidden" name="infinityPage" id="infinityPage" value="@LojaCorp.Control.Company._Company.InfiniteScrolling.ToString()" />
+<input type="hidden" name="itensPage" id="itensPage" value="@LojaCorp.Control.Company._Company.QuantityItemsPage" />
 <input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
 
 @section custom_js{

@@ -6,10 +6,11 @@
     <div class="active content">
         <div class="ui form">
             <div class="grouped fields">
-                @foreach (var category in Model)
+                @foreach (var category in Model.OrderBy(c => c.Level).ThenBy(c => c.Name))
                 {
-                    <div class="field">
-                        <div class="ui checkbox checkCategory" id="@category.IdCategory" name="@category.Name">
+                    
+                    <div class="field @(category.Level.Length == 2 ? "default" : "children")">
+                        <div class="ui checkbox checkCategory" data-type="idCategories" id="@category.IdCategory" name="@category.Name" data-reference="Categorias">
                             <input type="checkbox" name="@category.Name" id="checkCategory_@category.IdCategory" tabindex="0" value="@category.IdCategory">
                             <label>@category.Name (@category.QuantityOfProduct)</label>
                         </div>

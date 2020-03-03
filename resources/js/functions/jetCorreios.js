@@ -1,4 +1,6 @@
-;(function ($) {
+import { _alert, _confirm } from './message';
+
+; (function ($) {
     $.fn.buscaCep = function (options) {
         var settings    = $.extend({}, $.fn.buscaCep.defaults, options),
             sel         = settings.inputSelector,
@@ -11,11 +13,14 @@
                     if (sel[key].isDropDown) {
                         sel[key].loading("...");
                     }
-                    if (key === "numero" && sel[key] !== "") {
+
+                    if (key === "numero" && sel[key] !== "" && $(sel["logradouro"]).val() !== "") {
                         $(sel[key]).focus();
-                    }
-                    else {
-                        $(sel[key]).val("...");
+                    } else if (key === "logradouro" && sel[key] !== "") {
+                        $(sel["logradouro"]).val('').focus();
+                        $(sel["bairro"]).val('');
+                        $(sel["localidade"]).val('');
+                        $(sel["uf"]).val('');
                     }
                 }
             }
@@ -70,24 +75,28 @@
 
         function buscaCep(cep) {
             cep = cleanString(cep);
-            $.ajax({
-                method: "GET",
-                url: "/customer/LocalizaCep",
-                data: {
-                    cep: cep
-                },
-                success: function success(response) {
-                    if (response.success) {
-                        var obj = $.parseJSON(response.message);
-                        atualizaCampos(obj);
-                    } else {
-                        _alert("", response.message, "warning");
+            
+            if(cep) {
+                $.ajax({
+                    method: "GET",
+                    url: "/customer/LocalizaCep",
+                    data: {
+                        cep: cep
+                    },
+                    success: function success(response) {
+                        if (response.success) {
+                            var obj = $.parseJSON(response.message);
+                            atualizaCampos(obj);
+                        } else {
+                            _alert("", response.message, "warning");
+                        }
+                    },
+                    error: function () {
+                        alert('Erro');
                     }
-                },
-                error: function () {
-                    alert('Erro');
-                }
-            });
+                });
+            }            
+            
         }
 
         carregando();

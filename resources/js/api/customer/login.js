@@ -1,6 +1,7 @@
 ﻿import { _alert, _confirm } from "../../functions/message";
+import { generateRecaptcha }  from "../../ui/modules/recaptcha";
 
-var count = 0;
+
 
 function gettoken() {
 	var token = $("input[name='__RequestVerificationToken']").val();
@@ -8,196 +9,147 @@ function gettoken() {
 }
 
 function preLogin() {
-	var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false;
-	var googleRecaptchaVersion = "";
 
-	if ($('#googleVersion').length > 0)
-		googleRecaptchaVersion = $('#googleVersion').val();
+    var form = $('#formLogin');    
+	var googleRecaptchaStatus = !$("[id^=googleResponse]", form).length;
+	
 
 	if ($("#email").val().length > 0 && $("#password").val().length > 0) {
+	    
+	    
 		$("#submitForm").addClass("loading");
 
-		if (googleRecaptchaVersion == "") {
-			Login();
-		}
-		else if (googleRecaptchaVersion == "2") {
-			count++
-			if (count == 3) {
-				$("#submitForm").removeClass("loading");
-				$("#formLogin #gCaptcha").show();
-			}
-			else if (count > 3 && googleRecaptchaStatus) {
-				if (grecaptcha.getResponse() != "") {
-					$("#googleResponse").val(grecaptcha.getResponse())
-					Login();
-				} else {
-					$("#submitForm").removeClass("loading");
-				}
-			} else {
-				Login();
-			}
-		} else if (googleRecaptchaVersion == "3") {
-			var googleSiteKey = $('#googleSiteKey').val();
-			grecaptcha.ready(function () {
-				grecaptcha.execute(googleSiteKey, { action: 'Login' }).then(function (tokenGoogleRecaptchaV3) {
-					$("#googleResponse").val(tokenGoogleRecaptchaV3);
-					Login();
-				});
-			});
+		if (googleRecaptchaStatus) {
+			Login();			
+		} else{
+
+            if($("[id^=googleVersion]", form).val() === "2") {
+                if(generateRecaptcha($("[id^=googleModule]", form).val(), form))
+                    Login();
+                else
+                    $("#submitForm").removeClass("loading");
+            } else {
+                Login();
+            }
+               
+            
 		}
 	} else {
-		if (googleRecaptchaStatus) {
-			grecaptcha.reset();
-		}
+		if (!googleRecaptchaStatus)
+            (typeof grecaptcha !== "undefined" && $("[id^=googleVersion_]").eq(0).val() === "2" ? grecaptcha.reset() : "")
+		
 		$(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
 		$(".ui.message.form-message").show();
 	}
 }
 
 function preLoginB2B() {
-	var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
-	var googleRecaptchaVersion = "";
-
-	if ($('#googleVersion').length > 0) {
-		googleRecaptchaVersion = $('#googleVersion').val();
-	}
+    
+    var form = $('#formLogin');
+    var googleRecaptchaStatus = !$("[id^=googleResponse]", form).length;
 
 	if ($("#userName").val().length > 0 && $("#passwordb2b").val().length > 0) {
+	    
 		$("#loginB2B").addClass("loading");
 
-		if (googleRecaptchaVersion == "") {
-			LoginB2B();
-		}
-		else if (googleRecaptchaVersion == "2") {
-			count++
-			if (count == 3) {
-				$("#loginB2B").removeClass("loading");
-				$("#formLogin #gCaptcha").show()
-			}
-			else if (count > 3 && googleRecaptchaStatus) {
-				if (grecaptcha.getResponse() != "") {
-					$("#googleResponse").val(grecaptcha.getResponse())
-					LoginB2B();
-				} else {
-					$("#loginB2B").removeClass("loading");
-				}
-			} else {
-				LoginB2B();
-			}
-		} else if (googleRecaptchaVersion == "3") {
-			var googleSiteKey = $('#googleSiteKey').val();
-			grecaptcha.ready(function () {
-				grecaptcha.execute(googleSiteKey, { action: 'Login' }).then(function (tokenGoogleRecaptchaV3) {
-					$("#googleResponse").val(tokenGoogleRecaptchaV3);
-					LoginB2B();
-				});
-			});
-		}
+        if (googleRecaptchaStatus) {
+            
+            LoginB2B();
+            
+        } else {
+
+            if($("[id^=googleVersion]", form).val() === "2") {
+                if(generateRecaptcha($("[id^=googleModule]", form).val(), form))
+                    LoginB2B();
+                else
+                    $("#loginB2B").removeClass("loading");
+            } else {
+                LoginB2B();
+            }
+        }
+		
 	}
 	else {
-		if (googleRecaptchaStatus)
-			grecaptcha.reset()
+        if (!googleRecaptchaStatus)
+            (typeof grecaptcha !== "undefined" && $("[id^=googleVersion_]").eq(0).val() === "2" ? grecaptcha.reset() : "")
+        
 		$(".ui.message.form-message p").text("É necessário informar os dados de acesso.");
 		$(".ui.message.form-message").show();
 	}
 }
 
 function Login() {
-	var googleRecaptchaVersion = "";
 
-	if ($('#googleVersion').length > 0) {
-		googleRecaptchaVersion = $('#googleVersion').val();
-	}
-
-	var form = $("#formLogin").serialize();
-	var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
+	var form = $("#formLogin");
+    
 	$.ajax({
 		type: "POST",
 		url: "/Customer/Login",
-		data: form,
+		data: form.serialize(),
 		dataType: "json",
 		success: function (response) {
-			if (response.success == false) {
-				if (googleRecaptchaVersion == '2') {
-					grecaptcha.reset();
-				} else if (googleRecaptchaVersion == '3') {
-					var googleSiteKey = $('#googleSiteKey').val();
-					$("#googleResponse").val('');
-					$.ajaxSetup({ async: false });
-					$.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-						grecaptcha.ready(function () {
-							grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-								$("#googleResponse").val(tokenGoogleRecaptchaV3);
-							});
-						}); 
-					});
-				}
-				$(".ui.message.form-message p").text(response.message);
+		    
+			if (response.success === false) {
+				$(".ui.message.form-message p").html(response.message);
 				$(".ui.message.form-message").show();
+				
+				
+				setTimeout(function() {
+				    $(".ui.message.form-message", form).hide()
+                }, 3000)
 			}
 			else {
 				$("#submitForm").removeClass("loading");
 				location.href = response.redirectUrl;
 			}
+			
 		},
 		error: function () {
 			if (response.success == false) {
-				if (googleRecaptchaVersion == '2') {
-					grecaptcha.reset();
-				} else if (googleRecaptchaVersion == '3') {
-					var googleSiteKey = $('#googleSiteKey').val();
-					$("#googleResponse").val('');
-					$.ajaxSetup({ async: false });
-					$.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-						grecaptcha.ready(function () {
-							grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-								$("#googleResponse").val(tokenGoogleRecaptchaV3);
-							});
-						});
-					});
-				}
+				
 				$(".ui.message.form-message p").text(response.message);
 				$(".ui.message.form-message").show();
+
+                setTimeout(function() {
+                    $(".ui.message.form-message", form).hide()
+                }, 3000)
+                
 			}
 		},
 		complete: function () {
 			$("#submitForm").removeClass("loading");
+			
+			if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+			    if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                    (form.parents(".modal-login").length > 0 ? grecaptcha.reset(1) : grecaptcha.reset())
+                } else {
+                    generateRecaptcha($("[id^=googleModule]").val(), form);
+                }
+            }
+			
+            
 		}
 	});
 }
 
 function LoginB2B() {
-	var googleRecaptchaVersion = "";
 
-	if ($('#googleVersion').length > 0) {
-		googleRecaptchaVersion = $('#googleVersion').val();
-	}
-
-	var form = $("#formLogin");
-	var googleRecaptchaStatus = $("#formLogin #gCaptcha").length > 0 ? true : false
+    var form = $("#formLogin");
+	
 	$.ajax({
 		type: "POST",
 		url: "/Customer/LoginB2B",
 		data: form.serialize(),
 		dataType: "json",
 		success: function (response) {
-			if (response.success == false) {
-				if (googleRecaptchaVersion == '2') {
-					grecaptcha.reset();
-				} else if (googleRecaptchaVersion == '3') {
-					var googleSiteKey = $('#googleSiteKey').val();
-					$("#googleResponse").val('');
-					$.ajaxSetup({ async: false });
-					$.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-						grecaptcha.ready(function () {
-							grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-								$("#googleResponse").val(tokenGoogleRecaptchaV3);
-							});
-						});
-					});
-				}
+			if (response.success === false) {				
+			    
 				$(".ui.message.form-message p").text(response.message);
 				$(".ui.message.form-message").show();
+
+                setTimeout(function() {
+                    $(".ui.message.form-message", form).hide()
+                }, 3000)
 			}
 			else {
 				if (response.showAcceptTerm) {
@@ -216,34 +168,30 @@ function LoginB2B() {
 		},
 		error: function () {
 			if (response.success == false) {
-				if (googleRecaptchaVersion === '2') {
-					grecaptcha.reset();
-				} else if (googleRecaptchaVersion === '3') {
-					var googleSiteKey = $('#googleSiteKey').val();
-					$("#googleResponse").val('');
-					$.ajaxSetup({ async: false });
-					$.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-						grecaptcha.ready(function () {
-							grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-								$("#googleResponse").val(tokenGoogleRecaptchaV3);
-							});
-						});
-					});
-				}
+				
 				$(".ui.message.form-message p").text(response.message);
 				$(".ui.message.form-message").show();
+
+                setTimeout(function() {
+                    $(".ui.message.form-message", form).hide()
+                }, 3000)
 			}
 		},
 		complete: function () {
 			$("#loginB2B").removeClass("loading");
+
+            if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                    (form.parents(".modal-login").length > 0 ? grecaptcha.reset(1) : grecaptcha.reset())
+                } else {
+                    generateRecaptcha($("[id^=googleModule]").val(), form);
+                }
+            }
 		}
 	});
 }
 
 $(document).ready(function () {
-
-	$("#formLogin #gCaptcha").hide();
-
 
 	$(document).on("click", "#submitForm", function () {
 		preLogin();
@@ -312,45 +260,45 @@ $(document).ready(function () {
         $(this).addClass("loading");
 
         var _googleResponse = null;
-        var _googleRecaptchaVersion = null;
+        var _googleRecaptchaVersion = false;
 
-        if ($('#googleVersion').length > 0) {
-            _googleRecaptchaVersion = $('#googleVersion').val();
+
+        if($("[id^=googleVersion]").val() === "3") {
+            _googleResponse = $("[id^=googleResponse]").val()
+            _googleRecaptchaVersion = true;
         }
 
-        if (_googleRecaptchaVersion == '3') {
-            var googleSiteKey = $('#googleSiteKey').val();
-            $.ajaxSetup({ async: false });
-            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-                        _googleResponse = tokenGoogleRecaptchaV3;
-
-                        $.ajax({
-                            type: "POST",
-                            url: "/Customer/Login",
-                            data: {
-                                __RequestVerificationToken: gettoken(),
-                                returnUrl: null,
-                                provider: $("#Google").val(),
-                                googleResponse: _googleResponse
-                            },
-                            dataType: "json",
-                            success: function (response) {
-                                if (response.success === true) {
-                                    $("#Google").removeClass("loading");
-                                    window.location = response.redirectUrl
-                                }
-                            },
-                            error: function (response) {
-                                $("#Google").removeClass("loading");
-                                _alert("Mensagem", "Erro: " + response.message, "warning")
-                            }
-                        });
-                    });
-                });
+        if (_googleRecaptchaVersion) {
+           
+            $.ajax({
+                type: "POST",
+                url: "/Customer/Login",
+                data: {
+                    __RequestVerificationToken: gettoken(),
+                    returnUrl: null,
+                    provider: $("#Google").val(),
+                    googleResponse: _googleResponse
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success === true) {
+                        $("#Google").removeClass("loading");
+                        window.location = response.redirectUrl
+                    }
+                },
+                error: function (response) {
+                    $("#Google").removeClass("loading");
+                    _alert("Mensagem", "Erro: " + response.message, "warning")
+                }, 
+                complete: function() {
+                    
+                    generateRecaptcha($("[id^=googleModule]").val(), "body");
+                    
+                }
             });
+            
         } else {
+            
             $.ajax({
                 type: "POST",
                 url: "/Customer/Login",
@@ -378,44 +326,43 @@ $(document).ready(function () {
         $(this).addClass("loading");
 
         var _googleResponse = null;
-        var _googleRecaptchaVersion = null;
+        var _googleRecaptchaVersion = false;
 
-        if ($('#googleVersion').length > 0) {
-            _googleRecaptchaVersion = $('#googleVersion').val();
+
+        if($("[id^=googleVersion]").val() === "3") {
+            _googleResponse = $("[id^=googleResponse]").val()
+            _googleRecaptchaVersion = true;
         }
 
-        if (_googleRecaptchaVersion == '3') {
-            var googleSiteKey = $('#googleSiteKey').val();
-            $.ajaxSetup({ async: false });
-            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (tokenGoogleRecaptchaV3) {
-                        _googleResponse = tokenGoogleRecaptchaV3;
+        if (_googleRecaptchaVersion) {
+            
+            $.ajax({
+                type: "POST",
+                url: "/Customer/Login",
+                data: {
+                    __RequestVerificationToken: gettoken(),
+                    returnUrl: null,
+                    provider: $("#Facebook").val(),
+                    googleResponse: _googleResponse
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success === true) {
+                        $("#Facebook").removeClass("loading");
+                        window.location = response.redirectUrl
+                    }
+                },
+                error: function (response) {
+                    $("#Facebook").removeClass("loading");
+                    _alert("Mensagem", "Erro: " + response.message, "warning")
+                },
+                complete: function() {
 
-                        $.ajax({
-                            type: "POST",
-                            url: "/Customer/Login",
-                            data: {
-                                __RequestVerificationToken: gettoken(),
-                                returnUrl: null,
-                                provider: $("#Facebook").val(),
-                                googleResponse: _googleResponse
-                            },
-                            dataType: "json",
-                            success: function (response) {
-                                if (response.success === true) {
-                                    $("#Facebook").removeClass("loading");
-                                    window.location = response.redirectUrl
-                                }
-                            },
-                            error: function (response) {
-                                $("#Facebook").removeClass("loading");
-                                _alert("Mensagem", "Erro: " + response.message, "warning")
-                            }
-                        });
-                    });
-                });
+                    generateRecaptcha($("[id^=googleModule]").val(), "body");
+
+                }
             });
+            
         } else {
             $.ajax({
                 type: "POST",

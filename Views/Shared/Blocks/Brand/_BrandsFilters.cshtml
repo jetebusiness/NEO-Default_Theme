@@ -9,7 +9,7 @@
                 @foreach (var brand in Model)
                 {
                     <div class="field">
-                        <div class="ui checkbox checkBrand" id="@brand.IdBrand" data-name="@brand.Name">
+                        <div class="ui checkbox checkBrand" data-type="brand" id="@brand.IdBrand" data-name="@brand.Name" data-reference="Marcas">
                             <input type="checkbox" name="@brand.Name" id="checkBrand_@brand.IdBrand" tabindex="0" value="@brand.IdBrand">
                             <label>@brand.Name (@brand.QuantityOfProduct)</label>
                         </div>

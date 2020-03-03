@@ -126,6 +126,7 @@ import { isMobile } from "./mobile";
             disableEvent: function () {
             },
             onFinishedForm: function (form, fields) {
+                console.log(form)
             },
             onUnFinishedForm: function (form, field) {
             }
@@ -278,7 +279,7 @@ import { isMobile } from "./mobile";
                             regex = validateOptions.toValidate();
                         }
                         else if (validateOptions.type === "name") {
-                            if (/^[A-zÀ-ÿ'][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-zÀ-ÿ'][A-zÀ-ÿ']+$/g.test(value)) {
+                            if (/^[A-zÀ-ÿ'][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-zÀ-ÿ'][A-zÀ-ÿ'](\s?)+$/g.test(value)) {
                                 regex = validateOptions.pattern.test(value);
                             }
                         }

@@ -8,14 +8,14 @@
         <div class="active content">
             <div class="ui form">
                 <div class="grouped fields">
-                    @foreach (var valor in atribute.attributeValues)
+                    @foreach (var valor in atribute.attributeValues.OrderBy(c => c.Value))
                     {
                         if (valor.active)
                         {
                             <div class="field">
-                                <div class="ui checkbox checkAtribute" id="@valor.idAttributeValue" name="@valor.Value">
+                                <div class="ui checkbox checkAtribute"  data-type="idAttribute" id="@valor.idAttributeValue" name="@valor.Value" data-reference="@atribute.name.ToLower()">
                                     <input type="checkbox" name="@valor.Value" id="checkAtribute_@valor.idAttributeValue" value="@valor.idAttributeValue">
-                                    <label>@valor.Value</label>
+                                    <label class="text capitalize">@valor.Value.ToLower()</label>
                                 </div>
                             </div>
                         }

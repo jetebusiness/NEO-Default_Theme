@@ -2,6 +2,7 @@
 import { buscaCep, atualizaCampos } from '../../api/customer/AddressManager';
 import { isLoading } from "../../api/api_config";
 import { debug, isNull, isNullOrUndefined } from 'util';
+import { generateRecaptcha }  from "../../ui/modules/recaptcha";
 
 import { isMobile } from "../../functions/mobile";
 
@@ -261,41 +262,46 @@ function GerarPedidoCompleto(
             }
             else {
                 if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
-                    swal({
-                        title: '',
-                        html: response.errorMsg,
-                        type: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'OK'
-                    });
 
-                    var googleRecaptchaVersion = "";
-                    if ($('#googleVersion').length > 0) {
-                        googleRecaptchaVersion = $('#googleVersion').val();
-                    }
-
-                    if (googleRecaptchaVersion == '2') {
-                        grecaptcha.reset();
-                        $("#googleResponse").val('');
-                    } else if (googleRecaptchaVersion == '3') {
-                        var googleSiteKey = $('#googleSiteKey').val();
-                        $("#googleResponse").val('');
-                        $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                            grecaptcha.ready(function () {
-                                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                                    $("#googleResponse").val(token);
-                                });
-                            });
+                    if (response.urlRedirect === "") {
+                        swal({
+                            title: '',
+                            html: response.errorMsg,
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
                         });
                     }
-
+                    else {
+                        swal({
+                            title: '',
+                            html: response.errorMsg,
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function (result) {
+                            window.location.href = response.urlRedirect;
+                        });
+                    }
+                   
                     $(".GerarPedido").removeClass("loading");
-                    $(".GerarPedido").removeClass("disabled")
+                    $(".GerarPedido").removeClass("disabled");
                 }
                 else {
                     window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                }
+            }
+        },
+        complete: function() {
+            if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                    grecaptcha.reset()
+                } else {
+                    generateRecaptcha($("[id^=googleModule]").val(), "body");
                 }
             }
         }
@@ -432,16 +438,7 @@ function OrderCreateTwoCards(obj) {
     var idFrete = $("#GetShippping .item .checkbox.checked input").val();
     var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
 
-    var googleResponse = $("#googleResponse").val();
-    var googleRecaptchaVersion = "";
-    if ($('#googleVersion').length > 0) {
-        googleRecaptchaVersion = $('#googleVersion').val();
-    }
-    if (googleRecaptchaVersion == "2" && googleResponse == "") {
-        msgErrors += "<br />Por favor, verifique que não é um robo.";
-    } else if (googleRecaptchaVersion == "3" && googleResponse == "") {
-        msgErrors += "<br />Erro no recaptcha, por favor tente novamente mais tarde.";
-    }
+    var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
 
     var deliveryTime = null;
     var usefulDay = null;
@@ -821,44 +818,39 @@ function OrderCreateTwoCards(obj) {
                 }
                 else
                 {
-                if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
-                    swal({
-                        title: '',
-                        html: response.errorMsg,
-                        type: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'OK'
-                    });
+                    if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
+                        
+                        swal({
+                            title: '',
+                            html: response.errorMsg,
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function (result) {
 
-                    var googleRecaptchaVersion = "";
-                    if ($('#googleVersion').length > 0) {
-                        googleRecaptchaVersion = $('#googleVersion').val();
-                    }
-
-                    if (googleRecaptchaVersion == '2') {
-                        grecaptcha.reset();
-                        $("#googleResponse").val('');
-                    } else if (googleRecaptchaVersion == '3') {
-                        var googleSiteKey = $('#googleSiteKey').val();
-                        $("#googleResponse").val('');
-                        $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                            grecaptcha.ready(function () {
-                                grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                                    $("#googleResponse").val(token);
-                                });
-                            });
+                            if (response.urlRedirect !== "")
+                                window.location.href = response.urlRedirect;
                         });
-                    }
+                        
 
-                    $(".GerarPedido").removeClass("loading");
-                    $(".GerarPedido").removeClass("disabled");
+                        $(".GerarPedido").removeClass("loading");
+                        $(".GerarPedido").removeClass("disabled");
+                    }
+                    else {
+                        window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                    }
                 }
-                else {
-                    window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+            },
+            complete: function() {
+                if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                    if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                        grecaptcha.reset()
+                    } else {
+                        generateRecaptcha($("[id^=googleModule]").val(), "body");
+                    }
                 }
-            }
             }
         });
     }
@@ -867,7 +859,7 @@ function OrderCreateTwoCards(obj) {
 function OrderCreate() {
     $(".GerarPedido").click(function (event) {
         event.preventDefault();
-
+        
         var tipoVerificacao = $(this).attr("data-Card");
 
         if ((tipoVerificacao == "S" || tipoVerificacao == "D") && ($('#UseTwoCreditCards').is(':checked') || $('#UseTwoDebitCards').is(':checked'))) {
@@ -936,17 +928,7 @@ function OrderCreate() {
         var idFrete = $("#GetShippping .item .checkbox.checked input").val();
         var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
 
-        var googleResponse = $("#googleResponse").val();
-        var googleRecaptchaVersion = "";
-        if ($('#googleVersion').length > 0) {
-            googleRecaptchaVersion = $('#googleVersion').val();
-        }
-        if (googleRecaptchaVersion == "2" && googleResponse == "") {
-            msgErrors += "<br />Por favor, verifique que não é um robo.";
-        } else if (googleRecaptchaVersion == "3" && googleResponse == "") {
-            msgErrors += "<br />Erro no recaptcha, por favor tente novamente mais tarde.";
-        }
-
+        var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
         var deliveryTime = null;
         var usefulDay = null;
         if ($('input[name=radio]:checked').length > 0) {
@@ -1687,7 +1669,7 @@ function showAddressPayment() {
                 var item = {};
                 var splittedValue = value.split('=');
                 item["name"] = splittedValue[0];
-                item["value"] = splittedValue[1];
+                item["value"] = decodeURI(splittedValue[1]);
                 jsonArray.push(item);
             });
 
@@ -1930,59 +1912,43 @@ function viewAddressLogged(form) {
         var userName = $(form + " .UserName").val();
         var password = $(form + " .password").val();
 
-        var googleRecaptchaVersion = "";
+        var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
+        
+        if (googleResponse) {           
 
-        if ($('#googleVersion').length > 0) {
-            googleRecaptchaVersion = $('#googleVersion').val();
-        }
+            $.ajax({
+                method: "POST",
+                url: "/Customer/Login",
+                data: {
+                    __RequestVerificationToken: token,
+                    UserName: userName,
+                    password: password,
+                    googleResponse: googleResponse
+                },
+                success: function success(response) {
+                    if (response.success) {
+                        $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
+                        $(".ui.accordion.shopping-voucher").accordion('open', 0);
 
-        if (googleRecaptchaVersion == "3") {
-            var googleSiteKey = $('#googleSiteKey').val();
-            $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Login' }).then(function (tokenGoogle) {
-                        $("#googleResponse").val(tokenGoogle);
-
-                        $.ajax({
-                            method: "POST",
-                            url: "/Customer/Login",
-                            data: {
-                                __RequestVerificationToken: token,
-                                UserName: userName,
-                                password: password,
-                                googleResponse: tokenGoogle
-                            },
-                            success: function success(response) {
-                                if (response.success) {
-                                    $(".ui.modal.shopping-voucher").html('Logged').modal('hide');
-                                    $(".ui.accordion.shopping-voucher").accordion('open', 0);
-
-                                    updateAddress();
-                                    updateDadosUsuario();
-
-                                    var googleRecaptchaVersionPaymentCheckout = "";
-
-                                    if ($('#googleVersion').length > 0) {
-                                        googleRecaptchaVersionPaymentCheckout = $('#googleVersion').val();
-                                    }
-
-                                    if (googleRecaptchaVersionPaymentCheckout == '3') {
-                                        var googleSiteKey = $('#googleSiteKey').val();
-
-                                        grecaptcha.ready(function () {
-                                            grecaptcha.execute(googleSiteKey, { action: 'Payment' }).then(function (tokenGoogle) {
-                                                $("#googleResponse").val(tokenGoogle);
-                                            });
-                                        });
-                                    }
-                                } else {
-                                    _alert("", response.message, "warning");
-                                }
-                            }
-                        });
-                    });
-                });
+                        updateAddress();
+                        updateDadosUsuario();
+                        
+                        
+                    } else {
+                        _alert("", response.message, "warning");
+                    }
+                },
+                complete: function() {
+                    if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                        if($("[id^=googleVersion_]").eq(0).val() === "2") {
+                            grecaptcha.reset()
+                        } else {
+                            generateRecaptcha($("[id^=googleModule]").val(), "body");
+                        }
+                    }
+                }
             });
+                
         } else {
             $.ajax({
                 method: "POST",
@@ -3109,25 +3075,7 @@ $(document).ready(function () {
     })
     //************************************************************************
 
-    if ($('#googleModule').length > 0) {
-        if ($('#googleModule').val() == 'Payment') {
-            var googleRecaptchaVersionPaymentCheckout = "";
 
-            if ($('#googleVersion').length > 0) {
-                googleRecaptchaVersionPaymentCheckout = $('#googleVersion').val();
-            }
-
-            if (googleRecaptchaVersionPaymentCheckout == '3') {
-                var googleSiteKey = $('#googleSiteKey').val();
-
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(googleSiteKey, { action: 'Payment' }).then(function (token) {
-                        $("#googleResponse").val(token);
-                    });
-                });
-            }
-        }
-    }
 
     if ($('form#validCardCredit').length > 0) {
         $('#Valor1, #Valor2').maskMoney();

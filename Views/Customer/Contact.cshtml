@@ -170,7 +170,7 @@
 @section custom_js {
     <script>
         function onSuccess(response) {
-            googleRecaptchaVersion = $('#googleVersion').val();
+             
             if (response.success == true) {
                 swal({                 
                     text: response.Message,
@@ -185,22 +185,6 @@
             }
             else {
 
-                if (googleRecaptchaVersion == '2') {
-                    $("#googleResponse").val('');
-                    grecaptcha.reset();
-                } else if (googleRecaptchaVersion == '3') {
-                    var googleSiteKey = $('#googleSiteKey').val();
-                    $("#googleResponse").val('');
-                    $.ajaxSetup({ async: false });
-                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                        grecaptcha.ready(function () {
-                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                                $("#googleResponse").val(token);
-                            });
-                        });
-                    });
-                }
-
                 swal({                    
                     text: response.Message,
                     type: 'warning',
@@ -213,24 +197,7 @@
         }
 
         function onFailure(response) {
-            googleRecaptchaVersion = $('#googleVersion').val();
-            if (response.success == false) {
-
-                if (googleRecaptchaVersion == '2') {
-                    $("#googleResponse").val('');
-                    grecaptcha.reset();
-                } else if (googleRecaptchaVersion == '3') {
-                    var googleSiteKey = $('#googleSiteKey').val();
-                    $("#googleResponse").val('');
-                    $.ajaxSetup({ async: false });
-                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
-                        grecaptcha.ready(function () {
-                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
-                                $("#googleResponse").val(token);
-                            });
-                        });
-                    });
-                }
+             if (response.success == false) {               
 
                 swal({
                     text: response.Message,
