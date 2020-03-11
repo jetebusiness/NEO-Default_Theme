@@ -22,6 +22,7 @@ variations = {
             maxStockValue: 3, //quando o estoque for menor ou igual ao valor, a mensagem sera exibida 
             messageStockHtml: '<i class="icon bell"></i>Temos apenas <strong>0${value}</strong> em estoque', //html da mensagem
         },
+        callAjaxImage: false, //ex: se o produto possuir 2 cores e cada cor possuir suas imagens deixar true (se for a mesma imagem para todas as variacoes, deixar false)
         htmlPrice : { //itens que contem os valores da variacao
             containerValues: '#variacao-preco', //div que recebe as informacoes
             oldPrice: '#preco-antigo', //preco antigo
@@ -156,6 +157,10 @@ variations = {
                             "data-Description"       : obj[key]['Sku'].InstallmentMax.Description,
                             "data-Value"             : obj[key]['Sku'].InstallmentMax.Value
                         })
+
+                        if(obj[key]['Sku'].Stock == 0) {
+                            $(identifier, container).addClass('sold')
+                        }
                     }
                 });
 
@@ -229,6 +234,11 @@ variations = {
         }
 
         container.addClass("loaded")
+
+        if(!this.isDevice()) {
+            $(".easyzoom").easyZoom().init();
+        }
+        this.getImageThumbnail();
 
     },
     //funcao para criar as acoes do click de cada variacao
@@ -307,43 +317,47 @@ variations = {
         })
     },
     getImageThumbnail: function() {
+        
+        if(this.config.callAjaxImage) {
+            //setando as variacoes selecionadas para carregar as imagens de multifotos
+            var variationSelect = new Array();
 
-        //setando as variacoes selecionadas para carregar as imagens de multifotos
-        var variationSelect = new Array();
+            $('.references .variacao.select').each(function () {
 
-        $('.references .variacao.select').each(function() {
+                variationSelect.push($(this).closest('.references').data('reference') + '-' + $(this).data('variation'))
+            });
 
-            variationSelect.push($(this).closest('.references').data('reference') +'-'+ $(this).data('variation'))
-        });
+            $(this.config.selectedReferences).val(variationSelect.join())
 
-        $(this.config.selectedReferences).val(variationSelect.join())
+            $.ajax({
+                url: '/Product/SlideCor/',
+                type: 'POST',
+                data: {
+                    json: $("#lista-imagens-slide").val(),
+                    variacao: variationSelect.join()
+                },
+                dataType: 'html',
+                success: function (response) {
 
-        $.ajax({
-            url: '/Product/SlideCor/',
-            type: 'POST',
-            data: {
-                json: $("#lista-imagens-slide").val(),
-                variacao: variationSelect.join()
-            },
-            dataType: 'html',
-            success: function (response) {
+                    $("#exibePartial").html(response);
 
-                $("#exibePartial").html(response);
+                    if ($("#buy-together .image.medium").length > 0) {
+                        $("#buy-together .image.medium")[0].children[0].src = $("#imagem-padrao").attr("data-src")
+                    }
 
-                if($("#buy-together .image.medium").length > 0){
-                    $("#buy-together .image.medium")[0].children[0].src = $("#imagem-padrao").attr("data-src")
+
+                    //aplicando scroll e ativando o zoom
+                    variations.slickZoom()
+
                 }
-
-
-                //aplicando scroll e ativando o zoom
-                variations.slickZoom()
-
-            }
-        });
+            });
+        } else {
+            this.slickZoom()
+        }
     },
     isDevice: function() {
 
-        var isiDevice = /android|webos|iphone|ipad|ipod|blackberry|windows|phone/i.test(navigator.userAgent.toLowerCase());
+        var isiDevice = /android|webos|iphone|ipad|ipod|blackberry|windows phone|phone/i.test(navigator.userAgent.toLowerCase());
         return isiDevice;
     },
     slickZoom: function() {
@@ -529,7 +543,7 @@ variations = {
         //setando as variacoes selecionadas para utilizacao no aviseme
         var variationSelect = new Array();
 
-        $('.references .variacao.select').each(function() {
+        $('.references .variacao.select', this.config.container).each(function() {
             variationSelect.push($(this).data('variation'))
         });
 

@@ -1,6 +1,6 @@
 ﻿@model DomainProduct.Result
-<div class="ui divider hidden"></div>
-<div class="ui container listResult type-list">
+
+<div class="ui container listResult type-list" data-grid-number="@(Model.Settings.PageCount > 1 ? Model.Settings.PageNumber : 0)">
     <div class="ui divided items relaxed">
         @if (Model != null && Model.Products.Count() > 0)
         {
@@ -12,19 +12,15 @@
         }
         else
         {
-            <div class="row">Nenhum produto encontrado nesta categoria!</div>
+            <div class="row margin top large">Nenhum produto encontrado nesta categoria!</div>
         }
     </div>
-    
-    @if (Model.Settings.PageCount > 1)
-    {
-        <div class="ui centered grid ">
-            <div class="row">
-                <div class="center aligned column">
-                    <!-- Page: ~/Views/Shared/Parts/_Pagination.cshtml -->
-                    @Html.Partial("~/Views/Shared/Parts/_Pagination.cshtml", Model.Settings, new ViewDataDictionary() { { "parameters", ViewBag.parameters } })
-                </div>
-            </div>
-        </div>
-    }
+    <div class="ui divider"></div>
 </div>
+
+
+@if (Model.Settings.PageCount > 1)
+{
+    <!-- Page: ~/Views/Shared/Parts/_NewPagination.cshtml -->
+    @Html.Partial("~/Views/Shared/Parts/_NewPagination.cshtml", Model.Settings, new ViewDataDictionary() { { "parameters", ViewBag.parameters } } )
+}

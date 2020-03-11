@@ -4,7 +4,8 @@ import { _alert, _confirm } from "../../functions/message";
 
 var configFilter = {
     config: {
-        url: '/product/getproducts/', //url para buscar os produtos        
+        url: '/product/getproducts/', //url para buscar os produtos
+        urlEventList: '/product/getproductslistevents/', //url para buscar os produtos        
         father: "#list", //div que recebe o conteudo
         container: '#filtroList', //div responsavel por receber as referencias
         filters: {
@@ -22,6 +23,12 @@ var configFilter = {
             }
         },
         infinity: '#infinityPage', //ativa a rolagem infinita,
+        skeleton: { //cria containers fake de produtos para manter uma estrutura
+            useLoading: true,
+            htmlContent:'<div class="ui three doubling cards centered"></div>',
+            htmlProduct: '<div class="ui card produto product-in-card skeleton"><div class="content"><div class="line img"></div><div class="line rating"></div><div class="info"><div class="dados"><div class="line name"></div><div class="line price"></div><div class="line installment"></div></div></div></div></div>'
+        },
+        cache: true,//armazena o html dos produtos na sessao ao clicar em um produto para aumentar a perfomance. (caso nao utilize essa opcao, as paginas serao chamadas de forma assincrona o que causa uma lentidao no carregamento)
         pageQuantity: '#itensPage', //quantidade de itens por pagina
         initialPrice: '#initialPrice', //preco inicial
         finalPrice: '#finalPrice', //preco final
@@ -43,7 +50,7 @@ var configFilter = {
 
 var newFilter = {
     init: function() {
-        
+
         if(window.location.pathname.indexOf("/produto") === -1) {
             this.setSession()//verificando sessao para criar ou recuperar valores
             this.actionFilter() //criando acoes dos filtros
@@ -152,7 +159,7 @@ var newFilter = {
                         selected["pageNumber"] = 1;
 
                         Object.keys(configFilter.config.filters.types).forEach(function (key) {
-                            if(selected[key] === undefined && key !== "viewList" && key !== "pageSize")
+                            if(selected[key] === undefined && key !== "pageSize")
                                 selected[key] = "";
                         });
 
@@ -178,10 +185,38 @@ var newFilter = {
         if(urlClient.indexOf("/categoria") > -1 ||
             urlClient.indexOf("/grupo") > -1 ||
             urlClient.indexOf("/busca") > -1 ||
-            urlClient.indexOf("/marca") > -1) { //se for categoria, grupo, busca ou marca, compara com a pagina na sessao
+            urlClient.indexOf("/marca") > -1 ||
+            urlClient.indexOf("/EventList") > -1) { //se for categoria, grupo, busca ou marca, compara com a pagina na sessao
 
-            if(urlClient === url) {//se a pagina atual for igual a sessao continua caso contrario retorna falso       
-                return true;
+            if(urlClient === url) {//se a pagina atual for igual a sessao continua caso contrario retorna 
+
+                if(urlClient.indexOf("/busca") > -1 && window.location.search !== ""){ //limpando a sessao caso exista novo parametro na busca    
+
+                    var queryString = window.location.search.slice(1).split('&');
+                    
+                    if(queryString.length > 1) {                       
+                        
+                        var result = "";
+                        
+                        queryString.forEach(function (query) {
+                            query = query.split('=');
+
+                            if(query[0] === "n") {
+                                result = query[1];
+                            }
+                        });                        
+                    }
+                    
+                    
+                    if(JSON.parse(sessionStorage.getItem(configFilter.config.nameSession))["keyWord"] !==
+                        decodeURIComponent(result))
+                        return false;
+                    else
+                        return true;
+                } else {
+                    return true;
+                }
+
             } else {
                 return false;
             }
@@ -207,7 +242,7 @@ var newFilter = {
             brand: ($(configFilter.config.currentPage).val() === "brand" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da marca se existir
             category: ($(configFilter.config.currentPage).val() === "category" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da categoria se existir
             group: ($(configFilter.config.currentPage).val() === "group" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor do grupo se existir
-            keyWord: ($(configFilter.config.currentPage).val() === "keyWord" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da busca se existir
+            keyWord: ($(configFilter.config.currentPage).val() === "keyWord" ? $(configFilter.config.currentValue).val() : ""), //recuperando valor da busca se existir,
             initialPrice: "", //preco inicial
             finalPrice: "", //preco final
             variations: "", //variacoes selecionadas
@@ -289,8 +324,7 @@ var newFilter = {
 
         Object.keys(configFilter.config.filters.types).forEach(function (key) {
 
-            if(filters[key] !== "" && filters[key] !== undefined && key !== "pageSize" && key !== "viewList") {
-
+            if(filters[key] !== "" && filters[key] !== undefined && key !== "order" && key !== "pageSize" && key !== "viewList") {
 
                 if(filters[key].indexOf(",") > -1) {
 
@@ -312,7 +346,7 @@ var newFilter = {
                             else
                                 text = element.html()
                         }
-                    
+
                         $(configFilter.config.filters.container).append("<label class='ui label basic text capitalize' " +
                             "data-type='"+key+"' " +
                             "data-id='"+itens[i]+"'>" +
@@ -325,7 +359,7 @@ var newFilter = {
                 } else {
 
                     element = $("[data-type='"+key+"'][id='"+filters[key]+"']");
-                    
+
                     text = (element.text().trim().indexOf(" (") > -1 ?
                         element.text().trim().replace(/[(0-9)]/g, "") :
                         element.text().trim())
@@ -335,7 +369,7 @@ var newFilter = {
                             text = '<button class="ui button circular icon mini" style="'+element.attr("style")+'"></button>';
                         else
                             text = element.html()
-                    }                       
+                    }
 
                     $(configFilter.config.filters.container).append("<label class='ui label basic text capitalize' " +
                         "data-type='"+key+"' " +
@@ -343,7 +377,7 @@ var newFilter = {
                         ""+element.data("reference") + ": " + text +"" +
                         "<i class='icon close'></i>"+
                         "</label>");
-                    
+
                 }
             }
 
@@ -436,7 +470,7 @@ var newFilter = {
             }
         }
     },
-    getFilter: function(params) { //verificando se existe conteudo para atualizar
+    getFilter: function(params) { //verificando se existe conteudo para atualizar   
 
         var update = true;
 
@@ -449,7 +483,7 @@ var newFilter = {
 
         if(params) {
 
-            Object.entries(params).forEach(function (key, value) {
+            Object.entries(params).forEach(function (key) {
                 filters[key[0]] = key[1];
             });
 
@@ -469,64 +503,99 @@ var newFilter = {
 
         if($(configFilter.config.infinity).length > 0 && $(configFilter.config.infinity).val().toLowerCase() === "true") {
 
-            var forPage = parseInt(filters.pageNumber),
-                pageInit = 1,
-                containers = "";
-
             if (update) {
 
-                for (var i = 1; i <= forPage; i++) {
-                    containers += "<div class='content' data-grid-number='" + i + "'></div>";
+                if(configFilter.config.cache) {
+
+                    if(sessionStorage.getItem(configFilter.config.nameSessionPosition) !== null && sessionStorage.getItem(configFilter.config.nameSessionPosition) !== "") {
+                        var html = JSON.parse(sessionStorage.getItem(configFilter.config.nameSessionPosition)).html,
+                            position = JSON.parse(sessionStorage.getItem(configFilter.config.nameSessionPosition)).position;
+
+                        $(configFilter.config.father).html(html)
+
+                        setTimeout(function() {
+                            lazyLoad()
+
+                            $('html, body').animate({ scrollTop: position}, 1000);
+
+                            $(".ui.dropdown", configFilter.config.father).dropdown();
+                            $(".ui.rating", configFilter.config.father).rating()
+                        },500)
+                    }
+
+                } else {
+
+                    var forPage = parseInt(filters.pageNumber),
+                        pageInit = 1,
+                        containers = "";
+
+                    for (var i = 1; i <= forPage; i++) {
+                        containers += "<div class='content' data-grid-number='" + i + "'></div>";
+                    }
+
+                    $(configFilter.config.father).html(containers)
+
+                    if(configFilter.config.skeleton.useLoading) {
+
+                        $("[data-grid-number]", configFilter.config.father).html(configFilter.config.skeleton.htmlContent)
+
+                        for (var i = 1; i <= (parseInt($(configFilter.config.pageQuantity).val()) === 0 ? 12 : parseInt($(configFilter.config.pageQuantity).val())); i++) {
+                            $("[data-grid-number]", configFilter.config.father)
+                                .find(".cards")
+                                .append(configFilter.config.skeleton.htmlProduct);
+                        }
+
+                    }
+
+                    while (pageInit <= forPage) {
+
+                        filters.pageNumber = pageInit;
+
+                        $.when(
+                            $.ajax({
+                                url: (filters.idEventList !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                                method: "GET",
+                                dataType: "html",
+                                data: filters
+                            })
+                        ).then(function (data, status, response) {
+                            var content = response.responseText.match(/data-grid-number\=\"([0-9]*)\"/i)[1];
+
+                            if (content == 0)
+                                $(configFilter.config.father).append(data);
+                            else
+                                $(".content[data-grid-number='" + content + "']", configFilter.config.father).html(data);
+
+
+
+                            if(content < forPage)
+                                $("#container-paginate:not(.disabled)", configFilter.config.father).remove()
+                            else
+                                $("#container-paginate.disabled", configFilter.config.father).remove()
+
+
+                            lazyLoad()
+
+                            $(".ui.dropdown", configFilter.config.father).dropdown();
+                            $(".ui.rating", configFilter.config.father).rating()
+                        });
+
+                        pageInit++;
+                    }
                 }
 
-                $(configFilter.config.father).html(containers)
-
-                while (pageInit <= forPage) {
-
-                    filters.pageNumber = pageInit;
-
-                    $.when(
-                        $.ajax({
-                            url: configFilter.config.url,
-                            method: "GET",
-                            dataType: "html",
-                            data: filters
-                        })
-                    ).then(function (data, status, response) {
-                        var content = response.responseText.match(/data-grid-number\=\"([0-9]*)\"/i)[1];
-
-                        if (content == 0)
-                            $(configFilter.config.father).append(data);
-                        else
-                            $(".content[data-grid-number='" + content + "']", configFilter.config.father).append(data);
-
-                        if(sessionStorage.getItem(configFilter.config.nameSessionPosition) && forPage > 1)
-                            $('html, body').animate({ scrollTop: sessionStorage.getItem(configFilter.config.nameSessionPosition)}, 1000);
-
-                        if(content < forPage)
-                            $("#container-paginate:not(.disabled)", configFilter.config.father).remove()
-                        else
-                            $("#container-paginate.disabled", configFilter.config.father).remove()
-
-
-                        lazyLoad()
-                        $(".ui.dropdown", configFilter.config.father).dropdown();
-                    });
-
-                    pageInit++;
-                }
 
             } else {
 
                 $.ajax({
-                    url: configFilter.config.url,
+                    url: (filters.idEventList !== "" ? configFilter.config.urlEventList : configFilter.config.url),
                     method: "GET",
                     dataType: "html",
                     data: filters,
                     success: function (data) {
 
                         if(filters.pageNumber === 1) {
-                            $(configFilter.config.father).html(data);                         
+                            $(configFilter.config.father).html(data);
                         } else {
                             $(data).insertAfter($(".type-grid, .type-list", configFilter.config.father).last());
                             $("#container-paginate:last-child", configFilter.config.father).remove()
@@ -534,6 +603,7 @@ var newFilter = {
 
                         lazyLoad();
                         $(".ui.dropdown", configFilter.config.father).dropdown();
+                        $(".ui.rating", configFilter.config.father).rating()
                     }
                 })
             }
@@ -544,7 +614,7 @@ var newFilter = {
             isLoading(configFilter.config.father);
 
             $.ajax({
-                url: configFilter.config.url,
+                url: (filters.idEventList !== "" ? configFilter.config.urlEventList : configFilter.config.url),
                 method: "GET",
                 dataType: "html",
                 data: filters,
@@ -552,6 +622,7 @@ var newFilter = {
                     $(configFilter.config.father).html(response);
                     lazyLoad();
                     $(".ui.dropdown", configFilter.config.father).dropdown();
+                    $(".ui.rating", configFilter.config.father).rating()
                 }
             });
 
@@ -632,6 +703,10 @@ var newFilter = {
 
                         setTimeout(function() {
                             $(configFilter.config.pagination.next).removeClass("disabled")
+
+                            if($('img[src^="/assets/image/"][data-src]').length > 0)
+                                lazyLoad()
+
                         },3000)
                     } else {
                         $("#container-paginate.disabled", configFilter.config.father).remove()
@@ -645,7 +720,13 @@ var newFilter = {
     position: function() {
 
         $(document).on("click", "[id^=Product_]", function () {
-            sessionStorage.setItem(configFilter.config.nameSessionPosition, $(window).scrollTop()); //criando valores   
+
+            var content = {
+                position : $(window).scrollTop(),
+                html : $(configFilter.config.father).html()
+            }
+
+            sessionStorage.setItem(configFilter.config.nameSessionPosition, JSON.stringify(content)); //criando valores   
         });
 
     }

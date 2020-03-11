@@ -18,11 +18,11 @@
                         if (groupingType.Type.ToLower() == "cor")
                         {
                             <button type="button" id="@groupingType.IdGroupingType" class="ui basic button checkbox checkGroupingType variacao cor" data-type="idGroupingType" data-groupingtype="@groupingType.Description" data-reference="@titleGrouping" style="background-color: @(groupingType.Description.Contains("#") ? groupingType.Description : "#" + groupingType.Description) !important;"></button>
-                        } 
-                        else 
+                        }
+                        else
                         {
                             <button type="button" id="@groupingType.IdGroupingType" class="ui basic button checkbox checkGroupingType cor" data-type="idGroupingType" data-groupingtype="@groupingType.Description" data-reference="@titleGrouping">
-                                @if (groupingType.Type.ToLower() == "imagem")
+                                @if (groupingType.Type.ToLower() == "imagem" || groupingType.Type.ToLower() == "imagemproduto")
                                 {
                                     <img src="@groupingType.Description" onerror="imgError(this)" class="ui image mini">
                                 }

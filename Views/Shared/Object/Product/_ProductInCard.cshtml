@@ -57,7 +57,7 @@
         }
         @if (Model.AlternativeImage != null)
         {
-            <a class="ui slide masked reveal image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
+            <a class="ui slide masked reveal image fluid attached" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
                 <img itemprop="image" id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                 <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
 
@@ -71,8 +71,8 @@
         }
         else
         {
-            <a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
-                <img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+            <a class="ui image fluid attached" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
+                <img id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
                     <div class="ui bottom right attached label massive imagetag">
@@ -206,10 +206,9 @@
                         </span>
                     }
 
-                    @if (Model.Stock >= 0 && !Model.FlagExhausted)
+                    @if (Model.Stock >= 0 && !Model.FlagExhausted && !string.IsNullOrEmpty(Model.DescriptionAvailabilityStatus))
                     {
-                        <br /><br />
-                        <span class="text color grey regular parcelamento small">
+                        <span class="disponibilidade">
                             @Model.DescriptionAvailabilityStatus
                         </span>
                     }

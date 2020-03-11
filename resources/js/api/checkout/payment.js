@@ -263,30 +263,18 @@ function GerarPedidoCompleto(
             else {
                 if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
 
-                    if (response.urlRedirect === "") {
-                        swal({
-                            title: '',
-                            html: response.errorMsg,
-                            type: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                    else {
-                        swal({
-                            title: '',
-                            html: response.errorMsg,
-                            type: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        }).then(function (result) {
+                    swal({
+                        title: '',
+                        html: response.errorMsg,
+                        type: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        if (response.urlRedirect !== "")
                             window.location.href = response.urlRedirect;
-                        });
-                    }
+                    });
                    
                     $(".GerarPedido").removeClass("loading");
                     $(".GerarPedido").removeClass("disabled");
