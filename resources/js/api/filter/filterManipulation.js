@@ -1,4 +1,4 @@
-﻿import { lazyLoad } from "../../functions/lazy_load";
+import { lazyLoad } from "../../functions/lazy_load";
 import { isLoading } from "../api_config";
 import { _alert, _confirm } from "../../functions/message";
 
