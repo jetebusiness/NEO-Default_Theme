@@ -182,11 +182,7 @@ var newFilter = {
 
         var urlClient = window.location.pathname;
 
-        if(urlClient.indexOf("/categoria") > -1 ||
-            urlClient.indexOf("/grupo") > -1 ||
-            urlClient.indexOf("/busca") > -1 ||
-            urlClient.indexOf("/marca") > -1 ||
-            urlClient.indexOf("/EventList") > -1) { //se for categoria, grupo, busca ou marca, compara com a pagina na sessao
+        if($(configFilter.config.currentPage).length > 0) { //se for categoria, grupo, busca ou marca, compara com a pagina na sessao
 
             if(urlClient === url) {//se a pagina atual for igual a sessao continua caso contrario retorna 
 
@@ -221,7 +217,7 @@ var newFilter = {
                 return false;
             }
 
-        } else if(urlClient.indexOf("/produto") > -1) { //se for pagina de produto, mantem os filtros na sessao
+        } else if($("#produto-id").length > 0) { //se for pagina de produto, mantem os filtros na sessao
 
             return true;
 
