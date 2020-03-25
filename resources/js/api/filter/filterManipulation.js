@@ -471,7 +471,7 @@ var newFilter = {
         var update = true;
 
         if($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true" && !params) {
-            this.filterURL();
+            this.filterURL(true);
             update = false;
         }
 
@@ -549,7 +549,7 @@ var newFilter = {
 
                         $.when(
                             $.ajax({
-                                url: (filters.idEventList !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                                url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : configFilter.config.url),
                                 method: "GET",
                                 dataType: "html",
                                 data: filters
@@ -584,7 +584,7 @@ var newFilter = {
             } else {
 
                 $.ajax({
-                    url: (filters.idEventList !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                    url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : configFilter.config.url),
                     method: "GET",
                     dataType: "html",
                     data: filters,
@@ -610,7 +610,7 @@ var newFilter = {
             isLoading(configFilter.config.father);
 
             $.ajax({
-                url: (filters.idEventList !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : configFilter.config.url),
                 method: "GET",
                 dataType: "html",
                 data: filters,
@@ -628,7 +628,7 @@ var newFilter = {
         this.createLabel();
         this.checkFilter();
         this.pagination();
-        this.filterURL(true);
+        this.filterURL();
     },
     pagination: function() {
 
