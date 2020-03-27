@@ -159,7 +159,7 @@ var newFilter = {
                         selected["pageNumber"] = 1;
 
                         Object.keys(configFilter.config.filters.types).forEach(function (key) {
-                            if(selected[key] === undefined && key !== "pageSize")
+                            if(selected[key] === undefined && key !== ($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true" ? "" : "pageSize"))
                                 selected[key] = "";
                         });
 
