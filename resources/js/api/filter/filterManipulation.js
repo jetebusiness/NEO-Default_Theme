@@ -159,7 +159,7 @@ var newFilter = {
                         selected["pageNumber"] = 1;
 
                         Object.keys(configFilter.config.filters.types).forEach(function (key) {
-                            if(selected[key] === undefined && key !== ($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true" ? "" : "pageSize"))
+                            if(selected[key] === undefined && key !== "pageSize")
                                 selected[key] = "";
                         });
 
@@ -420,60 +420,29 @@ var newFilter = {
         });
 
     },
-    filterURL: function(action) { //funcao responsavel por atribuir os filtros selecionados na url
+    filterURL: function() { //funcao responsavel por atribuir os filtros selecionados na url
 
         if($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true") {
 
             var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
 
-            if (action) {
+            var queryString = window.location.origin + window.location.pathname + '?' +
+                Object.keys(filters).map(function (key) {
+                    if (key !== "" && filters[key] !== "" && key !== "path") {
+                        return ((key === "keyWord") ? "n" : encodeURIComponent(key)) + '=' + encodeURIComponent(filters[key]);
+                    } else {
+                        return "";
+                    }
+                }).filter(x => typeof x === 'string' && x.length > 0).join('&');
 
-                var queryString = window.location.origin + window.location.pathname + '?' +
-                    Object.keys(filters).map(function (key) {
-                        if (key !== "" && filters[key] !== "" && key !== "path") {
-                            return ((key === "keyWord") ? "n" : encodeURIComponent(key)) + '=' + encodeURIComponent(filters[key]);
-                        } else {
-                            return "";
-                        }
-                    }).filter(x => typeof x === 'string' && x.length > 0).join('&');
+            window.history.pushState(null, null, queryString);
 
-                window.history.pushState(null, null, queryString);
-
-            } else {
-
-                var queryString = location.search.slice(1).split('&');
-
-                if(queryString.length > 1) {
-                    var result = {};
-                    queryString.forEach(function (query) {
-                        query = query.split('=');
-
-                        if(query[0] !== "mdf" && query[0] !== "mdv") {
-                            try {
-                                result[(query[0] === "n" ? "keyWord" : query[0])] = decodeURIComponent(query[1] || '');
-                            } catch (ex) {
-                                result[query[0]] = query[1] || '';
-                            }
-                        }
-
-                    });
-
-                    result.path = window.location.pathname;
-
-                    sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(result)); //criando valores
-                }
-
-            }
+            
         }
     },
     getFilter: function(params) { //verificando se existe conteudo para atualizar   
 
         var update = true;
-
-        if($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true" && !params) {
-            this.filterURL(true);
-            update = false;
-        }
 
         var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
 
