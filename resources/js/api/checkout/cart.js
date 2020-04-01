@@ -308,7 +308,7 @@ $(document).on("click", "#finalizePurchase", function (e) {
         data: {},
         success: function (data) {
             if (data.success === true)
-                window.location.href = data.redirect
+                window.location.href = '/' + data.redirect
             else
                 _alert("Mensagem", data.message, "error")
         },
