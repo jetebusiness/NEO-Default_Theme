@@ -68,19 +68,19 @@
     </div>
 }
 <input type="hidden" name="idOrderCurrent" id="idOrderCurrent" value="@Model.IdOrder" />
-<div class="ui container fluid @bgColor">
+<div class="ui container fluid">
     <div class="ui container">
-        <div class="ui grid">
+        <div class="ui grid one column middle aligned">
             <div class="ui divider small hidden"></div>
-            <div class="row two column">
+            <div class="row text center">
                 <div class="column">
                     <h1 class="floated left">@tituloSucesso</h1>
                 </div>
-                <div class="column text right">
+                <div class="column">
                     <h2 class="">#@Model.IdOrder</h2>
                 </div>
             </div>
-            <div class="row @((ViewBag.PaymentType == 3 || !String.IsNullOrEmpty(Request.QueryString["d"])) ? "two column stackable" : "")">
+            <div class="row text center">
                 <div class="column">
                     <h3>Obrigado, @Model.NameCustomer</h3>
                     <p>@msgSucesso</p>
@@ -94,9 +94,24 @@
                         </div>
                     </div>
                 }
+            </div>
+            <div class="row text center">
+                @{
+                    if (!string.IsNullOrEmpty(ViewBag.DigitableLine))
+                    {
+                        <div class="column">
+                            <div class="header">INFORMAÇÕES DO BOLETO</div>
+                            <div class="ui message compact margin top bottom small">@ViewBag.DigitableLine</div>
+                        </div>
 
-
-
+                    }
+                    if (ViewBag.PaymentType == 3)
+                    {
+                        <div class="column">
+                            <button class="ui large action button margin none" id="ProcessBankSlip">Imprimir</button>
+                        </div>
+                    }
+                }
             </div>
             <div class="ui divider small hidden"></div>
         </div>
@@ -284,12 +299,6 @@
                                     </div>
                                 </a>
                             </div>
-                            @if (ViewBag.PaymentType == 3)
-                            {
-                                <div class="column">
-                                    <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
-                                </div>
-                            }
                         </div>
                     </div>
                 </div>
