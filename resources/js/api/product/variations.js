@@ -22,7 +22,7 @@ variations = {
             maxStockValue: 3, //quando o estoque for menor ou igual ao valor, a mensagem sera exibida 
             messageStockHtml: '<i class="icon bell"></i>Temos apenas <strong>0${value}</strong> em estoque', //html da mensagem
         },
-        callAjaxImage: false, //ex: se o produto possuir 2 cores e cada cor possuir suas imagens deixar true (se for a mesma imagem para todas as variacoes, deixar false)
+        callAjaxImage: true, //ex: se o produto possuir 2 cores e cada cor possuir suas imagens deixar true (se for a mesma imagem para todas as variacoes, deixar false)
         htmlPrice : { //itens que contem os valores da variacao
             containerValues: '#variacao-preco', //div que recebe as informacoes
             oldPrice: '#preco-antigo', //preco antigo
@@ -219,6 +219,8 @@ variations = {
             $('.references:not([data-active])', container).each(function(index, el) {
                 $('.variacao:eq(0)', this).click()
             });
+
+            this.haveInWishList($('#produto-id').val(), $("#produto-sku").val(), null);
 
         } else {
             //recuperando a grade padrao e escondendo as demais
@@ -549,8 +551,43 @@ variations = {
 
         $("#variacoesSelecionadas").val(variationSelect.join())
 
-    }
+        this.haveInWishList($('#produto-id').val(), $("#produto-sku").val(), null);
+    },
+    haveInWishList: function (productID, skuID, $parent) {
+        var data = {};
 
+        if ($parent === null) {
+            $parent = $("body");
+        }
+
+        var request = {};
+        request.productID = productID;
+        request.skuID = skuID;
+
+        $.ajax({
+            type: "POST",
+            url: "/Customer/HaveInWishList",
+            data: request,
+            async: false,
+            dataType: "json",
+            success: function (response) {
+                if (response.success === true) {
+                    $parent.find(".wishlist-item").removeClass('grey');
+                    $parent.find(".wishlist-item").addClass('red');
+                    $parent.find(".wishlist-item").attr('data-in-list', 'true');
+                } else {
+                    $parent.find(".wishlist-item").removeClass('red');
+                    $parent.find(".wishlist-item").addClass('grey');
+                    $parent.find(".wishlist-item").attr('data-in-list', 'false');
+                }
+                data = response;
+            },
+            error: function (ex) {
+                data.success = false;
+            }
+        });
+        return data;
+    }
 };
 
 //variations.config = $.extend({}, defaults, options);

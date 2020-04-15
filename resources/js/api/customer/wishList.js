@@ -19,8 +19,8 @@ $(document).ready(function () {
 			if (local == 'detail') {
 				_data.skuID = $("#produto-sku").val();
 				let loginOk = ValidateWishlist(_data, this, userAuthentication);
-				if (loginOk) {
-					_data.skuID = sku;
+                if (loginOk) {
+                    if (sku != undefined && sku != "") _data.skuID = sku;
 					ValidateReferences(productID, this, _data, userAuthentication);
 				}
 			} else {
@@ -215,14 +215,14 @@ function ValidateWishlist(_data, element, userAuthentication) {
 			if (result.success === true) {
 				$("#wishListCount").text(parseInt($("#wishListCount").text()) - 1);
 				products.each(function () {
-					let el = $(this).find(".bcg-heart.wishlist-btn");
+					let el = $(this).find(".wishlist-btn");
 					el.find(".wishlist-item").removeClass('red').addClass('grey');
           el.find(".wishlist-item").attr('data-in-list', 'false');
 
           el.attr("data-tooltip", "Adicionar à lista de desejos");
 				});
 			} else {
-				let el = $(this).find(".bcg-heart.wishlist-btn");
+				let el = $(this).find(".wishlist-btn");
         el.find(".wishlist-item").removeClass('grey').addClass('red');
         el.attr("data-tooltip", "Remover da lista de desejos");
 
