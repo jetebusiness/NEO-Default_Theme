@@ -51,7 +51,7 @@ var configFilter = {
 var newFilter = {
     init: function() {
 
-        if(window.location.pathname.indexOf("/produto") === -1) {
+        if(window.location.pathname.indexOf("/produto/") === -1) {
             this.setSession()//verificando sessao para criar ou recuperar valores
             this.actionFilter() //criando acoes dos filtros
             this.pagination() //criando paginacao
