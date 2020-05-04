@@ -219,3 +219,15 @@
     margin-bottom: 1em !important;
   }
 }
+
+.recurring-frequency {
+  &-box {
+    display: flex;
+    align-items: center;
+  }
+
+  &-title {
+    font-weight: 600;
+    margin-right: 4px;
+  }
+}

@@ -6,6 +6,7 @@
   string id_ipt_qtd = "qtd_";
   string classe_stock = "stock_";
   string classe_ipt_qtd = "";
+  bool data_signature = false;
 
   if (Session["EventList"] != null)
   {
@@ -22,9 +23,10 @@
     id_ipt_qtd += Model.IdCartItem;
     classe_stock += Model.IdCartItem;
     classe_ipt_qtd += "mini_cart";
+    data_signature = Model.IsRecurrent;
   }
 }
-<div class="item" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" id="itemCartProduct_@Model.IdCartItem">
+<div class="item item-cart-product" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
 
   <div class="ui image small">
     <img src="@Model.ProductImage.ImageDefault" onerror="imgError(this)">

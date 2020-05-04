@@ -1,0 +1,27 @@
+﻿@model DomainCheckout.Entities.Cart
+
+@if (Model != null)
+{
+  if (Model.RecurringPurchaseCart != null && Model.RecurringPurchaseCart.Count() > 0)
+  {
+    <div class="compraRecorrenteSelectBox">
+      <div class="ui warning message">
+        <div class="header">
+          <div class="compraRecorrenteTitle">
+            <i class="calendar check outline icon"></i>
+            <span>Frequência de entrega</span>
+          </div>
+          <div class="compraRecorrenteSelect">
+            <select class="ui dropdown">
+              <option value="">Selecione</option>
+              @foreach (var item in Model.RecurringPurchaseCart)
+              {
+                <option value="@item.IdCompraAutomaticaTipoEntrega">@item.TipoEntrega</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}

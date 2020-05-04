@@ -1,0 +1,177 @@
+﻿@model DomainOrder.Entities.Recurrent.Recurrent
+
+<div id="pagePrint" class="ui grid left aligned dadosPedido">
+    @if (Model == null)
+    {
+        <div class="row two column">
+            Pedido Assinatura não localizado!
+        </div>
+    }
+    else
+    {
+        <div class="row two column stackable">
+            <div class="column">
+                <div class="ui padded segment">
+                    <h5 class="ui header">
+                        Dados da Assinatura
+                    </h5>
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="ticket icon"></i>
+                            <div class="content">
+                                Número da Assinatura:
+                                <strong>@Model.PlanCode</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="calendar icon"></i>
+                            <div class="content">
+                                Data e Hora:
+                                <strong>@string.Format("{0:d}", Model.CreateDate)</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="payment icon"></i>
+                            <div class="content">
+                                Forma de Pagamento:
+                                <strong>@Model.RecurrentPaymentBrand</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="payment icon"></i>
+                            <div class="content">
+                                Período de Entrega:
+                                <strong>@Model.Interval</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="dollar icon"></i>
+                            <div class="content">
+                                Valor:
+                                <strong>@string.Format("{0:c}", Model.Amount)</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="shipping icon"></i>
+                            <div class="content">
+                                Status:
+                                <strong>
+                                    @if (Model.Status)
+                                    {
+                                        @Html.Raw("Ativa") 
+                                    }
+                                    else
+                                    { 
+                                        @Html.Raw("Cancelada")
+                                    }
+                                </strong>
+                            </div>
+                        </div>
+                        <br />
+                        @if (Model.Status)
+                        {
+                            <div class="item">
+                                <button type="button" id="btnDisableRecurrent" class="ui button red">Cancelar Assinatura</button>
+                            </div>
+                        }
+                        <input type="hidden" id="IdRecurrentClient" name="IdRecurrentClient" value="@Model.IdRecurrentClient" />
+                        <input type="hidden" id="RecurrentPaymentID" name="RecurrentPaymentID" value="@Model.RecurrentPaymentId" />
+                    </div>
+            </div>
+        </div>
+        <div class="column display flex align-stretch">
+            <div class="ui padded segment">
+                <h5 class="ui header">
+                    Local de Entrega
+                </h5>
+                <div class="ui list">
+                    <div class="item">
+                        <i class="building icon"></i>
+                        <div class="content">
+                            @string.Concat(Model.RecurrentCustomer.RecurrentAddress.Address, ", ", Model.RecurrentCustomer.RecurrentAddress.Number, ", ", Model.RecurrentCustomer.RecurrentAddress.Complement)
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="marker icon"></i>
+                        <div class="content">
+                            @string.Concat(Model.RecurrentCustomer.RecurrentAddress.District, ", ", Model.RecurrentCustomer.RecurrentAddress.City)
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="map icon"></i>
+                        <div class="content">
+                            @Model.RecurrentCustomer.RecurrentAddress.City
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="phone icon"></i>
+                        <div class="content">
+                            @Model.RecurrentCustomer.Telephone
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row one column">
+        <div class="column">
+            <h3 class="ui header">
+                Produtos da Assinatura
+            </h3>
+
+            <table class="ui large padded striped  table" id="order_products_list_cart">
+                <thead class="full-width">
+                    <tr>
+                        <th>#</th>
+                        <th>Produto</th>
+                        <th class="right aligned">Valor Un.</th>
+                        <th class="right aligned">Quantidade</th>
+                        <th class="right aligned">Valor Total.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RecurrentItens != null && Model.RecurrentItens.Count() > 0)
+                    {
+                        var counter = 1;
+                        foreach (var RecurrentProducts in Model.RecurrentItens)
+                        {
+
+                            <tr>
+                                <td>@counter.ToString().PadLeft(3, '0')</td>
+                                <td>
+                                    <a>@Html.Raw(RecurrentProducts.Name)</a>
+                                </td>
+                                <td class="right aligned">@string.Format("{0:c}", RecurrentProducts.PriceRecurrent)</td>
+                                <td class="right aligned">@RecurrentProducts.Quantity</td>
+                                <td class="right aligned">
+                                    <strong>@string.Format("{0:c}", RecurrentProducts.PriceTotalRecurrent)</strong>
+                                </td>
+                            </tr>
+
+                            counter++;
+                        }
+                    }
+                </tbody>
+                <tfoot class="full-width">
+                    <tr>
+                        <th colspan="4" class="right aligned">Valor</th>
+                        <th class="right aligned">@string.Format("{0:c}", Model.AmountProducts)</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="right aligned">Valor do Frete</th>
+                        <th class="right aligned">@string.Format("{0:c}", Model.AmountShipping)</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="right aligned">Valor do Desconto</th>
+                        <th class="right aligned">@string.Format("{0:c}", Model.AmountDiscount)</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="right aligned"><h3>Total</h3></th>
+                        <th class="right aligned"><h3>@string.Format("{0:c}", Model.Amount)</h3></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}
+</div>

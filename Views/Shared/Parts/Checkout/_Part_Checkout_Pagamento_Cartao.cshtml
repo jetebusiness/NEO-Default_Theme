@@ -7,6 +7,14 @@
     var UseTwoCards = (bool)Session["UseTwoCards"];
     decimal MinimumValueTwoCards = (decimal)Session["MinimumValueTwoCards"];
     decimal TotalCart = (decimal)Session["TotalCart"];
+    List<DomainPayment.Entities.PagSeguroV4.PagSeguroV4_OneClick> LstOneClickPagSeguroV4 = null;
+    bool btnExcluiOneClick = false;
+    if (temOneClickSalvo == false)
+    {
+        LstOneClickPagSeguroV4 = (List<DomainPayment.Entities.PagSeguroV4.PagSeguroV4_OneClick>)Session["LstOneClickPagSeguroV4"];
+        temOneClickSalvo = LstOneClickPagSeguroV4.Count() > 0 ? true : false;
+        btnExcluiOneClick = true;
+    }
 
     if (TotalCart < MinimumValueTwoCards)
     {
@@ -39,12 +47,28 @@
                     <select class="fieldCheckPayment" name="OneClick" id="OneClick" placeholder="Selecione o cartão desejado." style="padding: 0.62em 2.5em !important;">
                         <option value="0">Selecione o cartão desejado.</option>
                         @{
-                            foreach (var item in LstOneClick)
+                            if (LstOneClick != null && LstOneClick.Count > 0)
                             {
-                                <option value="@item.IdOneClickMaxiPago" data-brand="@item.Bandeira">@item.NumeroCartao</option>
+                                foreach (var item in LstOneClick)
+                                {
+                                    <option value="@item.IdOneClickMaxiPago" data-brand="@item.Bandeira" data-type="maxipago">@item.NumeroCartao</option>
+                                }
+                            }
+                            else if (LstOneClickPagSeguroV4 != null && LstOneClickPagSeguroV4.Count > 0)
+                            {
+                                foreach (var item in LstOneClickPagSeguroV4)
+                                {
+                                    <option value="@item.Token" data-brand="@item.Brand" data-type="pagsegurov4">@item.Label</option>
+                                }
                             }
                         }
                     </select>
+                    @{ 
+                        if(btnExcluiOneClick)
+                        {
+                            <button name="DelOneClick" id="DelOneClick" class="ui button red icon margin left small hideme"><i class="icon trash alternate"></i></button>
+                        }
+                    }
                 </div>
             </div>
             <div class="field required">
@@ -203,87 +227,93 @@
                     </div>
                 </div>
             }
-            <div class="one-card">
-                <div class="field required">
-                    <label class="labelCheckPayment">Número</label>
-                    <div class="ui left icon input">
-                        <i class="user icon"></i>
-                        <input type="text" class="fieldCheckPayment" name="CreditCard" id="CreditCard" placeholder="Número do Cartão" data-type="number">
-                    </div>
-                </div>
-                <div class="field required">
-                    <label class="labelCheckPayment">
-                        Nome
-                    </label>
-                    <div class="ui left icon input">
-                        <i class="user icon"></i>
-                        <input type="text" class="fieldCheckPayment" maxlength="100" name="Name" id="Name" placeholder="Nome Impresso no Cartão" data-type="name">
-                    </div>
-                </div>
-                <div class="two fields">
+                <div class="one-card">
                     <div class="field required">
-                        <label class="labelCheckPayment">Data de Validade</label>
+                        <label class="labelCheckPayment">Número</label>
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input type="text" class="fieldCheckPayment" name="ExpDate" id="ExpDate" placeholder="00/00" data-type="expiry" maxlength="7">
+                            <input type="text" class="fieldCheckPayment" name="CreditCard" id="CreditCard" placeholder="Número do Cartão" data-type="number">
                         </div>
                     </div>
                     <div class="field required">
-                        <label class="labelCheckPayment">CVV</label>
-                        <div class="ui left icon input">
-                            <i class="user icon"></i>
-                            <input type="text" class="fieldCheckPayment" name="CVV" id="CVV" placeholder="Nº de Segurança" data-type="cvv">
-                        </div>
-                    </div>
-                </div>
-                <div class="field hidden" id="documentField">
-                    <label class="labelCheckPayment">
-                        CPF
-                    </label>
-                    <div class="ui left icon input">
-                        <i class="user icon"></i>
-                        <input type="text" class="fieldCheckPayment" maxlength="100" name="Document" id="Document" placeholder="Documento de identificação" data-type="cpf">
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field hidden" id="dateOfBirthField">
                         <label class="labelCheckPayment">
-                            Data de Nascimento
+                            Nome
                         </label>
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input type="text" class="fieldCheckPayment masked mask_date" maxlength="10" name="DateOfBirth" id="DateOfBirth" placeholder="00/00/0000" data-type="date">
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="Name" id="Name" placeholder="Nome Impresso no Cartão" data-type="name">
                         </div>
                     </div>
-                    <div class="field hidden" id="phoneField">
+                    <div class="two fields">
+                        <div class="field required">
+                            <label class="labelCheckPayment">Data de Validade</label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment" name="ExpDate" id="ExpDate" placeholder="00/00" data-type="expiry" maxlength="7">
+                            </div>
+                        </div>
+                        <div class="field required">
+                            <label class="labelCheckPayment">CVV</label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment" name="CVV" id="CVV" placeholder="Nº de Segurança" data-type="cvv">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field hidden" id="documentField">
                         <label class="labelCheckPayment">
-                            Telefone
+                            CPF
                         </label>
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input type="text" class="fieldCheckPayment masked mask_phone" maxlength="25" name="Phone" id="Phone" placeholder="(00) 00000-0000" data-type="tel">
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="Document" id="Document" placeholder="Documento de identificação" data-type="cpf">
                         </div>
                     </div>
-                </div>
-                <div class="field required">
-                    <label class="labelCheckPayment">Desejo Parcelar em:</label>
-                    <div class="ui left icon input">
-                        <select class="fieldCheckPayment" name="idInstallment" id="parcCard">
-                            <option value="">Informe o numero do cartão primeiro</option>
-                        </select>
+                    <div class="two fields">
+                        <div class="field hidden" id="dateOfBirthField">
+                            <label class="labelCheckPayment">
+                                Data de Nascimento
+                            </label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment masked mask_date" maxlength="10" name="DateOfBirth" id="DateOfBirth" placeholder="00/00/0000" data-type="date">
+                            </div>
+                        </div>
+                        <div class="field hidden" id="phoneField">
+                            <label class="labelCheckPayment">
+                                Telefone
+                            </label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment masked mask_phone" maxlength="25" name="Phone" id="Phone" placeholder="(00) 00000-0000" data-type="tel">
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field hidden" id="checkOneClickField">
-                    <div class="ui left icon input">
-                        <input type="checkbox" class="fieldCheckPayment custom_oneClick" maxlength="100" name="SaveCard" id="SaveCard" value="true">
-                        <label class="labelCheckPayment" for="SaveCard">
-                            Deseja salvar este cartão para futuras compras?
-                        </label>
+                    <div class="field required">
+                        <label class="labelCheckPayment">Desejo Parcelar em:</label>
+                        <div class="ui left icon input">
+                            <select class="fieldCheckPayment" name="idInstallment" id="parcCard">
+                                <option value="">Informe o numero do cartão primeiro</option>
+                            </select>
+                        </div>
                     </div>
+                    <div class="field hidden" id="checkOneClickField">
+                        <div class="ui toggle checkbox margin top bottom small">
+                            <input type="checkbox" class="fieldCheckPayment custom_oneClick" maxlength="100" name="SaveCard" id="SaveCard" value="true">
+                            <label>Deseja salvar este cartão para futuras compras?</label>
+                        </div>
+                    </div>
+                    <div class="field hidden hideme" id="labelField">   
+                        <label class="labelCheckPayment hide">Salvar cartão com o nome:</label>
+                        <div class="ui left icon input">
+                            <i class="icon folder open outline"></i>
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="Label" id="Label" placeholder="Nome do meu cartão">
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" name="brandCard" id="brandCard" value="" />
+                    <input type="hidden" name="idBrandCard" id="idBrandCard" value="" />
                 </div>
-                <input type="hidden" name="brandCard" id="brandCard" value="" />
-                <input type="hidden" name="idBrandCard" id="idBrandCard" value="" />
-            </div>
             <div class="ui divider hidden small"></div>
             <div class="field">
                 <button class="ui labeled icon action large fluid button GerarPedido" id="btnCardCredit" data-idBrand="" data-externalcode="" data-gateway="" data-Card="S">

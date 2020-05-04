@@ -1,0 +1,21 @@
+﻿
+@if (!String.IsNullOrEmpty(LojaCorp.Control.Company._Company.AcceptedTermRecurringPurchase)) {
+  <div class="ui modal compra-recorrente-termos" id="compraRecorrenteTermos" data-active="false">
+    <i class="close icon"></i>
+    <div class="header compra-recorrente-termos-header">Termo de Aceite da Assinatura</div>
+    <div class="content compra-recorrente-termos-content">
+      <div class="box-text">
+        @Html.Raw(LojaCorp.Control.Company._Company.AcceptedTermRecurringPurchase)
+      </div>
+    </div>
+    <div class="compra-recorrente-termos-check">
+      <div class="ui checkbox">
+        <input type="checkbox" name="compra-recorrente-termos-input" id="compraRecorrenteTermosInput">
+        <label>Concordo com os Termos de Aceite da Assinatura de Produtos</label>
+      </div>
+    </div>
+    <div class="actions compra-recorrente-termos-actions text uppercase">
+      <div class="ui approve action disabled button" id="compraRecorrenteTermosInputButton">Concluir</div>
+    </div>
+  </div>
+}

@@ -1,9 +1,14 @@
+.tablet-and-mobile-only {
+  @media screen and (min-width: $tablet-bp-max) {
+    display: none !important;
+  }
+}
+
 .mobile-hide {
   @media screen and (max-width: $mobile-bp) {
     display: none !important;
   }
 }
-
 
 .tablet-hide {
   @media screen and (max-width: $tablet-bp-max) and (min-width: $tablet-bp-min) {

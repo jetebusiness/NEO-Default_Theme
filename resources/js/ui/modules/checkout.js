@@ -1,12 +1,14 @@
 import { generateRecaptcha }  from "./recaptcha";
 import { isMobile } from '../../functions/mobile';
+import { CompraRecorrenteStorage, CompraRecorrenteCheckout } from '../../functions/recurringPurchase';
 
 require("../../functions/jetCheckout");
 require("card/dist/jquery.card");
 
 $(document).ready(function () {
-    
-    
+    if ($(CompraRecorrenteCheckout.frequenciaBox.id).length > 0)
+        CompraRecorrenteCheckout.frequenciaBox.getFrequenciaBoxHtml();
+
     var form = $("form.jet.checkout.register");
 
     form.jetCheckout({

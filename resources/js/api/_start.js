@@ -42,6 +42,7 @@ require("./customer/login");
 require("./customer/wishlist");
 require("./customer/contact");
 require("./customer/changeEmail");
+require('./customer/recurrent');
 require("./product/alertMe");
 //--------------------[ Search ]--------------------//
 require('./search/search');

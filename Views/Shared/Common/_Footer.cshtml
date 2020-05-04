@@ -81,7 +81,12 @@
                                 }
                                 @if (redesSociais.Find(f => f.Identifier.ToUpper() == "WHATSAPP") != null)
                                 {
-                                    <a class="text color white" href="https://api.whatsapp.com/send?text=@HttpContext.Current.Request.Url.ToString()" target="_blank" title="WHATSAPP">
+                                    string urlWhasapp = HttpContext.Current.Request.Url.ToString();
+                                    if (urlWhasapp.Contains("?"))
+                                    {
+                                        urlWhasapp = urlWhasapp.Split('?')[0];
+                                    }
+                                    <a class="text color white" href="https://api.whatsapp.com/send?text=@urlWhasapp" target="_blank" title="WHATSAPP">
                                         <i class="whatsapp icon"></i>
                                     </a>
                                 }

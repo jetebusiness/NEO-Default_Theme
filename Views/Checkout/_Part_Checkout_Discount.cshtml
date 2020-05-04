@@ -1,26 +1,33 @@
 ﻿@model List<DomainCheckout.Entities.PaymentGateway>
 <div class="descontos relaxed list display grid">
-    @foreach (var gateway in Model)
+    @{
+        bool IsCompraRecorrente = Convert.ToBoolean(TempData["IsRecurrent"]);
+    }
+
+    @if (!IsCompraRecorrente)
     {
-        foreach (var method in gateway.PaymentMethods)
+        foreach (var gateway in Model)
         {
-            foreach (var brand in method.PaymentBrands)
+            foreach (var method in gateway.PaymentMethods)
             {
-                if (brand.Discount > 0)
+                foreach (var brand in method.PaymentBrands)
                 {
-                    if (brand.typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
+                    if (brand.Discount > 0)
                     {
-                        decimal _exibeDescontoDebito = 0;
-                        if (ViewBag.TotalCarrinho != null)
+                        if (brand.typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
                         {
-                            if (LojaCorp.Control.Company._Company.DescontoTotalProduto) {
-                                _exibeDescontoDebito = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
-                            }
-                            else
+                            decimal _exibeDescontoDebito = 0;
+                            if (ViewBag.TotalCarrinho != null)
                             {
-                                _exibeDescontoDebito = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
+                                if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
+                                {
+                                    _exibeDescontoDebito = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
+                                }
+                                else
+                                {
+                                    _exibeDescontoDebito = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
+                                }
                             }
-                        }
                             <div class="item">
                                 <div class="content">
                                     <p class="ui header text small floated left">
@@ -33,49 +40,51 @@
                                     </p>
                                 </div>
                             </div>
-                    }
-                    else
-                    {
-                        if (brand.Installments.Count() > 0)
-                        {
-                            <div class="item">
-                                <div class="content">
-                                    <p class="ui header text small floated left">
-                                        <span class="text color grey">
-                                            No @brand.NamePayment (@brand.Discount% de desconto)
-                                        </span>
-                                    </p>
-                                    <p class="ui text small color grey floated right description">
-                                        <span class="text color grey">@string.Format("{0}", brand.Installments != null && brand.Installments.Count() > 0 ? brand.Installments.FirstOrDefault().Total.ToString("C") : "0")</span>
-                                    </p>
-                                </div>
-                            </div>
                         }
                         else
                         {
-                            decimal _exibeDescontoBoleto = 0;
-                            if (ViewBag.TotalCarrinho != null)
+                            if (brand.Installments.Count() > 0)
                             {
-                                if (LojaCorp.Control.Company._Company.DescontoTotalProduto) {
-                                    _exibeDescontoBoleto = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
-                                }
-                                else
-                                {
-                                    _exibeDescontoBoleto = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
-                                }
-                            }
-                            <div class="item">
-                                <div class="content">
-                                    <p class="ui header text small floated left">
-                                        <span class="text color grey">
-                                            No @brand.NamePayment (@brand.Discount% de desconto)
-                                        </span>
-                                    </p>
-                                    <p class="ui text small color grey floated right description">
-                                        <span class="text color grey">@string.Format("{0}", _exibeDescontoBoleto.ToString("C"))</span>
-                                    </p>
+                                <div class="item">
+                                    <div class="content">
+                                        <p class="ui header text small floated left">
+                                            <span class="text color grey">
+                                                No @brand.NamePayment (@brand.Discount% de desconto)
+                                            </span>
+                                        </p>
+                                        <p class="ui text small color grey floated right description">
+                                            <span class="text color grey">@string.Format("{0}", brand.Installments != null && brand.Installments.Count() > 0 ? brand.Installments.FirstOrDefault().Total.ToString("C") : "0")</span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            }
+                            else
+                            {
+                                decimal _exibeDescontoBoleto = 0;
+                                if (ViewBag.TotalCarrinho != null)
+                                {
+                                    if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
+                                    {
+                                        _exibeDescontoBoleto = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
+                                    }
+                                    else
+                                    {
+                                        _exibeDescontoBoleto = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
+                                    }
+                                }
+                                <div class="item">
+                                    <div class="content">
+                                        <p class="ui header text small floated left">
+                                            <span class="text color grey">
+                                                No @brand.NamePayment (@brand.Discount% de desconto)
+                                            </span>
+                                        </p>
+                                        <p class="ui text small color grey floated right description">
+                                            <span class="text color grey">@string.Format("{0}", _exibeDescontoBoleto.ToString("C"))</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            }
                         }
                     }
                 }

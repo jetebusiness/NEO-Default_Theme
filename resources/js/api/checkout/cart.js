@@ -5,6 +5,7 @@ import { ExibirDicadeFrete } from "./mini_cart";
 import { UpdateCarrinho } from "../../functions/mini_cart_generic";
 import { SomenteNumerosPositivos } from "../../functions/form-control";
 import { disparaAjaxUpdate } from "./mini_cart";
+import { CompraRecorrenteStorage, CompraRecorrenteCart } from '../../functions/recurringPurchase';
 
 function InserirQuantidadeManual() {
   $(document).on("keyup", "#ListProductsCheckoutCompleto input[id^='qtd_']", function (e) {
@@ -93,7 +94,7 @@ function RemoveProductCart() {
           success: function (data) {
             if (data.success === true) {
               $("#itemCartProduct_" + idCurrent).remove();
-              CancelarCalculoFreteCart(1,1);
+              CancelarCalculoFreteCart(1, 1);
             }
             else {
               swal({
@@ -103,10 +104,10 @@ function RemoveProductCart() {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'OK'
-                });
+              });
 
-                $("#itemCartProduct_" + idCurrent).remove();
-                LoadCarrinho();
+              $("#itemCartProduct_" + idCurrent).remove();
+              LoadCarrinho();
             }
           }
         });
@@ -285,6 +286,33 @@ function CancelarCalculoFreteClk() {
   });
 }
 
+function loadCompraRecorrente() {
+  if ($(CompraRecorrenteCart.selectBox.id).length > 0) {
+
+    let recurringPurchaseCartObj = [],
+      options = CompraRecorrenteStorage.getStorageValue(CompraRecorrenteStorage.keys.dropdownOptions) !== null ? JSON.parse(CompraRecorrenteStorage.getStorageValue(CompraRecorrenteStorage.keys.dropdownOptions)) : [];
+
+    // Caso as opcoes de recorrencia nao estejam na storage, monta o objeto a partir do html
+    if (options.length === 0) { 
+      $(CompraRecorrenteCart.selectBox.id).find("select option").each(function () {
+        let idCompraAutomaticaTipoEntrega = $(this).val(),
+          tipoEntrega = $(this).text();
+
+        if (idCompraAutomaticaTipoEntrega != "")
+          recurringPurchaseCartObj.push({ idCompraAutomaticaTipoEntrega, tipoEntrega });
+      });
+      options = CompraRecorrenteCart.selectBox.dropdown.getDropdownOptions(recurringPurchaseCartObj);
+    }
+
+    CompraRecorrenteCart.selectBox.dropdown.instanceDropdown(options);
+
+    let value = CompraRecorrenteCart.selectBox.dropdown.getDropdownStorageValue(),
+      valueInOptions = CompraRecorrenteCart.selectBox.dropdown.checkValueInOptions(value, options);
+
+    CompraRecorrenteCart.buttonCart(valueInOptions);
+  }
+}
+
 $(document).ready(function () {
   AddMinusProductCart();
   RemoveProductCart();
@@ -292,30 +320,37 @@ $(document).ready(function () {
   ClearCart();
   InserirQuantidadeManual();
   CancelarCalculoFreteClk();
-})
+  loadCompraRecorrente();
+});
 
 $(document).on("click", "#finalizePurchase", function (e) {
-    var permiteVenda = $('#permiteVenda').val();
+  var permiteVenda = $('#permiteVenda').val();
 
-    if (permiteVenda == "False") {
-        _alert("Ops... vincule um cliente para finalizar a venda", "", "warning");
-        return false;
+  if (permiteVenda == "False") {
+    _alert("Ops... vincule um cliente para finalizar a venda", "", "warning");
+    return false;
+  }
+
+  $.ajax({
+    method: "GET",
+    url: "/Checkout/CheckoutNext",
+    data: {},
+    success: function (data) {
+      if (data.success === true) {
+
+        if (CompraRecorrenteCart.modalConfig.hasModal())
+          CompraRecorrenteCart.modalConfig.showModal(data.redirect);
+        else
+          window.location = data.redirect;
+
+      } else {
+        _alert("Mensagem", data.message, "error")
+      }
+    },
+    onFailure: function (data) {
+      //console.log("Erro ao excluir frete");
     }
-
-    $.ajax({
-        method: "GET",
-        url: "/Checkout/CheckoutNext",
-        data: {},
-        success: function (data) {
-            if (data.success === true)
-                window.location.href = "/" + data.redirect
-            else
-                _alert("Mensagem", data.message, "error")
-        },
-        onFailure: function (data) {
-            //console.log("Erro ao excluir frete");
-        }
-    });
+  });
 })
 
 export function limparFrete() {

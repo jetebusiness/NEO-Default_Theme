@@ -1,0 +1,32 @@
+﻿.filter-signature-line {
+  .searchSignature {
+    .ui.input {
+      width: 100%;
+      @media screen and (min-width: $mobile-bp) {
+        width: auto;
+      }
+    }
+  }
+}
+
+.filter-signature-status {
+  &-dropdown-box {
+    padding-right: 0 !important;
+
+    @media screen and (min-width: $mobile-bp) {
+      max-width: 200px;
+    }
+  }
+}
+
+.signature-table {
+  &-col-one {
+    color: $primary-color;
+  }
+
+  &-col-six {
+    @media screen and (min-width: $mobile-bp) {
+      text-align: right !important;
+    }
+  }
+}

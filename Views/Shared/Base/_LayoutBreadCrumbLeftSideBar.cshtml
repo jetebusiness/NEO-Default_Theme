@@ -97,7 +97,14 @@
         <i class="close icon"></i>
         <div class="header ui center aligned segment">Faça login ou cadastre-se para continuar</div>
         <div class="description">
-            @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={Request.Url.AbsoluteUri}" })
+            @{ 
+                string urlRedirect = HttpContext.Current.Request.Url.ToString();
+                if (urlRedirect.Contains("?"))
+                {
+                    urlRedirect = urlRedirect.Split('?')[0];
+                }
+            }
+            @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={urlRedirect}" })
         </div>
     </div>
 }

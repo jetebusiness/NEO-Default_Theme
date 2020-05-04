@@ -143,6 +143,27 @@ h6.codProduto {
   }
 }
 
+  .signature {
+    &-line {
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+      color: $recurring-color;
+      line-height: 1.5em;
+
+      @media screen and (min-width: $mobile-bp) {
+        justify-content: flex-end;
+      }
+    }
+
+    &-value {
+      font-size: 1.5em;
+    }
+  }
+
+
 .product-button {
   position: absolute;
   right: 10px;

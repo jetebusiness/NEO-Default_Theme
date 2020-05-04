@@ -2,6 +2,7 @@
 @{
   bool permiteVenda = true;
 }
+
 @if (Model != null)
 {
   <div id="miniCarrinho" class="ui right sidebar carrinho ui grid">
@@ -19,8 +20,8 @@
 
           @if (Session["UserAuthenticated"] != null && Session["Seller"] != null)
           {
-              if (((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).User.UserName != null)
-              {
+            if (((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).User.UserName != null)
+            {
               <!-- Comeco Venda Assistida (Com Cliente) -->
               <div class="row two column stackable venda-assistida">
                 <div class="column">
@@ -35,15 +36,16 @@
                           <div class="description">
                             <p>@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Email.ToString())</p>
                             <p>
-                                CPF: 
-                                @{
-                                    string CpfCnpj = ((DomainCustomer.Entities.Customer) Session["UserAuthenticated"]).Cpf_cnpj;
+                              CPF:
+                              @{
+                                string CpfCnpj = ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Cpf_cnpj;
 
-                                    if (!CpfCnpj.Contains("*")) {
-                                        CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
-                                    }
+                                if (!CpfCnpj.Contains("*"))
+                                {
+                                  CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
                                 }
-                                @CpfCnpj
+                              }
+                              @CpfCnpj
                             </p>
                           </div>
                         </div>
@@ -52,9 +54,9 @@
                   </div>
                 </div>
                 <div class="column middle aligned">
-                    <a href="/assistedsale/index" class="ui black button position-button">
-                        Alterar o cliente
-                    </a>
+                  <a href="/assistedsale/index" class="ui black button position-button">
+                    Alterar o cliente
+                  </a>
                 </div>
               </div>
               <!-- Fim Venda Assistida -->
@@ -87,8 +89,6 @@
             </div>
             <!-- Fim Venda Assistida -->
           }
-
-
 
           <div class="row green info">
             <div class="column">
@@ -193,4 +193,8 @@
     <input type="hidden" id="cep_selecionado" />
     <input type="hidden" id="permiteVenda" value="@permiteVenda.ToString()" />
   </div>
+
+  @* Compra Recorrente: Termo de Aceite *@
+  @Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_Terms.cshtml")
+
 }

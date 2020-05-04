@@ -89,11 +89,13 @@
             </div>
 
             <div class="sixteen wide mobile sixteen wide tablet six wide computer column jetCheckout margin top disable_column" id="checkoutColumn2">
-
-                <!-- Cupom Desconto -->
-                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
-                <!-- Vale Compras -->
-                @Html.Action("ValeCompra", "Checkout")
+                @if(!Model.CartItems.FirstOrDefault().IsRecurrent)
+                {
+                    <!-- Cupom Desconto -->
+                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
+                    <!-- Vale Compras -->
+                    @Html.Action("ValeCompra", "Checkout")
+                }
                 <!-- Formas de Pagamento -->
                 @Html.Action("ListaFormasPagamento", "Checkout")
 

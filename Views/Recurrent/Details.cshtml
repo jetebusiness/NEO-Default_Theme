@@ -1,0 +1,72 @@
+﻿@model DomainOrder.Entities.Recurrent.Recurrent
+@{
+    /**/
+
+    ViewBag.Title = "Detalhes da Assinatura";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Order/ListRecurrentPurchase">Histórico da Assinatura</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Informação da Assinatura</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- ~/Views/Shared/Object/Order/_PrintOrder.cshtml -->
+@Html.Partial("Object/Order/_PrintOrderRecurrent", Model)
+
+@if (Model != null)
+{
+    <h3 class="ui header">
+        Pedidos da Assinatura
+    </h3>
+    @Html.Action("DetailsOrderRecurrent", "Order", new { idCompraAutomaticaCliente = Model.IdRecurrentClient })
+
+    <br />
+    <div class="row">
+        <div class="column">
+            <button id="print" class="ui animated button right floated" tabindex="0">
+                <div class="visible content">Imprimir</div>
+                <div class="hidden content">
+                    <i class="print icon"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+}
+
+
+
+<script>
+    $('.ui.accordion').accordion({
+        selector: {
+            trigger: '.title .qus_label'
+        }
+    });
+</script>
+
+<div class="ui modal yami">
+    <!--<div class="header">
+        Troca ou Devolução
+    </div>-->
+    <div class="scrolling content iframe-modal">
+
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">Fechar</div>
+    </div>
+</div>

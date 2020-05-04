@@ -186,7 +186,29 @@
     }
   }
 
+  &.recurring {
+    background-color: $recurring-color !important;
+    box-shadow: 0 0 0 1px $recurring-color inset !important;
+    color: $white !important;
 
+    &.labeled {
+      &:not(.toggle) {
+        i {
+          background-color: darken($recurring-color, 5) !important;
+        }
+      }
+    }
+
+    &:hover,
+    &:focus,
+    &:checked,
+    &:active {
+      opacity: .9 !important;
+      background-color: $recurring-color !important;
+      box-shadow: 0 0 0 1px $recurring-color inset !important;
+      color: white !important;
+    }
+  }
 
   .button {
     margin-bottom: 0 !important;
@@ -233,7 +255,6 @@
     border: 1px solid $button-border-checkout-success-dark !important;
     color: $button-text-checkout-success-dark !important;
   }
-
 }
 
 .ui.form {

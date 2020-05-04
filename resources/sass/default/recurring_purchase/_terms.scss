@@ -1,0 +1,45 @@
+﻿$border-color-terms: rgba(34, 36, 38, .15);
+
+.compra-recorrente-termos {
+
+  &-header {
+    border-bottom: 0 !important;
+    padding-bottom: .25rem !important;
+  }
+
+  &-content {
+    height: 400px;
+    max-height: 50vh;
+
+    .box-text {
+      border: 1px solid $border-color-terms;
+      padding: .5rem;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+
+  &-check {
+    display: flex;
+    justify-content: center;
+    padding: .5rem 0 2rem 0;
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: center;
+
+    .ui.button {
+      margin-left: 0 !important;
+      min-width: 220px;
+
+      &.action {
+        &.disabled {
+          background: #666 !important;
+          box-shadow: 0 0 0 1px #666 inset !important;
+        }
+      }
+    }
+  }
+}

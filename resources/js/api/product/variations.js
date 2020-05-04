@@ -12,7 +12,8 @@ variations = {
         showStockOut: '#hdnShowProductOutOfStock', //exibe ou nao variacoes sem estoque,
         productSKU: '#produto-sku', //hidden que contem o id do SKU para adicionar ao carrinho
         itensDisable: { //itens que receberao a classe 'disabled' quando o stock for 0
-            btnBuy : '.btn-comprar',
+            btnBuy: '.btn-comprar',
+            btnSignature: '.btn-comprar-assinar',
             btnBuyNow: '.btn-comprar-oneclick'
         },
         alertMe: "#avise_me", //id do avise quando o stock for 0
@@ -27,6 +28,7 @@ variations = {
             containerValues: '#variacao-preco', //div que recebe as informacoes
             oldPrice: '#preco-antigo', //preco antigo
             newPrice: '#preco', //preco promocional e/ou atual
+            priceCA: '.signature-value', //preco promocional e/ou atual
             installment: {
                 containerInstallment: '.infoPreco', //div que recebe o valor do parcelamento
                 number: '#max-p', //numero de parcelas
@@ -151,6 +153,7 @@ variations = {
                             "data-IdSku"             : obj[key]['Sku'].IdSku,
                             "data-Price"             : obj[key]['Sku'].Price,
                             "data-PricePromotion"    : obj[key]['Sku'].PricePromotion,
+                            "data-PriceCA"           : obj[key]['Sku'].PricePromotionCA,
                             "data-SkuCode"           : obj[key]['Sku'].SkuCode,
                             "data-Stock"             : obj[key]['Sku'].Stock,
                             "data-Parc"              : obj[key]['Sku'].InstallmentMax.MaxNumber,
@@ -266,6 +269,7 @@ variations = {
             } else {
 
                 $(variations.config.itensDisable.btnBuy).addClass("disabled")
+                $(variations.config.itensDisable.btnSignature).addClass("disabled")
 
                 //verificando se e a primeira referencia e recuperando o ID inicial
                 if($(this).closest(".references[data-active]").length > 0) {
@@ -315,7 +319,6 @@ variations = {
             //buscando as imagens da variacao
             if(container.hasClass("loaded"))
                 variations.getImageThumbnail();
-
         })
     },
     getImageThumbnail: function() {
@@ -444,13 +447,14 @@ variations = {
 
         var IdSku = values.data("idsku");
         var Price = values.data("price");
-        var PricePromotion = values.data("pricepromotion")
-        var SkuCode = values.data("skucode")
-        var Stock = values.data("stock")
-        var Parc = values.data("parc")
-        var Value = values.data("value")
-        var Description = values.data("description")
-        var Discount = parseFloat($(this.config.htmlPrice.discountBillet).val().replace(',','.'))
+        var PricePromotion = values.data("pricepromotion");
+        var PriceCA = values.data("priceca");
+        var SkuCode = values.data("skucode");
+        var Stock = values.data("stock");
+        var Parc = values.data("parc");
+        var Value = values.data("value");
+        var Description = values.data("description");
+        var Discount = parseFloat($(this.config.htmlPrice.discountBillet).val().replace(',', '.'));
 
 
         //atribuindo os valores para utilizacao em compre-junto
@@ -498,6 +502,9 @@ variations = {
             }
         }
 
+        if (PriceCA > 0)
+            $(this.config.htmlPrice.priceCA).html(this.moneyBR(PriceCA)) //'#precoCA', //preco Compra Recorrente
+
         //parcelamento
         $(this.config.htmlPrice.installment.containerInstallment).html(
             'em '
@@ -517,26 +524,26 @@ variations = {
 
 
         //se a variacao estiver esgotada, esconde os itens e exibe o avise-me
-        if(Stock == 0) {
+        if (Stock == 0) {
             $.each(this.config.itensDisable, function (index, el) {
                 $(el).addClass('disabled')
             });
-
-            $('.visible', this.config.itensDisable.btnBuy).text('PRODUTO ESGOTADO')
-
+            if ($(this.config.itensDisable.btnBuy).is(":visible"))
+                $('.visible', this.config.itensDisable.btnBuy).text('PRODUTO ESGOTADO')
+            else
+                $('.visible', this.config.itensDisable.btnSignature).text('PRODUTO ESGOTADO')
             $(this.config.alertMe).removeClass("hideme")
         } else {
-
-            if ($(this.config.itensDisable.btnBuy).hasClass('disabled')) {
-
+            if ($(this.config.itensDisable.btnBuy).hasClass('disabled') || $(this.config.itensDisable.btnSignature).hasClass('disabled')) {
                 $.each(this.config.itensDisable, function (index, el) {
                     $(el).removeClass('disabled')
                 });
-
                 $(this.config.alertMe).addClass("hideme")
             }
-
-            $('.visible', this.config.itensDisable.btnBuy).text('ADICIONAR AO CARRINHO')
+            if ($(this.config.itensDisable.btnBuy).is(":visible"))
+                $('.visible', this.config.itensDisable.btnBuy).text('ADICIONAR AO CARRINHO')
+            else
+                $('.visible', this.config.itensDisable.btnSignature).text('ASSINAR PRODUTO')
         }
 
 

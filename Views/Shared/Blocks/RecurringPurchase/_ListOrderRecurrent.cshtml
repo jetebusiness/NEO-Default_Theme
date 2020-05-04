@@ -1,0 +1,60 @@
+﻿@model DomainOrder.Entities.Recurrent.ResultRecurrent
+
+<div class="row">
+    <div class="column">
+        <table class="ui padded table">
+            <thead>
+                <tr>
+                    <th>IdPedido</th>
+                    <th>Data do Pedido</th>
+                    <th>Total</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var order in Model.RecurrentPurchaseSimple)
+                    {
+                <tr>
+                    @if (order.IdOrder == 0)
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td>@order.IdOrder</td>
+                    }
+                    <td>@order.DateOrder</td>
+                    <td>@string.Format("{0:c}", order.Total)</td>
+                    <td>@order.NamePaymentMethodGateway</td>
+                    @if (string.IsNullOrEmpty(order.StatusName))
+                    {
+                        <td>Agendado</td>
+                    }
+                    else
+                    {
+                        <td>@order.StatusName</td>
+                    }
+                    @if (order.IdOrder == 0)
+                    {
+                        <td class="right aligned">
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="right aligned">
+                            <a class="ui icon teal small button" href="~/Order/Details/@order.IdOrder" data-tooltip="Visualizar Pedido">
+                                <i class="unhide icon"></i>
+                            </a>
+                        </td>
+                    }
+                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

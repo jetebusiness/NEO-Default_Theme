@@ -1,4 +1,4 @@
-import { lazyLoad } from "../../functions/lazy_load";
+﻿import { lazyLoad } from "../../functions/lazy_load";
 import { isLoading } from "../api_config";
 import { _alert, _confirm } from "../../functions/message";
 
@@ -574,7 +574,8 @@ var newFilter = {
             }
         } else {
 
-            $('html, body').animate({ scrollTop: $(configFilter.config.father).offset().top - 200 }, 1000);
+            if($(configFilter.config.father).length)
+                $('html, body').animate({ scrollTop: $(configFilter.config.father).offset().top - 200 }, 1000);
 
             isLoading(configFilter.config.father);
 

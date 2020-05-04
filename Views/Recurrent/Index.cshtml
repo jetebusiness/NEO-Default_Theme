@@ -1,0 +1,113 @@
+﻿@model DomainOrder.Entities.Recurrent.ResultRecurrent
+@{
+    ViewBag.Title = "Histórico de Assinaturas";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Order/ListRecurrentPurchase">Histórico de Assinaturas</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+    <div class="ui grid middle aligned left aligned">
+        <div class="row two column stackable">
+            <div class="ui form column aligned">
+                <div class="inline fields">
+                    <div class="field">
+                        <label class="padding top bottom small">Filtrar por status: </label>
+                    </div>
+                    <div class="ten wide field filter-signature-status-dropdown-box">
+                        <select class="ui dropdown dropdown-signature">
+                            <option value="">Selecione...</option>
+                            <option value="T">Todas</option>
+                            <option value="A">Ativas</option>
+                            <option value="I">Canceladas</option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+                <div class="ui form column right aligned">
+                    <div class="ui category searchOrder">
+                        <div class="ui icon input">
+                            <input class="prompt_pedidos_recurrent" type="text" placeholder="Buscar...">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                </div>
+            </div>
+        @if (Model == null || Model.RecurrentPurchaseSimple.Count() == 0)
+        {
+            <div class="row two column">
+                Não foram encontrados pedidos com assinaturas
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="column">
+                    <table class="ui padded table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Adesão</th>
+                                <th>Total</th>
+                                <th>Forma de Pagamento</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var order in Model.RecurrentPurchaseSimple)
+                                {
+                                    <tr>
+                                        <td>@order.NumberSignature</td>
+                                        <td>@order.DateOrder</td>
+                                        <td>@string.Format("{0:c}", order.Total)</td>
+                                        <td>@order.NamePaymentMethodGateway</td>
+                                        <td>@if (order.Status)
+                                        {@Html.Raw("Ativa") }
+                                    else
+                                    { @Html.Raw("Cancelada")}</td>
+                                        <td class="right aligned">
+                                            <a class="ui icon teal small button" href="~/Order/DetailsRecurrent/@order.IdRecurrentClient" data-tooltip="Visualizar Assinatura">
+                                                <i class="unhide icon"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+
+@if (Model.Settings.PageCount > 1)
+{
+    <div class="ui center aligned grid ">
+        <div class="center aligned row">
+            <div class="column">
+                @Html.Partial("~/Views/Shared/Parts/_PaginationOrder.cshtml", Model.Settings)
+            </div>
+        </div>
+    </div>
+}

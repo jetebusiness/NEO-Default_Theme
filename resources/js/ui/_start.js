@@ -33,12 +33,10 @@ require('./modules/editCustomer');
 require('./modules/mask');
 //--------------------[ DatePicker ]--------------------//
 require('./modules/jquery-ui.min');
-
 //--------------------[ LazyLoad ]--------------------//
 require('../functions/lazy_load');
 
 //--------------------[ Start Document ]--------------------//
-
 $(document).ready(function(){
     "use strict";
     

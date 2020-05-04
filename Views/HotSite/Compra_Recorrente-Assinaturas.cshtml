@@ -1,0 +1,99 @@
+﻿@{
+  ViewBag.Title = "Minhas Assinaturas";
+  Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+
+
+  List<List<string>> tableSignature = new List<List<string>> {
+    new List<string> { "0001", "25/01/2019", "R$ 100,03", "Boleto", "Ativo"},
+    new List<string> { "0002", "07/08/2019", "R$ 150,00", "Cartão de Crédito", "Ativo"},
+    new List<string> { "0003", "19/09/2018", "R$ 97,53", "Cartão de Crédito", "Ativo"}
+  };
+
+  int indexTableSignature = 1;
+}
+
+@section breadcrumbs {
+  <div class="ui container">
+    <div class="ui one column grid stackable middle aligned">
+      <div class="row">
+        <div class="column">
+          <h1>@ViewBag.Title</h1>
+          <div class="ui breadcrumb text small">
+            <a class="section" href="/">Home</a>
+            <i class="right angle icon divider"></i>
+            <a class="section" href="/Customer">Área do Cliente</a>
+            <i class="right angle icon divider"></i>
+            <a class="section cursor-default">Histórico de Assinaturas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="ui grid middle aligned left aligned">
+  <div class="row two column stackable filter-signature-line">
+    <div class="column">
+      <div class="ui form">
+        <div class="inline fields margin bottom none filter-signature-status">
+          <div class="field">
+            <label class="padding top bottom small">Filtrar por status</label>
+          </div>
+          <div class="ten wide field filter-signature-status-dropdown-box">
+            <select class="ui dropdown">
+              <option value="1">Todas</option>
+              <option value="2">Ativo</option>
+              <option value="3">Inativo</option>
+              <option value="4">Cancelado</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="column right aligned">
+      <div class="ui category searchSignature">
+        <div class="ui icon input">
+          <input class="prompt_assinaturas" type="text" placeholder="Buscar">
+          <i class="search icon"></i>
+        </div>
+        <div class="results"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <table class="ui padded table text center signature-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Adesão</th>
+            <th>Total</th>
+            <th>Forma de Pagamento</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @{
+            foreach (var tableItem in tableSignature)
+            {
+              <tr>
+                <td class="signature-table-col-one"><b>@tableItem[0]</b></td>
+                <td>@tableItem[1]</td>
+                <td>@tableItem[2]</td>
+                <td>@tableItem[3]</td>
+                <td>@tableItem[4]</td>
+                <td class="signature-table-col-six">
+                  <a class="ui icon teal small button" href="#" data-tooltip="Visualizar Assinatura">
+                    <i class="unhide icon"></i>
+                  </a>
+                </td>
+              </tr>
+              indexTableSignature++;
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -14,28 +14,46 @@
         ViewBag.ViewBoleto = false;
     }
 
-    string bgColor = "", tituloSucesso = "", msgSucesso = "";
+    string tituloSucesso = "", msgSucesso = "";
 
     if (Request.QueryString["s"] == null)
     {
-        bgColor = Request.QueryString["m"] == null ? "bg-checkout-success" : "bg-checkout-error";
-        tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
+        tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Assinatura Confirmada" : "Assinatura não Confirmada");
         msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+        
+        if(String.IsNullOrEmpty(Model.RecurrentCodePlan))
+        {
+            tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
+        }
+
     }
     else
     {
+        
         if (Request.QueryString["s"] == "true")
         {
-            bgColor = "bg-checkout-success";
-            tituloSucesso = "Pedido Confirmado";
+            tituloSucesso = "Assinatura Confirmada";
             msgSucesso = string.Format("Seu pedido foi realizado com sucesso! Agora falta pouco para receber seus produtos.");
         }
         else
         {
-            bgColor = "bg-red";
-            tituloSucesso = "Pedido não Confirmado";
+            tituloSucesso = "Assinatura não Confirmada";
             msgSucesso = string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
         }
+        
+        
+        if(String.IsNullOrEmpty(Model.RecurrentCodePlan))
+        {
+            if (Request.QueryString["s"] == "true")
+            {
+                tituloSucesso = "Pedido Confirmado";
+            }
+            else
+            {
+                tituloSucesso = "Pedido não Confirmado";
+            }
+        }
+
     }
 }
 
@@ -85,6 +103,13 @@
                     <h3>Obrigado, @Model.NameCustomer</h3>
                     <p>@msgSucesso</p>
                 </div>
+                @if (!String.IsNullOrEmpty(Model.RecurrentCodePlan))
+                {
+                    <div class="column">
+                        <h2>Assinatura #@Model.RecurrentCodePlan</h2>
+                        <p>Frequencia de Entrega: @Model.RecurrentSelectedTime</p>
+                    </div>
+                }  
                 @if (!String.IsNullOrEmpty(Request.QueryString["d"]))
                 {
                     <div class="column">
@@ -113,7 +138,9 @@
                     }
                 }
             </div>
-            <div class="ui divider small hidden"></div>
+
+            
+            <div class="ui divider small"></div>
         </div>
     </div>
 </div>
@@ -289,7 +316,7 @@
                     </div>
                     <div class="ui divider"></div>
                     <div class="ui grid">
-                        <div class="row two column">
+                        <div class="row one column">
                             <div class="column">
                                 <a href="/Home" class="ui animated button fluid large basic"
                                    tabindex="0">
