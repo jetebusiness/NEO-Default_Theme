@@ -77,7 +77,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data.Success == true && data.Message == "Login") {
                     $("#UserName").val(strLogin);
-                    $('.ui.modal').modal('show');
+                    $('#LoginModal').modal('show');
                 } else if (data.Success == true && data.Message == "CadastrarSenha") {
                     window.location.href = "/Customer/CheckAccessKey?email=" + data.Email;
                 } else if (data.Success == true && data.Message == "Cadastro") {
