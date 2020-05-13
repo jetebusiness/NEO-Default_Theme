@@ -15,6 +15,21 @@ function gettoken() {
 //require("card/dist/jquery.card");
 
 function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub, valorFrete) {
+    if ($('#ShoppingVoucherValue').length > 0) {
+        if ($('#ShoppingVoucherValue').data('base') == 'TotalPedido') {
+            $.ajax({
+                async: false,
+                method: "PUT",
+                url: "/Checkout/ValeCompraRemover",
+                success: function (responseValeCompra) {
+                    $('#ShoppingVoucherValue').val('');
+                    $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                    $(".ui.accordion.shopping-voucher").accordion('close', 0);
+                    $('#formas-pagamento').removeClass("disable_column");
+                }
+            });
+        }
+    }
     $.ajax({
         method: "POST",
         url: "SaveFrete",
@@ -59,14 +74,13 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                                 }
                             }
                         });
-
-
                     } else {
                         $('#btnGerarPedidoValeCompra').attr("disabled", true);
                         $('#formas-pagamento').removeClass("disable_column");
                     }
                 }
 
+                ValeCompraRefresh();
                 atualizaResumoCarrinho();
         //------------------------------------
                 if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
@@ -80,7 +94,6 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 _alert("", response.msg, "warning");
                 //location.reload(true);
             }
-
         }
     });
 }
@@ -1925,9 +1938,20 @@ function applyDiscount() {
                 success: function success(response) {
                     if (response.success) {
                         atualizaResumoCarrinho();
-                        // if ($('.ui.accordion.shopping-voucher').length > 0) {
-                        //     ValeCompraRemover();
-                        // }
+                         if ($('.ui.accordion.shopping-voucher').length > 0) {
+                             $.ajax({
+                                 async: false,
+                                 method: "PUT",
+                                 url: "/Checkout/ValeCompraRemover",
+                                 success: function (responseValeCompra) {
+                                     $('#ShoppingVoucherValue').val('');
+                                     $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                                     $(".ui.accordion.shopping-voucher").accordion('close', 0);
+                                     $('#formas-pagamento').removeClass("disable_column");
+                                     ValeCompraRefresh();
+                                 }
+                             });
+                         }
                         if (response.couponfreeshipping) {
                             atualizaEnderecos();
                             _alert("Cupom aplicado com sucesso!", response.msg, "success");
@@ -2307,6 +2331,7 @@ function ValeCompraAplicar(_valor) {
                 isLoading(".ui.accordion.shopping-voucher");
                 ValeCompraRefresh();
                 atualizaResumoCarrinho(false);
+                isLoading(".ui.accordion.shopping-voucher");
                 if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
                     $('.ui.toggle.checkbox.box-card').trigger('click');
                 }
@@ -2372,7 +2397,7 @@ function ValeCompraRefresh() {
                     $('.ui.toggle.checkbox.box-debit').trigger('click');
                 }
 
-                isLoading(".ui.accordion.shopping-voucher");
+                //isLoading(".ui.accordion.shopping-voucher");
             }
         }
     });
@@ -2627,33 +2652,49 @@ $(document).ready(function () {
             }
         });
             
-        $("#ApplyVoucher").on("click", function() {
-
+        $("#ApplyVoucher").on("click", function () {
             var $voucher = $('#ShoppingVoucherValue');
             let valor = $voucher.val();
             let balance = $voucher.data('balance');
-            
+            let calculationBase = $voucher.data('base');
+
             var shoppingVoucherValue = new Number(valor.replace(".", "").replace(",", "."));
             var subTotal = new Number($('.subtotal').html().replace('R$', '').replace(".", "").replace(",", "."));
             var saldoShoppingVoucher = new Number(balance.replace(",", "."));
             var shippingTotal = new Number($('#shipping_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
             var discount = new Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
 
-            var valorCompare = (subTotal - discount).toFixed(2);
+            var valorCompare = 0;
 
-            console.log(parseFloat(shoppingVoucherValue))
-            
-            
-            if (shoppingVoucherValue > valorCompare || shoppingVoucherValue > saldoShoppingVoucher) {
-                _alert("", "O valor deve ser menor ou igual ao valor dos produtos!", "warning");
-                //$(this).val('');                    
-                //ValeCompraRemover();    
-
+            let applyVoucher = true;
+            if (calculationBase == "TotalProduto") {
+                valorCompare = (subTotal - discount).toFixed(2);
+                if (shoppingVoucherValue > valorCompare || shoppingVoucherValue > saldoShoppingVoucher) {
+                    _alert("", "O valor deve ser menor ou igual ao valor total dos produtos!", "warning");
+                    applyVoucher = false;
+                }
             } else {
+                valorCompare = ((subTotal - discount) + shippingTotal).toFixed(2);
+                if (shoppingVoucherValue > valorCompare || shoppingVoucherValue > saldoShoppingVoucher) {
+                    _alert("", "O valor deve ser menor ou igual ao valor total do pedido!", "warning");
+                    applyVoucher = false;
+                }
+            }
+            if (applyVoucher) {
+
+                //if (shoppingVoucherValue > valorCompare || shoppingVoucherValue > saldoShoppingVoucher) {
+                //    _alert("", "O valor deve ser menor ou igual ao valor dos produtos!", "warning");
+                //    //$(this).val('');                    
+                //    //ValeCompraRemover();    
+
+                //} else {
 
                 if (parseFloat(shoppingVoucherValue) == 0) {
                     ValeCompraRemover();
                 } else {
+                    if (calculationBase == "TotalPedido") {
+                        shippingTotal = valorCompare - shoppingVoucherValue;
+                    }
                     if (parseFloat(shoppingVoucherValue) == parseFloat(valorCompare) && parseFloat(shippingTotal) == 0) {
                         $('#btnGerarPedidoValeCompra').removeAttr("disabled");
                         $('#formas-pagamento').addClass("disable_column");
@@ -2662,15 +2703,13 @@ $(document).ready(function () {
                         $('#formas-pagamento').removeClass("disable_column");
                     }
 
-                    if (parseFloat(shoppingVoucherValue) > 0 && shoppingVoucherValue <= subTotal && shoppingVoucherValue <= saldoShoppingVoucher) {
-                        ValeCompraAplicar(shoppingVoucherValue);                        
+                    if (parseFloat(shoppingVoucherValue) > 0 && shoppingVoucherValue <= valorCompare && shoppingVoucherValue <= saldoShoppingVoucher) {
+                        ValeCompraAplicar(shoppingVoucherValue);
+                        $voucher.val('')
                     }
-                }                 
-                                                    
-                
-            }                
-            
-        })
+                }
+            }
+        });
     }
 
     if ($('#hasPagSeguro').val() != "0" && $('#hasPagSeguro').val() != undefined) {
