@@ -6,6 +6,7 @@
     ViewBag.Title = "Pagamento";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
 }
+
 @section steps{
     <div class="jet checkout jBreadCrumb">
         <div class="jCrumb completed">
@@ -34,68 +35,91 @@
         </div>
     </div>
 }
+
 <input type="hidden" name="idShipping" id="idShipping" value="@Model.IdShippingMode" />
 <div class="ui tiny scrolling modal lista-endereco-cliente" id="ListaEnderecosCliente">
     @Html.Action("ListaEnderecosCliente", "Checkout")
 </div>
-<div class="ui container no-p no-m">
-    <div class="ui grid">
-        <div class="row">
-            <div class="sixteen wide mobile sixteen wide tablet five wide computer column" id="checkoutColumn1">
-                <!-- Dados do Cliente -->
-                <div class="ui segment blue" id="dadosClienteUpdate">
-                    @Html.Action("ListaDadosCliente", "Checkout", new { zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode })
+<div class="ui container" id="containerPayment">
+    <div class="ui grid stackable centered">
+        <div class="row one column">
+            <div class="column" id="checkoutColumn1">
+            
+                <div class="ui grid two column stackable summary">
+                    <div class="column">
+                        <!-- Dados do Cliente -->
+                        <div class="ui segment" id="dadosClienteUpdate">
+                            @Html.Action("ListaDadosCliente", "Checkout", new {zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode})
+                        </div>
+                    </div>
+                    <div class="column">
+                        <!-- Produtos do Carrinho -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Carrinho.cshtml", Model)
+                    </div>
                 </div>
-                <!-- Embrulhar para presente -->
-                @if (ViewBag.Gift)
-                {
-                    <div class="ui segment purple presente">
-                        <div class="ui compra">
-                            <div class="content ui form">
-                                <div class="field">
-                                    <div class="ui floated">
-                                        <i class="ui icon gift"></i>
-                                        <strong>Embrulhar para presente?</strong>
-                                    </div>
-                                    <div class="ui toggle checkbox margin left large" id="checkPresente">
-                                        <input type="checkbox" name="presente" id="presente" value="off" />
-                                    </div>
+            
+                <div class="ui grid one column stackable">
+                    
+                    @if (!Model.CartItems.FirstOrDefault().IsRecurrent)
+                    {
+                        <!-- Vale Compras -->
+                        @Html.Action("ValeCompra", "Checkout")
+                    }
+
+                    <div class="column">
+                        <!-- Dados de Frete -->
+                        <div class="ui segment">
+                            <div class="ui accordion frete">
+                                <div class="active title">
+                                    <i class="icon shipping fast"></i>
+                                    Opções <strong>de Entrega</strong>
+                                    <i class="ui icon dropdown floated right"></i>
                                 </div>
-                                <div class="field" id="exibeMsg">
-                                    <label>Mensagem</label>
-                                    <textarea rows="2" name="mensagem" id="mensagem"></textarea>
+                                <div class="active content" id="updateShippingPayment">
+                                    @Html.Action("ListaFretePagamento", "Checkout")
                                 </div>
                             </div>
                         </div>
                     </div>
-                }
+                    @if (!Model.CartItems.FirstOrDefault().IsRecurrent)
+                    {
+                        <div class="column">
+                            <!-- Cupom Desconto -->
+                            @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
+                        </div>
+                    }
+                    <!-- Embrulhar para presente -->
+                    @if (ViewBag.Gift)
+                    {
+                        <div class="column">
+                            <div class="ui segment presente">
+                                <div class="ui accordion compra">
+                                    <div class="active title">
+                                        Embrulhar <strong>para presente?</strong>
+                                        <i class="ui icon dropdown floated right"></i>
+                                    </div>
 
-                <!-- Dados de Frete -->
-                <div class="ui segment yellow">
-                    <div class="ui accordion frete">
-                        <div class="active title">
-                            <i class="ui icon shipping"></i>
-                            <strong>Frete</strong>
-                            <i class="ui icon dropdown floated right"></i>
+                                    <div class="content ui form">
+                                        <div class="field">
+                                            <div class="ui toggle checkbox margin left large" id="checkPresente">
+                                                <input type="checkbox" name="presente" id="presente" value="off"/>
+                                            </div>
+                                        </div>
+                                        <div class="field" id="exibeMsg">
+                                            <label>Mensagem</label>
+                                            <textarea rows="2" name="mensagem" id="mensagem"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="active content" id="updateShippingPayment">
-                            @Html.Action("ListaFretePagamento", "Checkout")
-                        </div>
-                    </div>
+                    }
                 </div>
-
-
-
             </div>
+            <div class="sixteen wide column jetCheckout disable_column margin top small" id="checkoutColumn2">
 
-            <div class="sixteen wide mobile sixteen wide tablet six wide computer column jetCheckout margin top disable_column" id="checkoutColumn2">
-                @if(!Model.CartItems.FirstOrDefault().IsRecurrent)
-                {
-                    <!-- Cupom Desconto -->
-                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
-                    <!-- Vale Compras -->
-                    @Html.Action("ValeCompra", "Checkout")
-                }
+
+              
                 <!-- Formas de Pagamento -->
                 @Html.Action("ListaFormasPagamento", "Checkout")
 
@@ -104,18 +128,13 @@
                 <div class="padding margin top">
                     @Html.Action("GetRecaptchaV3", "Company", new { Module = "Payment" })
                 </div>
-
-            </div>
-
-            <div class="sixteen wide mobile sixteen wide tablet five wide computer column">
-
-                <!-- Produtos do Carrinho -->
-                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Carrinho.cshtml", Model)
             </div>
 
         </div>
     </div>
 </div>
+
+
 @{
     if (!string.IsNullOrEmpty(ViewBag.ClearSale))
     {

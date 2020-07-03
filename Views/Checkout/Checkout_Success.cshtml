@@ -138,8 +138,6 @@
                     }
                 }
             </div>
-
-            
             <div class="ui divider small"></div>
         </div>
     </div>
@@ -199,16 +197,16 @@
 
 @if (ViewBag.ShowRegister)
 {
-    <div class="ui fluid container bg-checkout-success-dark">
+    <div class="ui fluid container bg-register">
         <div class="ui container">
-            <div class="ui grid">
-                <div class="two column row">
+            <div class="ui grid two column stackable middle aligned center aligned">
+                <div class="row">
                     <div class="column">
                         <h1>Quer acompanhar seu pedido?</h1>
                     </div>
                     <div class="column">
-                        <a class="ui large animated button floated right btn-checkout-success-dark" tabindex="0" href="@ViewBag.Link">
-                            <div class="visible content">Cadastre-se em nossa loja!</div>
+                        <a class="ui large animated button basic black margin right no" tabindex="0" href="@ViewBag.Link">
+                            <div class="visible content">Conclua o seu cadastro</div>
                             <div class="hidden content">
                                 <i class="add user icon"></i>
                             </div>
@@ -220,7 +218,7 @@
     </div>
 }
 <div class="ui divider hidden"></div>
-<div class="ui container">
+<div class="ui container  checkSuccess">
     <div class="ui grid divided horizontal">
         <div class="row">
             <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
@@ -274,7 +272,7 @@
             </div>
             <div class="column six wide computer sixteen wide tablet sixteen wide mobile right aligned success compra">
                 <div class="ui sticky box success">
-                    <div class="ui divided items">
+                    <div class="ui items">
                         <div class="item detalhes">
                             <div class="content">
                                 <div class="description">
@@ -314,7 +312,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ui divider"></div>
                     <div class="ui grid">
                         <div class="row one column">
                             <div class="column">

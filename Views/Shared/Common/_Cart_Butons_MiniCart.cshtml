@@ -1,21 +1,50 @@
 ﻿@model int
 
-<div class="row two column botoes stackable">
+@{
+    DomainCompany.Entities.PayPal payPal = LojaCorp.Control.Company._Company.PayPal;
+    string ClientId = "";
+    string ButtonFormat = "rect";
+    string ButtonColor = "gold";
+    string Env = "sandbox";
+    bool Active = false;
+
+    if (payPal != null && payPal.Active)
+    {
+        Active = payPal.UseCheckoutCart;
+        ClientId = payPal.ClientId;
+        ButtonFormat = payPal.ButtonFormat;
+        ButtonColor = payPal.ButtonColor;
+
+        if (payPal.Homologation == false)
+        {
+            Env = "production";
+        }
+    }
+}
+
+<div class="row one column stackable margin top small buttonsMiniCart hideme">
     <div class="column">
-        <button id="mini-carrinho-checkout" class="ui animated button fluid large basic buttonsMiniCart"
-                tabindex="0">
-            <div class="visible content">Carrinho</div>
-            <div class="hidden content">
-                <i class="cart icon"></i>
-            </div>
+        <button id="mini-carrinho-checkout" class="ui button fluid basic buttonsMiniCart" tabindex="0">
+            Carrinho
         </button>
     </div>
     <div class="column">
-        <button class="ui animated button fluid large submit action buttonsMiniCart" tabindex="0" id="btn_finalizar" data-total-itens="@Model" data-user-url="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")">
-            <div class="visible content">Finalizar Compra</div>
-            <div class="hidden content">
-                <i class="right arrow icon"></i>
-            </div>
+        <button class="ui button fluid large submit action buttonsMiniCart" tabindex="0" id="btn_finalizar" data-total-itens="@Model" data-user-url="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")">
+            Finalizar Compra
         </button>
+        @if (Active)
+        {
+            <input type="hidden" name="EnvPayPallCheckoutInCart" id="EnvPayPalCheckoutInCartlCheckoutInCart" value="@Env" />
+            <input type="hidden" name="ButtonColorPayPalCheckoutInCart" id="ButtonColorPayPalCheckoutInCart" value="@ButtonColor" />
+            <input type="hidden" name="ButtonFormatPayPalCheckoutInCart" id="ButtonFormatPayPalCheckoutInCart" value="@ButtonFormat" />
+
+            <script src="https://www.paypal.com/sdk/js?client-id=@ClientId&currency=BRL&commit=false"></script>
+            
+            <div class="ui horizontal divider dividerPaypal">
+                <span class="text medium">ou</span>
+            </div>
+            
+            <div id="paypal-button-container-incart" class="buttonsMiniCart margin top small"></div>
+        }
     </div>
 </div>

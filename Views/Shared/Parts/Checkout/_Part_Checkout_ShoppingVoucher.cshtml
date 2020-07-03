@@ -2,61 +2,64 @@
 
 @if (Model != null && Model.balanceAmount > 0)
 {
+    
     <div class="ui tiny scrolling modal shopping-voucher" id="modal-shopping-voucher">
         @Html.Action("ValeCompraLogin", "Checkout")
     </div>
-    <div class="ui segment green">
-        <div class="ui accordion shopping-voucher">
-            <div class="title">
-                <i class="ui icon tag"></i>
-                <strong>Utilizar Vale Compras</strong>
-                <i class="ui icon dropdown floated right"></i>
-            </div>
-            <div class="content">
-                <label>Utilizar saldo:</label>
-                <div class="field required">
-                    <div class="ui left icon input">
-                        <i class="tag icon"></i>
-                        <input 
-                            type="text" 
-                            name="ShoppingVoucherValue" 
-                            id="ShoppingVoucherValue" 
-                            value="" 
-                            data-symbol="R$ " 
-                            data-thousands="." 
-                            data-decimal="," 
-                            data-balance="@Model.balanceAmount"
-                            data-base="@Model.calculationBase"
-                            placeholder="R$" 
-                            autocomplete="off">
-                        <button class="ui button basic primary margin none tiny" id="ApplyVoucher">APLICAR</button>
-                    </div>
+    <div class="column">
+        <div class="ui segment basic attached">
+            <div class="ui accordion shopping-voucher">
+                <div class="title">
+                    <i class="icon ticket alternate"></i>
+                    Utilizar <strong>Vale Compras</strong>
+                    <i class="ui icon dropdown floated right"></i>
+                </div>
+                <div class="content">
+                    <label>Utilizar saldo:</label>
+                    <div class="field required margin top small">
+                        <div class="ui left icon input">
+                            <i class="tag icon"></i>
+                            <input 
+                                type="text" 
+                                name="ShoppingVoucherValue" 
+                                id="ShoppingVoucherValue" 
+                                value="" 
+                                data-symbol="R$ " 
+                                data-thousands="." 
+                                data-decimal="," 
+                                data-balance="@Model.balanceAmount"
+                                data-base="@Model.calculationBase"
+                                placeholder="R$" 
+                                autocomplete="off">
+                            <button class="ui button basic primary margin none tiny" id="ApplyVoucher">APLICAR</button>
+                        </div>
                     
-                </div>
-                <div class="field">
-                    <div class="ui basic red pointing prompt label">Valor Sugerido: <span id="ValeCompra_suggestedAmount">@Model.suggestedAmount.ToString("C")</span></div>
-                </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui basic red pointing prompt label">Valor Sugerido: <span id="ValeCompra_suggestedAmount">@Model.suggestedAmount.ToString("C")</span></div>
+                    </div>
 
-                <div class="ui fluid items">
-                    <div class="item">
-                        <div class="content">
-                            <div class="description">
-                                <span><b>Saldo Total</b></span>
-                                <span class="ui floated right" id="ValeCompra_balanceAmount">@Model.balanceAmount.ToString("C")</span>
-                            </div>
-                            <div class="description">
-                                <span><b>Saldo Restante</b></span>
-                                <span class="ui floated right" id="ValeCompra_remainingBalance">@Model.remainingBalance.ToString("C")</span>
+                    <div class="ui fluid items">
+                        <div class="item">
+                            <div class="content">
+                                <div class="description">
+                                    <span><b>Saldo Total</b></span>
+                                    <span class="ui floated right" id="ValeCompra_balanceAmount">@Model.balanceAmount.ToString("C")</span>
+                                </div>
+                                <div class="description">
+                                    <span><b>Saldo Restante</b></span>
+                                    <span class="ui floated right" id="ValeCompra_remainingBalance">@Model.remainingBalance.ToString("C")</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="field">
-                    <input type="hidden" name="freteGratisValeCompra" id="freteGratisValeCompra" value="@(LojaCorp.Control.Company._Company.FreeShippingVoucher ? "1" : "0")" />
-                    <button class="ui labeled icon green large fluid button GerarPedido" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" disabled="disabled" data-externalcode="" data-Card="N">
-                        <i class="tag icon"></i>
-                        Finalizar com Vale Compras
-                    </button>
+                    <div class="field">
+                        <input type="hidden" name="freteGratisValeCompra" id="freteGratisValeCompra" value="@(LojaCorp.Control.Company._Company.FreeShippingVoucher ? "1" : "0")" />
+                        <button class="ui action large fluid button GerarPedido hideme" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" data-externalcode="" data-Card="N">
+                            <i class="tag icon"></i>
+                            Finalizar com Vale Compras
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

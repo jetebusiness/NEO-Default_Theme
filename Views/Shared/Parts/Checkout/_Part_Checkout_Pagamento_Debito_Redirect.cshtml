@@ -1,21 +1,33 @@
 ﻿@model List<DomainCheckout.Entities.PaymentBrand>
 
-@foreach (var item in Model)
-{
-    <div class="title text big color black">
-        <i class="barcode icon"></i>
-        @item.NamePayment
-        <i class="ui icon dropdown floated right"></i>
+
+<div class="ui tab segment" data-tab="debOnline">   
+    
+    <div class="description ui small message">
+        Ao clicar em <strong>PAGAR COM DÉBITO ONLINE</strong> você será encaminhado para a página do <strong>BANCO</strong>, onde deverá fazer o pagamento online.
     </div>
-    <div class="content">
-        <p class="transition hidden"></p>
-        <div class="field">
-            <button class="ui labeled icon action large fluid button GerarPedido" id="btnDebitRedirect" data-idBrand="@item.IdPaymentBrand" data-externalcode="@item.ExternalCode" data-Card="N">
-                <i class="barcode icon"></i>
-                Pagar com Débito Online
-                <input type="hidden" name="parcelamento" class="idInstallment" value="0" />
-                <input type="hidden" name="kind" value="debit" />
-            </button>
+    
+    @foreach (var item in Model)
+    {
+        string name = item.NamePayment;
+        <div class="blocoTypePayment" data-typePayment="@item.IdBrand">
+            <div class="titleTypePayment">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="type-@(item.IdBrand)" tabindex="0" class="hidden">
+                    <label for="type-@(item.IdBrand)">@name</label>
+                </div>
+            </div>
+            <div class="contentPayment" data-payment="@item.IdBrand">
+                <p class="transition hidden"></p>
+                <div class="field">
+                    <button class="ui labeled icon action large fluid button GerarPedido" id="btnDebitRedirect" data-idBrand="@item.IdBrand" data-externalcode="@item.ExternalCode" data-Card="N">
+                        <i class="barcode icon"></i>
+                        Pagar com Débito Online
+                        <input type="hidden" name="parcelamento" class="idInstallment" value="0" />
+                        <input type="hidden" name="kind" value="debit" />
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
-}
+    }
+</div>

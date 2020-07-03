@@ -133,7 +133,7 @@
         <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
         @if (Model != null)
         {
-            @Html.Action("GetProducts", "Product", new {
+            @Html.Action("GetProductsCategory", "Product", new {
                 category = Model.IdCategory,
                 viewList = Request.QueryString["viewList"] ?? "",
                 pageNumber = Request.QueryString["pageNumber"] ?? "",

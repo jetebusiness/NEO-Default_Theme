@@ -69,7 +69,16 @@
                                     <td>@order.IdOrder</td>
                                     <td>@order.DateOrder</td>
                                     <td>@string.Format("{0:c}", order.Total)</td>
-                                    <td>@order.NamePaymentMethodGateway</td>
+                                    <td>
+                                        @if(order.NamePaymentMethodGateway.ToLower().Trim() == "salvar carteira digital")
+                                        {
+                                        <span>Carteira Digital</span>
+                                        }
+                                        else
+                                        {
+                                        <span>@order.NamePaymentMethodGateway</span>
+                                        }
+                                    </td>
                                     <td>@order.NameStatus</td>
                                     <td class="right aligned">
                                         @{

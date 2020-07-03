@@ -7,6 +7,10 @@ require('../vendors/validators');
 require('../functions/correios');
 //--------------------[ Form Starters ]--------------------//
 require('./starters/formManipulation');
+
+//--------------------[ PayPal ]--------------------//
+require('./modules/paypal');
+
 //--------------------[ Menu ]--------------------//
 //Mega Menu
 require('./modules/menu');

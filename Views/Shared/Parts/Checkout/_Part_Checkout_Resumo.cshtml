@@ -1,8 +1,13 @@
 ﻿@model DomainCheckout.Entities.Cart
-<div class="ui resumo">
+<div class="ui accordion resumo">
+    <div class="active title">
+        <i class="icon shopping bag"></i>
+        Resumo <strong>da Compra</strong>
+        <i class="ui icon dropdown floated right"></i>
+    </div>
     <div class="active content">
         <div class="ui fluid card-checkout">
-            <div class="ui divider"></div>
+            <div class="ui divider hidden"></div>
             <div class="item">
                 <div class="content">
                     <div class="description">
@@ -50,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ui divider"></div>
+            <div class="ui divider hidden"></div>
         </div>
         @Html.Action("ListaDescontosPagamento", "Checkout")
     </div>

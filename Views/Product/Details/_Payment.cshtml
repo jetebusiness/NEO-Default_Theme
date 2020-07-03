@@ -26,7 +26,14 @@
 
                                     <div class="title">
                                         <i class="dropdown icon"></i>
-                                        @brands.Name
+                                        @{ 
+                                            string brandName = brands.Name;
+                                            if (brands.Name.ToLower() == "paypal")
+                                            {
+                                                brandName = brands.NamePayment;
+                                            }
+                                        }
+                                        @brandName
                                     </div>
                                     <div class="content others">
                                         <div class="ui list">

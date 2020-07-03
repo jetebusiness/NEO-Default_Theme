@@ -147,7 +147,7 @@
     @if (Model != null)
     {
       <div class="brandProducts">
-        @Html.Action("GetProducts", "Product", new
+        @Html.Action("GetProductsBrand", "Product", new
         {
             category = Request.QueryString["category"] ?? "",
             viewList = Request.QueryString["viewList"] ?? "",

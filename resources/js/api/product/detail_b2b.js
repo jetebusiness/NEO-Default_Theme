@@ -113,9 +113,11 @@ export function CarregarParcelamento(isB2b) {
         json_content = "";
 
     json_string = BuscarJsonParcelamento(isB2b);
+
     if (json_string != "0") {
         json = JSON.parse(json_string);
         json_content = JSON.parse(json.Content);
+
         var total_parcelas_exibidas = 0;
         //GATEWAY
         for (var i = 0; i < json_content.length; i++) {
@@ -159,13 +161,15 @@ export function CarregarParcelamento(isB2b) {
                                                   <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                   <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                               </span>`
-                                    var ret = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].interestRate * json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
+                                    var ret = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase()
 
-                                    if (detalhes_maiorParc < json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber && Math.round(ret) === 1)//maior parcela sem juros
+                                    detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
+                                    detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
+                                    detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
+
+                                    if (ret !== "sem juros")//maior parcela sem juros
                                     {
-                                        detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
-                                        detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
-                                        detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
+                                        return;
                                     }
                                 }
                                 html += `</div>
@@ -360,12 +364,12 @@ export function CarregaParcelamentoPagSeguro() {
 
 
         detalhes_maiorParc = 0;
-        
+
         $('.pagSeguroParcelamento').html("Carregando...");
         $.ajax({
             method: "GET",
             url: "/Checkout/GetConfigPagSeguro",
-            success: function (responseConfig) {                
+            success: function (responseConfig) {
                 var urlJS = '';
                 if (responseConfig.config.production) {
                     urlJS = 'https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
@@ -378,42 +382,40 @@ export function CarregaParcelamentoPagSeguro() {
                     PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
 
                     var totalCheckout = 0;
-                    
-                    
+
+
 
                     if ($('#preco').length > 0)
                         totalCheckout = SomenteNumeros($('#preco').text());
                     else
                         totalCheckout = SomenteNumeros($('#conjunto-total-final').text());
 
-                    $.each($('.pagSeguroParcelamento'), function (key, item) {                        
+                    $.each($('.pagSeguroParcelamento'), function (key, item) {
                         var divParcelamento = $(item);
-                        var _brand = $(divParcelamento).data("brand");    
+                        var _brand = $(divParcelamento).data("brand");
 
                         PagSeguroDirectPayment.getInstallments({
                             amount: totalCheckout,
                             brand: _brand,
                             maxInstallmentNoInterest: responseConfig.config.maximumInstallmentWithoutInterest,
                             success: function (responseInstallment) {
-                                
-                               
-                                
+
+
+
                                 //var auxTotalProduto = Number.parseFloat(totalCheckout);
                                 //var jurosTotal = 0;
                                 //var taxaMensal = 0;
                                 var maximumInstallment = parseInt($("#qtd-parcela-maxima-unidade").val());
-                                
+
                                 $.each(responseInstallment.installments, function (key, ResponseBrand) {
                                     //jurosTotal = Number.parseFloat(item.totalAmount) - auxTotalProduto;
 
                                     //taxaMensal = (jurosTotal / (auxTotalProduto * Number.parseFloat(item.quantity))) * 100;
                                     $("div.pagSeguroParcelamento[data-brand=" + key + "]").empty();
 
-                                    
-
                                     $.each(ResponseBrand, function (key2, item) {
 
-                                                                
+
                                         if (detalhes_maiorParc < item.quantity && item.interestFree)//maior parcela sem juros
                                         {
                                             detalhes_maiorParc = item.quantity;
@@ -435,13 +437,13 @@ export function CarregaParcelamentoPagSeguro() {
                                         //}
                                     });
                                 });
-                                
+
                                 if(detalhes_maiorParc > maximumInstallment) {
                                     $("#max-value").text(moneyPtBR(detalhes_valorParc));
                                     $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
                                     $("#description").text("(" + detalhes_descricao + ")");
                                 }
-                                
+
                             },
                             error: function (responseInstallment) {
                                 console.log(responseInstallment);

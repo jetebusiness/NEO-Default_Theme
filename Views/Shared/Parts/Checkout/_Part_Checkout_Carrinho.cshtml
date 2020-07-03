@@ -1,39 +1,39 @@
 ﻿@model DomainCheckout.Entities.Cart
-<div class="ui segment teal">
-    <div class="ui accordion compra">
-        <div class="active title">
-            <i class="ui icon cart"></i>
-            <strong>Sua Compra</strong>
-            <i class="ui icon dropdown floated right"></i>
-        </div>
-        <div class="active content">
-            <div class="ui fluid items unstackable divided compra" id="checkout_products_list">
-                @if (Model != null && Model.CartItems != null)
-                {
-                    foreach (var product in Model.CartItems)
-                    {
-                        <div class="item">
-                            <div class="ui image tiny">
-                                <img src="@product.ProductImage.ImageDefault" onerror="imgError(this)" />
-                            </div>
-                            <div class="content">
-                                <a class="product title description"><strong>@Html.Raw(product.NameProduct)</strong></a>
-                                <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
-                                <div class="extra text color black left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-            <a href="/Checkout">Voltar para o carrinho</a>
-        </div>
-    </div>
-
-    <div id="compraRecorrenteFrequencia"></div>
-
+<div class="ui segment">
+    
+    
     <!-- Resumo das Compras -->
     <div id="resumoCheckout">
         @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Resumo.cshtml", Model)
     </div>
-
+    
+    <div class="compra">
+        <div class="ui accordion productSummary">
+            <div class="title transparent">
+                Visualizar <strong>Produtos</strong>
+                <i class="ui icon dropdown right floated"></i>
+            </div>
+            <div class="content">
+                <div class="ui fluid items compra unstackable" id="checkout_products_list">
+                    @if (Model != null && Model.CartItems != null)
+                    {
+                        foreach (var product in Model.CartItems)
+                        {
+                            <div class="item">
+                                <div class="image">
+                                    <img src="@product.ProductImage.ImageDefault" onerror="imgError(this)"/>
+                                </div>
+                                <div class="content">
+                                    <a class="product title description"><strong>@Html.Raw(product.NameProduct)</strong></a>
+                                    <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
+                                    <div class="extra text color black left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <a class="backCart" href="/Checkout">Voltar para o carrinho</a>
+        </div>
+    </div>
 </div>

@@ -6,7 +6,7 @@ $(document).ready(function () {
     if ($("#login").val() == "") {
         $("#enviar").prop("disabled", true);
     }
-    $("#login").keyup(function () {
+    $("#login").on('input', function () {
         
         var $value = $(this).val();
         

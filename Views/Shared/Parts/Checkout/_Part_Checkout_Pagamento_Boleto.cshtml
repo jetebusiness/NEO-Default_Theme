@@ -1,21 +1,61 @@
 ﻿@model List<DomainCheckout.Entities.PaymentBrand>
 
-@foreach (var item in Model)
-{
-    <div class="title text big color black">
-        <i class="barcode icon"></i>
-        @item.NamePayment
-        <i class="ui icon dropdown floated right"></i>
-    </div>
-    <div class="content">
-        <p class="transition hidden"></p>
-        <div class="field">
-            <button class="ui labeled icon action large fluid button GerarPedido" data-idBrand="@item.IdPaymentBrand" data-Card="N" data-externalcode="@item.ExternalCode">
-                <i class="barcode icon"></i>
-                Pagar com Boleto Bancário
-                <input type="hidden" name="parcelamento" class="idInstallment" value="0" />
-                <input type="hidden" name="kind" value="boleto" />
-            </button>
+<div class="ui tab segment" data-tab="boleto">  
+    
+    <div class="description">
+        <div class="ui list">
+            <div class="item">
+                <div class="ui button icon circular">
+                    <i class="file alternate outline icon"></i>
+                </div>
+                <div class="middle aligned content">
+                    Imprima o boleto na próxima página
+                </div>
+            </div>
+            <div class="item">
+                <div class="ui button icon circular">
+                    <i class="barcode icon"></i>
+                </div>
+                <div class="middle aligned content">
+                    pague no banco, casas lotéricas ou pela internet utilizando o código de barras do boleto
+                </div>
+            </div>
+            <div class="item">
+                <div class="ui button icon circular">
+                    <i class="calendar alternate outline icon"></i>
+                </div>
+                <div class="middle aligned content">
+                    o prazo para compensação é de até <strong>3 dias úteis</strong>
+                </div>
+            </div>
         </div>
+        
+        
     </div>
-}
+    
+    @foreach (var item in Model)
+    {
+        string name = item.NamePayment;
+            
+        <div class="blocoTypePayment" data-typePayment="@item.IdPaymentBrand">
+            <div class="titleTypePayment">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="type-@(item.IdPaymentBrand)" tabindex="0" class="hidden">
+                    <label for="type-@(item.IdPaymentBrand)">@(item.IdPaymentBrand == 277 ? name + " - Pagseguro" : name)</label>
+                </div>
+            </div>
+            <div class="contentPayment" data-payment="@item.IdPaymentBrand">
+                <p class="transition hidden"></p>
+                <div class="field">
+                    <button class="ui labeled icon action large fluid button GerarPedido" data-idBrand="@item.IdPaymentBrand" data-Card="N" data-externalcode="@item.ExternalCode">
+                        <i class="barcode icon"></i>
+                        Pagar com Boleto Bancário
+                        <input type="hidden" name="parcelamento" class="idInstallment" value="0"/>
+                        <input type="hidden" name="kind" value="boleto"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+    }
+</div>

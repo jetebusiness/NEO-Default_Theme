@@ -2,138 +2,138 @@
 @{
                 /**/
 
-                DomainProduct.Entities.Sku SKUPadrao = new DomainProduct.Entities.Sku();
-                if (TempData["SKUPadrao"] != null)
+    DomainProduct.Entities.Sku SKUPadrao = new DomainProduct.Entities.Sku();
+    if (TempData["SKUPadrao"] != null)
+    {
+        SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadrao"];
+    }
+    string ListaImagens = string.Empty;
+    string ListaSKU = string.Empty;
+    string AvailableReferences = string.Empty;
+    string JsonDetail = string.Empty;
+    string variacaoSelecionada = string.Empty;
+    string skuSelecionado = string.Empty;
+
+    ViewModels.ViewModelStore.Produto.TreeReference treeReference = (ViewModels.ViewModelStore.Produto.TreeReference)TempData["TreeReference"];
+
+    if (treeReference != null)
+    {
+        JsonDetail = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(treeReference);
+    }
+
+    if (Model.ProductImages != null)
+    {
+        ListaImagens = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.ProductImages);
+    }
+
+    if (Model.SKUs != null)
+    {
+        ListaSKU = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.SKUs);
+    }
+
+    if (Model.AvailableReferences != null)
+    {
+        AvailableReferences = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.AvailableReferences);
+    }
+
+    if (Model.AvailableReferences != null && Model.AvailableReferences.Count > 0)
+    {
+        foreach (var referencias in Model.AvailableReferences.OrderBy(o => o.OrdinationOfReferences).ToList())
+        {
+            foreach (var variacoes in referencias.Variations)
+            {
+                if (SKUPadrao.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation).Count > 0)
                 {
-                    SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadrao"];
+                    var referencia_selecionada = SKUPadrao.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation);
+                    variacaoSelecionada += referencias.IdReference.ToString() + '-' + referencia_selecionada.FirstOrDefault().IdVariation.ToString() + ',';
                 }
-                string ListaImagens = string.Empty;
-                string ListaSKU = string.Empty;
-                string AvailableReferences = string.Empty;
-                string JsonDetail = string.Empty;
-                string variacaoSelecionada = string.Empty;
-                string skuSelecionado = string.Empty;
+            }
+        }
 
-                ViewModels.ViewModelStore.Produto.TreeReference treeReference = (ViewModels.ViewModelStore.Produto.TreeReference)TempData["TreeReference"];
+        string character = variacaoSelecionada.Substring(variacaoSelecionada.Length - 1);
+        if (character == ",")
+        {
+            variacaoSelecionada = variacaoSelecionada.Remove(variacaoSelecionada.Length - 1);
+        }
+    }
 
-                if (treeReference != null)
+    if (SKUPadrao.InstallmentMax == null)
+    {
+        SKUPadrao.InstallmentMax = new DomainProduct.Entities.InstallmentMax();
+        SKUPadrao.InstallmentMax.MaxNumber = 0;
+        SKUPadrao.InstallmentMax.Value = 0;
+    }
+
+    List<DomainProduct.Entities.ProductRating> lista_avaliacoes_completa = new List<DomainProduct.Entities.ProductRating>();
+    if (Model.ProductRatings.Count > 5)
+    {
+        lista_avaliacoes_completa.AddRange(Model.ProductRatings);
+        lista_avaliacoes_completa.RemoveRange(0, 5);
+    }
+
+    //GRADE ABERTA B2C
+    var hasOpenSku = ViewBag.HasOpenSku != null ? ViewBag.HasOpenSku : false;
+
+    //OneClickMaxiPago
+    var useOneClickMaxiPago = ViewBag.UseOneClickMaxiPago != null ? ViewBag.UseOneClickMaxiPago : false;
+
+    List<DomainProduct.Entities.ProductImage> productFirstReferenceImages = new List<DomainProduct.Entities.ProductImage>();
+    List<DomainProduct.Entities.ProductImage> productImages = new List<DomainProduct.Entities.ProductImage>();
+    var classSkus = "nine";
+
+    if (hasOpenSku)
+    {
+        classSkus = Model.SKUs != null ? "seven" : "nine";
+        productImages = Model.ProductImages;
+    }
+    else
+    {
+        if (Model.AvailableReferences != null)
+        {
+            foreach (var item in Model.ProductImages)
+            {
+                int flag = 0;
+                if (item.Variacao_ids != null)
                 {
-                    JsonDetail = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(treeReference);
-                }
-
-                if (Model.ProductImages != null)
-                {
-                    ListaImagens = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.ProductImages);
-                }
-
-                if (Model.SKUs != null)
-                {
-                    ListaSKU = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.SKUs);
-                }
-
-                if (Model.AvailableReferences != null)
-                {
-                    AvailableReferences = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.AvailableReferences);
-                }
-
-                if (Model.AvailableReferences != null && Model.AvailableReferences.Count > 0)
-                {
-                    foreach (var referencias in Model.AvailableReferences.OrderBy(o => o.OrdinationOfReferences).ToList())
+                    for (int i = 0; i < item.Variacao_ids.Length; i++)
                     {
-                        foreach (var variacoes in referencias.Variations)
+                        for (int j = 0; j < SKUPadrao.Variations.Count(); j++)
                         {
-                            if (SKUPadrao.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation).Count > 0)
+                            if (item.Variacao_ids[0] == SKUPadrao.Variations[j].IdVariation)
                             {
-                                var referencia_selecionada = SKUPadrao.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation);
-                                variacaoSelecionada += referencias.IdReference.ToString() + '-' + referencia_selecionada.FirstOrDefault().IdVariation.ToString() + ',';
+                                productFirstReferenceImages.Add(item);
+                            }
+                            if (item.Variacao_ids[i] == SKUPadrao.Variations[j].IdVariation)
+                            {
+                                flag++;
                             }
                         }
                     }
-
-                    string character = variacaoSelecionada.Substring(variacaoSelecionada.Length - 1);
-                    if (character == ",")
-                    {
-                        variacaoSelecionada = variacaoSelecionada.Remove(variacaoSelecionada.Length - 1);
-                    }
                 }
-
-                if (SKUPadrao.InstallmentMax == null)
+                if (flag == SKUPadrao.Variations.Count())
                 {
-                    SKUPadrao.InstallmentMax = new DomainProduct.Entities.InstallmentMax();
-                    SKUPadrao.InstallmentMax.MaxNumber = 0;
-                    SKUPadrao.InstallmentMax.Value = 0;
+                    productImages.Add(item);
                 }
+            }
 
-                List<DomainProduct.Entities.ProductRating> lista_avaliacoes_completa = new List<DomainProduct.Entities.ProductRating>();
-                if (Model.ProductRatings.Count > 5)
-                {
-                    lista_avaliacoes_completa.AddRange(Model.ProductRatings);
-                    lista_avaliacoes_completa.RemoveRange(0, 5);
-                }
-
-                //GRADE ABERTA B2C
-                var hasOpenSku = ViewBag.HasOpenSku != null ? ViewBag.HasOpenSku : false;
-
-                //OneClickMaxiPago
-                var useOneClickMaxiPago = ViewBag.UseOneClickMaxiPago != null ? ViewBag.UseOneClickMaxiPago : false;
-
-                List<DomainProduct.Entities.ProductImage> productFirstReferenceImages = new List<DomainProduct.Entities.ProductImage>();
-                List<DomainProduct.Entities.ProductImage> productImages = new List<DomainProduct.Entities.ProductImage>();
-                var classSkus = "nine";
-
-                if (hasOpenSku)
-                {
-                    classSkus = Model.SKUs != null ? "seven" : "nine";
-                    productImages = Model.ProductImages;
-                }
-                else
-                {
-                    if (Model.AvailableReferences != null)
-                    {
-                        foreach (var item in Model.ProductImages)
-                        {
-                            int flag = 0;
-                            if (item.Variacao_ids != null)
-                            {
-                                for (int i = 0; i < item.Variacao_ids.Length; i++)
-                                {
-                                    for (int j = 0; j < SKUPadrao.Variations.Count(); j++)
-                                    {
-                                        if (item.Variacao_ids[0] == SKUPadrao.Variations[j].IdVariation)
-                                        {
-                                            productFirstReferenceImages.Add(item);
-                                        }
-                                        if (item.Variacao_ids[i] == SKUPadrao.Variations[j].IdVariation)
-                                        {
-                                            flag++;
-                                        }
-                                    }
-                                }
-                            }
-                            if (flag == SKUPadrao.Variations.Count())
-                            {
-                                productImages.Add(item);
-                            }
-                        }
-
-                        if (productImages.Count == 0)
-                        {
-                            productImages = productFirstReferenceImages;
-                        }
-                        if (productImages.Count == 0)
-                        {
-                            productImages = Model.ProductImages;
-                        }
-                        if (productImages.Count == 0)
-                        {
-                            Model.ProductImages.RemoveAll(item => item.Variacao_ids == null);
-                        }
-                    }
-                    else
-                    {
-                        productImages = Model.ProductImages;
-                    }
-                }
+            if (productImages.Count == 0)
+            {
+                productImages = productFirstReferenceImages;
+            }
+            if (productImages.Count == 0)
+            {
+                productImages = Model.ProductImages;
+            }
+            if (productImages.Count == 0)
+            {
+                Model.ProductImages.RemoveAll(item => item.Variacao_ids == null);
+            }
+        }
+        else
+        {
+            productImages = Model.ProductImages;
+        }
+    }
 }
 
 <script>
@@ -154,15 +154,15 @@
     @{
                         /**/
 
-                        if (!String.IsNullOrEmpty(Model.MetaDescription))
-                        {
-                            <meta name="Description" content="@Model.MetaDescription">
-                        }
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+        }
 
-                        if (!String.IsNullOrEmpty(Model.MetaKeyWords))
-                        {
-                            <meta name="Keywords" content="@Model.MetaKeyWords">
-                        }
+        if (!String.IsNullOrEmpty(Model.MetaKeyWords))
+        {
+            <meta name="Keywords" content="@Model.MetaKeyWords">
+        }
     }
 }
 
@@ -180,7 +180,7 @@
                         var _categoriaDefault = Model.Categories.Find(c => c.Default == true);
                         if (_categoriaDefault != null)
                         {
-                            var _urlFriendly = "";
+                            var _url = "";
                             var _level = _categoriaDefault.Level.Substring(0, _categoriaDefault.Level.Length - 2);
                             List<DomainProduct.Entities.Category> _lstAuxCategories = new List<DomainProduct.Entities.Category>();
                             while (_level.Length >= 2)
@@ -196,7 +196,8 @@
 
                             foreach (var _auxCategory in _lstAuxCategories.OrderBy(c => c.Level.Length).ToList())
                             {
-                                _urlFriendly = string.Concat("/categoria", _urlFriendly.Replace("/categoria", ""), _auxCategory.UrlFriendly.Replace("/categoria", ""));
+                                _url = string.Concat("/categoria", _url.Replace("/categoria", ""), _auxCategory.Url.Replace("/categoria", ""));
+                                var _urlFriendly = (_auxCategory.Url != _auxCategory.UrlFriendly ? _auxCategory.UrlFriendly : _url);
                                 <i class="right angle icon divider"></i>
                                 <a class="section" href="@_urlFriendly">@_auxCategory.Name</a>
                             }
@@ -533,16 +534,16 @@
                                                     @if (!Model.ProductSignature)
                                                     {
                                                         <a class="@(Model.Stock == 0 || Model.FlagExhausted || Model.ProductSignature ? " disabled " : " ") ui animated button detalhes @(Session["EventList"] != null ? "btn-add-event-list" : "btn-comprar") @(Model.FlagExhausted || Model.ProductSignature || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0) ? "disabled action" : "action" )">
-                                                            @if (Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0))
-                                                            {
+                                                        @if (Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0))
+                                                        {
                                                                 <div class="visible content">PRODUTO ESGOTADO</div>
-                                                            }
-                                                            else
-                                                            {
-                                                                <div class="visible content">
-                                                                    @(Session["EventList"] != null ? "ADICIONAR À LISTA" : "ADICIONAR AO CARRINHO")
-                                                                </div>
-                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="visible content">
+                                                                @(Session["EventList"] != null ? "ADICIONAR À LISTA" : "ADICIONAR AO CARRINHO")
+                                                            </div>
+                                                        }
                                                             <div class="hidden content">
                                                                 <i class="add to cart icon"></i>
                                                             </div>
@@ -552,10 +553,10 @@
                                                     {
                                                         <a class="ui animated button recurring btn-comprar-assinar detalhes">
                                                             <div class="visible content">ASSINAR PRODUTO</div>
-                                                            <div class="hidden content">
-                                                                <i class="add to cart icon"></i>
-                                                            </div>
-                                                        </a>
+                                                        <div class="hidden content">
+                                                            <i class="add to cart icon"></i>
+                                                        </div>
+                                                    </a>
                                                     }
                                                     <br />
                                                     @if (!Model.ProductSignature)

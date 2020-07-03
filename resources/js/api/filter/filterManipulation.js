@@ -60,9 +60,14 @@ var newFilter = {
     },
     setSession: function(reset) {
 
-        if(sessionStorage.getItem(configFilter.config.nameSession) == null || sessionStorage.getItem(configFilter.config.nameSession) === undefined || reset)
+        if(sessionStorage.getItem(configFilter.config.nameSession) == null ||
+            sessionStorage.getItem(configFilter.config.nameSession) === undefined ||
+            sessionStorage.getItem(configFilter.config.nameSessionPosition) === null ||
+            sessionStorage.getItem(configFilter.config.nameSessionPosition) === undefined ||
+            reset) {
             sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(this.resetFilter())); //criando valores
-        else
+            sessionStorage.removeItem(configFilter.config.nameSessionPosition);
+        } else
             this.getFilter(); //recuperando valores
 
     },
@@ -186,24 +191,24 @@ var newFilter = {
 
             if(urlClient === url) {//se a pagina atual for igual a sessao continua caso contrario retorna 
 
-                if(urlClient.indexOf("/busca") > -1 && window.location.search !== ""){ //limpando a sessao caso exista novo parametro na busca    
+                if(urlClient.indexOf("/busca") > -1 && window.location.search !== ""){ //limpando a sessao caso exista novo parametro na busca                    
 
                     var queryString = window.location.search.slice(1).split('&');
-                    
-                    if(queryString.length > 1) {                       
-                        
+
+                    if(queryString.length > 1) {
+
                         var result = "";
-                        
+
                         queryString.forEach(function (query) {
                             query = query.split('=');
 
                             if(query[0] === "n") {
                                 result = query[1];
                             }
-                        });                        
+                        });
                     }
-                    
-                    
+
+
                     if(JSON.parse(sessionStorage.getItem(configFilter.config.nameSession))["keyWord"] !==
                         decodeURIComponent(result))
                         return false;
@@ -437,7 +442,7 @@ var newFilter = {
 
             window.history.pushState(null, null, queryString);
 
-            
+
         }
     },
     getFilter: function(params) { //verificando se existe conteudo para atualizar   
@@ -642,6 +647,9 @@ var newFilter = {
                     newFilter.getFilter(params);
                 }
             })
+
+
+            this.position()
 
         }
     },

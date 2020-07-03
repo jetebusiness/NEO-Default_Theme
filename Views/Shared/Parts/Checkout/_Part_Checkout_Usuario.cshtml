@@ -1,13 +1,13 @@
 ﻿@model DomainCustomer.Entities.Customer
 
 <div class="ui accordion usuario">
-    <div class="active title">
-        <i class="ui icon user"></i>
-        <strong>Identificação do Cliente</strong>
+    <div class="title active">
+        <i class="icon user"></i>
+        Identificação <strong>do Cliente</strong>
         <i class="ui icon dropdown floated right"></i>
     </div>
-    <div class="content dadosCliente">
-        <div class="ui fluid items divided card-checkout">
+    <div class="content dadosCliente active">
+        <div class="ui fluid items card-checkout">
             <div class="item">
                 <div class="content">
                     <div class="description">
@@ -44,11 +44,13 @@
                                 break;
                             }
                         }
-                        <a href="ChangeUserPayment" class="ui mini compact floated left" id="changeUserPayment">Não é você? Sair!</a>
-                        @if (Session["idEventList"] == null)
-                        {
-                            <a class="ui teal mini compact floated right button" id="listAddressPayment">Alterar Endereço</a>
-                        }
+                        <div class="margin top bottom medium">
+                            <a href="ChangeUserPayment" class="ui small text compact floated left ui label" id="changeUserPayment">Não é você? Sair!</a>
+                            @if (Session["idEventList"] == null)
+                            {
+                                <a class="ui primary basic mini compact floated right button" id="listAddressPayment">Alterar Endereço</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

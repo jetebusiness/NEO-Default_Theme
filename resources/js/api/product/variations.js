@@ -36,8 +36,10 @@ variations = {
                 description: '#description' //descricao do parcelamento
             },
             discountBillet: "#desconto_boleto", //input que contem o valor de desconto do boleto
-            billet_price: "#preco_boleto" //div que recebe valor do desconto
-        }
+            billet_price: "#preco_boleto", //div que recebe valor do desconto,
+            quantity: "#quantidade"
+        },
+        getSession: '.modal.login'
     },
     init: function() {
 
@@ -219,11 +221,27 @@ variations = {
 
             $(".references[data-active] .variacao:eq(0)", container).click();
 
-            $('.references:not([data-active])', container).each(function(index, el) {
-                $('.variacao:eq(0)', this).click()
+            $('.references:not([data-active])', container).each(function() {
+                if($(this).is(":last-child")) {
+
+                    if($('.variacao:eq(0)', this).data("stock") > 0)
+                        $('.variacao:eq(0)', this).click()
+                    else
+                        $('.variacao', this).each(function(index, el) {
+                            if($(el).data("stock") > 0) {
+                                $(el).click();
+                                return false;
+                            }
+                        })
+
+                } else {
+                    $('.variacao:eq(0)', this).click()
+                }
+
             });
 
-            this.haveInWishList($('#produto-id').val(), $("#produto-sku").val(), null);
+            if($(this.config.getSession).length === 0)
+                this.haveInWishList($('#produto-id').val(), $("#produto-sku").val(), null);
 
         } else {
             //recuperando a grade padrao e escondendo as demais
@@ -322,7 +340,7 @@ variations = {
         })
     },
     getImageThumbnail: function() {
-        
+
         if(this.config.callAjaxImage) {
             //setando as variacoes selecionadas para carregar as imagens de multifotos
             var variationSelect = new Array();
@@ -446,9 +464,10 @@ variations = {
     reloadValues: function(values) {
 
         var IdSku = values.data("idsku");
-        var Price = values.data("price");
-        var PricePromotion = values.data("pricepromotion");
-        var PriceCA = values.data("priceca");
+        var quantity = parseInt($(this.config.htmlPrice.quantity).val());
+        var Price = values.data("price") * quantity;
+        var PricePromotion = values.data("pricepromotion") * quantity;
+        var PriceCA = values.data("priceca") * quantity;
         var SkuCode = values.data("skucode");
         var Stock = values.data("stock");
         var Parc = values.data("parc");
@@ -459,8 +478,8 @@ variations = {
 
         //atribuindo os valores para utilizacao em compre-junto
         $("#produto-stock").val(Stock);
-        $("#preco-unidade").val(Price);
-        $("#preco-promocao-unidade").val(PricePromotion);
+        $("#preco-unidade").val(values.data("price"));
+        $("#preco-promocao-unidade").val(values.data("pricepromotion"));
         $("#parcela-maxima-unidade").val(Value);
         $("#qtd-parcela-maxima-unidade").val(Parc);
         $("#pagamento-descricao").val(Description);
@@ -558,7 +577,8 @@ variations = {
 
         $("#variacoesSelecionadas").val(variationSelect.join())
 
-        this.haveInWishList($('#produto-id').val(), $("#produto-sku").val(), null);
+        if($(this.config.getSession).length === 0)
+            this.haveInWishList($('#produto-id').val(), $("#produto-sku").val(), null);
     },
     haveInWishList: function (productID, skuID, $parent) {
         var data = {};
@@ -575,7 +595,7 @@ variations = {
             type: "POST",
             url: "/Customer/HaveInWishList",
             data: request,
-            async: false,
+            async: true,
             dataType: "json",
             success: function (response) {
                 if (response.success === true) {

@@ -51,19 +51,7 @@
                             <i class="cart icon"></i>
                             <span>@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</span>
                         </div>
-                        <a class="ui left pointing primary label" id="total_itens_card">
-                            @{
-                                if (Session["EventList"] == null)
-                                {
-                                    @Html.Action("TotalItensCart", "Checkout")
-                                }
-                                else
-                                {
-                                    @Html.Action("TotalItensList", "EventList")
-                                }
-                            }
-
-                        </a>
+                        <a class="ui left pointing primary label" id="total_itens_card"></a>
                     </div>
                     <div class="ui searchMobile mobile only">
                         <div class="ui button icon centered">

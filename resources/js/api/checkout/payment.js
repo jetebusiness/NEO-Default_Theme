@@ -1,9 +1,9 @@
 ﻿import { _alert, _confirm } from '../../functions/message';
-import { buscaCep, atualizaCampos } from '../../api/customer/AddressManager';
+import { buscaCep } from '../../api/customer/AddressManager';
 import { isLoading } from "../../api/api_config";
-import { debug, isNull, isNullOrUndefined } from 'util';
 import { generateRecaptcha } from "../../ui/modules/recaptcha";
 import { CompraRecorrenteStorage } from "../../functions/recurringPurchase";
+import { PayPalCheckoutTransparent, PayPalCheckoutInCart, PayPalCheckoutReference } from "../../ui/modules/paypal";
 
 import { isMobile } from "../../functions/mobile";
 
@@ -11,8 +11,6 @@ function gettoken() {
     var token = $("input[name='__RequestVerificationToken']").val();
     return token;
 }
-
-//require("card/dist/jquery.card");
 
 function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub, valorFrete) {
     if ($('#ShoppingVoucherValue').length > 0) {
@@ -23,7 +21,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 url: "/Checkout/ValeCompraRemover",
                 success: function (responseValeCompra) {
                     $('#ShoppingVoucherValue').val('');
-                    $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                    $('#btnGerarPedidoValeCompra').addClass("hideme");
                     $(".ui.accordion.shopping-voucher").accordion('close', 0);
                     $('#formas-pagamento').removeClass("disable_column");
                 }
@@ -66,23 +64,24 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                                 var valorCompare = (subTotal - discount).toFixed(2);
 
                                 if (shoppingVoucherValue.toFixed(2) === valorCompare) {
-                                    $('#btnGerarPedidoValeCompra').removeAttr("disabled");
+                                    $('#btnGerarPedidoValeCompra').removeClass("hideme");
                                     $('#formas-pagamento').addClass("disable_column");
                                 } else {
-                                    $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                                    $('#btnGerarPedidoValeCompra').addClass("hideme");
                                     $('#formas-pagamento').removeClass("disable_column");
                                 }
                             }
                         });
+
+
                     } else {
-                        $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                        $('#btnGerarPedidoValeCompra').addClass("hideme");
                         $('#formas-pagamento').removeClass("disable_column");
                     }
                 }
 
-                ValeCompraRefresh();
                 atualizaResumoCarrinho();
-        //------------------------------------
+                //------------------------------------
                 if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
                     $('.ui.toggle.checkbox.box-card').trigger('click');
                 }
@@ -94,6 +93,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 _alert("", response.msg, "warning");
                 //location.reload(true);
             }
+
         }
     });
 }
@@ -292,7 +292,7 @@ function GerarPedidoCompleto(
                         if (response.urlRedirect !== "")
                             window.location.href = response.urlRedirect;
                     });
-                   
+
                     $(".GerarPedido").removeClass("loading");
                     $(".GerarPedido").removeClass("disabled");
                 }
@@ -361,10 +361,20 @@ function clickShipping() {
     var entregaAgendada = "";
     var exclusivaEntregaAgendada = "";
 
-    $("#GetShippping .item .checkbox").click(function () {
+    $("#GetShippping .card").click(function () {
+        
+        if($("#installmentCheckoutTransparent").length)
+            $("#installmentCheckoutTransparent").prop('selectedIndex', 0)
+        
+        if($("#paypal-cc-form").length)
+            $("#paypal-cc-form").empty();
+        
+        if($("#paypal-button-reference").length)
+            $("#paypal-button-referenc").empty();
+        
         //ValeCompraRemover();
-        $("#GetShippping .item .checkbox").removeClass("checked")
-        $(this).addClass("checked")
+        $("#GetShippping .card, #GetShippping .card .checkbox").removeClass("checked")
+        $(this).addClass("checked").find(".checkbox").addClass("checked")
 
         $(".agendar").hide("slow");
         $('.hasDatepicker').datepicker('setDate', null);
@@ -826,7 +836,7 @@ function OrderCreateTwoCards(obj) {
                 else
                 {
                     if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
-                        
+
                         swal({
                             title: '',
                             html: response.errorMsg,
@@ -840,7 +850,7 @@ function OrderCreateTwoCards(obj) {
                             if (response.urlRedirect !== "")
                                 window.location.href = response.urlRedirect;
                         });
-                        
+
 
                         $(".GerarPedido").removeClass("loading");
                         $(".GerarPedido").removeClass("disabled");
@@ -866,7 +876,7 @@ function OrderCreateTwoCards(obj) {
 function OrderCreate() {
     $(".GerarPedido").click(function (event) {
         event.preventDefault();
-        
+
         var tipoVerificacao = $(this).attr("data-Card");
 
         if ((tipoVerificacao == "S" || tipoVerificacao == "D") && ($('#UseTwoCreditCards').is(':checked') || $('#UseTwoDebitCards').is(':checked'))) {
@@ -935,7 +945,7 @@ function OrderCreate() {
         var shippingMode = "";
         if ($('.shippingGet:checked').length > 0) shippingMode = $('.shippingGet:checked').data("mode");
 
-        var idFrete = $("#GetShippping .item .checkbox.checked input").val();
+        var idFrete = $("#GetShippping .card .checkbox.checked input").val();
         var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
 
         var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
@@ -968,7 +978,7 @@ function OrderCreate() {
                 break;
         }
 
-        $("#GetShippping .item .description").each(function (index, value) {
+        $("#GetShippping .card").each(function (index, value) {
             var ponteiroCurrent = $(this);
 
             if ($(ponteiroCurrent).find(".checked").length > 0) {
@@ -1332,7 +1342,7 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, idPaymentBr
                 amex: /^3[47][0-9]{12,13}$/,
                 aura: /^5078[0-9]{12,15}$/,
                 //mastercard: /^5[1-5][0-9]{14}$/,
-                mastercard: /^(5[1-5][0-9]{14})|(2[2-7][0-9]{14})|(5021[0-9]{12})$/,
+                mastercard: /^(5[1-5][0-9]{14})|(2[2-7][0-9]{14})|(5021[0-9]{12})|(5899[0-9]{12})$/,
                 visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
                 jcb: /^35(2+[8-9]|3+[0-9]|4+[0-9]|5+[0-9]|6+[0-9]|7+[0-9]|8+[0-9])+[0-9]{12,15}$/,
                 credz: /^(636760|637032)+[0-9]{10}$/
@@ -1839,11 +1849,8 @@ function atualizaResumoCarrinho(oneclick) {
 
             //isLoading(".ui.accordion.frete");
             $('.ui.accordion.usuario').accordion("refresh");
-            $('.ui.accordion.usuario .title').addClass("active");
-            $('.ui.accordion.usuario .dadosCliente').addClass("active");
-            $('.ui.accordion.usuario .dadosCliente .fluid').removeClass("hidden");
 
-            var idFrete = $("#GetShippping .item .checkbox.checked input").val();
+            var idFrete = $("#GetShippping .card .checkbox.checked input").val();
             var exclusivaEntregaAgendada = $("#radio_" + idFrete).attr("data-exclusiva-entregaagendada");
 
             pagamentocomDesconto();
@@ -1859,6 +1866,10 @@ function atualizaResumoCarrinho(oneclick) {
                     HabilitaBlocoPagamento(true);
                 }
             }
+
+            PayPalCheckoutTransparent();
+            PayPalCheckoutInCart();
+            PayPalCheckoutReference();
             //isLoading(".ui.segment.teal");
         }
     });
@@ -1952,8 +1963,8 @@ function applyDiscount() {
                                  }
                              });
                          }
+                        atualizaEnderecos();
                         if (response.couponfreeshipping) {
-                            atualizaEnderecos();
                             _alert("Cupom aplicado com sucesso!", response.msg, "success");
                         } else {
                             _alert("Cupom de Desconto!", response.msg, "success");
@@ -2001,8 +2012,8 @@ function viewAddressLogged(form) {
         var password = $(form + " .password").val();
 
         var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
-        
-        if (googleResponse) {           
+
+        if (googleResponse) {
 
             $.ajax({
                 method: "POST",
@@ -2020,8 +2031,8 @@ function viewAddressLogged(form) {
 
                         updateAddress();
                         updateDadosUsuario();
-                        
-                        
+
+
                     } else {
                         _alert("", response.message, "warning");
                     }
@@ -2036,7 +2047,7 @@ function viewAddressLogged(form) {
                     }
                 }
             });
-                
+
         } else {
             $.ajax({
                 method: "POST",
@@ -2086,6 +2097,7 @@ function updateDadosUsuario() {
             $("#dadosClienteUpdate").html(response);
             $('.dadosUsuario').addClass('active');
             $('.ui.accordion').accordion("refresh");
+            $("#key").val('')
             updateAddress();
             listAddressPayment();
         }
@@ -2233,7 +2245,7 @@ function HabilitaBlocoPagamento(habilita) {
         if (habilita == true) {
             $("#checkoutColumn2").removeClass("disable_column");
             if (isMobile())
-                $('html, body').animate({ scrollTop: $("#checkoutColumn2 .jetCheckout").offset().top - 30 }, 1000);
+                $('html, body').animate({ scrollTop: $("#checkoutColumn2").offset().top - 30 }, 1000);
         } else {
             $("#checkoutColumn2").addClass("disable_column");
             if (isMobile())
@@ -2296,31 +2308,31 @@ function ValeCompraAplicar(_valor) {
                         data: {
                             freteGratisValeCompra: true
                         },
-                        success: function success(data) {   
-                            
-                            sessionStorage.setItem("shippingSelected", $("#GetShippping .item .checkbox.checked input").val())
-                            sessionStorage.setItem("ShippingValue", $("#GetShippping .item .checkbox.checked input").data("value"))
+                        success: function success(data) {
+
+                            sessionStorage.setItem("shippingSelected", $("#GetShippping .card .checkbox.checked input").val())
+                            sessionStorage.setItem("ShippingValue", $("#GetShippping .card .checkbox.checked input").data("value"))
 
                             $("#updateShippingPayment").html(data);
 
                             var ShippingSelected = sessionStorage.getItem("shippingSelected");
                             var ShippingValue = sessionStorage.getItem("ShippingValue");
-                            var idShipping = $("#GetShippping .item .checkbox input[data-id='"+ShippingSelected+"']", "#updateShippingPayment");
-                            var valueShipping = $("#GetShippping .item .checkbox input[data-id='"+ShippingSelected+"']").data("value");
+                            var idShipping = $("#GetShippping .card .checkbox input[data-id='"+ShippingSelected+"']", "#updateShippingPayment");
+                            var valueShipping = $("#GetShippping .card .checkbox input[data-id='"+ShippingSelected+"']").data("value");
 
                             clickShipping();
                             HabilitaBlocoPagamento(false);
-                            
+
                             if(idShipping.length > 0 && valueShipping == ShippingValue) {
                                 idShipping.click();
                                 _alert("", "Vale compras aplicado com sucesso", "success");
-                            } else {                                
+                            } else {
                                 _alert("Vale compras aplicado com sucesso", "Os valores de frete foram atualizados. Selecione o frete desejado", "warning");
                             }
                             CampoEntregaAgendada();
                             $('.ui.modal').modal('hide');
 
-                            
+
                             //isLoading(".ui.accordion.frete");
                         }
                     });
@@ -2350,12 +2362,12 @@ function ValeCompraRemover() {
         async: false,
         method: "PUT",
         url: "/Checkout/ValeCompraRemover",
-        success: function (responseValeCompra) {            
+        success: function (responseValeCompra) {
             if (responseValeCompra.success) {
                 isLoading(".ui.accordion.shopping-voucher");
                 ValeCompraRefresh();
                 $('#ShoppingVoucherValue').val('');
-                $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                $('#btnGerarPedidoValeCompra').addClass("hideme");
                 $(".ui.accordion.shopping-voucher").accordion('close', 0);
                 $('#formas-pagamento').removeClass("disable_column");
                 atualizaResumoCarrinho(false);
@@ -2373,8 +2385,8 @@ function ValeCompraRefresh() {
         async: false,
         method: "GET",
         url: "/Checkout/ValeCompraRefresh",
-        success: function (responseValeCompra) {            
-            
+        success: function (responseValeCompra) {
+
             if (responseValeCompra.success) {
                 //$('#btnGerarPedidoValeCompra').attr("disabled", true);
 
@@ -2475,7 +2487,7 @@ function CampoEntregaAgendada() {
             .end()
             .append('<option value="">Selecione</option>')
             .val('')
-            ;
+        ;
 
         $("#combo_dataperiodoagendada_" + idFrete).append(optionPeriodo);
         $("#combo_dataperiodoagendada_" + idFrete).trigger("chosen:updated");
@@ -2622,7 +2634,7 @@ function UpdateValueTwoDebitCards(obj) {
     $('#DebitValor2').val(valorCartao2.toFixed(2).replace(",", "").replace(".", ","));
 
     $("#DebitCard1, #DebitCard2").trigger('blur');
-    
+
     return false;
 }
 
@@ -2631,12 +2643,17 @@ var verifyPaymentMethod = [];
 
 $(document).ready(function () {
 
+
+    $("#formas-pagamento .itemTabPayment").appendTo($("#formas-pagamento #tabPayment"))
+    $("#formas-pagamento #tabPayment .itemTabPayment").tab();
+
+
     if ($('.ui.accordion.shopping-voucher').length > 0) {
-        
+
         //ValeCompraRemover()
 
         $('#ShoppingVoucherValue').mask('#.##0,00', { reverse: true })
-        
+
         $('.ui.accordion.shopping-voucher > .title').on('click', function () {
             //if(!confirm("checka accordion")) return false;
             if ($('.ui.modal.shopping-voucher').html().trim() == "Logged") {
@@ -2651,8 +2668,9 @@ $(document).ready(function () {
                 return false;
             }
         });
-            
-        $("#ApplyVoucher").on("click", function () {
+
+        $("#ApplyVoucher").on("click", function() {
+
             var $voucher = $('#ShoppingVoucherValue');
             let valor = $voucher.val();
             let balance = $voucher.data('balance');
@@ -2696,10 +2714,10 @@ $(document).ready(function () {
                         shippingTotal = valorCompare - shoppingVoucherValue;
                     }
                     if (parseFloat(shoppingVoucherValue) == parseFloat(valorCompare) && parseFloat(shippingTotal) == 0) {
-                        $('#btnGerarPedidoValeCompra').removeAttr("disabled");
+                        $('#btnGerarPedidoValeCompra').removeClass("hideme");
                         $('#formas-pagamento').addClass("disable_column");
                     } else {
-                        $('#btnGerarPedidoValeCompra').attr("disabled", true);
+                        $('#btnGerarPedidoValeCompra').addClass("hideme");
                         $('#formas-pagamento').removeClass("disable_column");
                     }
 
@@ -3216,32 +3234,18 @@ $(document).ready(function () {
                 $('#Valor1').val(valueCard1.replace(",", "").replace(".", ","));
                 $('#Valor2').val(valueCard2.replace(",", "").replace(".", ","));
 
-                $('.one-card').addClass('hide');
-                $('.multi-card').removeClass('hide');
+                $('.one-card').addClass('hideme');
+                $('.multi-card').removeClass('hideme');
 
                 $('.multi-card > .ui.attached.tabular.menu > a[data-tab=card-1]').trigger('click');
             } else {
-                $('.one-card').removeClass('hide');
-                $('.multi-card').addClass('hide');
-                $('.card-wrapper1,.card-wrapper2').addClass('hide');
-                $('.card-wrapper').removeClass('hide');
+                $('.one-card').removeClass('hideme');
+                $('.multi-card').addClass('hideme');
 
                 $('#CreditCard1, #CreditCard2, #Name1, #Name2, #ExpDate1, #ExpDate2, #CVV1, #CVV2').val('');
                 $("#parcCard1, #parcCard2").html("<option value='0'>Informe o numero do cartão primeiro</option>");
 
                 atualizaResumoCarrinho();
-            }
-        });
-
-        $(document).on('click', '.multi-card > .ui.attached.tabular.menu > a', function () {
-            if ($(this).attr('data-tab') == "card-1") {
-                $('.card-wrapper,.card-wrapper2').addClass('hide');
-                $('.card-wrapper1').removeClass('hide');
-            }
-            else
-            {
-                $('.card-wrapper,.card-wrapper1').addClass('hide');
-                $('.card-wrapper2').removeClass('hide');
             }
         });
     }
@@ -3282,14 +3286,12 @@ $(document).ready(function () {
                 $('#DebitValor1').val(valueCard1.replace(",", "").replace(".", ","));
                 $('#DebitValor2').val(valueCard2.replace(",", "").replace(".", ","));
 
-                $('.one-debit').addClass('hide');
-                $('.multi-debit').removeClass('hide');
+                $('.one-debit').addClass('hideme');
+                $('.multi-debit').removeClass('hideme');
                 $('.multi-debit > .ui.attached.tabular.menu > a[data-tab=debit-1]').trigger('click');
             } else {
-                $('.one-debit').removeClass('hide');
-                $('.multi-debit').addClass('hide');
-                $('.card-wrapper-debit1,.card-wrapper-debit2').addClass('hide');
-                $('.card-wrapper-debit').removeClass('hide');
+                $('.one-debit').removeClass('hideme');
+                $('.multi-debit').addClass('hideme');
 
                 $('#DebitCard1, #DebitCard2, #DebitName1, #DebitName2, #DebitExpDate1, #DebitExpDate2, #DebitCVV1, #DebitCVV2').val('');
 
@@ -3297,16 +3299,16 @@ $(document).ready(function () {
 
             }
         });
-
-        $(document).on('click', '.multi-debit > .ui.attached.tabular.menu > a', function () {
-            if ($(this).attr('data-tab') == "debit-1") {
-                $('.card-wrapper-debit,.card-wrapper-debit2').addClass('hide');
-                $('.card-wrapper-debit1').removeClass('hide');
-            }
-            else {
-                $('.card-wrapper-debit,.card-wrapper-debit1').addClass('hide');
-                $('.card-wrapper-debit2').removeClass('hide');
-            }
-        });
     }
 });
+
+
+
+window.onload = function () {  
+
+    $(".blocoTypePayment").on("click", function () {
+        $(".contentPayment").hide()
+        $(".contentPayment", this).show()
+    })
+
+}();

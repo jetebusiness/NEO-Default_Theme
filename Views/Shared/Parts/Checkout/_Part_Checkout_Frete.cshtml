@@ -1,5 +1,5 @@
 ﻿@model List<DomainCheckout.Entities.Shipping>
-<div class="ui fluid items divided card-checkout" id="GetShippping">
+<div class="ui three cards doubling card-checkout margin top bottom small" id="GetShippping">
     @if (Model != null)
     {
         int _contador = 0;
@@ -20,11 +20,26 @@
                 _checkFrete = "";
             }
 
-            <div class="item">
+            <div class="card @_classCheckFrete">
                 <div class="content">
-                    <div class="description">
+                    <div class="header">
                         <div class="ui radio checkbox @_classCheckFrete">
-                            <input type="radio" name="radio" id="radio_@item.ShippingMode.IdShippingMode" class="shippingGet" value="@item.ShippingMode.IdShippingMode" data-id="@item.ShippingMode.IdShippingMode" data-value="@string.Format("{0}", item.ValueShipping)" data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" data-entregaagendada="@item.ShippingMode.ScheduledDelivery" data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery" data-carrier="@item.ShippingMode.carrier" data-mode="@item.ShippingMode.mode" data-hub="@item.ShippingMode.hub" data-deliverytime="@item.ShippingMode.DeliveryTime" data-usefullday="@((item.ShippingMode.UsefulDay == true) ? "1" : "0")" @_checkFrete>
+                            <input type="radio" 
+                                   name="radio" 
+                                   id="radio_@item.ShippingMode.IdShippingMode" 
+                                   class="shippingGet" 
+                                   value="@item.ShippingMode.IdShippingMode" 
+                                   data-id="@item.ShippingMode.IdShippingMode" 
+                                   data-value="@string.Format("{0}", item.ValueShipping)" 
+                                   data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" 
+                                   data-entregaagendada="@item.ShippingMode.ScheduledDelivery" 
+                                   data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery" 
+                                   data-carrier="@item.ShippingMode.carrier" 
+                                   data-mode="@item.ShippingMode.mode" 
+                                   data-hub="@item.ShippingMode.hub" 
+                                   data-deliverytime="@item.ShippingMode.DeliveryTime" 
+                                   data-usefullday="@((item.ShippingMode.UsefulDay == true) ? "1" : "0")" @_checkFrete>
+                            
                             @if (item.ShippingMode.ScheduledDelivery)
                             {
                                 <label>@(item.ShippingMode.Name + " (*)") </label>
@@ -35,26 +50,26 @@
                             }
                             else
                             {
-                                <label>@item.ShippingMode.Name (@item.ShippingMode.DeliveryTime dia(s) @string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? "úteis" : "útil") : "")) </label>
+                                <label>@item.ShippingMode.Name <span>(@item.ShippingMode.DeliveryTime dia(s) @string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? "úteis" : "útil") : ""))</span> </label>
                             }
 
                         </div>
-
-
-                        <span class="ui floated right">
-                            @{
-                                var _valueShipping = "";
-                                if (item.ValueShipping == 0)
-                                {
-                                    _valueShipping = "Frete Gratis";
-                                }
-                                else
-                                {
-                                    _valueShipping = string.Format("{0:c}", item.ValueShipping);
-                                }
+                    </div>
+                    <div class="meta">
+                        @{
+                            var _valueShipping = "";
+                            if (item.ValueShipping == 0)
+                            {
+                                _valueShipping = "Frete Gratis";
                             }
-                            @_valueShipping
-                        </span>
+                            else
+                            {
+                                _valueShipping = string.Format("{0:c}", item.ValueShipping);
+                            }
+                        }
+                        @_valueShipping
+                    </div>
+                    <div class="extra content">
                         @{
                             if (item.ShippingMode.ScheduledDelivery)
                             {
@@ -71,11 +86,13 @@
                     </div>
                 </div>
             </div>
-                                }
-                            }
-                            else
-                            {
-                                @Html.Raw("Nenhum Frete foi encontrado")
-                            }
+        }
+    }
+    else
+    {
+        <div class="row margin top left bottom small">
+            @Html.Raw("Nenhum Frete foi encontrado")
+        </div>
+        
+    }
 </div>
-@*<a href="">Dica de Frete Grátis</a>*@

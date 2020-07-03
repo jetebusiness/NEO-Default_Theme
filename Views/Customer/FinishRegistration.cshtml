@@ -24,8 +24,6 @@
         <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
             @using (Ajax.BeginForm("FinishRegistration", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente" }))
             {
-                @Html.AntiForgeryToken()
-
                 <input type="hidden" name="IdCustomer" value="@Model.IdCustomer" />
                 <input type="hidden" name="Address[0].IdAddress" value="@Model.Address[0].IdAddress" />
                 <input type="hidden" name="Address[0].Country" value="BRASIL" />
