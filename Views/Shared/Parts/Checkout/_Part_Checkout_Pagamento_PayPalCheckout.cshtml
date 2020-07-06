@@ -1,0 +1,47 @@
+﻿@model List<DomainCheckout.Entities.PaymentBrand>
+
+@{
+    DomainCompany.Entities.PayPal payPal = LojaCorp.Control.Company._Company.PayPal;
+    string ClientId = "";
+    string ButtonFormat = "rect";
+    string ButtonColor = "gold";
+    string Env = "sandbox";
+
+    if (payPal != null && payPal.Active)
+    {
+        ClientId = payPal.ClientId;
+        ButtonFormat = payPal.ButtonFormat;
+        ButtonColor = payPal.ButtonColor;
+
+        if (payPal.Homologation == false)
+        {
+            Env = "production";
+        }
+    }
+}
+
+    @foreach (var item in Model)
+    {
+    <div class="ui tab segment" data-tab="paypalCheckout">
+        <div class="content">
+            <div class="description">
+                <div class="ui list">
+                    <div class="item">
+                        Após clicar na opção abaixo, autentique-se em sua conta do PayPal. <br />
+                        Confirme o valor e o cartão para o pagamento para finalizar sua compra.
+                    </div>
+                </div>
+            </div>
+            
+            <p class="transition hidden"></p>
+            <div class="field">
+                <input type="hidden" name="IdPaymentBrandPayPal" id="IdPaymentBrandPayPal" value="@item.IdPaymentBrand"/>
+                <input type="hidden" name="EnvPayPal" id="EnvPayPal" value="@Env"/>
+                <input type="hidden" name="ButtonColorPayPal" id="ButtonColorPayPal" value="@ButtonColor"/>
+                <input type="hidden" name="ButtonFormatPayPal" id="ButtonFormatPayPal" value="@ButtonFormat"/>
+                <script src="https://www.paypal.com/sdk/js?client-id=@ClientId&currency=BRL"></script>
+                <div id="paypal-button-container"></div>
+            </div>
+        </div>
+    </div>
+    }

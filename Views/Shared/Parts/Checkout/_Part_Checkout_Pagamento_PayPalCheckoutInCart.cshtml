@@ -1,0 +1,38 @@
+﻿@model List<DomainCheckout.Entities.PaymentBrand>
+
+@{
+    var _orderPayPalCheckoutInCart = (DomainPayment.Entities.PayPal.PayPal_Order)Session["PreOrderPayPalCheckoutInCart"];
+}
+
+@foreach (var item in Model)
+{
+    <div class="ui tab segment" data-tab="paypalCheckoutInCart">
+        <div class="content margin bottom medium">
+            <p class="transition hidden"></p>
+            <div class="field">
+                <input type="hidden" name="IsPayPalCheckoutInCart" id="IsPayPalCheckoutInCart" value="1"/>
+                <input type="hidden" name="IdPaymentBrandPayPalCheckoutInCart" id="IdPaymentBrandPayPalCheckoutInCart" value="@item.IdPaymentBrand"/>
+                <p><strong>Olá @_orderPayPalCheckoutInCart.payer.payer_info.first_name @_orderPayPalCheckoutInCart.payer.payer_info.last_name</strong></p>
+                <p>Você esta pagando através de uma conta PayPal:</p>
+                <p><i class="barcode alternative icon"></i>@_orderPayPalCheckoutInCart.payer.payer_info.email</p>
+                @if (_orderPayPalCheckoutInCart.credit_financing_offered != null)
+                {
+                    <p class="PayPalCheckoutInCartInstallment">
+                        <strong>
+                            @_orderPayPalCheckoutInCart.credit_financing_offered.term x de R$ @_orderPayPalCheckoutInCart.credit_financing_offered.monthly_payment.value.Replace(",", "").Replace(".", ",")
+                        </strong>
+                    </p>
+                }
+                else
+                {
+                    <p class="PayPalCheckoutInCartInstallment">
+                        <strong>
+                            1 x de R$ @_orderPayPalCheckoutInCart.transactions[0].amount.total.Replace(",", "").Replace(".", ",")
+                        </strong>
+                    </p>
+                }
+                <button id="finalizarPedidoPayPalCheckoutInCart" class="ui labeled icon action large fluid button" disabled="disabled">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
+}

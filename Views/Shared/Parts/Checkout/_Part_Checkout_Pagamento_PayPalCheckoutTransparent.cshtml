@@ -1,0 +1,36 @@
+﻿@model List<DomainCheckout.Entities.PaymentBrand>
+
+@{
+    DomainCompany.Entities.PayPal payPal = LojaCorp.Control.Company._Company.PayPal;
+    string Env = "sandbox";
+
+    if (payPal != null && payPal.Active)
+    {
+        if (payPal.Homologation == false)
+        {
+            Env = "live";
+        }
+    }
+}
+
+@foreach (var item in Model)
+{
+    <div class="ui tab segment active" data-tab="paypalCheckoutTransparent">
+        <div class="content margin bottom medium">
+            <p class="transition hidden"></p>
+            <div class="field">
+                <input type="hidden" name="IdPaymentBrandPayPalCheckoutTransparent" id="IdPaymentBrandPayPalCheckoutTransparent" value="@item.IdPaymentBrand" />
+                <input type="hidden" name="EnvPayPalCheckoutTransparent" id="EnvPayPalCheckoutTransparent" value="@Env" />
+                <input type="hidden" name="PaymentIdPayPalCheckoutTransparent" id="PaymentIdPayPalCheckoutTransparent" value="" />
+                <script src="https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js"></script>
+                <form class="ui form">
+                    <select id="installmentCheckoutTransparent" class="fieldCheckPayment">
+                        <option value="0">Selecione o parcelamento</option>
+                    </select>
+                    <div id="paypal-cc-form" style="width: 100% !important;"></div>
+                    <button id="continueButton" class="ui labeled icon action large fluid button" style="display: none;">Finalizar Pedido</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}

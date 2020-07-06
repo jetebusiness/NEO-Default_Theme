@@ -1,0 +1,43 @@
+﻿@model List<DomainCheckout.Entities.PaymentBrand>
+
+@{
+    DomainCompany.Entities.PayPal payPal = LojaCorp.Control.Company._Company.PayPal;
+    string Env = "sandbox";
+    string ButtonFormat = "rect";
+    string ButtonColor = "gold";
+
+    if (payPal != null && payPal.Active)
+    {
+        ButtonFormat = payPal.ButtonFormat;
+        ButtonColor = payPal.ButtonColor;
+
+        if (payPal.Homologation == false)
+        {
+            Env = "production";
+        }
+    }
+}
+
+@foreach (var item in Model)
+{
+    <div class="ui tab segment" data-tab="paypalCheckoutReference">
+        <div class="content">
+            <div class="description">
+                <div class="ui list">
+                    <div class="item">
+                        Após se autenticar em sua conta Paypal, suas informações serão salvas garantindo uma compra mais rápida e segura em sua próxima visita.
+                    </div>
+                </div>
+            </div>
+            <p class="transition hidden"></p>
+            <div class="field">
+                <input type="hidden" name="IdPaymentBrandPayPalCheckoutReference" id="IdPaymentBrandPayPalCheckoutReference" value="@item.IdPaymentBrand"/>
+                <input type="hidden" name="EnvPayPalCheckoutReference" id="EnvPayPalCheckoutReference" value="@Env"/>
+                <input type="hidden" name="ButtonColorPayPalCheckoutReference" id="ButtonColorPayPalCheckoutReference" value="@ButtonColor"/>
+                <input type="hidden" name="ButtonFormatPayPalCheckoutReference" id="ButtonFormatPayPalCheckoutReference" value="@ButtonFormat"/>
+                <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+                <div id="paypal-button-reference"></div>
+            </div>
+        </div>
+    </div>
+}
