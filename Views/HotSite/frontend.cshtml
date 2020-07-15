@@ -7,7 +7,7 @@
   <div class="row">
       <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
           <h2>Contato</h2>
-          <form name="contato_teste" id="contato_teste">            
+          <form name="contato_teste" id="contato_teste" onsubmit="getDataInputs()">            
             <div class="ui segment">
               <div class="ui grid stackable top aligned left">
                   <div class="row two column divided horizontal">
@@ -24,26 +24,26 @@
                                   <label>E-mail</label>
                                   <div class="ui left icon input">
                                       <i class="mail icon"></i>
-                                      <input type="email" name="Email" id="Email" placeholder="E-mail" value="rafael90@jet.com.br" data-validate="email" required>
+                                      <input type="email" name="email" id="Email" placeholder="E-mail" value="" data-validate="email" required>
                                   </div>
                               </div>
                               <div class="field required">
                                   <label>Telefone</label>
                                   <div class="ui left icon input">
                                       <i class="phone icon"></i>
-                                      <input type="tel" name="Phone.Phone1" placeholder="(00) 00000-0000" class="masked mask_phone" data-validate="phone" required>
+                                      <input type="tel" name="phone" placeholder="(00) 00000-0000" value="" class="masked mask_phone" data-validate="phone" required>
                                   </div>
                               </div>
                               <div class="field required">
                                   <label>Assunto</label>
                                   <div class="ui left icon input">
-                                      <input type="text" name="" value="" placeholder="Dúvidas" required>
+                                      <input type="text" name="subject" value="" placeholder="Dúvidas" required>
                                   </div>
                               </div>
                               <div class="field required">
                                   <label>Mensagem</label>
                                   <div class="ui input">
-                                      <textarea required></textarea>
+                                      <textarea name="message" required></textarea>
                                   </div>
                               </div>
                               <button type="submit"
@@ -56,7 +56,11 @@
                           </div>
                       </div>
                       <div class="column">
-                        <span class="texto"></span>
+                        <span id="name"></span>
+                        <span id="email"></span>
+                        <span id="phone"></span>
+                        <span id="subject"></span>
+                        <span id="message"></span>
                       </div>
                   </div>
               </div>
@@ -65,13 +69,48 @@
       </div>
   </div>
 </div>
-<script>
-const contato = document.querySelector('#contato_teste');
-const texto = document.querySelector('.texto');
-function handleKeyUp(event){
-  console.log(event.target.value);
-  texto.innerText = event.target.value;
-}
 
-contato.addEventListener('keyup', handleKeyUp);
+  <script>
+    const form = document.getElementById('contato_teste');
+    form.onsubmit = getDataInputs;
+
+    const inputName = document.querySelector('input[name=name]')
+    const inputEmail = document.querySelector('input[name=email]')
+    const inputPhone = document.querySelector('input[name=phone]')
+    const inputSubject = document.querySelector('input[name=subject]')
+    const inputMessage = document.querySelector('textarea[name=message]')
+
+
+    //function getStorageinfo() {
+    //const dataStorage = sessionStorage.getItem('@lais:contato');
+
+    //if(dataStorage) {
+    //    inputName.value = JSON.parse(dataStorage).name
+    //    inputEmail.value = JSON.parse(dataStorage).email
+    //    inputPhone.value = JSON.parse(dataStorage).phone
+    //    inputSubject.value = JSON.parse(dataStorage).subject
+    //    inputMessage.value = JSON.parse(dataStorage).message
+    //}
+   // }
+
+    //getStorageinfo()
+
+    function getDataInputs(e) {
+    
+    const formData = {
+        name: inputName.value,
+        email: inputEmail.value,
+        phone: inputPhone.value,
+        subject: inputSubject.value,
+        message: inputMessage.value
+    }
+
+    sessionStorage.setItem('@lais:contato', JSON.stringify(formData))
+
+    console.log(formData)
+
+    e.preventDefault()
+
+    return formData
+    }
 </script>

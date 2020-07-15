@@ -9,3 +9,5 @@ export function checkStorage(key) {
 export function setInStorage(key, value) {
   sessionStorage.setItem(key, value);
 }
+
+
