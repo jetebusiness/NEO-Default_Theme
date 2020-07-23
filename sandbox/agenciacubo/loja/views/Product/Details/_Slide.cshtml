@@ -1,0 +1,47 @@
+﻿@model List<DomainProduct.Entities.ProductImage>
+
+@{
+    DomainProduct.Entities.SealStatus tag = new DomainProduct.Entities.SealStatus();
+
+    if (Session["SealStatusV"] != null)
+    {
+        tag = (DomainProduct.Entities.SealStatus)Session["SealStatusV"];
+    }
+    else
+    {
+        tag.Image = "";
+        tag.Name = "";
+    }
+}
+
+<div class="ui grid">
+    <div class="row">
+        <div class="column center aligned">
+            <div class="ui image">
+                @if (!string.IsNullOrEmpty(tag.Name))
+                {
+                    <div class="ui top right attached label massive imagetag">
+                        <img src="@tag.Image" alt="@tag.Name" class="ui image tiny" onerror="imgError(this)">
+                    </div>
+                }
+                <div class="produto easyzoom easyzoom--overlay easyzoom--with-thumbnails easyzoom--with-toggle">
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        <a href="@(Model.FirstOrDefault().ImageHighResolution != null ? Model.FirstOrDefault().ImageHighResolution : "#" )">
+                            @* Tem de Setar aqui a imagem de tamanho maior ZOOM!*@
+                            <img id="imagem-padrao" class="img" src="/assets/image/img_default.png" data-src="@Model.FirstOrDefault().ImageDefault"  onerror="imgError(this)" />
+                        </a>
+                    }
+                </div>
+                <button class="ui button basic small toggleZoom mobile only" data-active="false">Habilitar Zoom</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row one column">
+        <div class="column">
+            @Html.Partial("~/Views/Product/Details/_Gallery.cshtml", Model)
+        </div>
+    </div>
+</div>

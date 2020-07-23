@@ -1,0 +1,14 @@
+﻿@model DomainProduct.Result
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <div class="ui container topsellers no-slideshow">
+
+        <div class="ui horizontal divider">
+            Em Destaque
+        </div>
+        <!-- Page: ~/Views/Shared/Blocks/Product/_ProductList.cshtml -->
+        @Html.Partial("~/Views/Shared/Blocks/Product/_ProductList.cshtml", Model.Products)
+
+    </div>
+}

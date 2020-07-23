@@ -1,0 +1,105 @@
+﻿@model DomainProduct.Entities.ProductDetail
+
+@{
+    DomainProduct.Entities.Sku SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadrao"];
+    if (SKUPadrao == null)
+    {
+        SKUPadrao = new DomainProduct.Entities.Sku();
+        SKUPadrao.Variations = new List<DomainProduct.Entities.Variation>();
+    }
+}
+@{ 
+    decimal preco = 0;
+    decimal? preco_promocional = 0;
+    if (Model.HaveSku)
+    {
+        if(SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+        {
+            preco_promocional = SKUPadrao.PricePromotion;
+        }
+        preco = SKUPadrao.Price;
+    }
+    else
+    {
+        if (Model.PricePromotion != null && Model.PricePromotion > 0)
+        {
+            preco_promocional = (decimal)Model.PricePromotion;
+        }
+        preco = Model.Price;
+    }
+}
+
+
+<div class="ui container fluid detalhes produto flutuante computer only mobile-hide">
+    <div class="ui container">
+        <div class="ui grid ">
+            <div class="middle aligned row">
+                <div class="one wide column">
+                    @if (Model.ImageHome != null)
+                    {
+                        <img src="@Model.ImageHome" class="ui image fluid"  onerror="imgError(this)"/>
+                    }
+                    else 
+                    {
+                        var imageDetails = Model.ProductImages != null && Model.ProductImages.Count > 0 ? Model.ProductImages.FirstOrDefault().ImageDefault : "";
+
+                        <img src="@imageDetails" class="ui image fluid"  onerror="imgError(this)"/>
+                    }
+
+                </div>
+                <div class="five wide column">
+                    <h3 itemprop="name" class="nomeProduto">@Model.Name</h3>
+                </div>
+                <div class="five wide column text right" itemprop="offers" itemscope
+                     itemtype="http://schema.org/Offer">
+                    @if (preco_promocional != null && preco_promocional > 0)
+                    {
+                        <span class="precoAntigo">
+                            de: @preco.ToString("C")
+                            por:
+                        </span>
+                        <span itemprop="price" class="preco" id="preco-floating-bar">@preco_promocional.Value.ToString("C")</span>
+                    }
+                    else
+                    {
+                        <span itemprop="price" class="preco" id="preco-floating-bar">@preco.ToString("C")</span>
+                    }
+                </div>
+
+
+                <div class="two wide column">
+                    @if (Model.AvailableReferences != null)
+                    {
+                        <a class="ui basic button fluid variacao produto">
+                            Variações
+                        </a>
+                    }
+                </div>
+
+
+                <div class="three wide column">
+                    <a class="ui animated action button fluid detalhes btn-comprar text uppercase">
+                        <div class="visible content">Adicionar ao Carrinho</div>
+                        <div class="hidden content">
+                            <i class="add to cart icon"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui variacao produto popup top left transition hidden">
+        <div class="ui grid fluid">
+            <div class="one column row product-grid" id="floating-bar">
+                @if (Model.AvailableReferences != null)
+                {
+                    <div class="one column ui attached segment">
+                        <div class="column">
+                            <div id="variations-floating" class="grid-variations"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

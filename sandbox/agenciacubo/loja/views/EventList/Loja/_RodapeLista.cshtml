@@ -1,0 +1,15 @@
+﻿@model List<DomainCustomer.Entities.EventListType>
+@if (Model != null && Model.Count > 0)
+{
+    <div class="column margin bottom large">
+        <h4 class="ui inverted header">Lista de Eventos <i class="ui icon chevron right mobile only"></i></h4>
+        <div class="ui inverted link list">
+            @if(Model != null) { 
+                foreach (var item in Model)
+                {
+                    <a href="/EventList/SearchList/?type=@item.IdType" class="item">@Html.Raw(@item.Title)</a>
+                }
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,61 @@
+﻿@model DomainCustomer.Entities.Address
+
+@{
+    ViewBag.Title = "Lista de Chá de Bebê";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui container margin bottom large">
+    <div class="ui grid middle center aligned">
+
+        @Html.Partial("~/Views/Shared/Parts/EventList/_Steps.cshtml", new ViewDataDictionary { { "step", "2" } } )
+
+        @Html.Partial("~/Views/Shared/Parts/EventList/_EditAddressPartial.cshtml", Model, new ViewDataDictionary { { "returnUrl", "/" } })
+
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function onSuccess(response) {
+            if (response.success == true && response.urlRedirect != "") {
+                document.location = response.urlRedirect;
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+
+        }
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿
+<div class="sixteen wide mobile five wide tablet four wide computer column">
+    <div class="ui vertical menu aligned fluid">
+        <a id="data" class="item @(ViewData["option"].ToString().ToLower() == "data" ? "active" : "")" href="@Url.Action("ManagerList", "EventList")">
+            Dados da Lista
+        </a>
+        <a id="address" class="item @(ViewData["option"].ToString().ToLower() == "address" ? "active" : "")" href="@Url.Action("ManagerAddress", "EventList")">
+            Endereços
+        </a>
+        <a id="product" class="item @(ViewData["option"].ToString().ToLower() == "product" ? "active" : "")" href="@Url.Action("ManagerProducts", "EventList")">
+            Produtos
+        </a>
+        <a id="guest" class="item @(ViewData["option"].ToString().ToLower() == "guest" ? "active" : "")" href="@Url.Action("ManagerGuest", "EventList")">
+            Lista de Convidados
+        </a>
+        <a id="invitation" class="item @(ViewData["option"].ToString().ToLower() == "invitation" ? "active" : "")" href="@Url.Action("ManagerInvitation", "EventList")">
+            Configurar Convites
+        </a>
+    </div>
+</div>

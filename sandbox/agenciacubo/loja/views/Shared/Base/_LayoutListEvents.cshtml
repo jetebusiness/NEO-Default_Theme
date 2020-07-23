@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    @if (LojaCorp.Control.Company._Company.StatusGTM)
+    {<!-- GoogleTagManager Common -->
+        @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
+     <!-- End GoogleTagManager Common -->
+    }
+
+    <!-- ~/Views/Shared/Common/_Header.cshtml -->
+    @Html.Partial("Common/_Header")
+    @RenderSection("CustomSeo", required: false)
+
+    <!-- CSS Styles -->
+    @Html.Partial("Common/_CommonCss")
+    @RenderSection("custom_css", required: false)
+
+    <!-- Scripts -->
+    @Html.Partial("Common/_CommonJs")
+    @RenderSection("custom_js", required: false)
+
+    <!-- Google Analytics -->
+    @{
+        if (!string.IsNullOrEmpty(LojaCorp.Control.Company._Company.IdAnalytics) && !LojaCorp.Control.Company._Company.StatusGTM)
+        {
+            <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', '@LojaCorp.Control.Company._Company.IdAnalytics', 'auto');
+            ga('require', 'displayfeatures');
+            ga('send', 'pageview');
+            </script>
+        }
+    }
+    <!-- End Google Analytics -->
+</head>
+<body>
+    @if (LojaCorp.Control.Company._Company.StatusGTM)
+    {
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=@LojaCorp.Control.Company._Company.GTM"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
+
+    <!-- ~/Views/Shared/Common/_Cart.cshtml -->
+    @Html.Action("GetCartBySession", "Checkout")
+    <div class="pusher">
+        <!-- ~/Views/Shared/Common/_TopBar.cshtml -->
+        @Html.Partial("Common/_TopBar")
+        <!-- ~/Views/Shared/Common/_Head.cshtml -->
+        @Html.Partial("Common/_Head")
+        
+        <!-- ~/Views/Shared/Common/_Menu.cshtml -->
+        @Html.Action("Menu", "Home")
+        
+        @RenderSection("breadcrumbs", required: true)
+        <div class="ui container margin bottom large">
+            <div class="ui divider"></div>
+            <div class="ui grid">
+                <div class="row divided horizontal stackable">
+                    @RenderSection("filters", required: true)
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+        <!-- Page: ~/Views/Shared/Common/_Footer.cshtml -->
+        @Html.Partial("Common/_Footer")
+    </div>
+    @RenderSection("remarketing", required: false)
+</body>
+</html>

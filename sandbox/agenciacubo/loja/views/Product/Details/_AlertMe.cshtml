@@ -1,0 +1,27 @@
+﻿@model bool? 
+       
+@{ 
+    string classes = "";
+
+    if (Model == true)
+    {
+        classes = "";
+    }
+    else
+    {
+        classes = "detalhes hideme";
+    }
+}
+<div id="avise_me" class="ui grey segment @classes">
+    <h4 class="header">Gostaria de receber notificação quando este produto estiver disponível?</h4>
+    <div class="ui form">
+        <div class="field">
+            <a class="ui big button grey animated fluid avise avise-me-modal">
+                <div class="visible content">Avise-me quando chegar!</div>
+                <div class="hidden content">
+                    <i class="announcement icon"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

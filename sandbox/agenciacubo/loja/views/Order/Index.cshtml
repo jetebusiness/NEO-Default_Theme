@@ -1,0 +1,148 @@
+﻿@model DomainOrder.Result
+@{
+    ViewBag.Title = "Histórico de Pedidos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Order">Histórico de Pedidos</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned left aligned">
+    <div class="row two column stackable">
+        <div class="column">
+            <h4>Histórico de Pedidos</h4>
+        </div>
+        <div class="column right aligned">
+            <div class="ui category searchOrder">
+                <div class="ui icon input">
+                    <input class="prompt_pedidos" type="text" placeholder="Buscar por pedido">
+                    <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+        </div>
+    </div>
+    @if (Model == null || Model.OrderSimples.Count() == 0)
+    {
+        <div class="row two column">
+            Não foram encontrados pedidos
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="column">
+                <table class="ui padded table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Data</th>
+                            <th>Total</th>
+                            <th>Forma de Pagamento</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var order in Model.OrderSimples)
+                            {
+                                <tr>
+                                    <td>@order.IdOrder</td>
+                                    <td>@order.DateOrder</td>
+                                    <td>@string.Format("{0:c}", order.Total)</td>
+                                    <td>@order.NamePaymentMethodGateway</td>
+                                    <td>@order.NameStatus</td>
+                                    <td class="right aligned">
+                                        @{
+                                            if (ViewBag.Yami.Trim() != "")
+                                            {
+                                                string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", order.IdOrder, "/", ViewBag.OrderEmail, "/");
+                                                <a href="@urlYami" class="ui icon orange small button margin top bottom btn-yami"  data-tooltip="Troca ou Devolução">
+                                                    <i class="exchange icon"></i>
+                                                </a>
+                                            }
+                                        }
+                                        <a class="ui icon grey small button margin top bottom" id="reOrder" data-tooltip="Refazer pedido" data-idorder="@order.IdOrder">
+                                            <i class="cart icon"></i>
+                                        </a>
+                                        @{
+                                            if (order.NameStatus.ToLower().Contains("novo") || order.NameStatus.ToLower().Contains("aprovação"))
+                                            {
+                                                @* Forma de pagamento com boleto Itaú *@
+                                                if (order.NamePaymentMethodGateway.ToLower().Contains("itaú"))
+                                                {
+                                                    <input type="hidden" class="__idOrder" value="@order.IdOrder" />
+                                                    <a href="javascript:void(0)" class="__reprintBankSlip ui icon gray small button margin top bottom" data-tooltip="Imprimir Boleto" data-id-order="@order.IdOrder">
+                                                        <i class="print icon"></i>
+                                                    </a>
+                                                }
+                                                @* Forma de pagamento com boleto MaxiPago*@
+                                                else if (order.NamePaymentMethodGateway.ToLower().Contains("maxipago"))
+                                                {
+                                                    <input type="hidden" class="__idOrderMaxiPago" value="@order.IdOrder" />
+                                                    <a href="javascript:void(0)" class="__reprintBankSlipMaxiPago ui icon gray small button margin top bottom" data-tooltip="Imprimir Boleto" data-id-order="@order.IdOrder">
+                                                        <i class="print icon"></i>
+                                                    </a>
+                                                }
+                                            }
+                                        }
+                                        <a class="ui icon action small button printOrder margin top bottom" data-tooltip="Imprimir Pedido" data-id-order="@order.IdOrder">
+                                            <i class="print icon"></i>
+                                        </a>
+                                        <a class="ui icon teal small button" href="~/Order/Details/@order.IdOrder" data-tooltip="Visualizar Pedido">
+                                            <i class="unhide icon"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Model.Settings.PageCount > 1)
+{
+    <div class="ui center aligned grid ">
+        <div class="center aligned row">
+            <div class="column">
+                @Html.Partial("~/Views/Shared/Parts/_PaginationOrder.cshtml", Model.Settings)
+            </div>
+        </div>
+    </div>
+}
+
+<div id="htmlOrderPrint" class="hideme"></div>
+
+<div class="ui modal yami">
+    <!--<div class="header">
+        Troca ou Devolução
+    </div>-->
+    <div class="scrolling content iframe-modal">
+
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">Fechar</div>
+    </div>
+</div>

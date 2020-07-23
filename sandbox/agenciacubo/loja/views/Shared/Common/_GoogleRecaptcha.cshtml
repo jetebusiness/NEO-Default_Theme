@@ -1,0 +1,9 @@
+﻿@model DomainCompany.Entities.Recaptcha
+@if (Model != null)
+{
+    if (Model.Status)
+    {
+        <input type='hidden' id='googleResponse' name='googleResponse' value='' />
+        <div id="gCaptcha" class="g-recaptcha" data-sitekey="@Model.SiteKey"></div>
+    }
+}

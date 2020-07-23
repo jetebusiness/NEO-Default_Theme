@@ -1,0 +1,79 @@
+﻿@model DomainCustomer.Entities.Customer
+@{
+  ViewBag.Title = "Área do Cliente";
+  Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+  <div class="ui container">
+    <div class="ui one column grid stackable middle aligned">
+      <div class="row">
+        <div class="column">
+          <h1>@ViewBag.Title</h1>
+          <div class="ui breadcrumb text small">
+            <a class="section" href="/">Home</a>
+            <i class="right angle icon divider"></i>
+            <a class="section">Área do Cliente</a>
+            <i class="right angle icon divider"></i>
+            <a class="section">Lista de Desejos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="row">
+  <div class="column">
+    <div class="ui grid stackable wishlist">
+      <div class="row three column">
+        <div class="column center aligned">
+          <div class="content">
+            <a class="item" href="">
+              <div class="ui small bcg-ball">
+                <i class="ui icon big heart red"></i>
+              </div>
+              <div class="header">Adicione produtos</div>
+              <div class="description">
+                Adicione os produtos clicando no icone de coração. Todos os produtos preferidos no mesmo lugar.
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="column center aligned">
+          <div class="content">
+            <a class="item" href="">
+              <div class="ui small bcg-ball">
+                <i class="ui icon big tags blue"></i>
+              </div>
+              <div class="header">Acompanhe os preços</div>
+              <div class="description">
+                Acompanhe de maneira rápida e fácil se seu produto está com o melhor preço ou em promoção.
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="column center aligned">
+          <div class="content">
+            <a class="item" href="">
+              <div class="ui small bcg-ball">
+                <i class="ui icon big cart plus orange"></i>
+              </div>
+              <div class="header">Compre os produtos</div>
+              <div class="description">
+                Compre os produtos direto da lista de desejos quando encontrar a promoção ou o preço ideal.
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row margin large top margin bottom large">
+  <div class="column margin rl-auto">
+    <a href="" class="ui action button">
+      Comece já! Adicione produtos
+    </a>
+  </div>
+</div>

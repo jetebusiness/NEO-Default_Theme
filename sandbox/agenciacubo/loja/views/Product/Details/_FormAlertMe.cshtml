@@ -1,0 +1,99 @@
+﻿@model DomainProduct.Entities.Product
+
+@{
+    int skuID = Model.SKUs != null && Model.SKUs.Count > 0 ? Model.SKUs.FirstOrDefault().IdSku : 0;
+}
+
+@using (Ajax.BeginForm("AlertMeForm", "Product", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure", OnComplete = "OnComplete" }, new { @id = "form-alert", @class = "ui modal form", @data_modal = Model.Code }))
+{
+
+    @Html.AntiForgeryToken()
+    <i class="close icon" id="fechar"></i>
+    <div class="header">@Model.Name</div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="@Model.ImageHome"  onerror="imgError(this)"/>
+        </div>
+        <div class="description">
+            <h4 class="header divider">Gostaria de receber notificação quando este produto estiver disponível?</h4>
+            <div class="field fluid required">
+                <label>Nome</label>
+                <input type="text" name="name" maxlength="100" placeholder="Nome">
+            </div>
+            <div class="field fluid required">
+                <label>E-mail</label>
+                <input id="email" type="text" name="email" maxlength="100" placeholder="E-mail">
+            </div>
+            <div class="field fluid required">
+                <label>Telefone</label>
+                <div class="ui left icon input">
+                    <i class="phone icon"></i>
+                    <input type="text" name="phone" id="phone"
+                           placeholder="(00) 0000-0000" class="masked mask_phone"
+                            >
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button basic">Cancelar</div>
+        <input type="submit" class="ui button grey" id="alertMe" value="Avise-me!" />
+    </div>
+    <input type="hidden" name="firstImage" value="@Model.ImageHome" />
+    <input type="hidden" name="nameProduct" value="@Model.Name" />
+    <input type="hidden" name="IdSku" value="@skuID" />
+    <input type="hidden" name="IdProduct" value="@Model.IdProduct" />
+
+        
+            <script>
+                function OnSuccess(response) {
+                    if (response.Success == true) {
+                        swal({
+                            title: '',
+                            text: response.Message,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#16ab39',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function () {
+                            $('.ui.modal').modal('hide');
+                        });
+                    }
+                    else {
+                        swal({
+                            title: '',
+                            text: response.Message,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#16ab39',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function () {
+                            $('.ui.modal').modal('hide');
+                        });
+                    }
+                }
+
+                function OnFailure(response) {
+                    if (response.Success == false) {
+                        swal({
+                            title: '',
+                            text: response.Message,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#16ab39',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function () {
+                            $('.ui.modal').modal('hide');
+                        });
+                    }
+                }
+
+                function OnComplete() {
+
+                }
+            </script>
+}

@@ -1,0 +1,84 @@
+﻿@model DomainCustomer.Entities.Address
+
+<div class="row">
+    <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+        <div class="ui segment">
+            @*<form action="/EventList/LinkAddressToEventList" method="post"></form>*@
+            @using (Ajax.BeginForm("LinkAddressToEventList", "EventList", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "onSuccess", OnFailure = "onFailure" }, new { name = "formAddress", id = "formAddress" }))
+            {
+                <input type="hidden" name="urlToRedirect" value="@(ViewData["returnUrl"] != null ? @ViewData["returnUrl"].ToString() : "/Home/Index")" />
+
+                <div class="ui grid stackable top left aligned vertically divided grid">
+                    <div class="row">
+
+                        @if (Model != null)
+                        {
+                            <div class="column">
+
+                                <div class="ui form">
+
+                                    @if (Session["EventListState"] != null && Session["EventListState"].ToString() == "E")
+                                    {
+                                        <div id="divDeliveryMyAddress" class="ui small right aligned @(Session["EventListCurrent"] != null && ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).DeliveryAddressGuest == false ? "" : "hideme")">
+                                            <i class="ui icon big check circle black"></i>
+                                        </div>
+                                    }
+
+                                    <input type="hidden" name="listId" value="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")" />
+                                    <input type="hidden" name="addressId" value="@(Model != null ? Model.IdAddress.ToString() : "")" />
+
+                                    <div class="field">
+                                        <h3>Entrega no meu endereço</h3>
+                                        <p>@string.Concat(Model.StreetAddress, ", ", Model.Number, !string.IsNullOrEmpty(Model.Complement) ? ", " : "", Model.Complement)</p>
+                                        <p>@Model.Neighbourhood</p>
+                                        <p>@string.Concat(Model.City, "/", Model.State)</p>
+                                        <p>CEP: @Model.ZipCode</p>
+                                    </div>
+                                    <div class="field">
+                                        <a href="@Url.Action("ChangeAddress", "EventList")" class="ui small compact icon basic button">
+                                            <i class="check icon"></i>
+                                            Alterar Endereço
+                                        </a>
+                                        <a href="@Url.Action("CreateAddress", "Customer")" class="ui small compact icon basic button">
+                                            <i class="check icon"></i>
+                                            Adicionar Endereço
+                                        </a>
+                                    </div>
+                                    <div class="field">
+                                        <button type="submit" id="btnSendToMyAddress" class="ui button small submit primary floated right text uppercase" data-id="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")">
+                                            <i class="check icon"></i> Entrega no meu endereço
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+
+                        <div class="column">
+                            <div class="ui form">
+                                @if (Session["EventListState"] != null && Session["EventListState"].ToString() == "E")
+                                {
+                                    <div id="divDeliveryAddressGuest" class="ui small right aligned @(Session["EventListCurrent"] != null && ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).DeliveryAddressGuest == true ? "" : "hideme")">
+                                        <img src="" class="ui fluid image">
+                                        <i class="ui icon big check circle black"></i>
+                                    </div>
+                                }
+
+                                <div class="field">
+                                    <h3>Entrega no endereço do convidado</h3>
+                                    <p>Ao selecionar esta opção, os produtos serão enviados ao endereço identificado pelo convidado no momento de sua compra.</p>
+                                </div>
+                                <div class="field">
+                                    <button type="submit" id="btnSendToGuestAddress" class="ui button small submit primary floated right  text uppercase" data-id="@(Session["EventListCurrent"] != null ? ((DomainCustomer.Entities.EventList)Session["EventListCurrent"]).IdEventList.ToString() : "")">
+                                        <i class="check icon"></i> Entrega no endereço do convidado
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

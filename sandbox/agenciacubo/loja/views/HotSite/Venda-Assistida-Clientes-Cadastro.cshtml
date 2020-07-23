@@ -1,0 +1,310 @@
+﻿@{
+    ViewBag.Title = "Cadastrar novo cliente";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Vendedor</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Lista de Clientes</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Cadastro de Clientes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row one column">
+    <div class="column">
+        <div class="ui grid middle aligned center aligned">
+            <div class="row">
+                <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                    <form>
+                        <div class="ui segment">
+                            <div class="ui grid stackable top aligned left aligned grid">
+                                <div class="row two column divided horizontal">
+                                    <div class="column">
+                                        <div class="ui form">
+                                            <h4 class="ui dividing header">Informações Pessoais</h4>
+                                            <div class="field required">
+                                                <label>Perfil</label>
+                                                <div class="ui dropdown selection tipo cliente" tabindex="0">
+                                                    <div class="text">Pessoa Física</div>
+                                                    <i class="dropdown icon"></i>
+                                                    <div class="menu" tabindex="-1">
+                                                        <div class="item active selected" data-value="0">Pessoa Física</div>
+                                                        <div class="item" data-value="1">Pessoa Jurídica</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="field required pessoa fisica">
+                                                <label>Nome</label>
+                                                <div class="ui left icon input">
+                                                    <i class="user icon"></i>
+                                                    <input type="text" name="name" placeholder="Nome" data-validate="name">
+                                                </div>
+                                            </div>
+                                            <div class="field required pessoa juridica">
+                                                <label>Responsável</label>
+                                                <div class="ui left icon input">
+                                                    <i class="user icon"></i>
+                                                    <input type="text" name="contact" placeholder="Responsável pela Empresa" disabled="disabled">
+                                                </div>
+                                            </div>
+                                            <div class="two fields pessoa juridica">
+                                                <div class="field required pessoa juridica">
+                                                    <label>Razão Social</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="suitcase icon"></i>
+                                                        <input type="text" name="name" placeholder="Razão Social da Empresa" value="" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                                <div class="field required pessoa juridica">
+                                                    <label>Nome Fantasia</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="suitcase icon"></i>
+                                                        <input type="text" data-validate="fantasyName" name="FantasyName" placeholder="Nome Fantasia da Empresa" value="" disabled="disabled">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="two fields">
+                                                <div class="field required pessoa fisica">
+                                                    <label>CPF</label>
+                                                    <div class="ui left input">
+                                                        <input type="tel" value="" name="Cpf_cnpj" class="masked mask_cpf" placeholder="000.000.000-00" data-validate="cpf" id="_cpf" maxlength="14">
+                                                    </div>
+                                                </div>
+                                                <div class="field pessoa fisica">
+                                                    <label>RG</label>
+                                                    <div class="ui left input">
+                                                        <input type="text" name="Rg_ie" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="field required pessoa juridica">
+                                                    <label>CNPJ</label>
+                                                    <div class="ui left input">
+                                                        <input type="tel" name="Cpf_cnpj" class="masked mask_cnpj" placeholder="00.000.000/0000-00" data-validate="cnpj" id="_cnpj" disabled="disabled" maxlength="18">
+                                                    </div>
+                                                </div>
+                                                <div class="field pessoa juridica">
+                                                    <label>IE</label>
+                                                    <div class="ui input checkIe">
+                                                        <input type="text" name="Rg_ie" id="inscricaoEstadual" placeholder="Inscrição Estadual" disabled="disabled">
+                                                    </div>
+                                                    <div class="field pessoa juridica margin top small">
+                                                        <div class="ui checkbox" id="checkIsento">
+                                                            <input type="checkbox" name="check_isento" tabindex="0" class="hidden" disabled="disabled">
+                                                            <label id="labelIsento">Isento</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="three fields pessoa fisica">
+                                                <div class="field required">
+                                                    <label>Data de Nascimento</label>
+                                                    <div class="ui input left icon">
+                                                        <i class="calendar icon"></i>
+                                                        <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date" id="inputDateBirthRegister" value="" data-validate="birthdate" name="DateBirth" maxlength="10">
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Sexo</label>
+                                                    <div class="ui dropdown selection" tabindex="0">
+                                                        <select name="Gender" data-validate="gender">
+                                                            <option value="">Selecione</option>
+                                                            <option value="0">
+                                                                Masculino
+                                                            </option>
+                                                            <option value="1">
+                                                                Feminino
+                                                            </option>
+                                                        </select><i class="dropdown icon"></i><div class="default text">Selecione</div><div class="menu" tabindex="-1">
+                                                            <div class="item" data-value="0">
+                                                                Masculino
+                                                            </div><div class="item" data-value="1">
+                                                                Feminino
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Estado Civil</label>
+                                                    <div class="ui dropdown selection" tabindex="0">
+                                                        <select name="MaritalStatus" data-validate="maritalstatus">
+                                                            <option value="">Selecione</option>
+                                                            <option value="1">Solteiro(a)</option>
+                                                            <option value="0">Casado(a)</option>
+                                                            <option value="3">Viúvo(a)</option>
+                                                            <option value="2">Desquitado(a)</option>
+                                                            <option value="4">Separado(a)</option>
+                                                        </select><i class="dropdown icon"></i><div class="default text">Selecione</div><div class="menu" tabindex="-1"><div class="item" data-value="1">Solteiro(a)</div><div class="item" data-value="0">Casado(a)</div><div class="item" data-value="3">Viúvo(a)</div><div class="item" data-value="2">Desquitado(a)</div><div class="item" data-value="4">Separado(a)</div></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="two fields">
+                                                <div class="field required">
+                                                    <label>Telefone</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="phone icon"></i>
+                                                        <input type="tel" name="Phone.Phone1" placeholder="(00) 00000-0000" class="masked mask_phone" data-validate="phone">
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Celular</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="mobile icon"></i>
+                                                        <input type="tel" name="Phone.Phone2" placeholder="(00) 00000-0000" class="masked mask_phone1" data-validate="mobile" maxlength="15">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4 class="ui dividing header">Crie sua conta</h4>
+                                            <div class="two fields">
+                                                <div class="field required">
+                                                    <label>E-mail</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="mail icon"></i>
+                                                        <input type="text" name="Email" id="Email" placeholder="E-mail" value="rafael90@jet.com.br" data-validate="email">
+                                                    </div>
+                                                </div>
+                                                <div class="field required">
+                                                    <label>Senha</label>
+                                                    <div class="ui right action left icon input">
+                                                        <i class="lock icon"></i>
+                                                        <input type="password" name="User.password" placeholder="*******" data-validate="password" class="password_box">
+                                                        <div class="ui basic icon button password_unhide">
+                                                            <i class="unhide icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="ui form">
+                                            <h4 class="ui dividing header">Endereço</h4>
+                                            <div class="two fields required">
+                                                <div class="field">
+                                                    <label>CEP</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="marker icon"></i>
+                                                        <input type="text" name="Address[0].ZipCode" placeholder="00000-000" class="masked mask_zipcode" data-validate="zipcode" maxlength="10">
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <div class="busca cep">
+                                                        <p>
+                                                            Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank">Consulte Aqui</a>.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="field required">
+                                                <label>Endereço</label>
+                                                <div class="ui input">
+                                                    <input type="text" name="Address[0].StreetAddress" placeholder="Endereço" class="endereco" data-validate="address">
+                                                </div>
+                                            </div>
+                                            <div class="three fields">
+                                                <div class="field required">
+                                                    <label>Número</label>
+                                                    <div class="ui input">
+                                                        <input type="text" name="Address[0].Number" placeholder="Número" data-validate="number">
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Complemento</label>
+                                                    <div class="ui input">
+                                                        <input type="text" name="Address[0].Complement" placeholder="Ex: ap. 123" data-validate="complement">
+                                                    </div>
+                                                </div>
+                                                <div class="field required">
+                                                    <label>Bairro</label>
+                                                    <div class="ui input">
+                                                        <input type="text" name="Address[0].Neighbourhood" placeholder="Bairro" class="bairro" data-validate="neighborhood">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="two fields">
+                                                <div class="field required">
+                                                    <label>Cidade</label>
+                                                    <div class="ui input">
+                                                        <input type="text" name="Address[0].City" placeholder="Cidade" data-validate="city">
+                                                    </div>
+                                                </div>
+                                                <div class="field required">
+                                                    <label>Estado</label>
+                                                    <div class="ui dropdown search selection">
+                                                        <select name="Address[0].State" id="estado_0" data-validate="state">
+                                                            <option value="">Selecione</option>
+                                                            <option value="AC">Acre</option>
+                                                            <option value="AL">Alagoas</option>
+                                                            <option value="AP">Amapá</option>
+                                                            <option value="AM">Amazonas</option>
+                                                            <option value="BA">Bahia</option>
+                                                            <option value="CE">Ceará</option>
+                                                            <option value="DF">Distrito Federal</option>
+                                                            <option value="ES">Espírito Santo</option>
+                                                            <option value="GO">Goiás</option>
+                                                            <option value="MA">Maranhão</option>
+                                                            <option value="MT">Mato Grosso</option>
+                                                            <option value="MS">Mato Grosso do Sul</option>
+                                                            <option value="MG">Minas Gerais</option>
+                                                            <option value="PA">Pará</option>
+                                                            <option value="PB">Paraíba</option>
+                                                            <option value="PR">Paraná</option>
+                                                            <option value="PE">Pernambuco</option>
+                                                            <option value="PI">Piauí</option>
+                                                            <option value="RJ">Rio de Janeiro</option>
+                                                            <option value="RN">Rio Grande do Norte</option>
+                                                            <option value="RS">Rio Grande do Sul</option>
+                                                            <option value="RO">Rondônia</option>
+                                                            <option value="RR">Roraima</option>
+                                                            <option value="SC">Santa Catarina</option>
+                                                            <option value="SP">São Paulo</option>
+                                                            <option value="SE">Sergipe</option>
+                                                            <option value="TO">Tocantins</option>
+                                                        </select><i class="dropdown icon"></i><input class="search" autocomplete="off" tabindex="0"><div class="default text">Selecione</div><div class="menu" tabindex="-1"><div class="item" data-value="AC">Acre</div><div class="item" data-value="AL">Alagoas</div><div class="item" data-value="AP">Amapá</div><div class="item" data-value="AM">Amazonas</div><div class="item" data-value="BA">Bahia</div><div class="item" data-value="CE">Ceará</div><div class="item" data-value="DF">Distrito Federal</div><div class="item" data-value="ES">Espírito Santo</div><div class="item" data-value="GO">Goiás</div><div class="item" data-value="MA">Maranhão</div><div class="item" data-value="MT">Mato Grosso</div><div class="item" data-value="MS">Mato Grosso do Sul</div><div class="item" data-value="MG">Minas Gerais</div><div class="item" data-value="PA">Pará</div><div class="item" data-value="PB">Paraíba</div><div class="item" data-value="PR">Paraná</div><div class="item" data-value="PE">Pernambuco</div><div class="item" data-value="PI">Piauí</div><div class="item" data-value="RJ">Rio de Janeiro</div><div class="item" data-value="RN">Rio Grande do Norte</div><div class="item" data-value="RS">Rio Grande do Sul</div><div class="item" data-value="RO">Rondônia</div><div class="item" data-value="RR">Roraima</div><div class="item" data-value="SC">Santa Catarina</div><div class="item" data-value="SP">São Paulo</div><div class="item" data-value="SE">Sergipe</div><div class="item" data-value="TO">Tocantins</div></div><div class="results"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" value="0" name="Address[0].AddressType">
+                                            <input type="hidden" value="1" name="Address[1].AddressType">
+                                            <input type="hidden" name="Address[1].Country" value="BRASIL">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="column">
+                                        <a href="/Customer/Login" class="ui animated button large basic left floated">
+                                            <div class="visible content">Cancelar</div>
+                                            <div class="hidden content">
+                                                <i class="remove icon"></i>
+                                            </div>
+                                        </a>
+                                        <button type="submit" class="ui animated button large submit primary right floated" tabindex="0">
+                                            <div class="visible content">Cadastrar</div>
+                                            <div class="hidden content">
+                                                <i class="checkmark icon"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

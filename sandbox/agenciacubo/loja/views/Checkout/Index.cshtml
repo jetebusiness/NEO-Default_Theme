@@ -1,0 +1,217 @@
+﻿@model DomainCheckout.Entities.Cart
+
+@{
+    ViewBag.Title = "Carrinho de Compras";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+    bool permiteVenda = true;
+}
+
+<div class="ui container">
+
+    <div class="ui two column grid stackable middle aligned">
+        <div class="row">
+            <div class="column ui ten wide computer six wide tablet">
+                <h1 class="meu-carrinho">@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</h1>
+            </div>
+            <div class="column ui six wide computer ten wide tablet">
+
+                @if (Session["UserAuthenticated"] != null && Session["Seller"] != null)
+                {
+                    if (((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).User.UserName != null)
+                    {
+                        <!-- Comeco Venda Assistida (Com Cliente) -->
+                        <div class="ui two column grid stackable middle aligned venda-assistida">
+                            <div class="row">
+                                <div class="column">
+                                    <div class="info">
+                                        <div class="ui items">
+                                            <div class="item">
+                                                <div class="cliente-vinculado">
+                                                    <i class="user circle outline icon"></i> <span>Cliente</span>
+                                                </div>
+                                                <div class="content align-self-center">
+                                                    <div class="header">@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name.ToString())</div>
+                                                    <div class="description">
+                                                        <p>@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Email.ToString())</p>
+                                                        <p>CPF: @(Convert.ToUInt64(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Cpf_cnpj).ToString(@"000\.000\.000\-00"))</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column middle aligned">
+                                    <a href="/assistedsale/index" class="ui black button position-button">
+                                        Alterar o cliente
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fim Venda Assistida -->
+                    }
+                }
+                @if (Session["Seller"] != null && ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name == null)
+                {
+                    permiteVenda = false;
+                    <!-- Comeco Venda Assistida (Sem Cliente) -->
+                    <div class="ui two column grid stackable middle aligned venda-assistida">
+                        <div class="row">
+                            <div class="column">
+                                <div class="info">
+                                    <div class="ui items">
+                                        <div class="item">
+                                            <div class="cliente-vinculado">
+                                                <i class="user circle outline icon"></i> <span>Cliente</span>
+                                            </div>
+                                            <div class="content align-self-center">
+                                                <div class="header">Sem cliente vinculado</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column middle aligned">
+                                <a href="/assistedsale/index" class="ui black button position-button">
+                                    <i class="user plus icon"></i> Vincular cliente
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim Venda Assistida -->
+                }
+                <input type="hidden" id="permiteVenda" value="@permiteVenda.ToString()" />
+            </div>
+        </div>
+        <div class="ui clearing divider"></div>
+    </div>
+
+    <div class="ui grid divided horizontal" id="ListProductsCheckoutCompleto">
+        <div class="row">
+            <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
+
+            @if (Model != null && Model.CartItems != null)
+            {
+            <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
+                <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
+                    @if (Model != null && Model.CartItems != null)
+                    {
+                        foreach (var product in Model.CartItems)
+                        {
+                            <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
+                            @Html.Partial("~/Views/Shared/Object/Product/_ProductCartItem.cshtml", product)
+                        }
+                    }
+                </div>
+                <div class="ui divider"></div>
+                <button class="ui button basic large"
+                        id="ClearCart" tabindex="0">
+                    Limpar Carrinho
+                </button>
+            </div>
+                <div class="column six wide computer sixteen wide tablet sixteen wide mobile right aligned detalhes compra">
+                    <div class="ui sticky box detalhes">
+                        <div class="ui divided items">
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description">
+                                        Desconto: <span id="descontoCarrinho">@string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description">
+                                        <strong>Subtotal: <span id="subTotalCarrinho">@string.Format("{0:c}", Model != null ? Model.SubTotal : 0)</span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description frete">
+                                        <div class="ui form right floated ">
+                                            <div class="inline fields margin none">
+                                                <div class="field">
+                                                    <label>Calcular Frete</label>
+                                                    <div class="ui action input">
+                                                        <input type="text" placeholder="00000-000"
+                                                               class="masked mask_zipcode" size="9" name="shipping"
+                                                               value="@Model.ZipCode"
+                                                               id="shipping">
+                                                        <button class="ui right labeled icon button frete calcular" id="CallServiceShipping">
+                                                            <i class="shipping icon"></i>
+                                                            Calcular
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="description resultado" id="exibeFrete">
+                                        <div class="ui form right floated ">
+                                            <div class="field">
+                                                <label class="frete valor" id="loadFrete"></label>
+                                                <div class="ui">
+                                                    <button class="ui right labeled icon mini button frete recalcular margin none" id="btn_recalcular_frete">
+                                                        <i class="refresh icon"></i>
+                                                        Recalcular
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes hideme" id="dica_frete">
+                                <div class="content">
+                                    <span id="descricao_dica"></span>
+                                </div>
+                            </div>
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description">
+                                        <h3>Total a pagar: <span id="totalCarrinho">@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <div class="ui grid">
+                            <div class="row two column">
+                                <div class="column">
+                                    <a href="/home" class="ui animated button fluid large basic"
+                                       tabindex="0">
+                                        <div class="visible content">Voltar à Loja</div>
+                                        <div class="hidden content">
+                                            <i class="shopping bag icon"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="column">
+                                    <button id="finalizePurchase" class="ui animated button fluid large submit action"
+                                            tabindex="0">
+                                        <div class="visible content">Finalizar Compra</div>
+                                        <div class="hidden content">
+                                            <i class="right arrow icon"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @section remarketing {
+                    <!-- Google Remarketing -->
+                    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+                    <!-- End Google Remarketing -->
+                }
+            }
+            else
+            {
+                <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
+                    Carrinho Vazio
+                </div>
+            }
+        </div>
+    </div>
+</div>

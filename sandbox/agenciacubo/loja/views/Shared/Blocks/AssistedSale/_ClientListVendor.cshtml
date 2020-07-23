@@ -1,0 +1,58 @@
+﻿@model DomainAssistedSale.Entities.Results.ResultsAssistedSale<DomainAssistedSale.Entities.Customer.Customer>
+
+@if (Model == null)
+{
+    <div class="row two column">
+        Não foram encontrados clientes cadastrados.
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="column">
+            <table class="ui padded table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nome do Cliente</th>
+                        <th>CPF</th>
+                        <th>E-mail</th>
+                        @*<th>Status</th>*@
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var client in Model.Object)
+                    {
+                        <tr>
+                            <td>@client.IdCustomer</td>
+                            <td>@client.Name</td>
+                            <td>@client.Cpf_cnpj</td>
+                            <td>@client.Email</td>
+                            @*<td>@client.Status</td>*@
+                            <td class="right aligned">
+                                <a class="ui icon grey button" href="/assistedsale/detailClient?idClient=@client.IdCustomer" data-tooltip="Detalhes do Cliente">
+                                    <i class="unhide icon"></i>
+                                </a>
+                                <a class="ui icon teal button btn_AttachClient" data-emailClient="@client.Email" data-nameClient="@client.Name" data-tooltip="Vincular Cliente">
+                                    <i class="user plus icon"></i>                                    
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    if (Model.Settings.PageCount > 1)
+    {
+        <div class="ui center aligned grid margin rl-auto">
+            <div class="center aligned row">
+                <div class="column">
+                    @Html.Partial("~/Views/Shared/Parts/_PaginationClient.cshtml", Model.Settings)
+                </div>
+            </div>
+        </div>
+    }
+}

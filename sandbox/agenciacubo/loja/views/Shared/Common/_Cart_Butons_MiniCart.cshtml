@@ -1,0 +1,21 @@
+﻿@model int
+
+<div class="row two column botoes stackable">
+    <div class="column">
+        <button id="mini-carrinho-checkout" class="ui animated button fluid large basic buttonsMiniCart"
+                tabindex="0">
+            <div class="visible content">Carrinho</div>
+            <div class="hidden content">
+                <i class="cart icon"></i>
+            </div>
+        </button>
+    </div>
+    <div class="column">
+        <button class="ui animated button fluid large submit action buttonsMiniCart" tabindex="0" id="btn_finalizar" data-total-itens="@Model" data-user-url="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")">
+            <div class="visible content">Finalizar Compra</div>
+            <div class="hidden content">
+                <i class="right arrow icon"></i>
+            </div>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿<div class="content">
+    <div class="ui form">
+        @Html.AntiForgeryToken()
+        <div class="field required">
+            <label>Para realizar essa operação, é necessário enviar a chave de acesso por e-mail.</label>
+            <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="text" name="codeTokkenPayment" id="codeTokkenPayment" class="codeTokkenPayment" placeholder="Código">
+            </div>
+        </div>
+        <div class="field centered">
+            <button class="ui button green basic reenviarCod" type="button" id="reenviarCod">Enviar chave de acesso</button>
+            <button class="ui green button confirmTokkenPayment" type="button" id="confirmTokkenPayment">Confirmar</button>
+        </div>
+    </div>
+</div>

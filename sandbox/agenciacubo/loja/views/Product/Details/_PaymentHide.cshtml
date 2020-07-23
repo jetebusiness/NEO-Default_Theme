@@ -1,0 +1,35 @@
+﻿@model List<DomainCheckout.Entities.PaymentGateway>
+
+<div class="ui segment formas-pagamento hideme" id="calculo-parcelamento">
+    <div class="ui accordion fluid">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            <strong>Parcelas e formas de pagamento</strong>
+        </div>
+        <div class="content">
+            <div class="accordion">
+                @if (Model != null && Model.Any() && Model.FirstOrDefault().PaymentMethods != null && Model.FirstOrDefault().PaymentMethods.Any() && Model.FirstOrDefault().PaymentMethods.FirstOrDefault().PaymentBrands != null)
+                {
+                    foreach (var method in Model.FirstOrDefault().PaymentMethods.FirstOrDefault().PaymentBrands)
+                    {
+
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            @method.Name
+                        </div>
+                        <div class="content">
+                            <div class="ui list">
+                                @foreach (var parcelas in method.Installments)
+                                {
+                                    <span class="item"><strong>@parcelas.InstallmentNumber x</strong>@parcelas.Value.ToString("C")</span>
+                                }
+                            </div>
+                        </div>
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

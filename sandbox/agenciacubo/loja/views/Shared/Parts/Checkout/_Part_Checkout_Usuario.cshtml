@@ -1,0 +1,64 @@
+﻿@model DomainCustomer.Entities.Customer
+
+<div class="ui accordion usuario">
+    <div class="active title">
+        <i class="ui icon user"></i>
+        <strong>Identificação do Cliente</strong>
+        <i class="ui icon dropdown floated right"></i>
+    </div>
+    <div class="content dadosCliente">
+        <div class="ui fluid items divided card-checkout">
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span>@Model.Name</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span>@Model.User.UserName</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span>@Model.Phone.Phone1</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        @foreach (var item in Model.Address)
+                        {
+                            if (item.Default)
+                            {
+                                <p><span id="streetClient">@item.StreetAddress</span>, <span id="numberClient">@item.Number</span></p>
+                                <p id="complementClient">@item.Complement</p>
+                                <p id="neighbourhoodClient">@item.Neighbourhood</p>
+                                <p><span id="cityClient">@item.City</span> - <span id="stateClient">@item.State</span></p>
+                                <p id="zipCodeClient">@ViewBag.ZipcodeEncrypt</p>
+                                break;
+                            }
+                        }
+                        <a href="ChangeUserPayment" class="ui mini compact floated left" id="changeUserPayment">Não é você? Sair!</a>
+                        @if (Session["idEventList"] == null)
+                        {
+                            <a class="ui teal mini compact floated right button" id="listAddressPayment">Alterar Endereço</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string zipcode = !string.IsNullOrEmpty(ViewBag.ZipCodeCart) ? ViewBag.ZipCodeCart : ViewBag.ZipCode;
+}
+<input type="hidden" name="zipcode" id="zipcode" value="@zipcode" />
+<input type="hidden" name="idAddress" id="idAddress" value="@TempData["IdAddressPayment"]" />
+<input type="hidden" name="idCustomer" id="idCustomer" value="@Model.IdCustomer" />
+@{TempData.Keep("IdAddressPayment");}

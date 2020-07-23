@@ -1,0 +1,25 @@
+﻿<div class="content">
+    <div class="ui form">
+        @Html.AntiForgeryToken()
+        <h4>Já sou cadastrado</h4>
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="mail icon"></i>
+                <input type="text" autocomplete="off" readonly disabled="disabled" name="UserName" class="UserName" id="UserName" value="@ViewBag.EmailCliente" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="password" name="password" class="password" placeholder="Senha">
+            </div>
+        </div>
+        @{
+            Tuple<string, DomainCompany.Entities.Recaptcha> _tuple = Tuple.Create<string, DomainCompany.Entities.Recaptcha>("Login", ViewBag.recaptchaData);
+            @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_GoogleRecaptcha.cshtml", _tuple)
+        }
+        <a class="ui fluid large submit primary button loginPayment">Entrar</a>
+        <div class="ui divider"></div>
+        <p>Esqueceu sua senha? <a class="RecoverPasswordByEmail">Recuperar senha</a></p>
+    </div>
+</div>

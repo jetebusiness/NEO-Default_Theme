@@ -1,0 +1,165 @@
+﻿@model DomainCustomer.Entities.EventList
+
+@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row fluid margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+
+            @Html.Partial("~/Views/Shared/Parts/EventList/_EventListMenu.cshtml", new ViewDataDictionary() { { "option", "invitation" } })
+
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                <form action="/EventList/SaveInvitation" id="formInvitation" name="formInvitation" enctype = "multipart/form-data">
+                    <input type="hidden" name="IdEventList" value="@Model.IdEventList" />
+
+                    <div class="ui form">
+                        @*<div class="field" style="display: inline-flex">
+                            <div class="ui checkbox">
+                                <input type="checkbox" checked="checked" name="RandomGifts">
+                            </div>
+                            <label>Sortear os produtos automaticamente?</label>
+                        </div>*@
+                        <div class="field">
+                            <label>Modelo do Convite</label>
+                            <div class="ui image fluid">
+                                <img class="ui image fluid" id="imgPicture" src="@(Model != null ? Model.UrlInvitationPicture : "")"/>
+                                <div id="uploadArea">
+                                    <span>
+                                        <i class="huge cloud upload icon"></i>
+                                        Enviar Arquivo
+                                    </span>
+                                </div>
+                            </div>
+                            <input type="file" id="filePicture" name="Picture" />
+                            <a class="ui button basic floated right" id="changeEventPicture">Alterar</a>
+                            <div class="text small">Extensões permitidas: .jpg .png ou .gif</div>
+                        </div>
+                        <div class="field">
+                            <label>Mensagem do convite</label>
+                            <div class="ui input">
+                                <textarea name="InvitationMessage">@Model.InvitationMessage</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui grid stackable buttonsGrid">
+                        <div class="row">
+                            <div class="column">
+                                <a href="javascript:history.go(-1)" class="ui button large basic left floated">
+                                    <i class="remove icon"></i> Cancelar
+                                </a>                              
+                                <button type="submit" id="btnSaveInvitation" class="ui button large submit primary basic right floated">
+                                    <i class="checkmark icon"></i> Salvar
+                                </button>
+                                <button type="button" id="btnSendInvitation" class="ui button large submit primary right floated">
+                                    <i class="send outline icon"></i> Enviar Convites
+                                </button>                                  
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        $(document).on('submit', '#formInvitation', function (e) {
+            e.preventDefault();
+
+            var dataString;
+            var action = $(this).attr('action');
+
+            if ($(this).attr("enctype") == "multipart/form-data") {
+                dataString = new FormData($(this)[0]);
+                contentType = false;
+                processData = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: dataString,
+                    contentType: contentType,
+                    processData: processData,
+                    success: function (response) {
+                        onSuccess(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        onFailure(jqXHR.responseText);
+                    }
+                });
+            }
+            return false;
+        });
+
+        function onSuccess(response) {
+            if (response.success == true) {
+                if (response.urlRedirect != "") {
+                    document.location = response.urlRedirect;
+                }
+                else {
+
+                    swal({
+                        title: '',
+                        html: response.message,
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+            if (response.success == true && response.urlRedirect != "") {
+                document.location = response.urlRedirect;
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    </script>
+}

@@ -1,0 +1,175 @@
+﻿@model DomainProduct.Entities.Group
+
+@{
+  ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
+  Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
+}
+
+@section CustomSeo {
+  @{
+    if (!String.IsNullOrEmpty(Model.MetaDescription))
+    {
+      <meta name="Description" content="@Model.MetaDescription">
+    }
+  }
+}
+
+@section breadcrumbs {
+  <div class="ui two column centered grid stackable middle aligned margin top bottom no breadcrumbs">
+    <div class="row">
+      <div class="container">
+        <div class="column">
+          <h1>@(Model != null ? Model.Name : "")</h1>
+          <div class="ui breadcrumb text small">
+            <div class="ui breadcrumb">
+              <a class="section" href="/">Home</a>
+              <i class="right angle icon divider"></i>
+              <span class="section" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <span itemprop="name">@(Model != null ? Model.Name : "")</span>
+                <meta itemprop="url" content="/@(Model.Name)">
+                <meta itemprop="position" content="2" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+
+@section banner {
+  @if (Model != null)
+  {
+    <div class="ui grid">
+      <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
+      @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'F' })
+    </div>
+  }
+}
+@section filters {
+  <div class="four wide column filterColumn">
+    <div class="row one column filterBlock" id="filterBlock">
+      <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
+      @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
+      {
+        @Html.Action("FilterMenuNew", "Product", new { category = "", brand = "", group = Model.IdGroup, keyword = "" })
+      }
+      else
+      {
+        @Html.Action("FilterMenu", "Product")
+      }
+    </div>
+    <div class="row">
+      @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'L' })
+    </div>
+  </div>
+}
+
+<div class="twelve wide column">
+  <div class="ui grid">
+    <div class="row one column">
+      <div class="column right aligned right floated">
+        <button class="ui mobile only left floated icon button basic filterbutton right labeled small" data-tooltip="Filtros" data-inverted="">
+          <i class="filter icon"></i>
+          Filtros
+        </button>
+        <div class="ui dropdown button basic dropdownitens small">
+          <span class="text">@(Request.QueryString["pageSize"] != null ? Request.QueryString["pageSize"] : "Itens")</span>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="item" data-value="12">
+              12
+            </div>
+            <div class="item" data-value="18">
+              18
+            </div>
+            <div class="item" data-value="24">
+              24
+            </div>
+            <div class="item" data-value="30">
+              30
+            </div>
+          </div>
+        </div>
+        <div class="ui dropdown button basic dropdownorder small">
+          <span class="text">Ordenar por</span>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="item" data-value="lancamentos">
+              <i class="asterisk icon"></i>
+              Lançamentos
+            </div>
+            <div class="item" data-value="maior_preco">
+              <i class="sort numeric descending icon"></i>
+              Maior Preço
+            </div>
+            <div class="item" data-value="mais_vendidos">
+              <i class="diamond icon"></i>
+              Mais Vendidos
+            </div>
+            <div class="item" data-value="menor_preco">
+              <i class="sort numeric ascending icon"></i>
+              Menor Preço
+            </div>
+            <div class="item" data-value="nome_a_z">
+              <i class="sort alphabet ascending icon"></i>
+              Nome [A-Z]
+            </div>
+            <div class="item" data-value="nome_z_a">
+              <i class="sort alphabet descending icon"></i>
+              Nome [Z-A]
+            </div>
+
+
+          </div>
+        </div>
+        <button id="viewgrid" class="ui icon button basic small viewgrid mobile hide" data-tooltip="Grid" data-inverted="">
+          <i class="grid layout icon"></i>
+        </button>
+        <button id="viewlist" class="ui icon button basic small viewlist mobile hide" data-tooltip="Lista" data-inverted="">
+          <i class="list layout icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="list">
+    <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryList.cshtml -->
+    <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
+    @if (Model != null)
+    {
+      <div class="groupProducts">
+        
+          @Html.Action("GetProducts", "Product",
+                   new
+                   {
+                     category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
+                     viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",
+                     pageNumber = Request.QueryString["pageNumber"] != null ? Request.QueryString["pageNumber"] : "",
+                     pageSize = 12,
+                     order = Request.QueryString["order"] != null ? Request.QueryString["order"] : "",
+                     brand = Request.QueryString["brand"] != null ? Request.QueryString["brand"] : "",
+                     group = Model.IdGroup,
+                     initialPrice = Request.QueryString["initialPrice"] != null ? Request.QueryString["initialPrice"] : "",
+                     finalPrice = Request.QueryString["finalPrice"] != null ? Request.QueryString["finalPrice"] : "",
+                     variations = Request.QueryString["variations"] != null ? Request.QueryString["variations"] : "",
+                     idAttribute = Request.QueryString["idAttribute"] != null ? Request.QueryString["idAttribute"] : "",
+                     idCategories = Request.QueryString["idCategories"] != null ? Request.QueryString["idCategories"] : ""
+                   }
+               )
+      </div>
+    }
+  </div>
+</div>
+<div class="sixteen wide column">
+  <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
+  @Html.Action("BannerGroup", "Banner", new { groupID = Model.IdGroup, bannerType = 'R' })
+</div>
+<input type="hidden" name="CurrentPage" id="CurrentPage" value="group" />
+<input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
+
+@section custom_js{
+  <script>
+        window.filterManipulation = { idGroup: @Model.IdGroup};
+  </script>
+}

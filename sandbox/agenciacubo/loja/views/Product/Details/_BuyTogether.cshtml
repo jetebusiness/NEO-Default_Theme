@@ -1,0 +1,289 @@
+﻿@model DomainProduct.Entities.ProductDetail
+
+@{
+    DomainProduct.Entities.Sku SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadrao"];
+    if (SKUPadrao == null)
+    {
+        SKUPadrao = new DomainProduct.Entities.Sku();
+        SKUPadrao.Variations = new List<DomainProduct.Entities.Variation>();
+    }
+}
+
+
+<div class="ui container">
+    <div class="ui horizontal divider">
+        Compre Junto
+    </div>
+    <div class="ui grid stackable">
+        <div class="row horizontal divided">
+            <div class="twelve wide computer column">
+                <div class="ui items relaxed divided produtos compre junto">
+                    <div class="item product-grid">
+                        <div class="ui image medium">
+                            @if (@Model.ImageHome != null)
+                            {
+                                <img src="@Model.ImageHome" alt="@Model.Name"  onerror="imgError(this)">
+                            }
+                            else
+                            {
+                                <img src="@Model.ProductImages.FirstOrDefault().ImageDefault" alt="@Model.Name"  onerror="imgError(this)">
+                            }
+                        </div>
+                        <div class="content">
+                            <a href="" class="header">@Model.Name</a>
+                            <div class="meta">
+                                @if (@Model.Brand != null)
+                                {
+                                    <span>@Model.Brand.Name</span>
+                                }
+                                <h4 class="margin small top" id="price-buy-together">
+                                    @if (Model.HaveSku)
+                                    {
+                                        if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+                                        {
+                                            @SKUPadrao.PricePromotion.Value.ToString("C")
+                                        }
+                                        else
+                                        {
+                                            @SKUPadrao.Price.ToString("C")
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                                        {
+                                            @Model.PricePromotion.Value.ToString("C")
+                                        }
+                                        else
+                                        {
+                                            @Model.Price.ToString("C")
+                                        }
+                                    }
+                                </h4>
+                            </div>
+                            <div class="description">
+                                @if (Model.AvailableReferences != null)
+                                {    
+                                    <div id="variations-buy-together" class="grid-variations"></div>
+                                }
+                            </div>
+                            <div class="extra"></div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" value="" name="buy-together-skus" id="buy-together-skus" />
+
+                    @foreach (var item in Model.BuyTogether)
+                    {
+                        string variacaoSelecionada = string.Empty;
+
+                        if (item.SKUs != null && item.SKUs.Any())
+                        {
+                            var skuPadraoByTogether = item.SKUs.FirstOrDefault(m => m.Standard == true) != null ? item.SKUs.FirstOrDefault(m => m.Standard == true) : item.SKUs.FirstOrDefault(m => m.Stock > 0);
+                            if (skuPadraoByTogether != null)
+                            {
+                                if (item.AvailableReferences != null && item.AvailableReferences.Count > 0)
+                                {
+                                    foreach (var referencias in item.AvailableReferences.OrderBy(o => o.OrdinationOfReferences).ToList())
+                                    {
+                                        foreach (var variacoes in referencias.Variations)
+                                        {
+                                            if (skuPadraoByTogether.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation).Count > 0)
+                                            {
+                                                var referencia_selecionada = skuPadraoByTogether.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation);
+                                                variacaoSelecionada += referencias.IdReference.ToString() + '-' + referencia_selecionada.FirstOrDefault().IdVariation.ToString() + ',';
+                                            }
+                                        }
+                                    }
+
+                                    string character = variacaoSelecionada.Substring(variacaoSelecionada.Length - 1);
+                                    if (character == ",")
+                                    {
+                                        variacaoSelecionada = variacaoSelecionada.Remove(variacaoSelecionada.Length - 1);
+                                    }
+                                }
+                            }
+                        }
+
+                        int total_variacoes = item.AvailableReferences != null ? item.AvailableReferences.Count() : 0;
+
+                        <div class="item buy-together" id="buy-together" data-id="@item.IdProduct" data-variacoes="@total_variacoes">
+                            <div class="ui image small">
+                                <a href="@(item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly)">
+                                    <img src="@item.ImageHome" alt=""  onerror="imgError(this)">
+                                </a>
+                            </div>
+                            <div class="content">
+                                <a href="@(item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly)" class="header">@item.Name</a>
+                                <div class="meta">
+                                    @if (item.Brand != null)
+                                    {
+                                        <span>@item.Brand.Name</span>
+                                    }
+                                    else
+                                    {
+                                        <span></span>
+                                    }
+                                    @{
+                                        decimal preco_final = item.PricePromotion != null ? Convert.ToDecimal(item.PricePromotion) : item.Price;
+                                    }
+
+                                    @if (item.AvailableReferences == null || item.AvailableReferences.Count() == 0)
+                                    {
+                                        <h4 class="margin small top" id="@item.IdProduct-price-product-buy-together">@preco_final.ToString("C")</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="margin small top" id="@item.IdProduct-price-product-buy-together"></h4>
+                                    }
+                                </div>
+                                <div class="description" data-id="@item.IdProduct" data-variacoes="@total_variacoes">
+                                    @if (@item.AvailableReferences != null)
+                                    {
+                                        @Html.Action("Variations", "Product", new { reference = @item.AvailableReferences, ListaSku = @item.SKUs })
+                                    }
+                                </div>
+                            </div>
+                            <div class="extra">
+                                <button class="ui circular icon big toggle button compre junto primary" data-id="@item.IdProduct" data-variacoes="@total_variacoes" id="adicionar-compre-junto-@item.IdProduct">
+                                    <i class="plus icon"></i>
+                                </button>
+                            </div>
+
+
+                            <!-- COMEÇO VARIÁVEIS PRODUTO - COMPRE JUNTO-->
+
+
+                            @{
+                                string ListaSKU = "";
+
+                                if (item.SKUs != null)
+                                {
+                                    ListaSKU = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(item.SKUs);
+                                }
+                            }
+
+                            <input type="hidden" name="@item.IdProduct-buy-together-product-id" id="@item.IdProduct-buy-together-product-id" value="@item.IdProduct" class="buy-together-product-id" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-sku" id="@item.IdProduct-buy-together-sku" value="" class="buy-together-sku" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-lista-sku" id="@item.IdProduct-buy-together-lista-sku" value="@ListaSKU" class="compre-junto-sku" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-preco" id="@item.IdProduct-buy-together-preco" value="@item.Price" class="compre-junto-preco" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-preco-promocao" id="@item.IdProduct-buy-together-preco-promocao" value="@item.PricePromotion" class="compre-junto-preco-promocao" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-total-variacoes" id="@item.IdProduct-buy-together-total-variacoes" value="@total_variacoes" class="compre-junto-total-varicao" />
+                            <input type="hidden" name="@item.IdProduct-buy-together-referencias-selecionadas" id="@item.IdProduct-buy-together-referencias-selecionadas" value="@variacaoSelecionada" class="compre-junto-variacao-selecionada" />
+                            <!-- FIM VARIÁVEIS PRODUTO - COMPRE JUNTO-->
+
+                        </div>
+                                }
+
+
+                </div>
+            </div>
+            <div class="ui rail four wide computer column compre junto">
+                <div class="ui sticky comprar junto">
+                    <table class="ui green table">
+                        <thead>
+                            <tr class="text center">
+                                <th>Comprando junto você economiza!</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @if (Model.HaveSku)
+                                {
+                                    if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+                                    {
+                                        <td class="text right">Preço Total: <span id="compre-junto-total">@SKUPadrao.PricePromotion.Value.ToString("C")</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text right">Preço Total: <span id="compre-junto-total">@SKUPadrao.Price.ToString("C")</span></td>
+                                    }
+                                }
+                                else
+                                {
+                                    if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                                    {
+                                        <td class="text right">Preço Total: <span id="compre-junto-total">@Model.PricePromotion.Value.ToString("C")</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text right">Preço Total: <span id="compre-junto-total">@Model.Price.ToString("C")</span></td>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <td class="text right">Desconto: <span id="compre-junto-desconto">R$ 0,00</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text right">
+                                    @if (Model.HaveSku)
+                                    {
+                                        if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+                                        {
+                                            <strong>Total: <span id="compre-junto-total-final">@SKUPadrao.PricePromotion.Value.ToString("C")</span></strong>
+                                        }
+                                        else
+                                        {
+                                            <strong>Total: <span id="compre-junto-total-final">@SKUPadrao.Price.ToString("C")</span></strong>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                                        {
+                                            <strong>Total: <span id="compre-junto-total-final">@Model.PricePromotion.Value.ToString("C")</span></strong>
+                                        }
+                                        else
+                                        {
+                                            <strong>Total: <span id="compre-junto-total-final">@Model.Price.ToString("C")</span></strong>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @if (Model.HaveSku)
+                    {
+                        if (SKUPadrao.Stock > 0)
+                        {
+                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                                <i class="icon add to cart"></i>
+                                Comprar Junto
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                                <i class="icon add to cart"></i>
+                                Comprar Junto
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        if (Model.Stock > 0)
+                        {
+                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                                <i class="icon add to cart"></i>
+                                Comprar Junto
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                                <i class="icon add to cart"></i>
+                                Comprar Junto
+                            </a>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

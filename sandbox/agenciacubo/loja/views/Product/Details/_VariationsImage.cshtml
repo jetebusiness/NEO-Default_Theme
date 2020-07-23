@@ -1,0 +1,187 @@
+﻿@model DomainProduct.Entities.Reference
+
+@{
+    DomainProduct.Entities.Sku SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadraoVariacao"];
+    List<DomainProduct.Entities.Sku> ListSKUPadraoVariacao = null;
+    List<DomainProduct.Entities.Sku> ListaSku = (List<DomainProduct.Entities.Sku>)TempData["ListaSKU"];
+    List<DomainProduct.Entities.Variation> VariacoesSelecionadas = ViewBag.VariacoesSelecionadas;
+    int ordem = Convert.ToInt32(TempData["Order"]);
+    int totalReferencias = TempData["TotalReferencias"] != null ? Convert.ToInt32(TempData["TotalReferencias"]) : 0;
+    ordem = ordem + 1;
+    TempData["Order"] = ordem;
+    if (SKUPadrao == null)
+    {
+        SKUPadrao = new DomainProduct.Entities.Sku();
+        SKUPadrao.Variations = new List<DomainProduct.Entities.Variation>();
+    }
+    if (Session["ListSKUPadraoVariacao"] != null)
+    {
+        ListSKUPadraoVariacao = (List<DomainProduct.Entities.Sku>)Session["ListSKUPadraoVariacao"];
+    }
+}
+
+
+<div class="ui form">
+    <div class="field" data-id-reference="@Model.IdReference" data-tipo="image" data-order="@ordem">
+        @foreach (var variacoes in Model.Variations)
+            {
+                //SE SKU PADRÂO = NULL APENAS EXIBE AS VARIAÇÔES (COMPRE JUNTO)
+                if (SKUPadrao == null)
+                {
+                <div class="ui variacao image">
+                    <img src="@variacoes.Image" alt="@variacoes.Name" class="variacao-imagem" data-value="@Model.IdReference-@variacoes.IdVariation" data-tipo="image" data-order="@ordem" data-id-reference="@Model.IdReference">
+                    <div class="ui checkbox hideme">
+                        <input type="radio" name="@Model.IdReference" value="@Model.IdReference-@variacoes.IdVariation">
+                        <label></label>
+                    </div>
+                </div>
+            }
+            else
+            {
+                if (VariacoesSelecionadas != null || totalReferencias == 1)
+                {
+                    //BUSCA SKUS DISPONÍVEIS PARA VARIACAO SELECIONADA
+                    List<DomainProduct.Entities.Sku> ListaSkusDisponiveis = new List<DomainProduct.Entities.Sku>();
+
+
+                    if (totalReferencias == 1)
+                    {
+                        if (ListSKUPadraoVariacao != null)
+                        {
+                            ListaSkusDisponiveis = ListSKUPadraoVariacao;
+                        }
+                        else
+                        {
+                            ListaSkusDisponiveis = ListaSku;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var skuL in ListaSku)
+                        {
+                            int flag = 0;
+                            if (skuL.Variations != null)
+                            {
+                                foreach (var variacaoLSku in skuL.Variations)
+                                {
+                                    foreach (var vSelecionadas in VariacoesSelecionadas)
+                                    {
+                                        if (variacaoLSku.IdVariation == vSelecionadas.IdVariation)
+                                        {
+                                            flag++;
+                                        }
+                                    }
+                                }
+                            }
+                            if (flag == VariacoesSelecionadas.Count())
+                            {
+                                ListaSkusDisponiveis.Add(skuL);
+                            }
+                        }
+                    }
+
+                    //PROCURA O SKU DA VARIACAO CORRENTE PARA VALIDAR ESTOQUE E VISIVEL
+                    DomainProduct.Entities.Sku skuvariacao = new DomainProduct.Entities.Sku();
+                    List<DomainProduct.Entities.Sku> skuTodasVariacoes = new List<DomainProduct.Entities.Sku>();
+                    foreach (var variacoesSkuDisponivel in ListaSkusDisponiveis)
+                    {
+                        foreach (var skuVariacao in variacoesSkuDisponivel.Variations)
+                        {
+                            if (skuVariacao.IdVariation == variacoes.IdVariation)
+                            {
+                                skuTodasVariacoes.Add(variacoesSkuDisponivel);
+                            }
+                        }
+                    }
+
+
+                    //APLICA REGRA SE APENAS 1 VARIAÇÃO ESTIVER SELECIONADA
+                    if (skuTodasVariacoes.Count > 0 && (skuTodasVariacoes.FindAll(s => s.Visible == true).Count() > 0) || skuTodasVariacoes.FindAll(s => s.Stock > 0).Count() > 0)
+                    {
+                        skuvariacao = skuTodasVariacoes.Find(s => s.Visible == true && s.Stock > 0);
+
+
+                        if (skuvariacao == null)
+                        {
+                            skuvariacao = skuTodasVariacoes.Find(s => s.Visible == true);
+                        }
+
+                        if (skuvariacao == null)
+                        {
+                            skuvariacao = skuTodasVariacoes.Find(s => s.Stock > 0);
+                        }
+
+                    }
+                    else
+                    {
+                        skuvariacao = new DomainProduct.Entities.Sku();
+                    }
+
+
+                    //MONTA CLASSE DO ELEMENTO
+                    string classeBtn = "ui variacao image";
+                    string classeDiv = "ui checkbox hideme";
+
+                    if (skuvariacao.Stock <= 0 || !skuvariacao.Visible)
+                    {
+                        if (skuvariacao.Stock <= 0)
+                        {
+                            classeBtn += " desabilitado";
+                        }
+                        else if (!skuvariacao.Visible)
+                        {
+                            classeBtn += " hideme";
+                        }
+                    }
+
+                    if (SKUPadrao.Variations.FindAll(v => v.IdVariation == variacoes.IdVariation).Count > 0)
+                    {
+                        classeBtn += " img-selecionado";
+                        classeDiv += " checked";
+                    }
+
+                    bool showVariation = true;
+                    if (!LojaCorp.Control.Company._Company.ShowProductOutOfStock)
+                    {
+                        if (skuTodasVariacoes.Count <= 0) { showVariation = false; }
+                    }
+                    if (showVariation)
+                    {
+                        //ADICIONA O ELEMENTO
+                        <div class="@classeBtn">
+                            <img src="@variacoes.Image" alt="@variacoes.Name" class="variacao-imagem" data-value="@Model.IdReference-@variacoes.IdVariation" data-tipo="image" data-order="@ordem" data-id-reference="@Model.IdReference">
+                            <div class="@classeDiv">
+                                <input type="radio" name="@Model.IdReference">
+                                <label></label>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    //CARREGA TODAS VARIAÇÕES DA REFERENCIA
+                    if (SKUPadrao.Variations.FindAll(v => v.IdVariation == variacoes.IdVariation).Count > 0)
+                    {
+                        <div class="ui variacao image variacao-imagem img-selecionado">
+                            <img src="@variacoes.Image" alt="@variacoes.Name" class="variacao-imagem" data-value="@Model.IdReference-@variacoes.IdVariation" data-tipo="image" data-order="@ordem" data-id-reference="@Model.IdReference">
+                            <div class="ui checkbox hideme checked">
+                                <input type="radio" name="@Model.IdReference" value="@Model.IdReference-@variacoes.IdVariation">
+                                <label></label>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ui variacao image variacao-imagem">
+                            <img src="@variacoes.Image" alt="@variacoes.Name" class="variacao-imagem" data-value="@Model.IdReference-@variacoes.IdVariation" data-tipo="image" data-order="@ordem" data-id-reference="@Model.IdReference">
+                            <div class="ui checkbox hideme">
+                                <input type="radio" name="@Model.IdReference" value="@Model.IdReference-@variacoes.IdVariation">
+                                <label></label>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+</div>

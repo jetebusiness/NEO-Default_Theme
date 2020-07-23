@@ -1,0 +1,41 @@
+﻿@model List<DomainCheckout.Entities.Shipping>
+@if (Model != null)
+{
+  <div class="grouped fields display-flex flex-column align-items-start" id="GetShipping">
+    @foreach (var item in Model)
+    {
+      if (item.ShippingMode != null)
+      {
+        int IdShippingMode = item.ShippingMode.IdShippingMode;
+        bool DeliveredByTheCorreiosService = @item.ShippingMode.DeliveredByTheCorreiosService ? true : false;
+
+        <div class="field">
+          <div class="ui radio checkbox ShippingValueBox">
+            <input type="radio" name="ShippingValue" value="@IdShippingMode" id="ship_@IdShippingMode" class="ShippingValue" data-correios="@string.Format("{0}", DeliveredByTheCorreiosService)" data-carrier="@item.ShippingMode.carrier" data-mode="@item.ShippingMode.mode" data-hub="@item.ShippingMode.hub">
+            <label class="font regular text left">
+                @if (item.ShippingMode.ScheduledDelivery)
+                {
+                    @Html.Raw(item.ShippingMode.Name + " (*) - " + string.Format("{0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C")))
+                }
+                else if (item.ShippingMode.DeliveryTime == null)
+                {
+                    @Html.Raw(item.ShippingMode.Name + " ( Envio Imediato ) - " + string.Format(" {0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C")))
+                }
+                else
+                {
+                    @Html.Raw(item.ShippingMode.Name + " (" + item.ShippingMode.DeliveryTime + " dia(s)" + string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? " úteis) -" : " útil) -") : ") -") + string.Format(" {0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C")))
+                }
+            </label>
+          </div>
+        </div>
+      }
+    }
+  </div>
+}
+else
+{
+  <div class="ui left aligned compact message form-message error" style="display: block;">
+    <p>@Html.Raw(ViewBag.ZipMessage)</p>
+  </div>
+  <br>
+}

@@ -1,0 +1,88 @@
+﻿@model DomainCustomer.Entities.Address
+@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row fluid margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+            @Html.Partial("~/Views/Shared/Parts/EventList/_EventListMenu.cshtml", new ViewDataDictionary() { { "option", "address" } })
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                @Html.Partial("~/Views/Shared/Parts/EventList/_EditAddressPartial.cshtml", Model, new ViewDataDictionary { { "returnUrl", (Session["EventListState"] != null && Session["EventListState"].ToString() == "E" ? "" : "/") } })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function onSuccess(response) {
+            if (response.success == true) {
+                if (response.urlRedirect !== "") {
+                    swal({      
+                        text: "Você será redirecionando para a vitrine para escolher os produtos da sua lista.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        window.location = response.urlRedirect;
+                    },
+                    function (dismiss) {
+                        // dismiss can be 'cancel', 'overlay',
+                        // 'close', and 'timer'
+                        if (dismiss === 'overlay') {
+                            window.location = response.urlRedirect;
+                        }
+                    });
+                }
+                else {
+                    swal({
+                        title: '',
+                        html: 'Opção de Endereço Alterada com Sucesso!',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+
+        }
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@model DomainCheckout.Entities.CartItem
+
+@{
+  string classe_qtd = "ui icon button ";
+  string classe_remove = "mini ui icon red button produto ";
+  string id_ipt_qtd = "qtd_";
+  string classe_stock = "stock_";
+  string classe_ipt_qtd = "";
+
+  if (Session["EventList"] != null)
+  {
+    classe_qtd += "qtdActionEventList";
+    classe_remove += "removeItemEventList";
+    id_ipt_qtd += Model.IdCartItem;
+    classe_stock += Model.IdCartItem;
+    classe_ipt_qtd += "event_list";
+  }
+  else
+  {
+    classe_qtd += "qtdActionMiniCart";
+    classe_remove += "removeCartItem";
+    id_ipt_qtd += Model.IdCartItem;
+    classe_stock += Model.IdCartItem;
+    classe_ipt_qtd += "mini_cart";
+  }
+}
+<div class="item" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" id="itemCartProduct_@Model.IdCartItem">
+
+  <div class="ui image small">
+    <img src="@Model.ProductImage.ImageDefault" onerror="imgError(this)">
+    <a href="/Product/Details/@Model.IdProduct" class="product title ui mobile only" id="name_@Model.IdCartItem">@Html.Raw(Model.NameProduct)</a>
+  </div>
+
+  <div class="content">
+    <a href="/Product/Details/@Model.IdProduct" class="product title ui mobile hide" id="name_@Model.IdCartItem">@Html.Raw(Model.NameProduct)</a>
+    @if (Model.IsKit)
+    {
+      <div>
+        @foreach (var productKit in Model.ProductsKit)
+        {
+          <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+        }
+      </div>
+    }
+    <div class="meta product avaibility" id="availability_@Model.IdCartItem">
+      @if (Model.Stock == 0)
+      {
+        @Html.Raw("Produto Esgotado")
+      }
+      else if (Model.AvailabilityStatus != null)
+      {
+        @Model.AvailabilityStatus.DescriptionCart
+      }
+    </div>
+    <div class="description">
+      <table class="ui very basic unstackable table ">
+        <thead>
+          <tr>
+            <th>Qtd</th>
+            <th>Valor Un.</th>
+            <th>Valor Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-idCartItem="@Model.IdCartItem">
+              <div class="ui qtd action mini input">
+                <button class="@classe_qtd" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                  <i class="minus icon"></i>
+                </button>
+                <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
+                <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
+                <input type="number" class="text center inputMiniCart" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" />
+                <button class="@classe_qtd" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                  <i class="add icon"></i>
+                </button>
+              </div>
+            </td>
+            <td id="preco_unitario_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceProduct)</td>
+            <td><strong id="preco_total_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceTotalProduct)</strong></td>
+            <td>
+              <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                <i class="remove icon"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+</div>

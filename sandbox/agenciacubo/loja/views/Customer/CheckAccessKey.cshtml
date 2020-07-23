@@ -1,0 +1,188 @@
+﻿
+@{
+    ViewBag.Title = "Primeiro acesso";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui grid stackable middle aligned centered">
+            <div class="row one column">
+                <div class="column">
+                    <h1 class="text">@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small uppercase">
+                        <a class="section" href="/">Home</a>
+                        <div class="divider"> / </div>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <div class="divider"> / </div>
+                        <span class="active section">Código de Acesso</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="eight wide computer sixteen wide tablet sixteen wide mobile column">
+            <div class="ui icon message">
+                <i class="inbox icon"></i>
+                <div class="content">
+                    <div class="header">
+                        Você já fez uma compra em nossa loja.
+                    </div>
+                    <p>Cheque seu email, pois foi enviado um código de acesso para recuperar as informações da sua compra anterior.</p>
+                </div>
+            </div>
+            <form action="" class="ui large form">
+                <div class="ui segment">
+                    <div class="ui grid  very relaxed stackable middle aligned grid">
+                        <div class="row left aligned">
+                            <div class="column">
+                                <div class="field required">
+                                    <label>E-mail</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input class="field disabled" type="text" autocomplete="off" readonly name="Email" id="Email" value="@ViewBag.EmailUser" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Digite o código que recebeu por e-mail</label>
+                                    <div class="ui left icon input">
+                                        <i class="unlock alternate icon"></i>
+                                        <input type="text" autocomplete="off" name="KeyAccess" id="KeyAccess" placeholder="Código de Acesso">
+                                    </div>
+                                </div>
+                                <div class="ui divider"></div>
+                                <p>
+                                    Não recebeu ainda sua chave? <a href="javascript:void(0)" id="ReenviarCodigo">Re-envie o código de acesso</a>.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <a href="/Customer/AccessKey" class="ui animated button basic left floated">
+                                    <div class="visible content">Voltar</div>
+                                    <div class="hidden content">
+                                        <i class="arrow left icon"></i>
+                                    </div>
+                                </a>
+                                <button type="button" id="Confirmar"
+                                        class="ui animated button submit primary right floated continuar"
+                                        tabindex="0">
+                                    <div class="visible content">Confirmar</div>
+                                    <div class="hidden content">
+                                        <i class="check icon"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+    </div>
+</div>
+@section custom_js {
+    <script>
+        var emailCustomer = '@Session["email"]'
+
+        function gettoken() {
+            var token = '@Html.AntiForgeryToken()';
+            token = $(token).val();
+            return token;
+        }
+
+        $(document).ready(function () {
+            //$("#Email").val(emailCustomer)
+
+            $(document).on("click",
+                "#Confirmar",
+                function (e) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Customer/CheckAccessKey",
+                        data: {             
+                            Email: $("#Email").val(),
+                            KeyAccess: $("#KeyAccess").val()
+                        },
+                        success: function (data) {
+                            if (data.Success == true) {
+                                window.location.href = data.Message;
+                            } else {
+                                swal({
+                                    text: data.Message,
+                                    type: data.type,
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#16ab39',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                                e.stopPropagation()
+                            }
+                        },
+                        error: function (data) {
+                            swal({
+                                text: data.Message,
+                                type: data.type,
+                                showCancelButton: false,
+                                confirmButtonColor: '#16ab39',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                            e.stopPropagation()
+                        }
+                    });
+                })
+
+            $(document).on("click",
+                "#ReenviarCodigo",
+                function () {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Customer/Accesskey",
+                        data: {
+                            __RequestVerificationToken: gettoken(),
+                            Email: emailCustomer
+                        },
+                        success: function (data) {
+                            if (data.Success == true) {
+                                swal({                               
+                                    text: "Código de acesso reenviado!",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#16ab39',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                swal({                                
+                                    text: data.Message,
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#16ab39',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function (data) {
+                            swal({                             
+                                text: data.Message,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#16ab39',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                })
+        })
+
+    </script>
+}

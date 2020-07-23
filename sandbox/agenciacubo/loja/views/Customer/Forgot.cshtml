@@ -1,0 +1,72 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Recuperar Senha ou E-mail";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <span class="section">Área do Cliente</span>
+                        <i class="right angle icon divider"></i>
+                        <a class="section active">@ViewBag.Title</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
+            <form action="" class="ui large form">
+                <div class="ui segment">
+                    <div class="ui grid very relaxed stackable middle aligned grid">
+                        <div class="row two column">
+                            <div class="column">
+                                <div class="field required">
+                                    <label>E-mail</label>
+                                    <div class="ui left icon input">
+                                        <i class="icon mail"></i>
+                                        <input type="text" id="email" name="email" placeholder="E-mail" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="ui large primary submit button" id="recuperarSenha">Recuperar Senha</div>
+                            </div>
+                            <div class="divider-column">
+                                <div class="ui vertical divider">
+                                    Ou
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field required">
+                                    <label>CPF / CNPJ</label>
+                                    <div class="ui left icon input">
+                                        <i class="certificate icon"></i>
+                                        <input type="text" id="cpf" name="cpf" class="masked mask_document" placeholder="CPF / CNPJ">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Senha</label>
+                                    <div class="ui left icon input">
+                                        <i class="lock icon"></i>
+                                        <input type="password" id="password" name="password" placeholder="*******" maxlength="50">
+                                    </div>
+                                </div>
+                                <div class="ui large primary submit button" id="recuperaEmail">Recuperar Email</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+    </div>
+</div>

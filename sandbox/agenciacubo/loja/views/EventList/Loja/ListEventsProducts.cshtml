@@ -1,0 +1,177 @@
+﻿@model DomainCustomer.Entities.EventList
+
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/Base/_LayoutListEvents.cshtml";
+    var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
+}
+
+@section breadcrumbs {
+    
+    <div class="ui two column centered grid stackable middle aligned breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui small breadcrumb">
+                        <div class="section"><span class="text bold">Data do Evento:</span> @Model.EventDate.ToShortDateString()</div>
+                        <span class="divider">/</span>
+                        <div class="section">
+                            @*Lista de Casamento / Lista Cha Bar / Lista Cha de Cozinha / Lista de Presentes*@
+                            @*Lista de Cha de Bebe*@
+                            @{
+                                string nomeLista = string.Empty;
+                                string tipoLista = string.Empty;
+                                string nomeListaBebe = string.Empty;
+                                string tituloLista = "Nome dos Noivos";
+                                string montaTituloLista = string.Empty;
+
+                                if (!string.IsNullOrEmpty(Model.Name1))
+                                {
+                                    nomeLista += @Model.Name1;
+                                }
+
+                                if (!string.IsNullOrEmpty(Model.Name2))
+                                {
+                                    nomeLista += string.Format(" e {0}", @Model.Name2);
+                                }
+
+                                if (!string.IsNullOrEmpty(Model.Name3))
+                                {
+                                    nomeListaBebe += @Model.Name3;
+                                }
+
+                                if (!string.IsNullOrEmpty(Model.Name4))
+                                {
+                                    nomeListaBebe += string.Format(", {0}", @Model.Name4);
+                                }
+
+                                if (!string.IsNullOrEmpty(Model.Name5))
+                                {
+                                    nomeListaBebe += string.Format(", {0}", @Model.Name5);
+                                }
+
+                                if (!string.IsNullOrEmpty(Model.Name6))
+                                {
+                                    nomeListaBebe += string.Format(" e {0}", @Model.Name5);
+                                }
+
+                                if (Model.Type == 1)
+                                {
+                                    nomeLista = string.Format("{0}{1}", Model.Name1, Model.Name4 != "" ? " e " + Model.Name4 : "");
+                                }
+
+
+                                if (Model.Type == 5)
+                                {
+                                    tituloLista = "Nome da Lista";
+                                    nomeLista = string.Format("{0}{1}", Model.Name1, Model.Name4 != "" ? " e " + Model.Name4 : "");
+                                }
+
+
+                                if (Model.Type == 4)
+                                {
+                                    nomeLista = string.Format("{0}{1}", Model.Name2, Model.Name3 != "" ? " e " + Model.Name3 : "");
+                                    nomeListaBebe = Model.Name1;
+                                    tituloLista = "Nome dos Pais";
+                                    if (!string.IsNullOrEmpty(Model.Name3))
+                                    {
+                                        tipoLista += string.Format("<span class='divider'>/</span><span class='text bold'>Nome(s) do(s) Bebê(s):</span> {0}", @nomeListaBebe);
+                                    }
+                                }
+                                montaTituloLista += string.Format("<span class='text bold'>{0}:</span> {1}",@tituloLista, @nomeLista);
+                                @Html.Raw(montaTituloLista)
+                                @Html.Raw(tipoLista)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section filters {
+    <div class="four wide column filterColumn">
+        <div class="row one column filterBlock">
+            <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
+            @Html.Action("FilterMenu", "Product")
+        </div>
+    </div>
+}
+
+<div class="twelve wide column">
+    <div class="ui grid">
+        <div class="row one column">
+            <div class="column right aligned right floated">
+                <button class="ui mobile only left floated icon button basic filterbutton right labeled small" data-tooltip="Filtros" data-inverted="">
+                    <i class="filter icon"></i>
+                    Filtros
+                </button>
+                <div class="ui dropdown button basic dropdownorder small">
+                    <span class="text">Ordenar por</span>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="lancamentos">
+                            <i class="asterisk icon"></i>
+                            Lançamentos
+                        </div>
+                        <div class="item" data-value="maior_preco">
+                            <i class="sort numeric descending icon"></i>
+                            Maior Preço
+                        </div>
+                        <div class="item" data-value="mais_vendidos">
+                            <i class="diamond icon"></i>
+                            Mais Vendidos
+                        </div>
+                        <div class="item" data-value="menor_preco">
+                            <i class="sort numeric ascending icon"></i>
+                            Menor Preço
+                        </div>
+                        <div class="item" data-value="nome_a_z">
+                            <i class="sort alphabet ascending icon"></i>
+                            Nome [A-Z]
+                        </div>
+                        <div class="item" data-value="nome_z_a">
+                            <i class="sort alphabet descending icon"></i>
+                            Nome [Z-A]
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="list">
+        <!-- ~/Views/Shared/Blocks/Product/_ProductsListEvents.cshtml -->
+        @if (Model != null)
+        {
+            <div class="categoryProducts">
+                @Html.Action("GetProductsListEvents", "Product", new
+                {
+                    category = "",
+                    viewList = "l",
+                    pageNumber = Request.QueryString["pageNumber"] ?? "",
+                    pageSize = 12,
+                    order = Request.QueryString["order"] ?? "",
+                    brand = Request.QueryString["brand"] ?? "",
+                    group = Request.QueryString["group"] ?? "",
+                    initialPrice = Request.QueryString["initialPrice"] ?? "",
+                    finalPrice = Request.QueryString["finalPrice"] ?? "",
+                    variations = Request.QueryString["variations"] ?? "",
+                    idAttribute = Request.QueryString["idAttribute"] ?? "",
+                    idEventList = Model.IdEventList.ToString()
+                })
+            </div>
+        }
+    </div>
+</div>
+
+<input type="hidden" name="idEventListFilter" id="idEventListFilter" value="@Session["idEventList"]" />
+
+@section custom_js{
+    <script>
+        window.filterManipulation = { idEventList: @Model.IdEventList, viewList: "l"};
+    </script>
+}

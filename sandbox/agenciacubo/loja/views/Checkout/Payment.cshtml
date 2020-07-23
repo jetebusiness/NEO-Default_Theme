@@ -1,0 +1,157 @@
+﻿@model DomainCheckout.Entities.Cart
+@using DomainPayment.Entities.BrasPag.Contracts.Antifraud
+@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Pagamento";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+}
+@section steps{
+    <div class="jet checkout jBreadCrumb">
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Identificação</h4>
+        </div>
+        <div class="jCrumb active">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>2</span>
+                </div>
+            </div>
+            <h4>Pagamento</h4>
+        </div>
+        <div class="jCrumb">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4>Confirmação</h4>
+        </div>
+    </div>
+}
+<input type="hidden" name="idShipping" id="idShipping" value="@Model.IdShippingMode" />
+<div class="ui tiny scrolling modal lista-endereco-cliente" id="ListaEnderecosCliente">
+    @Html.Action("ListaEnderecosCliente", "Checkout")
+</div>
+<div class="ui container no-p no-m">
+    <div class="ui grid">
+        <div class="row">
+            <div class="sixteen wide mobile sixteen wide tablet five wide computer column" id="checkoutColumn1">
+                <!-- Dados do Cliente -->
+                <div class="ui segment blue" id="dadosClienteUpdate">
+                    @Html.Action("ListaDadosCliente", "Checkout", new { zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode })
+                </div>
+                <!-- Embrulhar para presente -->
+                @if (ViewBag.Gift)
+                {
+                    <div class="ui segment purple presente">
+                        <div class="ui compra">
+                            <div class="content ui form">
+                                <div class="field">
+                                    <div class="ui floated">
+                                        <i class="ui icon gift"></i>
+                                        <strong>Embrulhar para presente?</strong>
+                                    </div>
+                                    <div class="ui toggle checkbox margin left large" id="checkPresente">
+                                        <input type="checkbox" name="presente" id="presente" value="off" />
+                                    </div>
+                                </div>
+                                <div class="field" id="exibeMsg">
+                                    <label>Mensagem</label>
+                                    <textarea rows="2" name="mensagem" id="mensagem"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Dados de Frete -->
+                <div class="ui segment yellow">
+                    <div class="ui accordion frete">
+                        <div class="active title">
+                            <i class="ui icon shipping"></i>
+                            <strong>Frete</strong>
+                            <i class="ui icon dropdown floated right"></i>
+                        </div>
+                        <div class="active content" id="updateShippingPayment">
+                            @Html.Action("ListaFretePagamento", "Checkout")
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="sixteen wide mobile sixteen wide tablet six wide computer column jetCheckout margin top disable_column" id="checkoutColumn2">
+
+                <!-- Cupom Desconto -->
+                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Desconto.cshtml")
+                <!-- Vale Compras -->
+                @Html.Action("ValeCompra", "Checkout")
+                <!-- Formas de Pagamento -->
+                @Html.Action("ListaFormasPagamento", "Checkout")
+
+                <div class="ui divider hidden medium"></div>
+
+                <div class="padding margin top">
+                    @{
+                        Tuple<string, DomainCompany.Entities.Recaptcha> _tuple = Tuple.Create<string, DomainCompany.Entities.Recaptcha>("Payment", ViewBag.recaptchaData);
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_GoogleRecaptcha.cshtml", _tuple)
+                    }
+                </div>
+
+            </div>
+
+            <div class="sixteen wide mobile sixteen wide tablet five wide computer column">
+
+                <!-- Produtos do Carrinho -->
+                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Carrinho.cshtml", Model)
+            </div>
+
+        </div>
+    </div>
+</div>
+@{
+    if (!string.IsNullOrEmpty(ViewBag.ClearSale))
+    {
+        <script>
+            (function(a, b, c, d, e, f, g) {
+                a['CsdpObject'] = e;
+                a[e] = a[e] || function() {
+                    (a[e].q = a[e].q || []).push(arguments)
+                }, a[e].l = 1 * new Date();
+                f = b.createElement(c), g = b.getElementsByTagName(c)[0];
+                f.async = 1;
+                f.src = d;
+                g.parentNode.insertBefore(f, g)
+            })(window, document, 'script', '//device.clearsale.com.br/p/fp.js', 'csdp');
+            csdp('app', '@ViewBag.ClearSale');
+            csdp('sessionid', '@Session["SessionId"].ToString()');
+        </script>
+    }
+}
+@{
+    bool cyberSourceStatus = Convert.ToBoolean(@Html.Action("GetCyberSourceStatus", "Checkout", null).ToString());
+    if (cyberSourceStatus)
+    {
+        Fingerprint fingerPrint = JsonConvert.DeserializeObject<Fingerprint>(@Html.Action("GetFingerPrint", "Checkout", null).ToString());
+        fingerPrint.ProviderIdentifier = Session["SessionId"].ToString();
+
+        @section CyberSourceHead{
+            <!--CyberSource Head-->
+            <script type="text/javascript" src="https://h.online-metrix.net/fp/tags.js?org_id=@Html.Raw(fingerPrint.ProviderOrgId)&session_id=@Html.Raw(fingerPrint.ProviderMerchantId+fingerPrint.ProviderIdentifier)">
+            </script>
+        }
+
+        @section CyberSourceBody{
+            <!--CyberSource Body-->
+            <noscript><iframe style="width:188px; height:188px; border:B; position:absolute; top:-5000px;" src="https://h.online-metrix.net/fp/tags.js?org_id=@Html.Raw(fingerPrint.ProviderOrgId)&session_id=@Html.Raw(fingerPrint.ProviderMerchantId+fingerPrint.ProviderIdentifier)"></iframe></noscript>
+        }
+    }
+}

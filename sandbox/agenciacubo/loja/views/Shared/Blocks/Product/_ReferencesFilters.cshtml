@@ -1,0 +1,63 @@
+﻿@model IList<DomainProduct.Entities.Reference>
+
+
+@if (Model != null)
+{
+  foreach (var reference in Model)
+  {
+    if (reference.Variations != null && reference.Variations.Count() > 1)
+    {
+      <div class="active title" id="reference_@reference.IdReference" data-title="@reference.Name">@reference.Name<i class="dropdown icon"></i></div>
+      <div class="active content">
+        @if (reference.Variations != null)
+        {
+          <div class="ui form">
+            <div class="grouped fields">
+              <div class="field">
+
+                @foreach (var variation in reference.Variations.OrderBy(p => p.DisplayOrder))
+                {
+                  if (string.IsNullOrEmpty(variation.Color))
+                  {
+                    <button type="button" id="@variation.IdVariation" class="ui primary basic button checkbox tiny checkText" data-reference="@reference.Name">@variation.Name</button>
+                    <div id="check_@variation.IdVariation" class="ui checkbox hideme">
+                      <input type="checkbox" name="@variation.Name" id="variation_@variation.IdVariation">
+                      <label></label>
+                    </div>
+
+                    @*<div class="ui checkbox">
+                          <input type="checkbox" name="@variation.IdVariation" tabindex="0">
+                          <label>@variation.Name</label>
+                      </div>*@
+                  }
+                  else if (!string.IsNullOrEmpty(variation.Color))
+                  {
+                    <button type="button" id="@variation.IdVariation" class="ui basic button checkbox variacao cor checkColor" style="background-color: @LojaCorp.Control.Static.HexaToRgb(variation.Color) !important;" data-tooltip="@variation.Name" data-reference="@reference.Name">
+                      &ensp;
+                    </button>
+                    <div id="check_@variation.IdVariation" class="ui checkbox hideme">
+                      <input type="checkbox" name="@variation.Name" id="variation_@variation.IdVariation">
+                      <label></label>
+                    </div>
+                  }
+                  else if (!string.IsNullOrEmpty(variation.Image))
+                  {
+                    <div class="ui variacao image checkImage">
+                      <img src="@variation.Image" alt="@variation.Name" onerror="imgError(this)">
+                      <div class="ui checkbox hideme">
+                        <input type="checkbox" name="@variation.Name" id="variation_@variation.IdVariation">
+                        <label></label>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+}
+
+

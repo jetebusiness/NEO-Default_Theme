@@ -1,0 +1,23 @@
+﻿@model DomainProduct.Settings
+
+@{int _maxPagination = Request.Browser.IsMobileDevice ? 1 : 3;}
+
+<div class="ui pagination menu" data-teste="@Request.Browser.IsMobileDevice">
+  <a id="previousPage" class="@(Model.HasPreviousPage ? "" : "disabled") item" href="javascript: void(0);" data-number="@(@Model.PageNumber - 1)">
+    <i class="angle left icon"></i>
+  </a>
+
+  @for (int i = 1; i <= Model.PageCount; i++)
+  {
+    if ((Model.PageCount <= _maxPagination) || (Model.PageCount > _maxPagination && (i >= Model.PageNumber - _maxPagination && i <= Model.PageNumber + _maxPagination)))
+    {
+      <a class="@((i) == Model.PageNumber ? "active" : "") btnPageNumber item" data-number="@(i)" href="javascript: void(0);">
+        @(i)
+      </a>
+    }
+  }
+
+  <a id="nextPage" class="@(Model.HasNextPage ? "" : "disabled") item" href="javascript: void(0);" data-number="@(@Model.PageNumber + 1)">
+    <i class="angle right icon"></i>
+  </a>
+</div>

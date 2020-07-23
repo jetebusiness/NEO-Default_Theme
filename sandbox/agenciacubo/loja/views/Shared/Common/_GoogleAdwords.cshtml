@@ -1,0 +1,25 @@
+﻿@model List<ViewModels.ViewModelStore.Empresa.GoogleAdwordsModel>
+
+@if (Model != null && !LojaCorp.Control.Company._Company.StatusGTM)
+{
+    <!-- Google AdWords: Global site tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@Model.FirstOrDefault().IdConversao"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', @Model.FirstOrDefault().idOrder);
+    </script>
+
+    foreach (var item in Model)
+    {
+    <!-- Google Adwords: Event snippet for Neo Teste conversion page -->
+        <script>
+            gtag('event', 'conversion', {
+                'send_to': '@item.IdConversao/@item.RotuloConversao',
+                'transaction_id': '@Model.FirstOrDefault().idOrder'
+            });
+        </script>
+    }
+}

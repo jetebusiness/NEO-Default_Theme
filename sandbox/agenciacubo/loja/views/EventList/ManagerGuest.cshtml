@@ -1,0 +1,79 @@
+﻿@model DomainCustomer.Entities.PagedGuest
+
+@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row fluid margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+
+            @Html.Partial("~/Views/Shared/Parts/EventList/_EventListMenu.cshtml", new ViewDataDictionary() { { "option", "guest" } })
+
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                <div class="ui form">
+                    <div class="three fields">
+                        <div id="divFieldNameGuest" class="field required">
+                            <label>Nome do Convidado</label>
+                            <div id="divInputNameGuest" class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" name="NameGuest" id="NameGuest" value="" placeholder="João das Flores">
+                            </div>
+                        </div>
+                        <div id="divFieldEmailGuest" class="field required">
+                            <label>E-mail</label>
+                            <div id="divInputEmailGuest" class="ui left icon input">
+                                <i class="mail icon"></i>
+                                <input type="text" name="EmailGuest" id="EmailGuest" value="" placeholder="email@email.com.br">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>&nbsp;</label>
+                            <button id="addGuest" class="ui icon primary basic button fluid">
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="divSearchGuest" class="ui search">
+                        <div class="fluid">
+                            <div class="ui icon input" style="width: 100%;">
+                                <input type="text" class="busca_convidado_lista" placeholder="Buscar...">
+                                <button class="ui icon button btn_convidado_lista">
+                                    <i class="search icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="guestsList">
+                    @if (Model != null)
+                    {
+                        @Html.Partial("~/Views/Shared/Parts/EventList/_GuestsList.cshtml", Model)
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+﻿@model DomainCustomer.Entities.PagedGuest
+
+<div class="ui grid stackable">
+    <div class="row">
+        <div class="column">
+            <div class="ui form">
+                <table class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>Convidado</th>
+                            <th>E-mail</th>
+                            <th class="ui center aligned">Convite Enviado</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Guests != null && Model.Guests.Any())
+                        {
+                            foreach (var guest in Model.Guests)
+                            {
+                                <tr id="guest_@guest.IdGuest">
+                                    <td>@guest.Name</td>
+                                    <td>@guest.Email</td>
+                                    <td class="ui center aligned">@(guest.InvitationSent ? "Sim" : "Não")</td>
+                                    <td class="ui center aligned">
+                                        <button id="btnDeleteGuest_@guest.IdGuest" class="ui icon red button" data-id="@guest.IdGuest">
+                                            <i class="trash outline icon"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="4">
+                                    <!-- Page: ~/Views/Shared/Parts/_Pagination.cshtml -->
+                                    @Html.Partial("~/Views/Shared/Parts/_GuestPagination.cshtml", Model.Settings)
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if (Session["EventListState"] != null && Session["EventListState"].ToString() == "N")
+    {
+        <div class="row">
+            <div class="column">
+                <a href="javascript:history.go(-1)" class="ui animated button large basic left floated">
+                    <div class="visible content">Cancelar</div>
+                    <div class="hidden content">
+                        <i class="remove icon"></i>
+                    </div>
+                </a>
+                <a href="@Url.Action("ManagerInvitation", "EventList")" type="submit" class="ui animated button large submit primary right floated">
+                    <div class="visible content">Configurar Convite</div>
+                    <div class="hidden content">
+                        <i class="checkmark icon"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
+</div>
+

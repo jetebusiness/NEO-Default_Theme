@@ -1,0 +1,365 @@
+﻿@model DomainOrder.Entities.Order
+
+@{
+    ViewBag.Title = "Pedido Finalizado";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+
+    if (ViewBag.ShowRegister == null)
+    {
+        ViewBag.ShowRegister = false;
+    }
+
+    if (ViewBag.ViewBoleto == null)
+    {
+        ViewBag.ViewBoleto = false;
+    }
+
+    string bgColor = "", tituloSucesso = "", msgSucesso = "";
+
+    if (Request.QueryString["s"] == null)
+    {
+        bgColor = Request.QueryString["m"] == null ? "bg-checkout-success" : "bg-checkout-error";
+        tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
+        msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+    }
+    else
+    {
+        if (Request.QueryString["s"] == "true")
+        {
+            bgColor = "bg-checkout-success";
+            tituloSucesso = "Pedido Confirmado";
+            msgSucesso = string.Format("Seu pedido foi realizado com sucesso! Agora falta pouco para receber seus produtos.");
+        }
+        else
+        {
+            bgColor = "bg-red";
+            tituloSucesso = "Pedido não Confirmado";
+            msgSucesso = string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
+        }
+    }
+}
+
+@section steps{
+    <div class="jet checkout jBreadCrumb ">
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Identificação</h4>
+        </div>
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Pagamento</h4>
+        </div>
+        <div class="jCrumb active">
+            <div class="jBullet ">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4>Confirmação</h4>
+        </div>
+    </div>
+}
+<input type="hidden" name="idOrderCurrent" id="idOrderCurrent" value="@Model.IdOrder" />
+<div class="ui container fluid @bgColor">
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="ui divider small hidden"></div>
+            <div class="row two column">
+                <div class="column">
+                    <h1 class="floated left">@tituloSucesso</h1>
+                </div>
+                <div class="column text right">
+                    <h2 class="">#@Model.IdOrder</h2>
+                </div>
+            </div>
+            <div class="row @((ViewBag.PaymentType == 3 || !String.IsNullOrEmpty(Request.QueryString["d"])) ? "two column stackable" : "")">
+                <div class="column">
+                    <h3>Obrigado, @Model.NameCustomer</h3>
+                    <p>@msgSucesso</p>
+                </div>
+                @if (!String.IsNullOrEmpty(Request.QueryString["d"]))
+                {
+                    <div class="column">
+                        <div class="text center success-debit-pagseguro">
+                            <h3>Para efetuar o pagamento</h3>
+                            <a class="ui large primary button center" href="@LojaCorp.Control.Static.DecryptData(Request.QueryString["d"].ToString())">Clique aqui</a>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+            <div class="ui divider small hidden"></div>
+        </div>
+    </div>
+</div>
+
+
+@if (ViewBag.ActiveEbit != 0)
+{
+    var individualPrice = "";
+    var individualQTD = "";
+    var individualName = "";
+    var individualSKU = "";
+
+    if (Model != null && Model.OrderItems != null)
+    {
+
+        var conc = Model.OrderItems.Count() > 1 ? "|" : "";
+
+        var regex = new System.Text.RegularExpressions.Regex("<h1(.*?)>(.*?)</h1>");
+
+
+        foreach (var item in Model.OrderItems)
+        {
+            individualPrice += item.UnitPrice.ToString().Replace(",", ".") + conc;
+            individualQTD += item.Quantity + conc;
+            var m = regex.Match(item.Name);
+            individualName += m.Groups[2].Value + conc;
+            individualSKU += (String.IsNullOrEmpty(item.IdSku.ToString()) ? item.IdProduct.ToString() : item.IdSku.ToString()) + conc;
+
+        }
+    }
+
+    <param id="ebitParam" value="email=@Model.Email&zipCode=@Model.Address.ZipCode&parcels=@Model.NumberOfInstallments&deliveryTax=@Model.TotalShipping.ToString().Replace(",", ".")&totalSpent=@Model.Total.ToString().Replace(",", ".")&value=@individualPrice&quantity=@individualQTD&productName=@individualName&transactionId=@Model.IdOrder&sku=@individualSKU&storeId=@ViewBag.ActiveEbit" />
+
+    <a id="bannerEbit" class="ui grid centered"></a>
+    <script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.CompreConfie))
+{
+    string productName = "", productQuantity = "", productValue = "", productSKU = "";
+    if (Model != null && Model.OrderItems != null)
+    {
+        foreach (var item in Model.OrderItems)
+        {
+            productName += item.Name + "|";
+            productQuantity += item.Quantity + "|";
+            productValue += item.Total + "|";
+            productSKU += item.IdSku + "|";
+        }
+    }
+
+    <a id="bannerEconfy"></a>
+    <param id="TagEConfy" value="orderID=@Model.IdOrder&orderDate=@Model.DateOrder&orderPlatform=Jet-NEO&orderSellerID=@ViewBag.CompreConfie&orderBankEmissor=@Model.NameBank&orderCardFlag=@Model.CreditCardFlag&orderDeliveryType=@Model.NameShipping&orderPaymentType=@Model.OrderType&orderParcels=@Model.TotalInstallment&orderTotalSpent=@Model.TotalShipping&consumerCPF=@Model.Cpf_cnpj&consumerEmail=@Model.Email&consumerName=@Model.NameCustomer&consumerPhone=@Model.Address.PhoneContact&consumerZipcode=@Model.Address.ZipCode&billingCPF=@Model.Cpf_cnpj&billingEmail=@Model.Email&billingName=@Model.NameCustomer&billingPhone=@Model.Address.PhoneContact&billingZipcode=@Model.Address.ZipCode&productName=@productName&productQuantity=@productQuantity&productValue=@productValue&productDiscount=@Model.TotalDiscount&productDeliveryType=@Model.NameShipping&productSKU=@productSKU" />
+    <script type="text/javascript" id="getData" src="https://banner.compreconfie.com.br/scripts/tagBanner.min.js?@ViewBag.CompreConfie&lightbox=true"></script>
+}
+
+@if (ViewBag.ShowRegister)
+{
+    <div class="ui fluid container bg-checkout-success-dark">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="two column row">
+                    <div class="column">
+                        <h1>Quer acompanhar seu pedido?</h1>
+                    </div>
+                    <div class="column">
+                        <a class="ui large animated button floated right btn-checkout-success-dark" tabindex="0" href="@ViewBag.Link">
+                            <div class="visible content">Cadastre-se em nossa loja!</div>
+                            <div class="hidden content">
+                                <i class="add user icon"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui divider hidden"></div>
+<div class="ui container">
+    <div class="ui grid divided horizontal">
+        <div class="row">
+            <div class="column ten wide computer sixteen wide tablet sixteen wide mobile detalhes produtos">
+                <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
+                    @if (Model != null && Model.OrderItems != null)
+                    {
+                        foreach (var item in Model.OrderItems)
+                        {
+                            <div class="item">
+                                <div class="ui image small">
+                                    <img src="@item.Image" onerror="imgError(this)">
+                                </div>
+                                <div class="content">
+                                    <div class="product title">@Html.Raw(item.Name)</div>
+
+                                    @if (item.IsKit)
+                                    {
+                                        <div>
+                                            @foreach (var productKit in item.ProductsKit)
+                                            {
+                                                <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                                            }
+                                        </div>
+                                    }
+
+                                    <div class="description">
+                                        <table class="ui very basic unstackable table ">
+                                            <thead>
+                                                <tr>
+                                                    <th>Qtd</th>
+                                                    <th>Valor Un.</th>
+                                                    <th>Valor Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p>@item.Quantity</p>
+                                                    </td>
+                                                    <td>@string.Format("{0:c}", item.UnitPrice)</td>
+                                                    <td><strong>@string.Format("{0:c}", item.Total)</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="column six wide computer sixteen wide tablet sixteen wide mobile right aligned success compra">
+                <div class="ui sticky box success">
+                    <div class="ui divided items">
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    SubTotal: @string.Format("{0:c}", Model != null ? Model.TotalItens : 0)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    Desconto: @string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.TotalShoppingVoucher > 0)
+                        {
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description">
+                                        Vale Compra: @string.Format("{0:c}", Model != null ? Model.TotalShoppingVoucher : 0)
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    <strong>@Html.Raw(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping) : @string.Format("{0:c}", Model != null ? Model.TotalShipping : 0)</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item detalhes">
+                            <div class="content">
+                                <div class="description">
+                                    <h3>Total a pagar: <span>@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui divider"></div>
+                    <div class="ui grid">
+                        <div class="row two column">
+                            <div class="column">
+                                <a href="/Home" class="ui animated button fluid large basic"
+                                   tabindex="0">
+                                    <div class="visible content">Voltar à Loja</div>
+                                    <div class="hidden content">
+                                        <i class="left arrow icon"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            @if (ViewBag.PaymentType == 3)
+                            {
+                                <div class="column">
+                                    <button class="ui large action button floated right" id="ProcessBankSlip">Imprimir</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Começo do Itau Shopline -->
+            <div class="ui modal shopline">
+                <div class="content">
+                    <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                </div>
+            </div>
+            <!-- Final do Itau Shopline -->
+            <!-- Começo do PagSeguro Débito -->
+            <div class="ui modal pagseguro">
+                <div class="content">
+                    <iframe name="openPagSeguro" id="openPagSeguro" style="width: 100%; height: 33em; border: none;"></iframe>
+                </div>
+            </div>
+            <!-- Final do PagSeguro Débito -->
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/Parts/Checkout/_SecurityBankSlip.cshtml")
+
+@section remarketing {
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = "FinalizaPedido" })
+    <!-- End Google Remarketing -->
+}
+
+@{
+    if (@LojaCorp.Control.Company._Company.UtilizaGoogleEcommerce && !LojaCorp.Control.Company._Company.StatusGTM)
+    {
+        <!-- GOOGLE E-COMMERCE -->
+        <script type="text/javascript">
+            ga('require', 'ecommerce');
+            ga('ecommerce:addTransaction', {
+                'id': '@Model.IdOrder', // Transaction ID. Required.
+                'affiliation': '@LojaCorp.Control.Company._Company.NameStore', // Affiliation or store name.
+                'revenue': '@Model.Total.ToString().Replace(",", ".")', // Grand Total.
+                'shipping': '@Model.TotalShipping.ToString().Replace(",", ".")', // Shipping.
+                'tax': '', // Tax.
+                'currency': 'BRL' // Local currency code.
+            });
+        </script>
+
+        if (Model != null && Model.OrderItems != null)
+        {
+            foreach (var item in Model.OrderItems)
+            {
+                var sku = String.IsNullOrEmpty(@item.IdSku.ToString()) ? item.IdProduct.ToString() : item.IdSku.ToString();
+                var name_gacommerce = System.Text.RegularExpressions.Regex.Replace(item.Name, "<.*?>", string.Empty);
+
+                <script type="text/javascript">
+                    ga('ecommerce:addItem', {
+                        'id': '@Model.IdOrder', // Transaction ID. Required.
+                        'name': '@Html.Raw(name_gacommerce)', // Product name. Required.
+                        'sku': '@sku', // SKU/code.
+                        'category': '@Html.Raw(item.Category)', // Category or variation.
+                        'price': '@item.UnitPrice.ToString().Replace(",", ".")', // Unit price.
+                        'quantity': '@item.Quantity', // Quantity.
+                        'currency': 'BRL' // Local currency code.
+                    });
+                </script>
+            }
+        }
+
+        <script type="text/javascript">
+            ga('ecommerce:send');
+        </script>
+        <!-- FIM - GOOGLE E-COMMERCE -->
+    }
+}

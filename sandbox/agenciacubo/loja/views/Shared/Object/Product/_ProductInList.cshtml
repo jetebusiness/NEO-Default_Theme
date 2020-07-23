@@ -1,0 +1,112 @@
+﻿@model DomainProduct.Entities.Product
+<div class="item produtoList" itemscope itemtype="http://schema.org/Product" data-exhausted="@Model.FlagExhausted" id="Product_@Model.IdProduct">
+  <link itemprop="url" href="@Model.UrlFriendly" rel="author" />
+  <div class="ui small image sixteen wide mobile six wide tablet six wide computer column">
+    <a itemprop="url" href="@(Session["idEventList"] == null ? Model.UrlFriendly : "#")">
+      <img src="/assets/image/img_default.png" data-src="@Model.ImageHome" data-src="@Model.ImageHome" id="mainImageCard_@Model.IdProduct" onerror="imgError(this)">
+    </a>
+  </div>
+  <div class="content sixteen wide mobile ten wide tablet ten wide computer column">
+    <a class="header" href="@(Session["idEventList"] == null ? Model.UrlFriendly : "#")"><h3><span itemprop="name">@Model.Name</span></h3></a>
+    <div class="meta">
+      <span>@Model.Code</span>
+    </div>
+    <div class="sku-options @(Session["segment"] != null && Session["segment"].ToString() == "b2b" ? "hideme" : string.Empty)">
+      <div class="ui grid horizontal divided middle aligned">
+        <div class="row two column stackable doubling">
+          @if (Model.AvailableReferences != null)
+          {
+            foreach (var reference in Model.AvailableReferences)
+            {
+              <div class="column">
+                <div id="referencefromproduct_@Model.IdProduct" class="ui fluid selection dropdown dropdownreference" data-idproduct="@Model.IdProduct">
+                  <input type="hidden" name="reference" id="@reference.Name">
+                  <i class="dropdown icon"></i>
+                  <span class="text">@reference.Name</span>
+                  <div class="menu">
+                    <div class="header">
+                      @reference.Name
+                    </div>
+                    <div class="scrolling menu">
+                      @foreach (var variation in reference.Variations)
+                      {
+                        <div class="item" data-value="@variation.IdVariation">
+                          @if (variation.Color != null)
+                          {
+                            <div class="ui empty circular label" style="background-color: @LojaCorp.Control.Static.HexaToRgb(variation.Color) !important; border-color: #1B1C1D !important;"></div>
+                          }
+                          @variation.Name
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="extra valores">
+      <div class="ui grid horizontal divided middle aligned margin none">
+        <div class="row two column stackable doubling">
+          <span class="info column padding none" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+            @if (Model.PricePromotion != null && Model.PricePromotion > 0)
+            {
+              <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span>
+              <span itemprop="preco" class="preco">@string.Format("{0:c}", Model.PricePromotion)</span>
+            }
+            else
+            {
+              <span id="price_@Model.IdProduct" class="preco"><span class="precoBase">@(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span> @string.Format("{0:c}", Model.Price)</span>
+            }
+
+            @if (Model.InstallmentMax != null)
+            {
+              <span class="parcelamento">
+                ou em <span class="installmentMaxNumber">@Model.InstallmentMax.MaxNumber</span>
+                x de <span class="installmentMaxValue">@string.Format("{0:c}", Model.InstallmentMax.Value)</span>
+              </span>
+            }
+          </span>
+          <div class="ui divider hidden"></div>
+          <div class="column padding right no">
+            @if (Model.FlagExhausted || Model.Stock <= 0)
+            {
+              <a id="btn-comprar-card-@Model.IdProduct" class="ui labeled icon button grey fluid avise-card avise-me-modal" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                <i id="btn-icon-card-@Model.IdProduct" class="icon announcement"></i>
+                Avise-me
+              </a>
+            }
+            else if (Session["EventList"] != null)
+            {
+              <a id="add-event-list-@Model.IdProduct" title="Adicionar à Lista" class="ui labeled icon button primary fluid add-event-list text uppercase btnComprar" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
+                Adicionar à Lista
+              </a>
+            }
+            else
+            {
+
+              if (Session["segment"] != null && Session["segment"].ToString() == "b2b")
+              {
+                <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" id="btn-comprar-card-@Model.IdProduct" class="ui labeled icon button primary fluid btn-comprar-card btn-comprar-card-b2b text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                  <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart "></i>
+                  Comprar
+                </a>
+              }
+              else
+              {
+                <a id="btn-comprar-card-@Model.IdProduct" class="ui labeled icon button primary fluid btn-comprar-card  text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                  <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart "></i>
+                  Comprar
+                </a>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

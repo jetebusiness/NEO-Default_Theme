@@ -1,0 +1,138 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Alterar E-mail";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a href="/Customer/Index" class="section">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <span class="active section">Alterar E-mail</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
+            @using (Ajax.BeginForm("ChangeEmail", "Customer", new AjaxOptions {HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure"}, new {@class = "ui large form"}))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.IdCustomer, new {name = "IdCustomer"})
+
+                <div class="ui segment">
+                    <div class="ui grid stackable top aligned left aligned grid">
+                        <div class="row">
+                            <div class="column">
+                                <div class="ui form">
+                                    <div class="field disabled">
+                                        <label>E-mail atual</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" name="Email"
+                                                   placeholder="@Model.User.UserName" value="" disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Novo e-mail</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input id="email" type="text" maxlength="100" name="NewEmail"
+                                                   placeholder="Novo e-mail" required>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Confirmação do e-mail</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input id="confirmEmail" type="text" maxlength="100" name="confimEmail"
+                                                   placeholder="Confirmação do e-mail" data-validate="matchemail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column left aligned left floated">
+                                <a href="/Customer/Index">
+                                    <div class="ui animated button basic"
+                                         tabindex="0">
+                                        <div class="visible content">Cancelar</div>
+                                        <div class="hidden content">
+                                            <i class="remove icon"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                                <button id="alterarEmail" type="submit" class="ui animated button submit primary right floated"
+                                        tabindex="0">
+                                    <div class="visible content">Alterar</div>
+                                    <div class="hidden content">
+                                        <i class="checkmark icon"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui error message"></div>
+            }
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function OnSuccess(response) {
+            if (response.Success == true) {
+                swal({
+                    text: response.Message,
+                    type: response.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function() {
+                    window.location.href = "/Customer/Index/@Model.IdCustomer";
+                });
+            } else {
+                swal({
+                    text: response.Message,
+                    type: response.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                })
+            };
+        }
+
+        function OnFailure() {
+            swal({
+                text: response.Message,
+                type: response.type,
+                showCancelButton: false,
+                confirmButtonColor: '#16ab39',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            })
+        }
+
+    </script>
+}
+
+@section custom_css {
+
+}

@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+    Response.StatusCode = 500;
+    if (IsAjax)
+    {
+        Response.Write("Server Error.");
+        return;
+    }
+    const string html = "text/html";
+    bool requestingHtml = Request.AcceptTypes.Any(type =>
+        html.Equals(type, StringComparison.OrdinalIgnoreCase));
+
+    if (!requestingHtml)
+    {
+        //não renderiza conteúdo
+        return;
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Erro interno do servidor</title>
+</head>
+<body>
+    <h2>Ocorreu um erro. Desculpe-nos pelo incoveniente. O administrador do site foi alertado.</h2>
+    <h3>@Session["exception"]</h3>
+    <h4>Original Url: @Request.RawUrl</h4>
+</body>
+</html>

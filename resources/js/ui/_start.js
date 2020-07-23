@@ -35,6 +35,9 @@ require('./modules/mask');
 require('./modules/jquery-ui.min');
 //--------------------[ LazyLoad ]--------------------//
 require('../functions/lazy_load');
+//--------------------[ Funções Teste ]--------------------//
+require('../functions/contact_form');
+require('../functions/storage_form');
 
 //--------------------[ Start Document ]--------------------//
 $(document).ready(function(){

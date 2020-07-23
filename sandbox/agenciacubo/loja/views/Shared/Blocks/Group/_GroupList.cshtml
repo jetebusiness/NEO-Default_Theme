@@ -1,0 +1,17 @@
+﻿@model List<DomainProduct.Entities.Group>
+@if (Model.Any())
+{
+    <div class="column groupList margin bottom large">
+        <div class="ui segment">
+            <div class="ui list divided relaxed">
+                @if (Model != null)
+                {
+                    foreach (var group in Model)
+                    {
+                        <a class="item" href="@group.UrlFriendly"><h3>@group.Name</h3></a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

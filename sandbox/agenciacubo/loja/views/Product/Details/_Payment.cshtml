@@ -1,0 +1,76 @@
+﻿@model List<DomainCheckout.Entities.PaymentGateway>
+@{
+    int total_parcelas_exibidas = 0;
+}
+@if (Model != null && Model.Any() && Model.FirstOrDefault().PaymentMethods != null && Model.FirstOrDefault().PaymentMethods.Any() && Model.FirstOrDefault().PaymentMethods.FirstOrDefault().PaymentBrands != null)
+{
+    <div class="ui segment formas-pagamento" id="calculo-parcelamento">
+        <div class="ui accordion fluid" id="parcelamento_b2b">
+            <div class="title">
+                <i class="dropdown icon"></i>
+                <span id="btnParcelamento text color black"><strong>Parcelas e formas de pagamento</strong></span>
+            </div>
+            <div class="content  @(Session["segment"] != null && Session["segment"].ToString() == "b2b" ? "first-b2b-payment" : "")">
+                <div class="accordion" id="parcelamento_info">
+                    @foreach (var gateways in Model)
+                    {
+                        foreach (var methods in gateways.PaymentMethods)
+                        {
+                            foreach (var brands in methods.PaymentBrands)
+                            {
+                                int total_parcelas = brands.Installments != null ? brands.Installments.Count() : 0;
+
+                                if (total_parcelas > 0)
+                                {
+                                    total_parcelas_exibidas++;
+
+                                    <div class="title">
+                                        <i class="dropdown icon"></i>
+                                        @brands.Name
+                                    </div>
+                                    <div class="content others">
+                                        <div class="ui list">
+                                            @{
+                                                if (gateways.IdPaymentGateway == 6)
+                                                {
+                                                    <div 
+                                                         class="pagSeguroParcelamento" 
+                                                         id="pagSeguroParcelamento"
+                                                         data-paymentbrand="@brands.IdPaymentBrand"
+                                                         data-brand="@brands.Name.ToLower()">
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                foreach (var parcelas in brands.Installments)
+                                                {
+                                                    var typeDiscount = brands.typeDiscount != null ? brands.typeDiscount.Value : DomainCheckout.Entities.typeDiscount.General;
+                                                    var totalCompra = parcelas.Total.ToString("C");
+
+                                                    if (parcelas.InstallmentNumber == 1)
+                                                    {
+                                                        if (typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
+                                                        {
+                                                            totalCompra = parcelas.Value.ToString("C");
+                                                        }
+                                                    }
+                                                    <span class="item parcelamentos">
+                                                        <span class="parcelas">@parcelas.InstallmentNumber x</span>
+                                                        <span class="valor"> @parcelas.Value.ToString("C") </span>
+                                                        <span class="modelo">(@parcelas.Description)</span>
+                                                        <span class="total">Total Parcelado: @totalCompra</span>
+                                                    </span>
+                                                }
+                                            }
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

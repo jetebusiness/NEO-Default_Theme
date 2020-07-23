@@ -1,0 +1,37 @@
+﻿@model IList<DomainCompany.Entities.Banner>
+@if (Model != null && Model.Count() > 0)
+{
+
+    List<DomainCompany.Entities.Banner> bannerRandom = Model.Where(b => b.Random == true).ToList();
+    List<DomainCompany.Entities.Banner> bannerNoRandom = Model.Where(b => b.Random == false).ToList();
+
+    if (bannerRandom.Any())
+    {
+
+        <div class="ui fluid container car-banners slick-dotted slideshow" data-qtd="1" data-auto="true" data-arrow="false" data-dots="true">
+            @foreach (var randombanner in bannerRandom)
+            {
+                <div class="container slideshow-item">
+                    <div class="image">
+                        <a href="@randombanner.Link" title="@randombanner.Name">
+                            <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
+                        </a>
+                    </div>
+                    <div class="description">
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    if (bannerNoRandom.Any())
+    {
+        <div class="ui images middle aligned center aligned">
+            @foreach (var banner in bannerNoRandom)
+            {
+                <a href="@banner.Link" title="@banner.Name">
+                    <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
+                </a>
+            }
+        </div>
+    }
+}

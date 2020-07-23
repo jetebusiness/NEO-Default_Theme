@@ -1,0 +1,79 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Detalhes do Cliente";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+
+    var idClient = Request.QueryString["idClient"];
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Vendedor</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/assistedsale/index">Lista de Clientes</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Detalhes do Clientes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row two column stackable">
+            <div class="column">
+                <div class="ui padded segment">
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="user icon"></i>
+                            <div class="content">
+                                <div class="font-weight bold">@Model.Name</div>
+                                <div>@Model.User.UserName</div>
+                                <div class="masked mask_cnpj">CPF: @Model.Cpf_cnpj</div>
+                            </div>
+                        </div>
+                        <div class="item margin top small">
+                            <i class="phone icon"></i>
+                            <div class="content">
+                                <div class="masked mask_phone">@Model.Phone.Phone1</div>
+                            </div>
+                        </div>
+                        <div class="item margin top small">
+                            <i class="building icon"></i>
+                            <div class="content">
+                                <div>@(Model.Address.Count() > 0 ? Model.Address[0].StreetAddress : string.Empty), @(Model.Address.Count() > 0 ? Model.Address[0].Number : string.Empty)</div>
+                                <div>@(Model.Address.Count() > 0 ? Model.Address[0].City : string.Empty) - @(Model.Address.Count() > 0 ? Model.Address[0].State : string.Empty)</div>
+                                <div class="masked mask_zipcode">CEP: @(Model.Address.Count() > 0 ? Model.Address[0].ZipCode : string.Empty)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row one column margin top medium">
+                        <a class="ui primary button" href="/assistedsale/edit?idClient=@Model.IdCustomer">
+                            <i class="pencil icon"></i>
+                            Editar Dados
+                        </a>
+                        <a class="ui green button btn_AttachClient" data-emailClient="@Model.User.UserName" data-nameClient="@Model.Name">
+                            <i class="cart icon"></i>
+                            Iniciar Venda
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ~/Views/Shared/Blocks/AssistedSale/_ListClientOrder.cshtml -->
+
+        @Html.Action("ListOrdersClient", "AssistedSale", new { idClient })
+
+    </div>
+</div>

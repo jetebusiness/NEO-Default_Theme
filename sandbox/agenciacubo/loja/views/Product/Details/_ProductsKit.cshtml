@@ -1,0 +1,71 @@
+﻿@model List<DomainProduct.Entities.ProductsKit>
+
+<!--COMEÇO KIT DE PRODUTO-->
+<div class="row product-grid kit-product">
+    <div class="column blocoInfo">
+        <div class="ui middle aligned margin bottom medium blocoValores blocoKit">
+
+            <div class="one column ui attached segment">
+                <div class="column">
+                    <h5>Produtos no Kit</h5>
+                </div>
+                
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var product in Model)
+                    {
+                    <div class="ui stackable two column grid margin top medium">
+                        <div class="column">
+                            <img src="@product.ImageHome" onerror="imgError(this)" class="ui image tiny">
+                        </div>
+                        <div class="column">
+                            <div class="infoKit">
+                                <span class="nameProduct">@product.Name</span>
+                                <div class="valores">
+                                    @if (product.Discount > 0)
+                                    {
+                                        <span class="valorDe">de @(string.Format("{0:c}", product.Price)) por</span>
+                                        <span class="valorPor">@(string.Format("{0:c}", product.PricePromotion))</span>
+                                        <span class="kit">no kit</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="valorPor">@(string.Format("{0:c}", product.Price))</span>
+                                        <span class="kit">no kit</span>
+                                    }
+                                </div>
+                                @if (product.AvailableReferences != null && product.AvailableReferences.Any())
+                                {
+                                    string references = string.Empty;
+                                    string variations = string.Empty;
+
+                                    <div class="variacao">
+                                        @foreach (var reference in product.AvailableReferences)
+                                        {
+                                            if (reference.Variations.FirstOrDefault().Color != null)
+                                            {
+                                                <button class="ui basic button radio variacao cor " style="background-color: @reference.Variations.FirstOrDefault().Color !important;" data-tooltip="@reference.Variations.FirstOrDefault().Name" data-tipo="color" data-order="@reference.Variations.FirstOrDefault().DisplayOrder"></button>
+                                            }
+
+                                            references = string.Concat(string.IsNullOrEmpty(references) ? "" : " - ", reference.Name);
+                                        }
+
+                                        @foreach (var variation in product.SKUs)
+                                        {
+                                            variations = string.Concat(string.IsNullOrEmpty(variations) ? "" : " - ", variation.Variations.FirstOrDefault().Name);
+                                        }
+
+                                        <span>@references - @variations</span>
+                                    </div>
+                                }
+                                <div class="quantidade">Quantidade: @product.Quantity</div>
+                            </div>
+                                </div>
+                    </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--FIM KIT DE PRODUTO-->

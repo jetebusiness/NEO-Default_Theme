@@ -1,0 +1,490 @@
+﻿@model DomainCheckout.Entities.Cart
+@{
+    /**/
+
+    ViewBag.Title = "Identificação";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+}
+@section steps{
+    <div class="jet checkout jBreadCrumb ">
+        <div class="jCrumb active">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>1</span>
+                </div>
+            </div>
+            <h4 style="text-align:center;">Identificação</h4>
+        </div>
+        <div class="jCrumb">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>2</span>
+                </div>
+            </div>
+            <h4 style="text-align:center;">Pagamento</h4>
+        </div>
+        <div class="jCrumb">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4 style="text-align:center;">Confirmação</h4>
+        </div>
+    </div>
+}
+<div class="ui container no-p no-m">
+    <div class="ui grid">
+        <div class="row">
+            <div class="sixteen wide tablet eleven wide computer column jetCheckout margin top">
+                @using (Ajax.BeginForm("RegisterClient", "Checkout", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure", OnComplete = "OnComplete" }, new { @id = "checkoutRegister", @class = "ui form jet checkout register" }))
+                {
+                    <div class="ui segment">
+                        <div class="ui top attached indicating progress jet checkout" data-percent="30"
+                             data-value="1" data-total="18"
+                             id="progress_checkout">
+                            <div class="bar">
+                            </div>
+                        </div>
+                        <div class="ui grid">
+                            <div class="row">
+                                <div class="column" data-jet-master="true">
+                                    <h4 class="ui dividing header">Informações Pessoais &ensp;&ensp;<a href="ChangeUserPayment" class="text small">Não é você? Sair</a></h4>
+                                    @{
+                                        if (ViewBag.EmailUser != null && ViewBag.EmailUser != "")
+                                        {
+                                            <div class="field required success" data-jet-active="true">
+                                                <div class="ui left icon input disabled ">
+                                                    <i class="checkmark box icon"></i>
+                                                    <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
+                                                           value="@ViewBag.EmailUser" data-jet-validate="email" autocomplete="off">
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="field required success" id="valid_cpf_cnpj"  data-jet-active="true">
+                                                <div class="ui left icon input disabled ">
+                                                    <i class="icon id card"></i>
+                                                    <input id="cpf_cnpj" type="text" name="Cpf_cnpj" value="@ViewBag.CpfCnpjUser" class="masked mask_document mask_document_cnpj cpf_cnpj_checkout"
+                                                           placeholder="CPF / CNPJ"
+                                                           data-jet-validate="cpfCnpj"
+                                                           data-jet-type="profileChanger"
+                                                           tabindex="1"
+                                                           autocomplete="off">
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    
+                                    <div class="field required" data-jet-active="true">
+                                        <label>Nome Completo</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="Name" placeholder="Seu Nome Completo"
+                                                   value=""
+                                                   data-jet-validate="name"
+                                                   tabindex="0">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        @{
+                                            if (ViewBag.EmailUser != null && ViewBag.EmailUser == "")
+                                            {
+                                                <div class="field required">
+                                                    <label>Seu Email</label>
+                                                    <div class="ui left icon input ">
+                                                        <i class="checkmark box icon"></i>
+                                                        <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
+                                                               data-jet-validate="email"
+                                                               autocomplete="false">
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="field required" id="valid_cpf_cnpj">
+                                                    <label>CPF / CNPJ</label>
+                                                    <div class="ui left icon input">
+                                                        <i class="icon id card"></i>
+                                                        <input id="cpf_cnpj" type="text" name="Cpf_cnpj" class="masked mask_document cpf_cnpj_checkout"
+                                                               placeholder="CPF / CNPJ"
+                                                               data-jet-validate="cpfCnpj"
+                                                               data-jet-type="profileChanger"
+                                                               tabindex="1"
+                                                               autocomplete="off">
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                                                            
+                                        <div class="field required">
+                                            <label>Telefone</label>
+                                            <div class="ui left icon input">
+                                                <i class="phone icon"></i>
+                                                <input type="tel" name="Phone.Phone1"
+                                                       placeholder="(00) 0000-0000" class="masked mask_phone"
+                                                       data-jet-validate="phone"
+                                                       tabindex="8">
+                                            </div>
+                                        </div>
+                                        <div class="field required pessoa fisica">
+                                            <label>Data de Nascimento</label>
+                                            <div class="ui input left icon">
+                                                <i class="calendar icon"></i>
+                                                <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date"
+                                                       name="DateBirth"
+                                                       data-jet-validate="datebirth"
+                                                       tabindex="3">
+                                            </div>
+                                        </div>
+                                        <div class="field pessoa juridica">
+                                            <label>IE</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon id card"></i>
+                                                <input class="ie_checkout" type="text" name="Rg_ie" placeholder="Instrição Estadual"
+                                                       tabindex="4"
+                                                       autocomplete="off">
+                                            </div>
+                                            <div class="text small text color grey">
+                                                Em caso de isenção, informe "Isento".
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required pessoa juridica">
+                                        <label>Responsável</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="Contact" id="Contact" data-jet-validate="name"
+                                                   placeholder="Responsável pela Empresa"
+                                                   data-validate="businessRepresentant"
+                                                   tabindex="5">
+                                        </div>
+                                    </div>
+                                    <div class="two fields pessoa juridica">
+                                        <div class="field required pessoa juridica">
+                                            <label>Razão Social</label>
+                                            <div class="ui left icon input">
+                                                <i class="suitcase icon"></i>
+                                                <input type="text" name="razaoSocial" data-jet-validate="empty"
+                                                       placeholder="Razão Social da Empresa"
+                                                       data-validate="businessName"
+                                                       tabindex="6">
+                                            </div>
+                                        </div>
+                                        <div class="field required  pessoa juridica">
+                                            <label>Nome Fantasia</label>
+                                            <div class="ui left icon input">
+                                                <i class="suitcase icon"></i>
+                                                <input type="text" name="FantasyName" data-jet-validate="empty"
+                                                       placeholder="Nome Fantasia da Empresa"
+                                                       tabindex="7">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="ui dividing header" data-jet-active="false">Endereço</h4>
+                                    <div class="three fields required">
+                                        <div class="field required" data-jet-revel="true">
+                                            <label>CEP</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon marker"></i>
+                                                <input type="text" name="Address[0].ZipCode"
+                                                       placeholder="00000-000"
+                                                       class="masked mask_zipcode"
+                                                       data-jet-validate="zipcode"
+                                                       data-jet-type="clearAllNext"
+                                                       tabindex="9">
+                                            </div>
+                                        </div>
+                                        <div class="field" data-jet-revel="true">
+                                            <div class="busca cep">
+                                                <p>
+                                                    Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
+                                                                           target="_blank">Consulte Aqui</a>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required" data-jet-revel="true">
+                                        <label>Endereço</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon home"></i>
+                                            <input type="text" name="Address[0].StreetAddress"
+                                                   placeholder="Endereço" data-jet-validate="empty"
+                                                   tabindex="10">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        <div class="field required" data-jet-revel="true">
+                                            <label>Número</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon square outline"></i>
+                                                <input type="text" name="Address[0].Number"
+                                                       placeholder="Número"
+                                                       data-jet-validate="empty"
+                                                       tabindex="11">
+                                            </div>
+                                        </div>
+                                        <div class="field" data-jet-revel="true">
+                                            <label>Complemento</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon square outline"></i>
+                                                <input type="text" name="Address[0].Complement"
+                                                       placeholder="Ex: ap. 123"
+                                                       tabindex="12">
+                                            </div>
+                                        </div>
+                                        <div class="field required" data-jet-revel="true">
+                                            <label>Bairro</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon square outline"></i>
+                                                <input type="text" placeholder="Bairro"
+                                                       name="Address[0].Neighbourhood"
+                                                       data-jet-validate="empty"
+                                                       tabindex="13">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required" data-jet-revel="true">
+                                            <label>Cidade</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon square outline"></i>
+                                                <input type="text" name="Address[0].City"
+                                                       placeholder="Cidade"
+                                                       data-jet-validate="empty"
+                                                       tabindex="14">
+                                            </div>
+                                        </div>
+                                        <div class="required field" data-jet-revel="true">
+                                            <label>Estado</label>
+                                            <select class="ui dropdown search" id="estado_0"
+                                                    name="Address[0].State" data-jet-validate="select"
+                                                    tabindex="15">
+                                                <option value="">Selecione</option>
+                                                <option value="AC">Acre</option>
+                                                <option value="AL">Alagoas</option>
+                                                <option value="AP">Amapá</option>
+                                                <option value="AM">Amazonas</option>
+                                                <option value="BA">Bahia</option>
+                                                <option value="CE">Ceará</option>
+                                                <option value="DF">Distrito Federal</option>
+                                                <option value="ES">Espírito Santo</option>
+                                                <option value="GO">Goiás</option>
+                                                <option value="MA">Maranhão</option>
+                                                <option value="MT">Mato Grosso</option>
+                                                <option value="MS">Mato Grosso do Sul</option>
+                                                <option value="MG">Minas Gerais</option>
+                                                <option value="PA">Pará</option>
+                                                <option value="PB">Paraíba</option>
+                                                <option value="PR">Paraná</option>
+                                                <option value="PE">Pernambuco</option>
+                                                <option value="PI">Piauí</option>
+                                                <option value="RJ">Rio de Janeiro</option>
+                                                <option value="RN">Rio Grande do Norte</option>
+                                                <option value="RS">Rio Grande do Sul</option>
+                                                <option value="RO">Rondônia</option>
+                                                <option value="RR">Roraima</option>
+                                                <option value="SC">Santa Catarina</option>
+                                                <option value="SP">São Paulo</option>
+                                                <option value="SE">Sergipe</option>
+                                                <option value="TO">Tocantins</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row one column" data-jet-revel="true">
+                                <div class="column text right" data-jet-revel="true">
+                                    <div class="field" data-jet-revel="true">
+                                        <div class="ui checkbox termo aceite">
+                                            <input type="checkbox" checked="" data-validate="termo"
+                                                   class="termo aceite"
+                                                   tabindex="16">
+                                            <label>
+                                                Concorda com o <a href="" target="_blank">
+                                                    termo de
+                                                    aceite?
+                                                </a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column text right">
+                                    @{
+                                        Tuple<string, DomainCompany.Entities.Recaptcha> _tuple = Tuple.Create<string, DomainCompany.Entities.Recaptcha>("Register", ViewBag.recaptchaData);
+                                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_GoogleRecaptcha.cshtml", _tuple)
+                                    }
+                                </div>
+                            </div>
+                            <div class="row two column barra-finalizacao" data-jet-active="false">
+                                <div class="column">
+                                    <a href="/checkout" class="ui animated button basic left floated">
+                                        <div class="visible content">Voltar para o Carrinho</div>
+                                        <div class="hidden content">
+                                            <i class="cart icon"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="column">
+                                    <button type="submit"
+                                            class="ui animated button submit action right floated continuar"
+                                            tabindex="17"
+                                            id="goPayment">
+                                        <div class="visible content">Fazer o Pagamento</div>
+                                        <div class="hidden content">
+                                            <i class="arrow right icon"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="sixteen wide tablet five wide computer column">
+
+                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Carrinho.cshtml", Model)
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    
+    <script type="text/javascript">   
+
+        function onCheckgCaptcha() {
+            var googleRecaptchaVersion = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersion = $('#googleVersion').val();
+            }
+
+            var googleResponse = grecaptcha.getResponse();
+            $("#googleResponse").val(googleResponse);
+        }
+
+        function OnBegin(response) {
+            var googleRecaptchaVersion = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersion = $('#googleVersion').val();
+            }
+
+            if (googleRecaptchaVersion == '2') {
+                if ($("#googleResponse").val() == '') {
+                    // if error I post a message in a div
+                    //$('#reCaptchaError').html('<p>Please verify youare human</p>');
+                    swal({
+                        title: '',
+                        html: 'Por favor, verifique que não é um robo.',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+            } else if (googleRecaptchaVersion == '3') {
+                if ($("#googleResponse").val() == '') {
+                    // if error I post a message in a div
+                    //$('#reCaptchaError').html('<p>Please verify youare human</p>');
+                    swal({
+                        title: '',
+                        html: 'Por favor, ocorreu um erro no google recaptcha.',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+            }
+        }
+
+        function OnSuccess(response) {
+            var googleRecaptchaVersion = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersion = $('#googleVersion').val();
+            }
+
+            if (response.success == true) {
+                window.location.href = "/checkout/Payment";
+            } else {
+                $("#email").attr("disabled", false);
+
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else if (googleRecaptchaVersion == '3') {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
+                swal({
+                    title: 'Mensagem',
+                    text: response.msg,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function OnFailure(response) {
+            var googleRecaptchaVersion = "";
+
+            if ($('#googleVersion').length > 0) {
+                googleRecaptchaVersion = $('#googleVersion').val();
+            }
+
+            if (response.success == false) {
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else if (googleRecaptchaVersion == '3') {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+
+
+                    swal({
+                        title: '',
+                        text: response.msg,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#16ab39',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        }
+
+        function OnComplete() {
+
+        }
+    </script>
+}

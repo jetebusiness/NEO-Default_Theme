@@ -1,0 +1,142 @@
+﻿@using Newtonsoft.Json
+@model DomainProduct.Entities.Product
+
+@{
+	string variationIds = "";
+	List<dynamic> variationsArray = new List<dynamic>();
+
+	if (Model.SKUs != null)
+	{
+		Model.SKUs = Model.SKUs.OrderBy(c => c.PricePromotion == 0 ? c.Price : c.PricePromotion).ToList();
+		if (Model.SKUs[0].Variations != null)
+		{
+			foreach (var variation in Model.SKUs[0].Variations)
+			{
+				variationsArray.Add(variation);
+				variationIds += Model.SKUs[0].Variations.IndexOf(variation) == Model.SKUs[0].Variations.Count - 1 ? variation.IdVariation + "" : variation.IdVariation + ",";
+			}
+		}
+	}
+}
+<div class="item">
+
+	<div id="Product_@Model.IdProduct" class="card produto conjunto"
+			 data-exhausted="@Model.FlagExhausted"
+			 data-product-type="conjunctItem"
+			 data-idSku="@(Model.SKUs?[0].IdSku ?? Model.IdProduct)"
+			 data-variationsId="@variationIds"
+			 data-variation="@JsonConvert.SerializeObject(variationsArray)"
+			 data-stock="@Model.Stock"
+			 data-idproduct="@Model.IdProduct">
+		<input type="hidden" id="selected-references_@Model.IdProduct" />
+		<div class="content">
+			<div class="ui grid container fluid">
+				<div class="row column stackable">
+					<div class="top-info six wide computer column">
+						@if (Model.AlternativeImage != null)
+						{
+							<a class="ui slide masked reveal image" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" onerror="imgError(this)">
+								<img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
+								<img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)">
+
+								@if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
+								{
+									<div class="ui bottom right attached label massive imagetag">
+										<img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)">
+									</div>
+								}
+							</a>
+						}
+						else
+						{
+							<a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
+								<img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
+								@if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
+								{
+									<div class="ui bottom right attached label massive imagetag">
+										<img src="@Model.SealStatus.Image" class="ui image tiny" onerror="imgError(this)">
+									</div>
+								}
+							</a>
+						}
+					</div>
+
+					<div class="bottom-info ten wide computer column">
+						<div class="info">
+							<div class="dados text align right">
+								<div itemscope itemtype="http://schema.org/Product">
+									<link itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" rel="author" />
+									<a itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
+										<span itemprop="name">
+											<h3>@Model.Name</h3>
+										</span>
+									</a>
+									<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+										@if (Model.PricePromotion != null && Model.PricePromotion > 0)
+										{
+											<span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por</span>
+											<span itemprop="preco" class="preco">@string.Format("{0:c}", Model.PricePromotion)</span>
+										}
+										else
+										{
+											<span id="price_@Model.IdProduct" class="preco">@string.Format("{0:c}", Model.Price)</span>
+										}
+										@if (Model.InstallmentMax != null)
+										{
+											<span>
+												ou em <span class="installmentMaxNumber">@Model.InstallmentMax.MaxNumber</span>
+												x de <span class="installmentMaxValue">@string.Format("{0:c}", Model.InstallmentMax.Value)</span>
+											</span>
+										}
+									</span>
+								</div>
+							</div>
+						</div>
+						@if (Model.AvailableReferences != null)
+						{
+							<div class="sku-options">
+								@foreach (var reference in Model.AvailableReferences)
+								{
+									<div id="referencefromproduct_@Model.IdProduct" class="ui selection dropdown dropdownreference" data-total-referencia="@(Model.AvailableReferences != null ? Model.AvailableReferences.Count() : 0)" data-idproduct="@Model.IdProduct">
+										<input type="hidden" name="reference_@Model.IdProduct" data-id-reference="@reference.IdReference" id="@reference.Name">
+										<i class="dropdown icon"></i>
+										<span class="text">@reference.Name</span>
+										<div class="menu">
+											<div class="header">
+												@reference.Name
+											</div>
+											<div class="scrolling menu">
+												@foreach (var variation in reference.Variations)
+												{
+													<div class="item" data-value="@variation.IdVariation">
+														@if (variation.Color != null)
+														{
+															<div class="ui empty circular label" style="background-color: @LojaCorp.Control.Static.HexaToRgb(variation.Color) !important; border-color: #1B1C1D !important;"></div>
+														}
+														@variation.Name
+													</div>
+												}
+											</div>
+										</div>
+									</div>
+									<div class="ui small divider hidden"></div>
+								}
+							</div>
+						}
+
+						<label id="btn-adiciona-conjunto-@Model.IdProduct"
+									 class="ui labeled icon button action btn-adiciona-conjunto mobile-fluid"
+									 data-idproduct="@Model.IdProduct"
+									 data-name="@Model.Name"
+									 for="conjunct_@Model.IdProduct">
+							<i id="btn-icon-card-@Model.IdProduct" class="icon checkmark box"></i>
+							<span>Selecionado</span>
+						</label>
+						<input type="checkbox" class="hideme conjunct_product" value="@Model.IdProduct" name="conjunct_product" id="conjunct_@Model.IdProduct" checked="checked" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui divider"></div>
+</div>

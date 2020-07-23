@@ -1,0 +1,84 @@
+﻿@model List<DomainCustomer.Entities.EventList>
+
+@{
+    ViewBag.Title = "Resultado Buscas";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="ui container margin bottom large">
+    <div class="row">
+        <div class="ui two column grid stackable">        
+            @if(Model.Count == 0)
+            {
+                <p>Nenhuma lista encontrada.</p>
+            }
+            @foreach (var list in Model)
+            {
+                <div class="column">
+                    <div class="ui segment">
+                        <div class="ui grid">
+                            <div class="four wide computer sixteen wide tablet sixteen wide mobile column">
+                                <div class="ui small image">
+
+                                    <img src="@(list.UrlPicture != null ? list.UrlPicture : "/#")" onerror="imgError(this)">
+
+                                </div>
+                            </div>
+                            <div class="twelve wide computer sixteen wide tablet sixteen wide mobile column">
+                                <div class="content">
+                                    @{ 
+                                        string titulo = string.Empty;
+                                        switch (list.Type)
+                                        {
+                                            case 1:
+                                                titulo = list.Name1 + " e " + list.Name4;
+                                                break;
+                                            case 2:
+                                                titulo = list.Name1 + " e " + list.Name2;
+                                                break;
+                                            case 3:
+                                                titulo = list.Name1 + " e " + list.Name2;   
+                                                break;
+                                            case 4:
+                                                titulo = list.Name1;
+                                                break;
+                                            case 5:
+                                                titulo = list.Name1;
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    <h4 class="header">@titulo</h4>
+
+                                    <p>@list.EventDate.ToShortDateString()</p>
+
+                                    <p>@Html.Raw(list.Message)</p>
+                                    
+                                    <div class="ui right floated">
+                                        <a href="/EventList/ListEventsProducts?idListEventsCurrent=@list.IdEventList">
+                                            <button class="ui tiny compact icon primary basic button">
+                                                <i class="unhide icon"></i>
+                                                Ver Lista
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

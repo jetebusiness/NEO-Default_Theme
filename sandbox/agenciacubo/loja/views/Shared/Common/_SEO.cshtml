@@ -1,0 +1,23 @@
+﻿@{
+    List<string> arrCustomSEOIgnore = new List<string>() { "Home-Index", "Search-Index" };
+    string currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+    string currentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+
+    if (arrCustomSEOIgnore.Contains(String.Format("{0}-{1}", currentController, currentAction)))
+    {
+        <meta name="distribution" content="Global">
+        if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaDescription))
+        {
+            <meta name="Description" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaDescription)">
+        }
+        if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaKey))
+        {
+            <meta name="Keywords" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaKey)">
+        }
+    }
+
+    if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.Robots))
+    {
+        <meta name="Robots" content="INDEX,FOLLOW">
+    }
+}

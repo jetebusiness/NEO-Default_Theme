@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Listas de Casamento";
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+}
+<div class="ui container fluid lista casamento">
+    <div class="ui container">
+        <div class="ui grid index">
+            <div class="row two column stackable">
+                <div class="column mobile-hide">
+                    <img src="~/assets/image/lista_casamento/img_casamento.png" alt=""
+                         class="ui image fluid img-banner-casal">
+                </div>
+                <div class="column">
+                    <div class="ui grid stackable">
+                        <div class="row one column">
+                            <div class="column busca-lista">
+                                <img src="~/assets/image/lista_casamento/img_passaros.png" alt=""
+                                     class="ui image right floated mobile-hide">
+                                <div class="ui form">
+                                    <h1>
+                                        <span>Lista de</span>
+                                        Casamento
+                                    </h1>
+                                    <h2>Procure uma lista</h2>
+                                    <div class="ui left icon right primary action input fluid">
+                                                <input type="text" id="parametro" placeholder="Nome dos noivos">
+                                        <i class="user outline icon"></i>
+                                        <button class="ui button primary text uppercase" id="pesquisar_lista">Pesquisar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row one column">
+                            <div class="column login-lista">
+                                <h1>Crie ou gerencie sua lista</h1>
+                                <p>
+                                    Crie ou gerencie sua lista de casamento com
+                                    praticidade e segurança e compartilhe esse
+                                    momento especial.
+                                </p>
+                                <a href="/EventList/ManagerList?typeId=1" class="ui button primary text uppercase">Criar Lista</a>
+                                <div class="ui divider hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="tipo_lista" value="1"/>
+</div>

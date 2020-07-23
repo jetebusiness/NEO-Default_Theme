@@ -1,0 +1,35 @@
+﻿@model DomainCompany.Entities.CustomPageContent
+@{
+    ViewBag.Title = string.IsNullOrEmpty(Model.TitlePage) ? Model.Name : Model.TitlePage;
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+}
+
+@section CustomSeo {
+    @{
+        if (!String.IsNullOrEmpty(Model.Metatag))
+        {
+            <meta name="Description" content="@Model.Metatag">
+        }
+    }
+}
+
+
+<div class="ui container">
+    <div class="ui two column grid stackable middle aligned">
+        <div class="row">
+            <div class="column">
+                <h1>@(Model != null ? Model.Name : "")</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui container margin bottom large">
+    <div class="ui two column grid stackable middle aligned margin bottom large">
+        <div class="row one column">
+            <div class="column">
+                @Html.Raw(Model.Content)
+            </div>
+        </div>
+    </div>
+</div>

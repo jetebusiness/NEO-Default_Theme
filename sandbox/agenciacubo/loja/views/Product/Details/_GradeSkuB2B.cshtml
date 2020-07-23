@@ -1,0 +1,160 @@
+﻿@model DomainProduct.Entities.ProductDetail
+
+@{
+    var useOneClick = (bool)ViewData["useOneCLick"];
+    var isB2B = ViewData["isB2B"] != null ? (bool)ViewData["isB2B"] : true;
+    var _classB2B = isB2B ? "avise_b2b" : "avise";
+    var _hasOpenSku = ViewData["hasOpenSku"] != null ? (bool)ViewData["hasOpenSku"] : false;
+}
+
+<div class="row product-b2b">
+    <div class="column">
+        <div class="ui middle aligned grid attached segment" id="grade_sku" style="overflow: scroll;max-height: 340px;overflow-x: hidden;padding: 45px 0 !important;">
+            @foreach (var sku in Model.SKUs)
+            {
+                var _variation = "";
+
+                if (sku.Visible)
+                {
+                    <div class="three column stackable row sku_b2b" data-sku-id="@sku.IdSku" data-stock="@sku.Stock" data-produto-id="@Model.IdProduct">
+                        <div class="column center aligned">
+                            <div class="ui form">
+                                <div class="grouped fields">
+                                    <div class="field inline-flex">
+                                        @foreach (var variacao in sku.Variations)
+                                        {
+                                            if (string.IsNullOrEmpty(_variation))
+                                            {
+                                                _variation += variacao.IdVariation;
+                                            }
+                                            else
+                                            {
+                                                _variation += "," + variacao.IdVariation;
+                                            }
+
+                                            int countSpaces = variacao.Color != null ? variacao.Color.TakeWhile(Char.IsWhiteSpace).Count() : 0;
+                                            if (!string.IsNullOrEmpty(variacao.Color) && countSpaces != variacao.Color.Length)
+                                            {
+                                                <span class="ui basic button variacao cor no-pointer" style="background-color: @variacao.Color !important;" data-tooltip="@variacao.Name"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="ui basic primary button variacao no-pointer" data-tooltip="@variacao.Name">@variacao.Name</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column center aligned">
+                            <div>
+                                @if (sku.PricePromotion.HasValue && sku.PricePromotion > 0)
+                                {
+                                    <span class="precoAntigo" id="preco_antigo_@sku.IdSku">de: <i>@(sku.Price.ToString("C"))</i> por</span>
+                                    <span class="preco" id="preco_@sku.IdSku">@sku.PricePromotion.Value.ToString("C")</span>
+                                }
+                                else
+                                {
+                                    <input type="hidden" id="preco_antigo_@sku.IdSku" value="0" />
+                                    <span class="preco" id="preco_@sku.IdSku">@sku.Price.ToString("C")</span>
+                                }
+                            </div>
+                        </div>
+                        @if (sku.Stock > 0 && Model.FlagExhausted == false)
+                        {
+                            <div class="column center aligned">
+                                <div class="ui qtd action mini input">
+                                    <button class="ui icon button b2b_minus detalhes">
+                                        <i class="minus icon"></i>
+                                    </button>
+                                    <input type="number" min="1" step="1" size="3" value="0" name="quantidade" id="quantidade_b2b_@sku.IdSku" class="quantidade_b2b text center" data-qtd-max="@sku.Stock" />
+                                    <button class="ui grey icon button b2b_plus detalhes">
+                                        <i class="add icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="column center aligned">
+                                <a class="ui button grey animated fluid @_classB2B" data-produto-id="@Model.IdProduct" data-produto-variations="@_variation">
+                                    <input type="hidden" class="quantidade_b2b" value="0" />
+                                    <div class="visible content">Avise-me!</div>
+                                    <div class="hidden content">
+                                        <i class="announcement icon"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                    if (Model.SKUs.LastOrDefault() != sku)
+                    {
+                        <div class="ui divider"></div>
+                    }
+                    <input type="hidden" value="@sku.PricePromotion" id="preco_antigo_unidade_@sku.IdSku" />
+                    <input type="hidden" value="@sku.Price" id="preco_unidade_@sku.IdSku" />
+                }
+            }
+        </div>
+        <div class="two column row margin bottom small">
+            <div class="ui left aligned column">
+                <strong id="total_selecionados" style="float: left">Itens selecionados: 0</strong>
+            </div>
+            <div class="ui right aligned column">
+                <strong id="total_geral" data-total-geral="0">Total: R$ 0,00</strong>
+            </div>
+        </div>
+        @if (Model.FlagExhausted == false)
+        {
+            <div class="row margin top medium">
+                <div class="column">
+                    <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_b2b">
+                        <div class="visible content">Comprar</div>
+                        <div class="hidden content">
+                            <i class="add to cart icon"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+
+        @if (useOneClick && Model.FlagExhausted == false)
+        {
+            <div class="row margin top medium">
+                <div class="column">
+                    <a class="ui animated big action button fluid detalhes text uppercase" id="btn_comprar_oneclick_b2b">
+                        <div class="visible content">Comprar com 1-Click</div>
+                        <div class="hidden content">
+                            <i class="add to cart icon"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+
+        @if (!_hasOpenSku)
+        {
+            <div class="row margin top medium">
+                <div class="column">
+                    <a class="ui animated large basic button fluid" id="btn_comprar_continuar">
+                        <div class="visible content">Adicionar e Continuar Comprando</div>
+                        <div class="hidden content">
+                            <i class="plus icon"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+
+        <div id="pagamento-calculado">
+            @{
+                var _valor = Model.PricePromotion != null ? Model.PricePromotion : 0;
+                var _flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true;
+                var _isB2b = isB2B;
+
+                Html.Action("Payment", "Product", new { valor = _valor, flagExibir = _flagExibir, isB2b = _isB2b });
+            }
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,202 @@
+﻿@model DomainCustomer.Entities.Address
+
+@{
+    ViewBag.Title = "Adicionar novo endereço";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Adicionar</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row one column">
+        <div class="column">
+            <form action="CreateAddress" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="ui segment">
+                    <div class="ui grid stackable top aligned left aligned grid">
+                        <div class="row two column divided horizontal">
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Informações do Endereço</h4>
+                                    <div class="field required">
+                                        <label>Identificação</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" maxlength="100" required name="Identification" placeholder="Ex: Casa, Trabalho, etc...">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Destinatário</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" maxlength="100" required name="Receiver" placeholder="Nome do Destinatário"
+                                                   data-validate="name">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Telefone</label>
+                                            <div class="ui left icon input">
+                                                <i class="phone icon"></i>
+                                                <input type="text" required name="PhoneContact"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       data-validate="phone">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Tipo do Endereço</label>
+                                            <select name="CommercialResidentialAddress" required class="ui dropdown">
+                                                <option value="">Selecione</option>
+                                                <option value="1">Residencial</option>
+                                                <option value="0">Comercial</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Endereço</h4>
+                                    <div class="two fields required">
+                                        <div class="field">
+                                            <label>CEP</label>
+                                            <div class="ui left icon input">
+                                                <i class="marker icon"></i>
+                                                <input type="text" required id="zipCode" name="zipCode" placeholder="00000-000" class="masked mask_zipcode" data-validate="ZipCode">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="busca cep">
+                                                <p>
+                                                    Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
+                                                                           target="_blank">Consulte Aqui</a>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Endereço</label>
+                                        <div class="ui input">
+                                            <input type="text" maxlength="100" required id="StreetAddress" name="StreetAddress"
+                                                   placeholder="Endereço" data-validate="empty">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        <div class="field required">
+                                            <label>Número</label>
+                                            <div class="ui input">
+                                                <input type="text" maxlength="10" required name="Number" placeholder="Número"
+                                                       data-validate="empty">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Complemento</label>
+                                            <div class="ui input">
+                                                <input type="text" maxlength="255" id="Complement" name="Complement"
+                                                       placeholder="Ex: ap. 123">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Bairro</label>
+                                            <div class="ui input">
+                                                <input type="text" maxlength="255" required id="Neighbourhood" placeholder="Bairro"
+                                                       name="Neighbourhood"
+                                                       data-validate="empty">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Cidade</label>
+                                            <div class="ui input">
+                                                <input type="text" maxlength="30" required id="City" name="City" placeholder="Cidade"
+                                                       data-validate="empty">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Estado</label>
+                                            <select class="ui dropdown state search" required id="State"
+                                                    name="State" data-validate="select">
+                                                <option value="">Selecione</option>
+                                                <option value="AC">Acre</option>
+                                                <option value="AL">Alagoas</option>
+                                                <option value="AP">Amapá</option>
+                                                <option value="AM">Amazonas</option>
+                                                <option value="BA">Bahia</option>
+                                                <option value="CE">Ceará</option>
+                                                <option value="DF">Distrito Federal</option>
+                                                <option value="ES">Espírito Santo</option>
+                                                <option value="GO">Goiás</option>
+                                                <option value="MA">Maranhão</option>
+                                                <option value="MT">Mato Grosso</option>
+                                                <option value="MS">Mato Grosso do Sul</option>
+                                                <option value="MG">Minas Gerais</option>
+                                                <option value="PA">Pará</option>
+                                                <option value="PB">Paraíba</option>
+                                                <option value="PR">Paraná</option>
+                                                <option value="PE">Pernambuco</option>
+                                                <option value="PI">Piauí</option>
+                                                <option value="RJ">Rio de Janeiro</option>
+                                                <option value="RN">Rio Grande do Norte</option>
+                                                <option value="RS">Rio Grande do Sul</option>
+                                                <option value="RO">Rondônia</option>
+                                                <option value="RR">Roraima</option>
+                                                <option value="SC">Santa Catarina</option>
+                                                <option value="SP">São Paulo</option>
+                                                <option value="SE">Sergipe</option>
+                                                <option value="TO">Tocantins</option>
+                                            </select>
+                                        </div>
+                                        <input type="hidden" name="Country" value="BRASIL" />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <a href="javascript: history.go(-1)" class="ui animated button large basic left floated">
+                            <div class="visible content">Cancelar</div>
+                            <div class="hidden content">
+                                <i class="remove icon"></i>
+                            </div>
+                        </a>
+                        <button type="submit"
+                                class="ui animated button large submit primary right floated"
+                                tabindex="0">
+                            <div class="visible content">Cadastrar</div>
+                            <div class="hidden content">
+                                <i class="checkmark icon"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

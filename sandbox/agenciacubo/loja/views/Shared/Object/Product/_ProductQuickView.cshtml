@@ -1,0 +1,301 @@
+﻿@model DomainProduct.Entities.ProductDetail
+
+<div class="ui large modal scrolling quick-view" data-modal="@Model.IdProduct">
+    <i class="close icon"></i>
+    <div class="content">
+        <div class="description">
+            <div class="ui container" itemscope itemtype="http://schema.org/Product">
+                <meta itemprop="description" content="@Model.MetaDescription">
+                <link itemprop="url" href="@Model.UrlFriendly" rel="author" />
+                <div class="ui grid stackable">
+                    <div class="row">
+                        <div class="sixteen wide mobile ten wide computer column">
+                            <div class="ui grid">
+                                <div class="row">
+                                    <div class="column">
+                                        <div class="ui fluid image">
+                                            @if (Model.SealStatus != null)
+                                            {
+                                                <div class="ui bottom right attached label massive imagetag">
+                                                    <img src="@Model.SealStatus.Image" class="ui image tiny" onerror="imgError(this)">
+                                                </div>
+                                            }
+                                            <script>
+                                                jQuery(document).ready(function ($) {
+                                                    $('.slider.produto').slick({
+                                                        slidesToShow: 1,
+                                                        slidesToScroll: 1,
+                                                        arrows: false,
+                                                        dots: false,
+                                                        fade: true,
+                                                        accessibility: false,
+                                                        asNavFor: '.car-gallery'
+                                                    });
+                                                });
+                                            </script>
+                                            <div class="slider produto">
+                                                @if (Model.ProductImages != null)
+                                                {
+                                                    foreach (var productImage in Model.ProductImages)
+                                                    {
+                                                        <img src="@productImage.ImageDefault"  onerror="imgError(this)"/>
+                                                    }
+                                                }
+                                            </div>
+                                            @*<div class="ui tags product-tags">
+                                                    <a class="ui blue tag label">Frete Grátis</a>
+                                                    <a class="ui green tag label">Desconto</a>
+                                                    <a class="ui yellow tag label">Promoção</a>
+                                                </div>*@
+                                            <div class="product-button">
+                                                <!--     <a class="ui circular basic icon button heart">
+                                                         <i class="icon heart"></i>
+                                                     </a>
+                                                -->
+                                                <a class="ui circular basic icon button default">
+                                                    <i class="icon shuffle"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row one column">
+                                    <div class="column">
+                                        @Html.Partial("~/Views/Product/Details/_Gallery.cshtml", Model.ProductImages)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sixteen wide mobile six wide computer column infoProduto">
+                            <div class="ui grid">
+                                <div class="computer only row">
+                                    <div class="column">
+                                        <div class="ui breadcrumb">
+                                            <a class="section"
+                                               href="/category/Index/@Model.Categories[0].IdCategory">@(Model.Categories != null ? Model.Categories[0].Name : string.Empty)</a>
+                                            @*@if (Model.Categories != null && Model.Categories[0].ChildCategories != null)
+                                                {
+                                                    foreach (var childCategory in Model.Categories[0].ChildCategories)
+                                                    {
+                                                        <i class="right angle icon divider"></i>
+                                                        <a class="section"
+                                                           href="/category/Index/@childCategory.IdCategory">@childCategory.Name</a>
+                                                    }
+                                                }*@
+                                        </div>
+
+                                        <h1 itemprop="name" class="nomeProduto">@Model.Name</h1>
+                                        <div class="ui two column grid">
+                                            <div class="column">
+                                                <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
+                                            </div>
+                                            <div class="column">
+                                                <div class="avaliacoes">
+                                                    <div class="ui tiny star rating" data-rating="@Model.Rate.Value"></div>
+                                                    @Model.Rate.Value avaliações
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="one column row">
+                                    <div class="column">
+                                        <div class="addthis_inline_share_toolbox"></div>
+                                    </div>
+                                </div>
+                                <div class="row product-grid">
+                                    <div class="column">
+                                        <div class="ui middle aligned grid blue segment">
+
+                                            <!--COMEÇO VARIAÇÔES-->
+                                            <div class="one column row">
+                                                @Html.Action("Variations", "Product", new { variacoes = @Model.AvailableReferences })
+                                            </div>
+                                            <!--FIM VARIAÇÔES-->
+
+                                            <div class="doubling two column row">
+                                                <div class="column right aligned">
+                                                    <div class="ui qtd action mini input">
+                                                        <button class="ui icon button qtdminus">
+                                                            <i class="minus icon"></i>
+                                                        </button>
+                                                        <input type="number" min="1" step="1" size="3" value="1"
+                                                               name="quantidade" id="quantidade" />
+                                                        <button class="ui green icon button qtdplus">
+                                                            <i class="add icon"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <!--COMEÇO GRADE-->
+                                                <div class="ten wide column text right" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
+                                                    <div id="variacao-preco">
+                                                        @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
+                                                        {
+                                                            decimal dec = (decimal)@Model.PricePromotion;
+                                                            <span class="precoAntigo"><span>de: </span><span id="preco-antigo">@Model.Price.ToString("C")</span><span> por</span></span>
+                                                            <span itemprop="price" class="preco" id="preco">@dec.ToString("C")</span>
+                                                            if (Model.InstallmentMax != null)
+                                                            {
+                                                                <span class="infoPreco">
+                                                                    <span>em</span>
+                                                                    <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
+                                                                    <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                                                    <br />
+                                                                    <span id="description">@Model.InstallmentMax.Description</span>
+                                                                </span>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span itemprop="price" class="preco" id="preco">@Model.Price.ToString("C")</span>
+                                                            if (Model.InstallmentMax != null)
+                                                            {
+                                                                <span class="infoPreco">
+                                                                    <span>ou</span>
+                                                                    <span id="max-p">
+                                                                        @Model.InstallmentMax.MaxNumber
+                                                                    </span>
+                                                                    <span>x de </span>
+                                                                    <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                                                    <br />
+                                                                    <span id="description">@Model.InstallmentMax.Description</span>
+                                                                    <br>
+                                                                </span>
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                                <!--FIM GRADE-->
+
+                                            </div>
+                                            <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
+                                            <div class="row">
+                                                <div class="column">
+                                                    @if (!string.IsNullOrEmpty(@Model.DescriptionAvailabilityStatus))
+                                                    {
+                                                        <h5 class="text grey regular right">Disponível em: @Model.DescriptionAvailabilityStatus</h5>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h5 class="text grey regular right"></h5>
+                                                    }
+                                                    <a class="ui animated big action button fluid btn-comprar">
+                                                        <div class="visible content">Adicionar ao Carrinho</div>
+                                                        <div class="hidden content">
+                                                            <i class="add to cart icon"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--FIM DISPONIBILIDADE / CARRINHO-->
+                                        </div>
+
+                                        @Html.Partial("~/Views/Product/Details/_Shipping.cshtml")
+
+                                        <div id="pagamento-calculado">
+                                            @Html.Action("Payment", "Product", new { valor = @Model.Price })
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui divider hidden"></div>
+                    <div class="row">
+                        <div class="ui top attached secondary pointing stackable menu tabular">
+                            <a class="item active" data-tab="informacoes">Informações Básicas</a>
+                            <a class="item" data-tab="detalhes">Características do Produto </a>
+                            <a class="item" data-tab="avaliacoes">Avaliações</a>
+
+                        </div>
+                        <div class="ui bottom attached tab segment basic active " data-tab="informacoes">
+                            @Html.Raw(Model.DescriptionDetailSummary)
+                        </div>
+
+
+                        <!--COMEÇO DETALHES PRODUTO-->
+                        <div class="ui bottom attached tab segment basic" data-tab="detalhes" id="detalhes">
+                            <div class="ui grid one column">
+                                <div class="column">
+                                    @Html.Raw(@Model.DescriptionDetail)
+                                </div>
+                            </div>
+                        </div>
+                        <!--FIM DETALHES PRODUTO-->
+
+                        <div class="ui bottom attached tab segment basic" data-tab="avaliacoes" id="avaliacoes">
+                            <div class="ui grid">
+                                <div class="row two column horizontal divided stackable">
+                                    <!-- COMEÇO AVALIAÇÂO-->
+                                    <div class="column">
+                                        <div class="ui comments fluid">
+                                            @if (Model.ProductRatings != null)
+                                            {
+                                                foreach (var review in Model.ProductRatings)
+                                                {
+                                                    <div class="comment">
+                                                        <div class="content">
+                                                            <a class="author">@review.Name</a>
+                                                            <div class="metadata">
+                                                                <div class="date"></div>
+                                                                <div class="rating">
+                                                                    <div class="ui mini star rating" data-rating="@review.Rate"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <p>@review.Comment</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ui divider"></div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <!-- FIM AVALIAÇÂO-->
+                                    <!-- COMEÇO FOMULÁRIO DE AVALIAÇÂO-->
+                                    <div class="column">
+                                        <form class="ui form" id="avaliar">
+                                            <div class="field">
+                                                <label>Nome</label>
+                                                <input type="text" name="Name" placeholder="Nome" id="name">
+                                            </div>
+                                            <div class="field">
+                                                <label>E-mail</label>
+                                                <input type="text" name="Email" placeholder="Email" id="Email">
+                                            </div>
+                                            <div class="field">
+                                                <label>Nota</label>
+                                                <div class="ui huge star rating"></div>
+                                            </div>
+                                            <div class="field">
+                                                <label>Avaliação</label>
+                                                <textarea name="Comment" id="Comment"></textarea>
+                                            </div>
+                                            <div class="field">
+                                                <div class="ui checkbox">
+                                                    <input type="checkbox" tabindex="0" class="hidden" name="Terms" id="Terms">
+                                                    <label>I agree to the Terms and Conditions</label>
+                                                </div>
+                                            </div>
+
+                                            <input type="hidden" name="Rate" id="Rate" value="" />
+                                            <button class="ui button btn-avaliar" type="submit" onclick="return false">Enviar</button>
+                                        </form>
+                                    </div>
+                                    <!-- FIM FOMULÁRIO DE AVALIAÇÂO-->
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

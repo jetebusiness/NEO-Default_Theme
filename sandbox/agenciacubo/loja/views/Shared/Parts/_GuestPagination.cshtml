@@ -1,0 +1,57 @@
+﻿@model DomainCustomer.Settings
+
+@{
+    var orderParam = Request.QueryString["order"] != null ? string.Concat("&order=", Request.QueryString["o"] != null ? Request.QueryString["order"].ToString() : string.Empty) : string.Empty;
+    var viewParam = Request.QueryString["viewList"] != null ? string.Concat("&viewList=", Request.QueryString["viewList"] != null ? Request.QueryString["viewList"].ToString() : string.Empty) : string.Empty;
+
+    var queryParameters = string.Concat(orderParam, viewParam);
+}
+
+@if (Model.PageCount > 1)
+{
+    <div class="ui right floated pagination menu">
+        <div class="ui right floated pagination menu">
+            @if (Model.HasPreviousPage)
+            {
+                <a class="item" href="@string.Concat("/eventlist/managerguest?pageNumber=", Model.PageNumber - 1, queryParameters)">
+                    <i class="left chevron icon"></i>
+                </a>
+            }
+            else
+            {
+                <a class="disabled item" href="@string.Concat("/eventlist/managerguest?pageNumber=", Model.PageNumber - 1, queryParameters)">
+                    <i class="left chevron icon"></i>
+                </a>
+            }
+
+            @for (int i = 0; i < Model.PageCount; i++)
+            {
+                if ((i + 1) == Model.PageNumber)
+                {
+                    <a class="active item">
+                        @(i + 1)
+                    </a>
+                }
+                else
+                {
+                    <a class="item" href="@string.Concat("/eventlist/managerguest?pageNumber=", (i + 1), queryParameters)">
+                        @(i + 1)
+                    </a>
+                }
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <a class="item" href="@string.Concat("/eventlist/managerguest?pageNumber=", Model.PageNumber + 1, queryParameters)">
+                    <i class="right chevron icon"></i>
+                </a>
+            }
+            else
+            {
+                <a class="disabled item" href="@string.Concat("/eventlist/managerguest?pageNumber=", Model.PageNumber + 1, queryParameters)">
+                    <i class="right chevron icon"></i>
+                </a>
+            }
+        </div>
+    </div>
+}

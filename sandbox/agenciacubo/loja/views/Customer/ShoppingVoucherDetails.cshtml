@@ -1,0 +1,256 @@
+﻿@model DomainCustomer.Entities.ShoppingVoucher.AccountStatement
+@{
+	ViewBag.Title = "Vale Compra";
+	Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+
+	DateTime dataDefault = new DateTime(1, 1, 1);
+	DateTime dataCorte = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+}
+@section breadcrumbs {
+	<div class="ui container">
+		<div class="ui one column grid stackable middle aligned">
+			<div class="row">
+				<div class="column">
+					<h1>@ViewBag.Title</h1>
+					<div class="ui breadcrumb text small">
+						<a class="section" href="/">Home</a>
+						<i class="right angle icon divider"></i>
+						<a class="section" href="/Customer">Central do Cliente</a>
+						<i class="right angle icon divider"></i>
+						<a class="section" href="/Customer/ShoppingVoucherDetails">Vale Compra</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+<div class="ui grid middle aligned left aligned">
+
+	<!-- Saldo-->
+	<div class="row">
+		<div class="column">
+			<a class="ui teal image label massive">
+				Saldo:
+				<div class="detail">@ViewBag.ValeCompraSaldo.ToString("C")</div>
+			</a>
+		</div>
+
+	</div>
+
+	<!-- Crédito-->
+	<div class="row one column">
+		<div class="column">
+			<h3>Créditos:</h3>
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="column">
+			<table class="ui fixed single line table">
+				<thead>
+					<tr>
+						<th class="center aligned">Valor do Crédito</th>
+						@*
+							<th class="center aligned">Expira</th>
+							<th class="center aligned">Data de expiração</th>
+						*@
+						<th class="center aligned">Data de lançamento</th>
+					</tr>
+				</thead>
+				<tbody>
+					@{
+						int rowCredit = 0;
+						if (Model.credits != null)
+						{
+							foreach (var credit in Model.credits)
+							{
+								//if (credit.expirationDate >= dataCorte || credit.expirationDate == dataDefault)
+								//{
+								rowCredit++;
+								<tr>
+									<td class="center aligned">@credit.amount.ToString("C")</td>
+									@*
+										<td class="center aligned">@(credit.expirationDate > dataDefault ? "Sim" : "Não")</td>
+										<td class="center aligned">@(credit.expirationDate > dataDefault ? credit.expirationDate.ToString("dd/MM/yyyy") : "-")</td>
+									*@
+									<td class="center aligned">
+										@if (credit.registerDate != null)
+										{
+											DateTime dataCadastro = (DateTime)credit.registerDate;
+											@dataCadastro.ToString("dd/MM/yyyy")
+										}
+										else
+										{
+											<span>-</span>
+										}
+									</td>
+								</tr>
+								//}
+							}
+						}
+
+						if (rowCredit == 0)
+						{
+							<tr>
+								<td class="center aligned" colspan="2">Nenhuma movimentação de crédito encontrada.</td>
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<!-- Débito-->
+	<div class="row one column">
+		<div class="column">
+			<h3>Débitos:</h3>
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="column">
+			<table class="ui fixed single line table">
+				<thead>
+					<tr>
+						<th class="center aligned">Valor do Débito</th>
+						<th class="center aligned">Número do Pedido</th>
+						<th class="center aligned">Data do Pedido</th>
+						<th class="center aligned"></th>
+					</tr>
+				</thead>
+				<tbody>
+					@{
+						int rowDebit = 0;
+						if (Model.debits != null)
+						{
+							foreach (var debit in Model.debits)
+							{
+								rowDebit++;
+								<tr>
+									<td class="center aligned">@debit.amount.ToString("C")</td>
+									<td class="center aligned">
+										@if (debit.idOrder != null)
+										{
+											<a href="/Order/Details/@debit.idOrder">@debit.idOrder</a>
+										}
+									</td>
+									<td class="center aligned">
+										@if (debit.registerDate != null)
+										{
+											DateTime dataCadastro = (DateTime)debit.registerDate;
+											@dataCadastro.ToString("dd/MM/yyyy")
+										}
+										else
+										{
+											<span>-</span>
+										}
+									</td>
+									<td class="center aligned">
+										@if (debit.idOrder != null)
+										{
+											<a class="ui labeled icon teal button" href="/Order/Details/@debit.idOrder">
+												<i class="unhide icon"></i>
+												Visualizar Pedido
+											</a>
+										}
+									</td>
+								</tr>
+							}
+						}
+
+						if (rowDebit == 0)
+						{
+							<tr>
+								<td class="center aligned" colspan="4">Nenhuma movimentação de crédito encontrada.</td>
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	@*
+		<!-- Expirados-->
+
+		<div class="row one column">
+				<div class="column">
+						<h3>Expirados:</h3>
+				</div>
+
+		</div>
+
+		<div class="row">
+
+				<div class="ui four column grid">
+						<div class="two column row">
+								<div class="column">
+										<table class="ui table">
+												<thead>
+														<tr>
+																<th class="center aligned">Valor Expirado</th>
+																<th class="center aligned">Expirado em:</th>
+														</tr>
+												</thead>
+												<tbody>
+														@{
+																int rowCreditExpired = 0;
+																if (Model.credits != null)
+																{
+																		foreach (var credit in Model.credits)
+																		{
+																				if (credit.expirationDate < dataCorte && credit.expirationDate != dataDefault)
+																				{
+																						rowCreditExpired++;
+																				<tr>
+																						<td class="center aligned">@credit.amount.ToString("C")</td>
+																						<td class="center aligned">@(credit.expirationDate > dataDefault ? credit.expirationDate.ToString("dd/MM/yyyy") : "-")</td>
+																				</tr>
+																				}
+																		}
+																}
+
+																if (rowCreditExpired == 0)
+																{
+																		<tr>
+																				<td class="center aligned" colspan="2">Nenhuma movimentação de crédito expirada encontrada.</td>
+																		</tr>
+																}
+														}
+												</tbody>
+										</table>
+								</div>
+						</div>
+				</div>
+		</div>
+	*@
+
+
+	<div class="row">
+		<div class="column">
+			<a href="/Customer" class="ui animated basic button left floated">
+				<div class="visible content">Voltar</div>
+				<div class="hidden content">
+					<i class="reply icon"></i>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<script>
+	$('.ui.accordion').accordion({
+		selector: {
+			trigger: '.title .qus_label'
+		}
+	});
+</script>

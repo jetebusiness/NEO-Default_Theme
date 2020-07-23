@@ -1,0 +1,603 @@
+﻿@model DomainProduct.Entities.ProductDetail
+@{
+    List<DomainProduct.Entities.ProductRating> lista_avaliacoes_completa = new List<DomainProduct.Entities.ProductRating>();
+    if (Model.ProductRatings.Count > 5)
+    {
+        lista_avaliacoes_completa.AddRange(Model.ProductRatings);
+        lista_avaliacoes_completa.RemoveRange(0, 5);
+    }
+}
+@section CustomSeo {
+    @{
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+        }
+
+        if (!String.IsNullOrEmpty(Model.MetaKeyWords))
+        {
+            <meta name="Keywords" content="@Model.MetaKeyWords">
+        }
+    }
+}
+<script>
+    var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
+    var lista_avaliacao_produto =
+        @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
+</script>
+
+@{
+
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
+}
+
+@section remarketing{
+    <!-- Google Remarketing -->
+    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+    <!-- End Google Remarketing -->
+}
+
+@section breadcrumbs {
+}
+@{
+    DomainProduct.Entities.Sku SKUPadrao = new DomainProduct.Entities.Sku();
+    if (TempData["SKUPadrao"] != null)
+    {
+        SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadrao"];
+    }
+    string ListaImagens = string.Empty;
+    string ListaSKU = string.Empty;
+    string AvailableReferences = string.Empty;
+    string variacaoSelecionada = string.Empty;
+    string skuSelecionado = string.Empty;
+
+    if (Model.ProductImages != null)
+    {
+        ListaImagens = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.ProductImages);
+    }
+
+    if (Model.SKUs != null)
+    {
+        ListaSKU = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.SKUs);
+    }
+
+    if (Model.AvailableReferences != null)
+    {
+        AvailableReferences = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.AvailableReferences);
+    }
+
+    if (Model.AvailableReferences != null && Model.AvailableReferences.Count > 0)
+    {
+        foreach (var referencias in Model.AvailableReferences.OrderBy(o => o.OrdinationOfReferences).ToList())
+        {
+            foreach (var variacoes in referencias.Variations)
+            {
+                if (SKUPadrao.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation).Count > 0)
+                {
+                    var referencia_selecionada = SKUPadrao.Variations.FindAll(r => r.IdVariation == variacoes.IdVariation);
+                    variacaoSelecionada += referencias.IdReference.ToString() + '-' + referencia_selecionada.FirstOrDefault().IdVariation.ToString() + ',';
+                }
+            }
+        }
+
+        string character = variacaoSelecionada.Substring(variacaoSelecionada.Length - 1);
+        if (character == ",")
+        {
+            variacaoSelecionada = variacaoSelecionada.Remove(variacaoSelecionada.Length - 1);
+        }
+    }
+
+
+    if (SKUPadrao.InstallmentMax == null)
+    {
+        SKUPadrao.InstallmentMax = new DomainProduct.Entities.InstallmentMax();
+        SKUPadrao.InstallmentMax.MaxNumber = 0;
+        SKUPadrao.InstallmentMax.Value = 0;
+    }
+}
+<div id="fb-root"></div>
+<script>
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.10&appId=656083874584141";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+<!-- Posicione esta tag no cabeçalho ou imediatamente antes da tag de fechamento do corpo. -->
+<script src="https://apis.google.com/js/platform.js" async defer>
+    {
+        lang: 'pt-BR'
+    }
+</script>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<!-- COMEÇO - Váriaveis Produto Principal-->
+<input type="hidden" id="produto-id" name="produto-id" value="@Model.IdProduct" />
+<input type="hidden" id="produto-stock" name="produto-stock" value="@Model.Stock" />
+<input type="hidden" id="produto-sku" name="produto-sku" value="@SKUPadrao.IdSku" />
+<input type="hidden" id="produto-codigo" name="produto-codigo" value="@Model.Code" />
+<input type="hidden" id="lista-imagens-slide" name="lista-imagens-slide" value="@ListaImagens" />
+<input type="hidden" id="principal-total-variacoes" name="principal-total-variacoes" value="@(Model.AvailableReferences != null ? Model.AvailableReferences.Count() : 0) " />
+<input type="hidden" id="principal-lista-sku" name="principal-lista-sku" value="@ListaSKU" />
+<input type="hidden" id="principal-referencias-selecionadas" name="principal-referencias-selecionadas" value="@variacaoSelecionada" />
+<input type="hidden" id="variacoesSelecionadas" value="" />
+<!-- FIM - Váriaveis Produto Principal-->
+<!-- COMEÇO - Váriaveis Produto Unitário-->
+<input type="hidden" value="@Model.Price" id="preco-unidade" name="preco-unidade" />
+<input type="hidden" value="@Model.PricePromotion" id="preco-promocao-unidade" name="preco-promocao-unidade" />
+@if (Model.InstallmentMax != null)
+{
+    <input type="hidden" value="@Model.InstallmentMax.Value" id="parcela-maxima-unidade" name="parcela-maxima-unidade" />
+    <input type="hidden" value="@Model.InstallmentMax.MaxNumber" id="qtd-parcela-maxima-unidade" name="qtd-parcela-maxima-unidade" />
+    <input type="hidden" value="@Model.InstallmentMax.Description" id="pagamento-descricao" name="pagamento-descricao" />
+}
+<input type="hidden" value="@AvailableReferences" id="principal-produto-referecias" name="principal-produto-referecias" />
+<!-- FIM - Váriaveis Produto Unitário-->
+<div class="ui container" itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="description" content="">
+    <link itemprop="url" href="" rel="author" />
+    <div class="ui grid stackable produto">
+        <div class="row product information one column">
+            <div class="column">
+                <div class="ui breadcrumb">
+                    <a class="section" href=""></a>
+                    <!--COMEÇO FOREACH CATEGORIAS-->
+                    @if (Model.Categories != null)
+            {
+                        <a class="section" href="/">Home</a>
+                        var categoriaDefault = Model.Categories.Find(c => c.Default == true);
+                        if (categoriaDefault != null)
+                        {
+                            <i class="right angle icon divider"></i>
+                            <a class="section" href="@categoriaDefault.Link">@categoriaDefault.Name</a>
+                        }
+                    }
+                    <!-- FIM FOREACH CATEGORIAS-->
+                </div>
+            </div>
+            <!-- COMEÇO MARCA MOBILE-->
+            <div class="mobile only column">
+                <h1 itemprop="name" class="nomeProduto" id="produto-nome">@Model.Name</h1>
+                @if (Model.Brand != null)
+                {
+                    <h5 itemprop="productBrand" class="marcaProduto">@Model.Name</h5>
+                }
+                else
+                {
+                    <h5 itemprop="productBrand" class="marcaProduto"></h5>
+                }
+                <!-- FIM MARCA MOBILE-->
+                <div class="ui two column grid">
+                    <div class="column">
+                        <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
+                    </div>
+                    <div class="column ten wide mobile">
+                        <div class="avaliacoes">
+                            <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
+                            @if (Model.ProductRatings != null)
+                            {
+                                if (Model.ProductRatings.Count() == 1)
+                                {
+                                    <span>1 avaliação</span>
+                                }
+                                else
+                                {
+                                    <span>@Model.ProductRatings.Count() avaliações</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>0 avaliações</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row detalhes produto">
+            <!-- FIM IMAGENS DO PRODUTO PRINCIPAL-->
+            <div class="sixteen wide mobile seven wide computer column" id="exibePartial">
+                @{
+                    List<DomainProduct.Entities.ProductImage> productFirstReferenceImages = new List<DomainProduct.Entities.ProductImage>();
+                    List<DomainProduct.Entities.ProductImage> productImages = new List<DomainProduct.Entities.ProductImage>();
+
+                    if (Model.AvailableReferences != null)
+                    {
+                        foreach (var item in Model.ProductImages)
+                        {
+                            int flag = 0;
+                            if (item.Variacao_ids != null)
+                            {
+                                for (int i = 0; i < item.Variacao_ids.Length; i++)
+                                {
+                                    for (int j = 0; j < SKUPadrao.Variations.Count(); j++)
+                                    {
+                                        if (item.Variacao_ids[0] == SKUPadrao.Variations[j].IdVariation)
+                                        {
+                                            productFirstReferenceImages.Add(item);
+                                        }
+                                        if (item.Variacao_ids[i] == SKUPadrao.Variations[j].IdVariation)
+                                        {
+                                            flag++;
+                                        }
+                                    }
+                                }
+                            }
+                            if (flag == SKUPadrao.Variations.Count())
+                            {
+                                productImages.Add(item);
+                            }
+                        }
+
+                        if (productImages.Count == 0)
+                        {
+                            productImages = productFirstReferenceImages;
+                        }
+                        if (productImages.Count == 0)
+                        {
+                            productImages = Model.ProductImages;
+                        }
+                        if (productImages.Count == 0)
+                        {
+                            Model.ProductImages.RemoveAll(item => item.Variacao_ids == null);
+                        }
+                    }
+                    else
+                    {
+                        productImages = Model.ProductImages;
+                    }
+                }
+                @Html.Partial("~/Views/Product/Details/_Slide.cshtml", productImages.ToList())
+            </div>
+            <!-- COMEÇO IMAGENS DO PRODUTO PRINCIPAL-->
+            <div class="ui divider hidden"></div>
+            <!-- COMEÇO INFORMAÇÕES DO PRODUTO-->
+            <div class="sixteen wide mobile nine wide computer column infoProduto">
+                <div class="ui grid">
+                    <div class="computer only row product information">
+                        <div class="column">
+                            <h1 itemprop="name" class="nomeProduto" id="produto-nome">@Model.Name</h1>
+                            @if (@Model.Brand != null)
+                            {
+                                <h5 itemprop="productBrand" class="marcaProduto">@Model.Brand.Name</h5>
+                            }
+                            else
+                            {
+                                <h5 itemprop="productBrand" class="marcaProduto"></h5>
+                            }
+                            <div class="ui two column grid">
+                                <div class="column">
+                                    <h6 itemprop="productID" class="codProduto">@Model.Code</h6>
+                                </div>
+                                <div class="column">
+                                    <div class="avaliacoes">
+                                        <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
+                                        @if (Model.ProductRatings != null)
+                                        {
+                                            if (Model.ProductRatings.Count() == 1)
+                                            {
+                                                <span>1 avaliação</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@Model.ProductRatings.Count() avaliações</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span>0 avaliações</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--COMEÇO DICA DE COMPRA-->
+                    <div id="dica_compra_partial">
+                        @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
+                    </div>
+                    <!--FIM DICA DE COMPRA-->
+                    <div class="row">
+                        <div class="column">
+                            <div class="ui middle aligned grid border bottom grey attached segment">
+                                <h4>Produtos no Conjunto</h4>
+                                <div class="row one colum">
+                                    <div class="ui container fluid">
+                                        @Html.Partial("Conjunct/_ProductConjunctList")
+                                    </div>
+                                </div>
+                                <div class="ui divider"></div>
+                                <!--FIM VARIAÇÔES-->
+                                <div class="row one column ">
+                                    <div class="column text right" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
+                                        <span class="precoAntigo">
+                                            Sub-Total: <span id="conjunto-total"></span>
+                                            <br />
+                                            <span>Desconto: <span id="conjunto-desconto">R$ 0,00</span></span>
+                                        </span><br />
+                                        <span itemprop="price" class="preco">
+                                            <span id="conjunto-total-final"></span>
+                                        </span>
+                                    </div>
+                                    <!--FIM GRADE-->
+                                    <div class="ui divider hidden"></div>
+                                </div>
+                                <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
+                                <div class="row @(ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago ? "two column stackable" : "")">
+
+                                    @if (ViewBag.UseOneClickMaxiPago != null && (bool)ViewBag.UseOneClickMaxiPago)
+                                    {
+                                        <div class="column" id="btn_compre_oneclick_conjunto_selecionado text uppercase">
+                                            <a href="" class="ui animated large basic button fluid buy-conjunct" onclick="return false">
+                                                <div class="visible content">Comprar com 1-Click</div>
+                                                <div id="iconCart" class="hidden content">
+                                                    <i class="add to cart icon"></i>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+
+                                    <div class="column" id="btn_compre_conjunto_selecionado">
+                                        @if (Model.Stock == 0 || Model.FlagExhausted)
+                                        {
+                                            <strong class="text color grey regular right text bold color red">Produto Esgotado</strong>
+                                        }
+                                        else if (!string.IsNullOrEmpty(@Model.DescriptionAvailabilityStatus))
+                                        {
+                                            <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
+                                        }
+                                        <a href="" class="ui animated large action button fluid buy-conjunct text uppercase" onclick="return false">
+                                            <div id="buttonText" class="visible content">Comprar Selecionados</div>
+                                            <div id="iconCart" class="hidden content">
+                                                <i class="add to cart icon"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--FIM DISPONIBILIDADE / CARRINHO-->
+                            @if (!Model.FlagExhausted)
+                            {
+
+                                <div id="pagamento-calculado">
+                                    @{
+                                        decimal price = 0;
+                                        decimal pricePromotion = 0;
+
+                                        foreach (var item in Model.ConjunctProducts)
+                                        {
+                                            price += item.Price;
+                                            if (item.PricePromotion != null)
+                                            {
+                                                pricePromotion += (decimal)item.PricePromotion;
+                                            }
+                                        }
+
+                                        if (pricePromotion > 0)
+                                        {
+                                            @Html.Action("Payment", "Product", new { valor = pricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
+                                        }
+                                        else
+                                        {
+                                            @Html.Action("Payment", "Product", new { valor = price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
+                                        }
+                                    }
+                                </div>
+                                        }
+                            @if (Model.HaveSku)
+                            {
+                                if (Model.FlagExhausted || SKUPadrao.Stock == 0)
+                                {
+                                    @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", true)
+                                }
+                                else
+                                {
+                                    @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", false)
+                                }
+                            }
+                            else
+                            {
+                                if (Model.FlagExhausted || Model.Stock == 0)
+                                {
+                                    @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", true)
+                                }
+                                else
+                                {
+                                    @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", false)
+                                }
+                            }
+                            <!-- COMEÇO REDES SOCIAIS-->
+                            <div class="ui divider hidden"></div>
+                            <div class="one column row">
+                                <div class="column">
+                                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
+                                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                                    <div class="addthis_inline_share_toolbox"></div>
+                                </div>
+                            </div>
+                            <!-- FIM REDES SOCIAIS-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIM INFORMAÇÕES DO PRODUTO-->
+        </div>
+        <!--COMEÇO DESCRIÇÃO-->
+        <div class="row">
+            <div class="ui top attached secondary pointing stackable menu tabular">
+                <a class="item active" data-tab="informacoes">Informações Básicas</a>
+                <a class="item" data-tab="detalhes">Características do Produto </a>
+                <a class="item" data-tab="avaliacoes">Avaliações</a>
+            </div>
+            <div class="ui bottom attached tab segment basic active " data-tab="informacoes">
+                @Html.Raw(Model.DescriptionDetailSummary)
+            </div>
+            <!--COMEÇO DETALHES PRODUTO-->
+            <div class="ui bottom attached tab segment basic" data-tab="detalhes" id="detalhes">
+                <div class="ui grid one column">
+                    <div class="column">
+                        @Html.Raw(@Model.DescriptionDetail)
+                    </div>
+                </div>
+            </div>
+            <!--FIM DETALHES PRODUTO-->
+            <div class="ui bottom attached tab segment basic" data-tab="avaliacoes" id="avaliacoes">
+                <div class="ui grid">
+                    <div class="row two column horizontal divided stackable">
+                        <!-- COMEÇO AVALIAÇÂO-->
+                        <div class="column">
+                            <div class="ui comments fluid" id="lista_avaliacoes">
+                                @if (Model.ProductRatings != null)
+                                {
+                                    int total = Model.ProductRatings.Count > 5 ? 5 : Model.ProductRatings.Count;
+                                    for (int i = 0; i < total; i++)
+                                    {
+                                        <div class="comment">
+                                            <div class="content">
+                                                <a class="author">@Model.ProductRatings[i].Name</a>
+                                                <div class="metadata">
+                                                    <div class="rating">
+                                                        <div class="ui mini star rating" data-rating="@Model.ProductRatings[i].Rate"></div>
+                                                    </div>
+                                                    <div class="date"></div>
+                                                    @if (Model.ProductRatings[i].LeavePublicEmail == true)
+                                                    {
+                                                        <div class="email">@Model.ProductRatings[i].Email</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="email"></div>
+                                                    }
+                                                    <div class="date">@Model.ProductRatings[i].DateRegister</div>
+                                                    <div class="address">@Model.ProductRatings[i].AddressCity</div>
+                                                </div>
+                                                <div class="text">
+                                                    <h5>@Model.ProductRatings[i].Title</h5>
+                                                    <p>@Model.ProductRatings[i].Comment</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ui divider"></div>
+                                    }
+                                }
+                            </div>
+                            @if (Model.ProductRatings != null && Model.ProductRatings.Count > 5)
+                            {
+                                <div class="ui button teal tiny right icon" id="btn_carregar_avaliacoes">
+                                    <i class="icon refresh"></i>
+                                    Carregar mais avaliações
+                                </div>
+                            }
+                        </div>
+                        <!-- FIM AVALIAÇÂO-->
+                        <!-- COMEÇO FOMULÁRIO DE AVALIAÇÂO-->
+                        <div class="column">
+                            <form class="ui form" id="avaliar">
+                                <div class="field required">
+                                    <label>Nome</label>
+                                    <input type="text" name="Name" maxlength="100" placeholder="Nome" id="Name" required>
+                                </div>
+                                <div class="field required">
+                                    <label>E-mail</label>
+                                    <input type="text" name="email" maxlength="100" placeholder="Email" id="Email" required>
+                                </div>
+                                <div class="two fields">
+                                    <div class="field required" data-jet-revel="true">
+                                        <label>Cidade</label>
+                                        <div class="ui input">
+                                            <input type="text" maxlength="100" name="AddressCity" placeholder="Cidade" id="cidade" required>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Estado</label>
+                                        <select class="ui dropdown search" id="estado_0" name="AddressState">
+                                            <option value="">Selecione</option>
+                                            <option value="AC">Acre</option>
+                                            <option value="AL">Alagoas</option>
+                                            <option value="AP">Amapá</option>
+                                            <option value="AM">Amazonas</option>
+                                            <option value="BA">Bahia</option>
+                                            <option value="CE">Ceará</option>
+                                            <option value="DF">Distrito Federal</option>
+                                            <option value="ES">Espírito Santo</option>
+                                            <option value="GO">Goiás</option>
+                                            <option value="MA">Maranhão</option>
+                                            <option value="MT">Mato Grosso</option>
+                                            <option value="MS">Mato Grosso do Sul</option>
+                                            <option value="MG">Minas Gerais</option>
+                                            <option value="PA">Pará</option>
+                                            <option value="PB">Paraíba</option>
+                                            <option value="PR">Paraná</option>
+                                            <option value="PE">Pernambuco</option>
+                                            <option value="PI">Piauí</option>
+                                            <option value="RJ">Rio de Janeiro</option>
+                                            <option value="RN">Rio Grande do Norte</option>
+                                            <option value="RS">Rio Grande do Sul</option>
+                                            <option value="RO">Rondônia</option>
+                                            <option value="RR">Roraima</option>
+                                            <option value="SC">Santa Catarina</option>
+                                            <option value="SP">São Paulo</option>
+                                            <option value="SE">Sergipe</option>
+                                            <option value="TO">Tocantins</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field required" id="rating_st">
+                                    <label>Nota</label>
+                                    <div class="ui huge star rating"></div>
+                                </div>
+                                <div class="field required">
+                                    <label>Título</label>
+                                    <input type="text" name="Title" maxlength="200" placeholder="Titulo" id="Title">
+                                </div>
+                                <div class="field required">
+                                    <label>Opinião</label>
+                                    <textarea id="Comment" maxlength="1000" name="Comment"></textarea>
+                                </div>
+                                <div class="field">
+                                    <div class="ui checkbox" id="ViewEmailCheck">
+                                        <input type="checkbox" tabindex="0" class="hidden" name="ViewEmail" id="ViewEmail">
+                                        <label>Mostrar Email?</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="Rate" id="Rate" value="" />
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Evaluation" })
+                                <br />
+                                <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
+                            </form>
+                        </div>
+                        <!-- FIM FOMULÁRIO DE AVALIAÇÂO-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--FIM DESCRIÇÃO-->
+        @if (!Model.FlagExhausted)
+        {
+            <div class="row" id="buy-together">
+                @if (Model.BuyTogether != null && Model.BuyTogether.Count > 0)
+                {
+                    @Html.Partial("~/Views/Product/Details/_BuyTogether.cshtml", Model)
+                }
+            </div>
+        }
+        <div class="row">
+            @if (Model.AlsoProductsPurchased != null && Model.AlsoProductsPurchased.Count > 0)
+            {
+                @Html.Partial("~/Views/Product/Details/_AlsoPurchased.cshtml", Model.AlsoProductsPurchased)
+            }
+        </div>
+        <div class="row one column">
+            <div class="column">
+                @if (Model.RelatedProducts != null && Model.RelatedProducts.Count > 0)
+                {
+                    @Html.Partial("~/Views/Product/Details/_RelatedProducts.cshtml", Model.RelatedProducts)
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+﻿@model DomainCompany.Entities.Ebit
+
+@if (Model != null && Model.IdEBit != 0)
+{
+    <a class="ui image" id="seloEbit" href="http://www.ebit.com.br/#@Model.NomeLojaEBit" target="_blank" onclick="redir(this.href);">Avaliação de Lojas e-bit</a>
+    <script type="text/javascript" id="getSelo" src="//a248.e.akamai.net/f/248/52872/0s/img.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@Model.IdEBit" defer="defer">
+
+    </script>
+}

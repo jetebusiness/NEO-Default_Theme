@@ -1,0 +1,113 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Acesse sua conta - Área Restrita";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Acesse sua conta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="five wide computer sixteen wide tablet sixteen wide mobile column">
+            <form class="ui large form" id="formLogin">
+                @Html.AntiForgeryToken()
+                <div class="ui segment">
+                    <input id="idCustomer" name="idCustomer" type="hidden" value="" />
+                    <input id="idTablePrice" name="idTablePrice" type="hidden" value="" />
+                    <div class="ui grid  very relaxed stackable middle aligned grid">
+                        <div class="row one column ">
+                            <div class="column">
+                                <div class="ui compact message form-message error">
+                                    <p></p>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="UserName" maxlength="100" id="userName" placeholder="E-mail, CPF ou CNPJ">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon input">
+                                        <i class="lock icon"></i>
+                                        <input type="password" name="password" maxlength="100" id="passwordb2b" placeholder="Senha">
+                                    </div>
+                                </div>
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Login" })
+                                <div class="ui divider hidden"></div>
+                                <button type="button" class="ui fluid large submit primary button" id="loginB2B">
+                                    Entrar
+                                </button>
+                                <div class="ui divider"></div>
+                                <p>Esqueceu sua senha? <a href="/customer/forgot">Recuperar senha</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="termoAceite" class="ui grid middle aligned center aligned hideme">
+    <div class="row">
+        <div class="eight wide computer sixteen wide tablet sixteen wide mobile column">
+            <div class="ui segment">
+                <div class="ui grid top aligned left">
+                    <div class="row">
+                        <div class="column">
+                            <h3>Para prosseguir este acesso, é necessário ler e concordar com nossos Termos e Condições.</h3>
+                            <div class="ui form">
+                                <div class="field" style="display: inline-flex">
+                                    <div class="ui checkbox termo aceite">
+                                        <input id="checkAcceptTerm" type="checkbox">
+                                    </div>
+                                    <label id="termo_aceite">Li e estou de acordo com os termos <a style="cursor: pointer;">termos e condições.</a></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <button type="button" id="btnCancelar" class="ui animated button large submit basic left floated">
+                                <div class="visible content">Cancelar</div>
+                                <div class="hidden content">
+                                    <i class="remove icon"></i>
+                                </div>
+                            </button>
+                            <button type="button" id="btnContinuar" class="ui animated button large submit primary right floated">
+                                <div class="visible content">Continuar</div>
+                                <div class="hidden content">
+                                    <i class="checkmark icon"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="termo" class="hideme">
+    @if (!string.IsNullOrEmpty(ViewBag.TermToAcceptTextB2B))
+    {
+        @Html.Raw(ViewBag.TermToAcceptTextB2B);
+    }
+    <div></div>
+</div>

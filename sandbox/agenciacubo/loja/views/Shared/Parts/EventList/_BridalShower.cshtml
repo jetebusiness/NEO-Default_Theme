@@ -1,0 +1,187 @@
+﻿@model DomainCustomer.Entities.EventList
+
+<div class="row">
+    <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+        @using (Html.BeginForm(Model != null && Model.IdEventList > 0 ? "ManagerList" : "CreateList", "EventList", FormMethod.Post, new { name = "formEventList", id = "formEventList", enctype = "multipart/form-data" }))
+        {
+
+            <input type="hidden" name="IdClient" value="@(Session["UserAuthenticated"] != null ? ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).IdCustomer.ToString() : "")" />
+            <input type="hidden" name="Type" value="3" />
+
+            if (Model != null && Model.IdEventList > 0)
+            {
+                <input type="hidden" name="IdEventList" value="@(Model != null ? Model.IdEventList.ToString() : "0")" />
+            }
+
+                    <div class="ui segment">
+                        <h2>Configurar Dados</h2>
+                        <div class="ui grid stackable top aligned left grid">
+                            <div class="row two column divided horizontal">
+                                <div class="column">
+                                    <div class="ui form">
+                                        <h4 class="ui dividing header">Dados do Evento</h4>
+                                        @if (Model.IdEventList > 0)
+                                        {
+                                            <div class="field ui toggle checkbox">
+                                                <input id="chkStatus" type="checkbox" name="Status" @(Model.Status ? "checked" : "") value="@Model.Status">
+                                                <label id="lblStatus" class="text bold">@(Model.Status ? "Ativo" : "Inativo")</label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="field ui toggle checkbox disabled">
+                                                <input id="chkStatus" type="checkbox" name="Status" checked value="true">
+                                                <label id="lblStatus" class="text bold">Ativo</label>
+                                            </div>
+                                        }
+                                        <div class="field calendar required">
+                                            <label>Data do Evento</label>
+                                            <div class="ui input left icon">
+                                                <i class="calendar icon"></i>
+                                                <input type="text" class="masked mask_date" name="EventDate" placeholder="DD/MM/YYYY" value="@(Model != null && Model.IdEventList > 0 ? Model.EventDate.ToString() : "")" data-validate="eventdate">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Criador da Lista</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input maxlength="200" type="text" name="CreatorName" value="@(Model != null && Model.CreatorName != null ? Model.CreatorName.ToString() : Session["Name"])" placeholder="João das Flores" data-validate="name">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Nome do Noivo</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input maxlength="200" type="text" name="Name1" value="@(Model != null && Model.Name1 != null ? Model.Name1 : "")" placeholder="João das Flores" data-validate="groomname">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Nome da Noiva</label>
+                                            <div class="ui left icon input">
+                                                <i class="user icon"></i>
+                                                <input maxlength="200" type="text" name="Name2" value="@(Model != null && Model.Name2 != null ? Model.Name2 : "")" placeholder="Maria das Flores" data-validate="bridename">
+                                            </div>
+                                        </div>
+                                        @if (Model.IdEventList == 0 && !string.IsNullOrEmpty(Model.Acceptance))
+                                        {
+                                            <div class="field required">
+                                                <label>Termos e Condições</label>
+                                            </div>
+                                            <div class="field">
+                                                <div class="ui checkbox termo aceite">
+                                                    <input type="checkbox" data-validate="termo">
+                                                </div>
+                                                <label class="inline-block" id="termoAceiteEventList">Li e estou de acordo com o regulamento. <a style="cursor: pointer;">Ler o Regulamento</a></label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="ui form">
+                                        <div class="field">
+                                            <label>Mensagem aos convidados</label>
+                                            <div class="ui input">
+                                                <textarea maxlength="8000" name="Message">@(Model != null ? Model.Message : "")</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Imagem do Evento</label>
+                                            <div class="ui image fluid">
+                                                <img class="ui image fluid" id="imgPicture" src="@(Model != null ? Model.UrlPicture : "")"/>
+                                                <div id="uploadArea">
+                                                    <span>
+                                                        <i class="huge cloud upload icon"></i>
+                                                        Enviar Arquivo
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <input type="file" id="filePicture" name="Picture" />
+                                            <a class="ui button basic floated right" id="changeEventPicture">Alterar</a>
+                                            <div class="text small">Extensões permitidas: .jpg .png ou .gif</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column btnEventList">
+                                    <a href="/Customer/Login" class="ui primary button large basic left floated text uppercase">
+                                        <i class="remove icon"></i> Cancelar
+                                    </a>
+                                    <button type="submit" class="ui button large submit primary right floated text uppercase">
+                                        <i class="checkmark icon"></i> @(Model.IdEventList > 0 ? "Salvar" : "Próximo" )
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function onSuccess(response) {
+            if (response.success == true && response.urlRedirect != "") {
+                document.location = response.urlRedirect;
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+            if (response.success == true && response.urlRedirect != "") {
+                document.location = response.urlRedirect;
+            }
+            else {
+                swal({
+                    title: '',
+                    html: response.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        $(document).on('submit', '#formEventList', function (event) {
+            event.preventDefault();
+
+            let dataString;
+            let action = $(this).attr('action');
+
+            if ($(this).attr("enctype") == "multipart/form-data") {
+                dataString = new FormData($(this)[0]);
+                contentType = false;
+                processData = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: dataString,
+                    contentType: contentType,
+                    processData: processData,
+                    success: function (response) {
+                        onSuccess(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        onFailure(jqXHR.responseText);
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+}

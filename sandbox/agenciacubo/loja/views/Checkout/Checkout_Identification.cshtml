@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Identificação";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+}
+
+<div class="ui container no-p no-m">
+    <div class="ui grid middle aligned center aligned">
+        <div class="row">
+            <div class="column">
+                <h1 class="text color black">Finalizar Compra</h1>
+                <h3 class="text color grey regular">Em apenas 3 passos você finaliza a compra de forma rápida e segura.</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve wide computer sixteen wide tablet sixteen wide mobile column">
+                <form action="" method="POST" id="identificationForm" class="ui large form jet checkout">
+                    <input type="hidden" name="email" id="email" value="" />
+                    <input type="hidden" name="cpfCnpj" id="cpfCnpj" value="" />
+                    <div class="ui segment">
+                        <div class="ui grid very relaxed stackable">
+                            <div class="row one column left aligned">
+                                <div class="column">
+                                    <div class="field required">
+                                        <label for="">Digite seu E-mail, CPF ou CNPJ</label>
+                                        <div class="ui left icon huge input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" id="login" name="login" placeholder="E-mail, CPF ou CNPJ">
+                                        </div>
+                                    </div>
+                                    <button type="submit" id="checkLogin" class="ui animated button large submit action right floated"
+                                            tabindex="0">
+                                        <div class="visible content">Continuar</div>
+                                        <div class="hidden content">
+                                            <i class="right arrow icon"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section steps{
+    <div class="jet checkout jBreadCrumb ">
+        <div class="jCrumb">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>1</span>
+                </div>
+            </div>
+            <h4>Identificação</h4>
+        </div>
+        <div class="jCrumb">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>2</span>
+                </div>
+            </div>
+            <h4>Pagamento</h4>
+        </div>
+        <div class="jCrumb">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4>Confirmação</h4>
+        </div>
+    </div>
+}

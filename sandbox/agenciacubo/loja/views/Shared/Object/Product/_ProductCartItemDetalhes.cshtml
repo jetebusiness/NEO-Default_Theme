@@ -1,0 +1,59 @@
+﻿@model DomainCheckout.Entities.CartItem
+
+<div class="item" data-id-produto="@Model.IdProduct">
+    <div class="ui image small">
+        <img src="@Model.ProductImage.ImageDefault">
+    </div>
+    <div class="content">
+        <a class="header">@Html.Raw(Model.NameProduct)</a>
+        <div class="meta">
+            @Model.IdProduct
+        </div>
+
+        @if (Model.IsKit)
+        {
+            <div>
+                @foreach (var productKit in Model.ProductsKit)
+                {
+                    <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                }
+            </div>
+        }
+
+        <div class="description">
+            <table class="ui very basic unstackable table ">
+                <thead>
+                    <tr>
+                        <th>Qtd</th>
+                        <th>Valor Un.</th>
+                        <th>Valor Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-idCartItem="@Model.IdCartItem">
+                            <div class="ui qtd action mini input">
+                                <button class="ui icon button qtdActionDetalhes" data-id="@Model.IdCartItem" data-action="minus">
+                                    <i class="minus icon"></i>
+                                </button>
+                                <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
+                                <input type="number" class="text center" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" />
+                                <button class="ui gray icon button qtdActionDetalhes" data-id="@Model.IdCartItem" data-action="plus">
+                                    <i class="add icon"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>@string.Format("{0:c}", Model.PriceProduct)</td>
+                        <td><strong>@string.Format("{0:c}", Model.PriceTotalProduct)</strong></td>
+                        <td>
+                            <button class="mini ui icon red button produto removeCartItemDetalhes" data-id="@Model.IdCartItem">
+                                <i class="remove icon"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

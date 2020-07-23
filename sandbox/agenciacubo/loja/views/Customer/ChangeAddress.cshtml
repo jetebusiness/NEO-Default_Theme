@@ -1,0 +1,280 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Gestão de Endereços";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned">
+<h3>Endereço(s) selecionado(s):</h3>
+<div class="two column row stackable">
+    @{
+        if (Model != null && Model.Address != null)
+        {
+            foreach (var item in Model.Address)
+            {
+                if (item.Default && !item.Billing)
+                {
+                    var identification = item.Identification != "" ? item.Identification : Model.Name;
+
+                    <div class="column">
+                        <div class="ui items">
+                            <div class="item">
+                                <div class="icon margin right medium">
+                                    <span class="text massive">
+                                        @{
+                                            if (item.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial)
+                                            {
+                                                @Html.Raw("<i class='icon home'></i>")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<i class='icon building outline'></i>")
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                                <div class="content">
+                                    <a class="header">@identification</a>
+                                    <div class="meta">
+                                        <div class="ui label">Entrega</div>
+                                    </div>
+                                    <div class="description">
+                                        <p>@Model.Name</p>
+                                        <p>@item.StreetAddress, nº @item.Number, @item.Complement</p>
+                                        <p>@item.Neighbourhood</p>
+                                        <p>@item.City, @item.State</p>
+                                        <p>CEP @item.ZipCode</p>
+                                    </div>
+                                    <div class="extra">
+                                        @{
+                                            string valueDelete = item.IdAddress.ToString() + "|#|" + (item.Default ? "default" : "billing");
+                                        }
+                                        <button id="delete" value="@valueDelete" class="ui red button icon">
+                                            <i class="icon trash"></i>
+                                        </button>
+                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui icon basic button">
+                                            <i class="write icon"></i>
+                                            Editar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (!item.Default && item.Billing)
+                {
+                    var identification = item.Identification != "" ? item.Identification : Model.Name;
+
+                    <div class="column">
+                        <div class="ui items">
+
+                            <div class="item">
+                                <div class="icon margin right medium">
+                                    <span class="text massive">
+                                        @{
+                                            if (item.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial)
+                                            {
+                                                @Html.Raw("<i class='icon home'></i>")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<i class='icon building outline'></i>")
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                                <div class="content">
+                                    <a class="header">@identification</a>
+                                    <div class="meta">
+                                        <div class="ui label">Cobrança</div>
+                                    </div>
+                                    <div class="description">
+                                        <p>@Model.Name</p>
+                                        <p>@item.StreetAddress, nº @item.Number, @item.Complement</p>
+                                        <p>@item.Neighbourhood</p>
+                                        <p>@item.City, @item.State</p>
+                                        <p>CEP @item.ZipCode</p>
+                                    </div>
+                                    <div class="extra">
+                                        @{
+                                            string valueDelete = item.IdAddress.ToString() + "|#|" + (item.Default ? "default" : "billing");
+                                        }
+                                        <button id="delete" value="@valueDelete" class="ui red button icon">
+                                            <i class="icon trash"></i>
+                                        </button>
+                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui icon basic button">
+                                            <i class="write icon"></i>
+                                            Editar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (item.Default && item.Billing)
+                {
+                    var identification = item.Identification != "" ? item.Identification : Model.Name;
+
+                    <div class="column">
+                        <div class="ui items">
+                            <div class="item">
+                                <div class="icon margin right medium">
+                                    <span class="text massive">
+                                        @{
+                                            if (item.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial)
+                                            {
+                                                @Html.Raw("<i class='icon home'></i>")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<i class='icon building outline'></i>")
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                                <div class="content">
+                                    <a class="header">@identification</a>
+                                    <div class="meta">
+                                        <div class="ui label">Entrega</div>
+                                        <div class="ui label">Cobrança</div>
+                                    </div>
+                                    <div class="description">
+                                        <p>@Model.Name</p>
+                                        <p>@item.StreetAddress, nº @item.Number, @item.Complement</p>
+                                        <p>@item.Neighbourhood</p>
+                                        <p>@item.City, @item.State</p>
+                                        <p>CEP @item.ZipCode</p>
+                                    </div>
+                                    <div class="extra">
+                                        @{
+                                            string valueDelete = item.IdAddress.ToString() + "|#|" + (item.Default ? "default" : "billing");
+                                        }
+                                        <button id="delete" value="@valueDelete" class="ui red button icon">
+                                            <i class="icon trash"></i>
+                                        </button>
+                                        <a href="/Customer/EditAddress/@item.IdAddress" class="ui icon basic button">
+                                            <i class="write icon"></i>
+                                            Editar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    }
+</div>
+<div class="ui divider"></div>
+<div class="two column doubling row">
+    @{
+        if (Model != null && Model.Address != null)
+        {
+            foreach (var item in Model.Address)
+            {
+                var identification = item.Identification != "" ? item.Identification : Model.Name;
+
+                <div class="column">
+                    <div class="ui items">
+                        <div class="item">
+                            <div class="icon margin right medium">
+                                <span class="text massive">
+                                    @{
+                                        if (item.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial)
+                                        {
+                                            @Html.Raw("<i class='icon home'></i>")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<i class='icon building outline'></i>")
+                                        }
+                                    }
+                                </span>
+                            </div>
+                            <div class="content">
+                                <a class="header">@identification</a>
+                                <div class="description">
+                                    <p>@Model.Name</p>
+                                    <p>@item.StreetAddress, nº @item.Number, @item.Complement</p>
+                                    <p>@item.Neighbourhood</p>
+                                    <p>@item.City, @item.State</p>
+                                    <p>CEP @item.ZipCode</p>
+                                </div>
+                                <div class="ui grid">
+                                    <div class="row two column stackable">
+                                        <div class="column">
+                                            <button id="entrega" value="@item.IdAddress" class="ui tiny compact icon primary basic button">
+                                        <i class="check icon"></i>
+                                        Entrega
+                                    </button>
+                                            <button id="cobranca" value="@item.IdAddress" class="ui tiny compact icon primary basic button">
+                                        <i class="check icon"></i>
+                                        Cobrança
+                                    </button>
+                                        </div>
+                                        <div class="column">
+                                    @{
+                                        string valueDelete = "";
+                                        if (item.Default)
+                                        {
+                                            valueDelete = item.IdAddress.ToString() + "|#|" + "default";
+                                        }
+                                        else if (item.Billing)
+                                        {
+                                            valueDelete = item.IdAddress.ToString() + "|#|" + "billing";
+                                        }
+                                        else
+                                        {
+                                            valueDelete = item.IdAddress.ToString() + "|#|" + "nothing";
+                                        }
+                                    }
+                                            <button id="delete" value='@valueDelete' class="ui red button icon">
+                                        <i class="icon trash"></i>
+                                    </button>
+                                            <a href="/Customer/EditAddress/@item.IdAddress" class="ui basic button icon">
+                                        <i class="write icon"></i>
+                                        Editar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>
+<div class="row">
+    <div class="column">
+        <a href="/Customer/CreateAddress" class="ui right floated primary button">
+            <i class="plus icon"></i>
+            Novo Endereço
+        </a>
+    </div>
+</div>
+</div>

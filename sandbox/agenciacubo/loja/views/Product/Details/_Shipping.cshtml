@@ -1,0 +1,47 @@
+﻿@model bool?
+
+@{
+    //ESCONDENDO O FRETE NA V1
+    string classes = "ui yellow segment hideme";
+
+    if (Model == true)
+    {
+        classes = "";
+    }
+    else
+    {
+        classes = "ui yellow segment hideme";
+    }
+}
+
+<div class="@classes" id="calculo-frete">
+    <h4 class="header">Calcular frete e prazo</h4>
+    <div class="description frete">
+        <div class="ui form">
+            <div class="inline field">
+                <div class="ui action input">
+                    <input type="text" placeholder="00000-000"
+                           class="masked mask_zipcode" size="9" name="cep"
+                           >
+                    <button class="ui yellow right labeled icon button frete calcular">
+                        <i class="shipping icon"></i>
+                        Calcular
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="description resultado">
+        <div class="ui form">
+            <div class="field">
+                <label class="frete valor"></label>
+                <div class="ui">
+                    <button class="ui right labeled icon mini button frete recalcular margin none">
+                        <i class="refresh icon"></i>
+                        Recalcular
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

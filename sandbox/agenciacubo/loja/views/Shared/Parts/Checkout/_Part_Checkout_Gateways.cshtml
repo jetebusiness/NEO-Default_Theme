@@ -1,0 +1,65 @@
+﻿@model List<DomainCheckout.Entities.PaymentMethod>
+
+@if (Model != null)
+{
+    <div class="sixteen wide mobile sixteen wide tablet six wide computer column" id="formas-pagamento">
+        <div class="ui styled fluid accordion jetCheckout margin top">
+            @foreach (var itemM in Model.OrderBy(p => p.Name))
+            {
+                switch (itemM.IdPaymentMethod)
+                {
+                    case 1:
+                        <!-- Cartão de Crédito -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao.cshtml", itemM)
+
+                        break;
+                    case 2:
+                        <!-- Pagamento Offline -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Offline.cshtml", itemM.PaymentBrands)
+
+                        break;
+                    case 3:
+                        <!-- Boleto Bancário -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Boleto.cshtml", itemM.PaymentBrands)
+
+                        break;
+                    case 9:
+                        <!-- Débito Redirect -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Debito_Redirect.cshtml", itemM.PaymentBrands)
+
+                        break;
+                    case 14:
+                        <!-- Cartão de Débito -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao_Debito.cshtml", itemM)
+
+                        break;
+                    case 19:
+                        <!-- Pagamento com Desconto -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Desconto.cshtml", itemM.PaymentBrands)
+
+                        break;
+                }
+            }
+            <input type="hidden" name="hasPagSeguro" id="hasPagSeguro" value="@Session["PagSeguro"]" />
+            <input type="hidden" name="SessionPayment" id="PaymentSession" value="" />
+            <input type="hidden" name="HashPayment" id="PaymentHash" value="" />
+            @{
+                if (Convert.ToInt32(Session["PagSeguro"].ToString()) > 0)
+                {
+                    <input type="hidden" name="MaximumInstallmentWithoutInterest" id="MaximumInstallmentWithoutInterest" value="0" />
+                    <input type="hidden" name="MaximumInstallment" id="MaximumInstallment" value="0" />
+                }
+            }
+        </div>
+        @if (TempData["AddressListEvents"] != null)
+        {
+            <br />
+            <div class="margin top column">
+                <p class="text small color grey aligned description">
+                    <strong>ATENÇÃO!</strong>
+                    Os produtos serão entregues no endereço do dono da lista.
+                </p>
+            </div>
+        }
+    </div>
+}

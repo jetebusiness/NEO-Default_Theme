@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "Primeiro acesso? Cadastre-se em nossa loja";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1 class="text">@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <div class="active section">Cadastrar na Loja</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
+            <form action="/Customer/Accesskey" class="ui large form" id="form-accesskey" method="post">
+                @Html.AntiForgeryToken()
+                <div class="ui segment">
+                    <div class="ui grid  very relaxed stackable middle aligned grid">
+                        <div class="row left aligned">
+                            <div class="column">
+                                <div class="field required">
+                                    <label>E-mail, CPF ou CNPJ</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" autocomplete="off" name="login" id="login" value="@Session["Login"]" placeholder="E-mail, CPF ou CNPJ" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <a href="/Customer/Login" class="ui animated button large basic left floated">
+                                    <div class="visible content">Voltar</div>
+                                    <div class="hidden content">
+                                        <i class="chevron left icon"></i>
+                                    </div>
+                                </a>
+                                <button id="enviar" type="submit"
+                                        class="ui animated button large submit primary right floated continuar"
+                                        tabindex="0">
+                                    <div class="visible content">Cadastrar</div>
+                                    <div class="hidden content">
+                                        <i class="arrow right icon"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui error message"></div>
+             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="ui mini modal" data-modal="">
+    <i class="close icon"></i>
+    <div class="content">
+        <div class="ui form">
+            <h4>Já sou cadastrado</h4>
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="mail icon"></i>
+                    <input class="field disabled" type="text" name="UserName" id="UserName" placeholder="Email">
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input type="password" name="Password" id="Password" placeholder="Senha">
+                </div>
+            </div>
+            @Html.Action("GetRecaptchaV3", "Company", new { Module = "Login" })
+            <button type="button" id="Entrar" class="ui fluid large submit primary button">Entrar</button>
+            <div class="ui divider"></div>
+            <p>
+                Esqueceu sua senha? <a href="/Customer/Forgot/">Recuperar senha</a>
+            </p>
+        </div>
+    </div>
+</div>

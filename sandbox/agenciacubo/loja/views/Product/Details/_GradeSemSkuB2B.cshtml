@@ -1,0 +1,161 @@
+﻿@model ViewModels.Produto.DetalhesB2BViewModel
+
+@{
+    var useOneClick = (bool)ViewData["useOneCLick"];
+    var isB2B = ViewData["isB2B"] != null ? (bool)ViewData["isB2B"] : true;
+}
+
+<div class="row product-grid">
+    <div class="column">
+        <div id="grade_sku" class="ui middle aligned grid blue segment">
+            <!--COMEÇO VARIAÇÔES-->
+            <div class="one column row">
+
+            </div>
+            <!--FIM VARIAÇÔES-->
+            <div class="doubling column row sku_b2b" data-sku-id="0" data-stock="@Model.Stock" data-produto-id="@Model.IdProduct" >
+                <div class="six wide column right aligned">
+                    <div class="ui qtd action mini input">
+                        <button class="ui icon button qtdminus" id="qtdminus-detalhes">
+                            <i class="minus icon"></i>
+                        </button>
+                        <input type="number" min="1" step="1" size="3" value="1" name="quantidade" id="quantidade" data-qtd-max="@Model.Stock" class="quantidade_b2b text center" />
+                        <button class="ui grey icon button qtdplus" id="qtdplus-detalhes">
+                            <i class="add icon"></i>
+                        </button>
+                    </div>
+                </div>
+                <!--COMEÇO GRADE-->
+                <div class="ten wide column text right" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
+                    <div id="variacao-preco">
+                        @if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                        {
+                            decimal dec = (decimal)@Model.PricePromotion;
+                            <span class="precoAntigo"><span>de: </span><span id="preco-antigo">@Model.Price.ToString("C")</span><span> por</span></span>
+                            <span itemprop="price" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
+                            if (Model.InstallmentMax != null)
+                            {
+                                <span class="infoPreco">
+                                    <span>em</span>
+                                    <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
+                                    <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                    <span id="description">(@Model.InstallmentMax.Description)</span>
+                                    @if (ViewBag.DescontoBoleto > 0)
+                                    {
+                                        var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
+                                        <br />
+                                        <span>ou</span>
+                                        <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                    }
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span itemprop="price" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
+                            if (Model.InstallmentMax != null)
+                            {
+                                <span class="infoPreco">
+                                    <span>em</span>
+                                    <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de </span></span>
+                                    <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
+                                    <span id="description">(@Model.InstallmentMax.Description)</span>
+                                    @if (ViewBag.DescontoBoleto > 0)
+                                    {
+                                        var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
+                                        <br />
+                                        <span>ou</span>
+                                        <span><span id="preco_boleto">@string.Format("R$ {0:0.00}", valor_final)</span>@string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
+                                    }
+                                </span>
+                            }
+                        }
+
+                    </div>
+                </div>
+                <!--FIM GRADE-->
+            </div>
+            <!--COMEÇO DISPONIBILIDADE / CARRINHO-->
+            <div class="row">
+                <div class="column">
+                    @{
+                        if (Model.Stock == 0 || Model.FlagExhausted)
+                        {
+                            <strong class="text color grey regular right text bold color red">Produto Esgotado</strong>
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Model.DescriptionAvailabilityStatus))
+                            {
+                                <p class="text color grey regular right">@Model.DescriptionAvailabilityStatus</p>
+                            }
+
+                            <div class="row margin top medium">
+                                <div class="column">
+                                    <a class="ui animated big action button fluid detalhes" id="btn_comprar_b2b">
+                                        <div class="visible content">Comprar</div>
+                                        <div class="hidden content">
+                                            <i class="add to cart icon"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            if (useOneClick)
+                            {
+                                <div class="row margin top medium">
+                                    <div class="column">
+                                        <a class="ui animated big action button fluid detalhes" id="btn_comprar_oneclick_b2b">
+                                            <div class="visible content">Comprar com 1-Click</div>
+                                            <div class="hidden content">
+                                                <i class="add to cart icon"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="row margin top medium">
+                                <div class="column">
+                                    <a class="ui animated big blue button fluid" id="btn_comprar_continuar">
+                                        <div class="visible content">Adicionar e Continuar Comprando</div>
+                                        <div class="hidden content">
+                                            <i class="plus icon"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!--FIM DISPONIBILIDADE / CARRINHO-->
+        </div>
+        @if (!Model.FlagExhausted)
+        {
+            <div id="pagamento-calculado">
+                @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
+                {
+                    @Html.Action("Payment", "Product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
+                }
+                else
+                {
+                    @Html.Action("Payment", "Product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
+                }
+            </div>
+        }
+        @if (Model.FlagExhausted || Model.Stock == 0)
+        {
+            @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", true)
+        }
+        else
+        {
+            @Html.Partial("~/Views/Product/Details/_AlertMe.cshtml", false)
+        }
+
+        <!-- COMEÇO REDES SOCIAIS-->
+
+        <!-- FIM REDES SOCIAIS-->
+    </div>
+</div>
+

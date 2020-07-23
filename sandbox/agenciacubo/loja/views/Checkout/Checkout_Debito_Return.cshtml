@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Pedido Finalizado";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+
+    string cor = "";
+    string titulo = "";
+    string descricao = "";
+    if (Request.QueryString["statusReturn"] != null)
+    {
+        if(Request.QueryString["statusReturn"] == "Success")
+        {
+            cor = "bg-green";
+            titulo = "Pedido Confirmado";
+            descricao = "Pedido efetuado com sucesso. Para obter maiores detalhes do pedido, efetue o login na loja.";
+        }
+        else
+        {
+            cor = "bg-red";
+            titulo = "Pedido Negado";
+            descricao = "Pedido não realizado com sucesso. Para obter maiores informações, entre em contato com a loja.";
+        }
+
+    }
+
+}
+
+@section steps{
+    <div class="jet checkout jBreadCrumb ">
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Identificação</h4>
+        </div>
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Pagamento</h4>
+        </div>
+        <div class="jCrumb active">
+            <div class="jBullet ">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4>Confirmação</h4>
+        </div>
+    </div>
+}
+<div class="ui container fluid @cor">
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="ui divider small hidden"></div>
+            <div class="row two column">
+                <div class="column">
+                    <h1 class="floated left">@titulo</h1>
+                </div>
+                <div class="column text right">
+                    <h2 class="">Débito</h2>
+                </div>
+            </div>
+            <div class="row two column stackable">
+                <div class="column">
+                    <div class="ui horizontal list">
+                        <div class="item">
+                            <div class="content">
+                                <p>@descricao</p><a class="ui no-p  action button floated left" href="/customer">Clique Aqui</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="ui divider small hidden"></div>
+        </div>
+    </div>
+</div>

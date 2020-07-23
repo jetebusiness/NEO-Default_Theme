@@ -1,0 +1,311 @@
+﻿@model DomainOrder.Entities.Order
+@{
+    /**/
+
+    ViewBag.Title = "Detalhes do Pedido";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/AssistedSale">Área do Vendedor</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Informação do Pedido</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="pagePrint" class="ui grid left aligned dadosPedido">
+    @if (Model == null)
+    {
+        <div class="row two column">
+            Pedido não localizado!
+        </div>
+    }
+    else
+    {
+        <div class="row two column stackable">
+            <div class="column">
+                <div class="ui padded segment">
+                    <h5 class="ui header">
+                        Dados do Pedido
+                    </h5>
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="ticket icon"></i>
+                            <div class="content">
+                                Número do Pedido:
+                                <strong>@Model.IdOrder</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="calendar icon"></i>
+                            <div class="content">
+                                Data e Hora:
+                                <strong>@string.Format("{0:d}", Model.DateOrder)</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="payment icon"></i>
+                            <div class="content">
+                                Forma de Pagamento:
+                                <strong>@Model.NamePaymentMethodGateway </strong>
+                                @if (Model.NumberOfInstallments != null && Model.TotalInstallment != null)
+                                {
+                                    <span>(@Model.NumberOfInstallments@Html.Raw("x de ") @string.Format("{0:c}", Model.ValueOfInstallment))</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="dollar icon"></i>
+                            <div class="content">
+                                Valor:
+                                <strong>@string.Format("{0:c}", Model.Total)</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="shipping icon"></i>
+                            <div class="content">
+                                Status:
+                                <strong>@Model.NameStatus</strong>
+                            </div>
+                        </div>
+                        <div class="item">
+                            @{
+                                if (Model.IdPaymentBrand == 207 || Model.IdPaymentBrand == 238 || !string.IsNullOrEmpty(Model.PaymentLink))
+                                {
+                                    @* Forma de pagamento com boleto Itaú *@
+                                    if (Model.IdPaymentBrand == 207)
+                                    {
+                                        <input type="hidden" id="idOrder" value="@Model.IdOrder" />
+                                        <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button right floated">Reimprimir Boleto</a>
+
+                                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                                              method="post"
+                                              name="itauShopline"
+                                              id="itauShopline"
+                                              target="openShopline">
+                                            <input type="hidden" name="DC" id="tokenBankSlip" value="" />
+                                        </form>
+
+                                        <div class="ui modal">
+                                            <i class="close icon"></i>
+                                            <div class="content">
+                                                <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                                            </div>
+                                        </div>
+                                    }
+                                    @* Forma de pagamento com boleto MaxiPago*@
+                                    else if (Model.IdPaymentBrand == 238)
+                                    {
+                                        <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
+                                        <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button right floated">Reimprimir Boleto</a>
+
+                                        <div class="ui modal maxiPago">
+                                            <i class="close icon"></i>
+                                            <div class="content">
+                                                <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
+                                            </div>
+                                        </div>
+                                    }
+                                    @* Forma de pagamento com boleto PagSeguro*@
+                                    else if (!string.IsNullOrEmpty(Model.PaymentLink))
+                                    {
+                                        <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button right floated">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
+                                        <div class="ui modal pagseguro">
+                                            <i class="close icon"></i>
+                                            <div class="content">
+                                                <iframe src="@Model.PaymentLink" name="openPaymentLink" id="openPaymentLink" style="width: 100%; height: 50em; border: none;"></iframe>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="column display flex align-stretch">
+                <div class="ui padded segment">
+                    <h5 class="ui header">
+                        Local de Entrega
+                    </h5>
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="building icon"></i>
+                            <div class="content">
+                                @string.Concat(Model.Address.StreetAddress, ", ", Model.Address.Number, ", ", Model.Address.Complement)
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="marker icon"></i>
+                            <div class="content">
+                                @string.Concat(Model.Address.Neighbourhood, ", ", Model.Address.City)
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="map icon"></i>
+                            <div class="content">
+                                @Model.Address.City - @Model.Address.State
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="phone icon"></i>
+                            <div class="content">
+                                @Model.Address.PhoneContact
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="shipping icon"></i>
+                            <div class="content">
+                                @(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping)<br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row one column">
+            <div class="column">
+                <div class="ui fluid steps">
+                    @if (Model.HistoryListOrderStatus != null && Model.HistoryListOrderStatus.Count() > 0)
+                    {
+                        var count = 0;
+                        foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus)
+                        {
+                            count++;
+                            if (count > 3)
+                            {
+                                @Html.Raw("</div> <div class='ui fluid steps'>")
+                                count = 0;
+                            }
+                            <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
+                                <i class="@status.Icon icon"></i>
+                                <div class="content">
+                                    <div class="title">@status.StatusName</div>
+                                    <div class="description">
+                                        @status.Message
+                                    </div>
+                                </div>
+                            </div>
+
+                            if (@status.DateRegisterStatus == null)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row one column">
+            <div class="column">
+                <table class="ui large padded striped  table" id="order_products_list_cart">
+                    <thead class="full-width">
+                        <tr>
+                            <th>#</th>
+                            <th>Produto</th>
+                            <th class="right aligned">Valor Un.</th>
+                            <th class="right aligned">Quantidade</th>
+                            <th class="right aligned">Valor Total.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.OrderItems != null && Model.OrderItems.Count() > 0)
+                        {
+                            var counter = 1;
+                            foreach (var orderProduct in Model.OrderItems)
+                            {
+
+                                <tr>
+                                    <td>@counter.ToString().PadLeft(3, '0')</td>
+                                    <td>
+                                        <a>@Html.Raw(orderProduct.Name)</a>
+                                        @if (orderProduct.IsKit)
+                                        {
+                                            <div>
+                                                @foreach (var productKit in orderProduct.ProductsKit)
+                                                {
+                                                    <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="right aligned">@string.Format("{0:c}", orderProduct.UnitPrice)</td>
+                                    <td class="right aligned">@orderProduct.Quantity</td>
+                                    <td class="right aligned">
+                                        <strong>@string.Format("{0:c}", orderProduct.Total)</strong>
+                                    </td>
+                                </tr>
+
+                                counter++;
+                            }
+                        }
+                    </tbody>
+                    <tfoot class="full-width">
+                        <tr>
+                            <th colspan="4" class="right aligned">Valor</th>
+                            <th class="right aligned">@string.Format("{0:c}", Model.TotalItens)</th>
+                        </tr>
+                        <tr>
+                            <th colspan="4" class="right aligned">Valor do Frete</th>
+                            <th class="right aligned">@string.Format("{0:c}", Model.TotalShipping)</th>
+                        </tr>
+                        <tr>
+                            <th colspan="4" class="right aligned">Valor do Desconto</th>
+                            <th class="right aligned">@string.Format("{0:c}", Model.TotalDiscount)</th>
+                        </tr>
+                        @if (Model.TotalShoppingVoucher > 0)
+                        {
+                            <tr>
+                                <th colspan="4" class="right aligned">Vale Compra</th>
+                                <th class="right aligned">@string.Format("{0:c}", Model.TotalShoppingVoucher)</th>
+                            </tr>
+                        }
+                        <tr>
+                            <th colspan="4" class="right aligned"><h3>Total</h3></th>
+                            <th class="right aligned"><h3>@string.Format("{0:c}", Model.Total)</h3></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Model != null)
+{
+    @Html.Action("StatusOrder", "AssistedSale", new { orderId = Model.IdOrder })
+
+    <br />
+    <div class="row">
+        <div class="column">
+            <button id="print" class="ui animated button right floated" tabindex="0">
+                <div class="visible content">Imprimir</div>
+                <div class="hidden content">
+                    <i class="print icon"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+}
+
+
+
+<script>
+  $('.ui.accordion').accordion({
+    selector: {
+      trigger: '.title .qus_label'
+    }
+  });
+</script>

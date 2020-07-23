@@ -1,0 +1,14 @@
+﻿@model List<DomainCompany.Entities.Seal>
+
+@if (Model != null)
+{
+    foreach (var item in Model.FindAll(s => s.Code == null))
+    {
+        <a href='@item.link' class='ui image margin bottom no'  target="_blank"><img src='@item.Image' onerror="imgError(this)"></a>
+    }
+
+    foreach (var item in Model.FindAll(s => s.Code != null))
+    {
+      @Html.Raw(item.Code);
+    }
+}

@@ -1,0 +1,23 @@
+﻿@model List<DomainSocialNetwork.Entities.SocialNetwork>
+<div class="ui left floated column margin none five wide computer tablet-hide mobile-hide">
+    <socialbar>
+        @if (Model != null)
+        {
+            foreach (var social in Model)
+            {
+                if (social.Identifier.ToUpper() == "WHATSAPP")
+                {
+                    <a href="@string.Format("{0}{1}","https://api.whatsapp.com/send?phone=55", social.Content.Replace("(","").Replace(")","").Replace("-","").Replace(" ",""))" target="_blank" title="@social.Identifier">
+                        <i class="@social.Identifier icon"></i>
+                    </a>
+                }
+                else
+                {
+                    <a href="@social.Content" target="_blank" title="@social.Identifier ">
+                        <i class="@social.Identifier icon"></i>
+                    </a>
+                }
+            }
+        }
+    </socialbar>
+</div>

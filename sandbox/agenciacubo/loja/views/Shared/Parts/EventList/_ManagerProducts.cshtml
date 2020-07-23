@@ -1,0 +1,136 @@
+﻿@model DomainCustomer.Entities.PagedProduct
+
+<div class="sixteen wide mobile eleven wide tablet twelve wide computer column" id="product_manager">
+    <div class="ui grid middle aligned">
+        <div class="row two column stackable sixteen wide eleven wide computer">
+            <div class="column left aligned">
+                <div class="ui busca_lista_evento">
+                    <div class="ui icon input fluid">
+                        <input class="busca_lista" type="text" placeholder="Buscar...">
+                        <button class="ui icon button busca_lista_btn">
+                            <i class="search icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="column right aligned">
+                <a class="ui icon primary basic button" href="/EventList/AddProductsInListFromHome">
+                    Adicionar Produto
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="ui grid stackable">
+        <div class="row">
+            <div class="column">
+                <table class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th class="ui center aligned">Quant. Solicitada</th>
+                            <th class="ui center aligned">Comprados</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var produto in Model.Products)
+                        {
+                            <tr id="@produto.IdEventListProduct">
+                                <td>@Html.Raw(produto.ProductName)</td>
+                                <td class="ui center aligned">
+                                    <div class="ui qtd action mini input">
+                                        <button class="ui icon button qtdminus qtd_change" data-id-event-list="@produto.IdEventListProduct" data-action="minus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
+                                            <i class="minus icon"></i>
+                                        </button>
+                                        <input type="number" class="text center" min="1" step="1" size="3" value="@produto.Quantity" name="" id="qtd_product_@produto.IdEventListProduct" data-id-event-list="@produto.IdEventListProduct" data-action="plus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
+                                        <button class="ui grey icon button qtdplus qtd_change" data-id-event-list="@produto.IdEventListProduct" data-action="plus" data-id-sku="@produto.idSku" data-id-stock="@produto.Stock" data-id-product="@produto.IdProduct">
+                                            <i class="add icon"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="ui center aligned">
+                                    <div class="ui action input">
+                                        <input type="number" class="inpSearch" name="" value="@produto.QuantityBuy" placeholder="0" disabled>
+                                        <button class="ui icon button" id="view_invited_purchased" data-product-id="@produto.IdProduct" data-product-id-sku="@produto.idSku">
+                                            <i class="unhide icon"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="ui center aligned">
+                                    <button class="ui icon red button removeItemEventList" data-id-event-list="@produto.IdEventListProduct">
+                                        <i class="trash outline icon"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="4">
+                                @if (Model.Settings.PageCount > 1)
+                                {
+                                    <div class="ui centered grid ">
+                                        <div class="row">
+                                            <div class="center aligned column">
+                                                <!-- Page: ~/Views/Shared/Parts/_Pagination.cshtml -->
+                                                @Html.Partial("~/Views/Shared/Parts/_PaginationProductEventList.cshtml", Model.Settings)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui longer modal" id="event_list_product">
+    <i class="close icon"></i>
+    <div class="header">Produto Comprados</div>
+    <div class="image content">
+        <div class="description">
+            <div class="ui margin bottom large">
+                <h4>Veja quem já comprou o seu presente</h4>
+                <h3>
+                    <img class="ui small right spaced image" id="imagem" src="" style="float: left"><p id="titulo"></p>
+                </h3>
+                <div class="display block mra mla">
+                    <div class="ui grid stackable" style="clear: both">
+                        <div class="row">
+                            <div class="column">
+                                <table class="ui celled table">
+                                    <thead>
+                                        <tr>
+                                            <th>Convidado</th>
+                                            <th>E-mail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="lista_cliente"></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui button approve">OK</div>
+    </div>
+</div>
+
+<div class="ui modal">
+    <div class="header"></div>
+    <div class="content">
+        <p></p>
+    </div>
+    <div class="actions">
+        <div class="ui approve button">OK</div>
+        <div class="ui cancel button">Voltar</div>
+    </div>
+</div>

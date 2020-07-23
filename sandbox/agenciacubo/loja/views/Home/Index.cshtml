@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = string.IsNullOrEmpty(LojaCorp.Control.Company._Company.Title) ? LojaCorp.Control.Company._Company.NameStore : LojaCorp.Control.Company._Company.Title;
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+}
+
+<!-- ~/Views/Shared/Blocks/Banner/_FullBanner.cshtml -->
+@Html.Action("FullBanner", "Banner")
+
+<!-- ~/Views/Shared/Blocks/_InfoBar.cshtml -->
+@Html.Partial("Blocks/_InfoBar")
+
+<div class="featuredProducts">
+    <!-- ~/Views/Shared/Blocks/Product/_FeaturedProducts.cshtml -->
+    @Html.Action("FeaturedProducts", "Product")
+</div>
+
+<!-- ~/Views/Shared/Blocks/_CentralHalfBanner.cshtml -->
+@Html.Action("CentralHalfBanner", "Banner")
+
+<!-- ~/Views/Shared/Blocks/Group/_Groups.cshtml -->
+@Html.Action("Group", "Group")
+
+<!-- ~/Views/Shared/Blocks/_TopSellers.cshtml -->
+@Html.Action("TopSellers", "Product")
+
+<!-- ~/Views/Shared/Blocks/Banner/_FooterHalfBanner.cshtml -->
+@Html.Action("FooterHalfBanner", "Banner")
+
+<!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
+@Html.Action("Brand", "Product")

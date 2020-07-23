@@ -1,0 +1,57 @@
+﻿@model DomainCheckout.Entities.Cart
+<div class="ui resumo">
+    <div class="active content">
+        <div class="ui fluid card-checkout">
+            <div class="ui divider"></div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span>Subtotal</span>
+                        <span class="ui floated right subtotal">@string.Format("{0:c}", Model.SubTotal != null ? Model.SubTotal : 0)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span>Frete</span>
+                        <span class="ui floated right" id="shipping_checkout">@string.Format("{0:c}", Model.TotalShipping != null ? Model.TotalShipping : 0)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span>Desconto</span>
+                        <span class="ui floated right" id="desconto_checkout" data-discount-initial="@(Model.TotalDiscount != null ? Model.TotalDiscount : 0)">@string.Format("{0:c}", Model.TotalDiscount != null ? Model.TotalDiscount : 0)</span>
+                    </div>
+                </div>
+            </div>
+            @if (Model.TotalShoppingVoucher != null && Model.TotalShoppingVoucher > 0)
+            {
+                <div class="item">
+                    <div class="content">
+                        <div class="description">
+                            <span>Vale Compras</span>
+                            <span class="ui floated right" id="desconto_shopping_voucher">
+                                @string.Format("{0:c}", Model.TotalShoppingVoucher != null ? Model.TotalShoppingVoucher : 0)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <span class="text bold">Total à pagar</span>
+                        <strong class="ui floated right text bold" id="total_checkout">
+                            @string.Format("{0:c}", Model.Total != null ? Model.Total : 0)
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <div class="ui divider"></div>
+        </div>
+        @Html.Action("ListaDescontosPagamento", "Checkout")
+    </div>
+</div>

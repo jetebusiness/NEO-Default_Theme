@@ -1,0 +1,47 @@
+﻿@model List<DomainCompany.Entities.Faq>
+
+@{
+    ViewBag.Title = "Perguntas Frequentes";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumb.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui two column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid">
+    <div class="row one column">
+        <div class="column">
+            <div class="ui items">
+                @if (Model != null)
+                {
+                  foreach (var faq in Model)
+                  {
+                        <div class="item">
+                            <div class="content">
+                                <p class="header">@faq.Question</p>
+                                <div class="description">
+                                    @faq.Answer
+                                </div>
+                                <div class="extra">
+                                </div>
+                            </div>
+                        </div>
+                  }
+                }
+                else
+                {
+                  <div class="text center">Até o momento não exisem dúvidas frequentes.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

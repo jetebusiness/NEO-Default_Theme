@@ -1,0 +1,46 @@
+﻿@model DomainCustomer.Settings
+
+
+<div class="ui right floated pagination menu">
+    @if (Model.HasPreviousPage)
+    {
+        <a class="item" href="@string.Concat("?pageNumber=", Model.PageNumber - 1)">
+            <i class="angle left icon"></i>
+        </a>
+    }
+    else
+    {
+        <a class="disabled item" href="@string.Concat("?pageNumber=", Model.PageNumber - 1)">
+            <i class="angle left icon"></i>
+        </a>
+    }
+
+    @for (int i = 0; i < Model.PageCount; i++)
+    {
+        if ((i + 1) == Model.PageNumber)
+        {
+            <a class="active item">
+                @(i + 1)
+            </a>
+        }
+        else
+        {
+            <a class="item" href="@string.Concat("?pageNumber=", (i+1))">
+                @(i + 1)
+            </a>
+        }
+    }
+
+    @if (Model.HasNextPage)
+    {
+        <a class="item" href="@string.Concat("?pageNumber=", Model.PageNumber + 1)">
+            <i class="angle right icon"></i>
+        </a>
+    }
+    else
+    {
+        <a class="disabled item" href="@string.Concat("?pageNumber=", Model.PageNumber + 1)">
+            <i class="angle right icon"></i>
+        </a>
+    }
+</div>

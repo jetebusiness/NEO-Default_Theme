@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+    Response.StatusCode = 404;
+    if (IsAjax)
+    {
+        Response.Write("Resource not found");
+        return;
+    }
+    const string html = "text/html";
+    bool requestingHtml = Request.AcceptTypes.Any(type =>
+        html.Equals(type, StringComparison.OrdinalIgnoreCase));
+
+    if (!requestingHtml)
+    {
+        //não renderiza conteúdo
+        return;
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>404 - Not Found</title>
+</head>
+<body>
+    <p>@Request.RawUrl</p>
+    <p>Este recurso não existe</p>
+</body>
+</html>

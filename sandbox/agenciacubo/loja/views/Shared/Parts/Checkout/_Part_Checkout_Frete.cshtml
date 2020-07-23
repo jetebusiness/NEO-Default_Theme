@@ -1,0 +1,81 @@
+﻿@model List<DomainCheckout.Entities.Shipping>
+<div class="ui fluid items divided card-checkout" id="GetShippping">
+    @if (Model != null)
+    {
+        int _contador = 0;
+        string _checkFrete = "";
+        string _classCheckFrete = "";
+        foreach (var item in Model)
+        {
+            _contador++;
+            int IdShippingModeCart = Convert.ToInt32(TempData["IdShippingModeCart"]);
+            if (IdShippingModeCart == item.ShippingMode.IdShippingMode && IdShippingModeCart != 0)
+            {
+                _classCheckFrete = "checked";
+                _checkFrete = "checked='checked'";
+            }
+            else
+            {
+                _classCheckFrete = "";
+                _checkFrete = "";
+            }
+
+            <div class="item">
+                <div class="content">
+                    <div class="description">
+                        <div class="ui radio checkbox @_classCheckFrete">
+                            <input type="radio" name="radio" id="radio_@item.ShippingMode.IdShippingMode" class="shippingGet" value="@item.ShippingMode.IdShippingMode" data-id="@item.ShippingMode.IdShippingMode" data-value="@string.Format("{0}", item.ValueShipping)" data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" data-entregaagendada="@item.ShippingMode.ScheduledDelivery" data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery" data-carrier="@item.ShippingMode.carrier" data-mode="@item.ShippingMode.mode" data-hub="@item.ShippingMode.hub" data-deliverytime="@item.ShippingMode.DeliveryTime" data-usefullday="@((item.ShippingMode.UsefulDay == true) ? "1" : "0")" @_checkFrete>
+                            @if (item.ShippingMode.ScheduledDelivery)
+                            {
+                                <label>@(item.ShippingMode.Name + " (*)") </label>
+                            }
+                            else if (item.ShippingMode.DeliveryTime == null)
+                            {
+                                <label>@item.ShippingMode.Name (Envio Imediato) </label>
+                            }
+                            else
+                            {
+                                <label>@item.ShippingMode.Name (@item.ShippingMode.DeliveryTime dia(s) @string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? "úteis" : "útil") : "")) </label>
+                            }
+
+                        </div>
+
+
+                        <span class="ui floated right">
+                            @{
+                                var _valueShipping = "";
+                                if (item.ValueShipping == 0)
+                                {
+                                    _valueShipping = "Frete Gratis";
+                                }
+                                else
+                                {
+                                    _valueShipping = string.Format("{0:c}", item.ValueShipping);
+                                }
+                            }
+                            @_valueShipping
+                        </span>
+                        @{
+                            if (item.ShippingMode.ScheduledDelivery)
+                            {
+                                <div class="ui input input-datepicker">
+                                    <input type="text" class="date agendar" id="dateAgendada_@item.ShippingMode.IdShippingMode" data-id-frete="@item.ShippingMode.IdShippingMode" readonly="readonly" style="display: none;" />
+
+                                    <select id="combo_dataperiodoagendada_@item.ShippingMode.IdShippingMode" class="field agendar select-datepicker" data-id-frete="@item.ShippingMode.IdShippingMode" style="display: none;">
+                                        <option value="">Selecione</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="json_dataagendada_@item.ShippingMode.IdShippingMode" />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+                                }
+                            }
+                            else
+                            {
+                                @Html.Raw("Nenhum Frete foi encontrado")
+                            }
+</div>
+@*<a href="">Dica de Frete Grátis</a>*@

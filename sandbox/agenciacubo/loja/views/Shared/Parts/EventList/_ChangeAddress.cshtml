@@ -1,0 +1,86 @@
+﻿@model List<DomainCustomer.Entities.Address>
+
+@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row fluid margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+
+            @Html.Partial("~/Views/Shared/Parts/EventList/_EventListMenu.cshtml", new ViewDataDictionary() { { "option", "address" } })
+
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+            @if (Model != null)
+            {
+                <div class="row">
+                    <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                        <div class="ui segment">
+                            <div class="ui items" id="listAddressData">
+                                @foreach (var item in Model)
+                                {
+                                    string identicationCurrent = string.IsNullOrEmpty(item.Identification) ? "Endereço" : item.Identification;
+                                    string iconAddressCurrent = item.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial ? "home" : "building";
+
+                                    <div class="item">
+                                        <div class="icon margin right medium">
+                                            <span class="text massive">
+                                                <i class="icon @iconAddressCurrent outline"></i>
+                                            </span>
+                                        </div>
+                                        <div class="content">
+                                            <a class="header">@identicationCurrent</a>
+                                            <div class="description">
+                                                <p>@item.StreetAddress, @item.Number @item.Complement</p>
+                                                <p>@item.Neighbourhood</p>
+                                                <p>@item.City, @item.State</p>
+                                                <p>CEP @item.ZipCode</p>
+                                            </div>
+                                            <div class="extra">
+                                                <a href="@Url.Action("ManagerAddress", "EventList", new {addressSelectedId = @item.IdAddress})" class="ui right floated tiny primary button utilAddress" data-id="@item.IdAddress">
+                                                    <i class="check icon"></i>
+                                                    Utilizar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="actions">
+                                <a href="javascript:history.go(-1)" class="ui animated button large basic left floated text uppercase">
+                                    <div class="visible content">Cancelar</div>
+                                    <div class="hidden content">
+                                        <i class="remove icon"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+        </div>
+    </div>
+</div>
+

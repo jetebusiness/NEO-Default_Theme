@@ -1,0 +1,171 @@
+﻿@model DomainCustomer.Entities.Customer
+@{
+  ViewBag.Title = "Área do Cliente";
+  Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+  <div class="ui container">
+    <div class="ui one column grid stackable middle aligned">
+      <div class="row">
+        <div class="column">
+          <h1>@ViewBag.Title</h1>
+          <div class="ui breadcrumb text small">
+            <a class="section" href="/">Home</a>
+            <i class="right angle icon divider"></i>
+            <a class="section">Área do Cliente</a>
+            <i class="right angle icon divider"></i>
+            <a class="section">Lista de Desejos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="row">
+  <div class="column">
+    <div class="ui grid stackable wishlistProduct">
+      <div class="row five column">
+        <div class="column center aligned">
+          <img src="//static-loja.plataformaneo.com.br/produto/20170903111215_2534997466_A.jpg">
+        </div>
+        <div class="column middle aligned content">
+          <div class="header">Mochila</div>
+          <div class="description">Adicionado em 10/07/2017</div>
+        </div>
+        <div class="column middle aligned content text-center">
+          <div class="de-price-por">de <span>R$ 290,00</span> por</div>
+          <div class="price">R$ 200,00</div>
+          <div class="parcelamento">em 5x de R$ 40,00 (sem juros)</div>
+        </div>
+        <div class="column center aligned middle aligned content text-center">
+          <div class="ui qtd action mini input">
+            <button class="ui icon button qtdminus">
+              <i class="minus icon"></i>
+            </button>
+            <input type="number" min="1" step="1" size="3" value="1" name="">
+            <button class="ui action icon button qtdplus">
+              <i class="add icon"></i>
+            </button>
+          </div>
+        </div>
+        <div class="column center aligned middle aligned content">
+          <button class="ui action button w-100">
+            <i class="icon shopping cart"></i>
+            Adicionar ao carrinho
+          </button>
+          <button class="ui basic button margin top small w-100">
+            <i class="icon trash alternate outline"></i>
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="ui divider"></div>
+</div>
+<div class="row">
+  <div class="column">
+    <div class="ui grid stackable wishlistProduct">
+      <div class="row five column">
+        <div class="column center aligned">
+          <img src="//static-loja.plataformaneo.com.br/produto/20170903111215_2534997466_A.jpg">
+        </div>
+        <div class="column middle aligned content">
+          <div class="header">Mochila</div>
+          <div class="description">Adicionado em 10/07/2017</div>
+        </div>
+        <div class="column middle aligned content text-center">
+          <div class="de-price-por">de <span>R$ 290,00</span> por</div>
+          <div class="price">R$ 200,00</div>
+          <div class="parcelamento">em 5x de R$ 40,00 (sem juros)</div>
+        </div>
+        <div class="column center aligned middle aligned content text-center">
+          <div class="ui qtd action mini input">
+            <button class="ui icon button qtdminus">
+              <i class="minus icon"></i>
+            </button>
+            <input type="number" min="1" step="1" size="3" value="1" name="">
+            <button class="ui action icon button qtdplus">
+              <i class="add icon"></i>
+            </button>
+          </div>
+        </div>
+        <div class="column center aligned middle aligned content">
+          <button class="ui action button w-100">
+            <i class="icon shopping cart"></i>
+            Adicionar ao carrinho
+          </button>
+          <button class="ui basic button margin top small w-100">
+            <i class="icon trash alternate outline"></i>
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="ui divider"></div>
+</div>
+<div class="row">
+  <div class="column">
+    <div class="ui grid stackable wishlistProduct">
+      <div class="row five column">
+        <div class="column center aligned">
+          <img src="//static-loja.plataformaneo.com.br/produto/20170903111215_2534997466_A.jpg">
+        </div>
+        <div class="column middle aligned content">
+          <div class="header">Mochila</div>
+          <div class="description">Adicionado em 10/07/2017</div>
+        </div>
+        <div class="column middle aligned content text-center">
+          <div class="de-price-por">de <span>R$ 290,00</span> por</div>
+          <div class="price">R$ 200,00</div>
+          <div class="parcelamento">em 5x de R$ 40,00 (sem juros)</div>
+        </div>
+        <div class="column center aligned middle aligned content text-center">
+          <div class="ui qtd action mini input">
+            <button class="ui icon button qtdminus">
+              <i class="minus icon"></i>
+            </button>
+            <input type="number" min="1" step="1" size="3" value="1" name="">
+            <button class="ui action icon button qtdplus">
+              <i class="add icon"></i>
+            </button>
+          </div>
+        </div>
+        <div class="column center aligned middle aligned content">
+          <button class="ui grey button w-100">
+            <i class="icon exclamation circle"></i>
+            Esgotado
+          </button>
+          <button class="ui basic button margin top small w-100">
+            <i class="icon trash alternate outline"></i>
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="ui divider"></div>
+</div>
+<div class="column margin rl-auto">
+  <div class="row">
+    <button class="ui action button" style="width: 240px">
+      <i class="icon shopping cart"></i>
+      Adicionar todos ao carrinho
+    </button>
+  </div>
+  <div class="row">
+    <button class="ui basic button margin top small" style="width: 240px">
+      <i class="icon trash alternate outline"></i>
+      Excluir todos
+    </button>
+  </div>
+</div>

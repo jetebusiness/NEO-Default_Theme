@@ -1,0 +1,66 @@
+﻿@model DomainProduct.Filters
+<div class="column" id="filter">
+    <div class="ui labels">
+
+    </div>
+    <div class="four wide column filtros" id="filtros">
+        <div class="ui grid one column">
+            <div class="row">
+                <div class="row filterbar">
+                    <div class="eight wide column">
+                        <h3>Filtros</h3>
+                    </div>
+                    <div class="eight wide column">
+                        <a class="ui button black icon closeFiltros"><i class="remove icon"></i></a>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui accordion" id="filtroList">
+                        @if (Model.GroupingTypes != null && Model.GroupingTypes.Count() > 0)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Product/_GroupingTypesFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Product/_GroupingTypesFilters.cshtml", Model.GroupingTypes)
+                        }
+
+                        @if (Model.References != null && Model.References.Count() > 0)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Product/_ReferencesFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Product/_ReferencesFilters.cshtml", Model.References)
+                        }
+
+                        @if (Model.Brands != null && Model.Brands.Count() > 1)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Brand/_BrandsFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Brand/_BrandsFilters.cshtml", Model.Brands)
+                        }
+
+                        @if (Model.Categories != null && Model.Categories.Count() > 1)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Category/_CategoriesFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Category/_CategoriesFilters.cshtml", Model.Categories)
+                        }
+
+                        @if (Model.Attributes != null && Model.Attributes.Count() > 0)
+                        {
+                            <!-- Page: ~/Views/Shared/Blocks/Atribute/_AtributesFilters.cshtml -->
+                            @Html.Partial("~/Views/Shared/Blocks/Atributes/_AtributesFilters.cshtml", Model.Attributes)
+                        }
+
+                        @Html.Partial("~/Views/Shared/Blocks/Product/_PriceFilters.cshtml")
+                    </div>
+                </div>
+            </div>
+                <!-- Page: ~/Views/Shared/Blocks/Group/_GroupList.cshtml -->
+                @Html.Action("GroupList", "Group")
+        </div>
+
+    </div>
+</div>
+<!-- ==== INPUTS PARA UTILIZAR NO FILTRO -->
+@*<input type="hidden" id="idCategory" name="idCategory" value="" />
+<input type="hidden" id="idBrand" name="idBrand" value="" />
+<input type="hidden" id="idGroup" name="idGroup" value="" />
+<input type="hidden" id="variationSelected" name="variationSelected" value="" />
+<input type="hidden" id="order" name="order" value="" />
+<input type="hidden" id="variationSelected" name="variationSelected" value="" />
+<input type="hidden" id="viewList" name="viewList" value="" />*@

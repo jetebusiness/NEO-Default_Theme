@@ -1,0 +1,14 @@
+﻿@model DomainCheckout.Entities.Cart
+
+@if (Model != null && Model.CartItems != null)
+{
+    foreach (var product in Model.CartItems)
+    {
+        <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
+        @Html.Partial("~/Views/Shared/Object/Product/_ProductCartItemDetalhes.cshtml", product)
+    }
+
+    @("|$|" + string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0))
+    @("|$|" + string.Format("{0:c}", Model != null ? Model.SubTotal : 0))
+    @("|$|" + string.Format("{0:c}", Model != null ? Model.Total : 0))
+}

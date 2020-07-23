@@ -1,0 +1,17 @@
+﻿@model List<DomainProduct.Entities.Product>
+@if (Model != null && Model.Any())
+{
+<div class="ui container">
+    <div class="ui horizontal divider">
+        Produtos Relacionados
+    </div>
+                
+    <div class="ui cards centered car-relacionados slideshow">
+        @foreach (var product in Model)
+        {
+            @Html.Partial("~/Views/Shared/Object/Product/_ProductInCard.cshtml", product)
+        }
+    </div>
+    <div class="ui divider hidden"></div>
+</div>
+}

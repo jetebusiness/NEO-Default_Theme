@@ -1,0 +1,182 @@
+﻿@model DomainCheckout.Entities.PaymentMethod
+
+@{
+    string JsonPaymentMethod = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
+    var UseTwoCards = (bool)Session["UseTwoCards"];
+    decimal MinimumValueTwoCards = (decimal)Session["MinimumValueTwoCards"];
+    decimal TotalCart = (decimal)Session["TotalCart"];
+
+    if (TotalCart < MinimumValueTwoCards)
+    {
+        UseTwoCards = false;
+    }
+
+}
+
+<div class="text big title color black">
+    <i class="credit card icon"></i>
+    Cartão de Débito
+    <i class="ui icon dropdown floated right"></i>
+</div>
+<div class="content">
+    <form action="" method="post" class="jet checkout ui form debit-card" id="validCardDebit" data-paymentmethod="@JsonPaymentMethod">
+        <div class="card-wrapper-debit"></div>
+        <div class="card-wrapper-debit1 hide"></div>
+        <div class="card-wrapper-debit2 hide"></div>
+        <div class="ui divider hidden"></div>
+        @if (UseTwoCards)
+        {
+            <div class="field">
+                <div class="ui toggle checkbox box-debit">
+                    <input type="checkbox" name="UseTwoDebitCards" id="UseTwoDebitCards" class="hidden">
+                    <label class="labelCheckPayment"><strong>Pagar usando dois cartões</strong></label>
+                </div>
+            </div>
+            <div class="multi-debit hide">
+                <div class="ui top attached tabular menu">
+                    <a class="item active" data-tab="debit-1">
+                        Cartão 1
+                    </a>
+                    <a class="item" data-tab="debit-2">
+                        Cartão 2
+                    </a>
+                </div>
+                <div class="ui bottom attached tab segment debit-1 active" data-tab="debit-1">
+                    <div class="field required">
+                        <label class="labelCheckPayment">Número</label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" name="DebitCard1" id="DebitCard1" placeholder="Número do Cartão" data-type="debitnumber">
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label class="labelCheckPayment">
+                            Nome
+                        </label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitName1" id="DebitName1" placeholder="Nome Impresso no Cartão" data-type="debitname">
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field required">
+                            <label class="labelCheckPayment">Data de Validade</label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment" name="DebitExpDate1" id="DebitExpDate1" placeholder="00/00" data-type="debitexpiry" maxlength="7">
+                            </div>
+                        </div>
+                        <div class="field required">
+                            <label class="labelCheckPayment">CVV</label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment" name="DebitCVV1" id="DebitCVV1" placeholder="Nº de Segurança" data-type="debitcvv">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label class="labelCheckPayment">
+                            Valor
+                        </label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitValor1" id="DebitValor1" placeholder="Valor a ser pago no cartão" data-type="money" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal=",">
+                        </div>
+                    </div>
+                    <input type="hidden" name="debitBrandCard1" id="debitBrandCard1" value="" />
+                    <input type="hidden" name="debitIdBrandCard1" id="debitIdBrandCard1" value="" />
+                </div>
+                <div class="ui bottom attached tab segment debit-2" data-tab="debit-2">
+                    <div class="field required">
+                        <label class="labelCheckPayment">Número</label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" name="DebitCard2" id="DebitCard2" placeholder="Número do Cartão" data-type="debitnumber">
+                        </div>
+                    </div>
+
+                    <div class="field required">
+                        <label class="labelCheckPayment">
+                            Nome
+                        </label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitName2" id="DebitName2" placeholder="Nome Impresso no Cartão" data-type="debitname">
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field required">
+                            <label class="labelCheckPayment">Data de Validade</label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment" name="DebitExpDate2" id="DebitExpDate2" placeholder="00/00" data-type="debitexpiry" maxlength="7">
+                            </div>
+                        </div>
+                        <div class="field required">
+                            <label class="labelCheckPayment">CVV</label>
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" class="fieldCheckPayment" name="DebitCVV2" id="DebitCVV2" placeholder="Nº de Segurança" data-type="debitcvv">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label class="labelCheckPayment">
+                            Valor
+                        </label>
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitValor2" id="DebitValor2" placeholder="Valor a ser pago no cartão" data-type="money" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal=",">
+                        </div>
+                    </div>
+                    <input type="hidden" name="debitBrandCard2" id="debitBrandCard2" value="" />
+                    <input type="hidden" name="debitIdBrandCard2" id="debitIdBrandCard2" value="" />
+                </div>
+            </div>
+        }
+        <div class="one-debit">
+            <div class="field required">
+                <label class="labelCheckPayment">Número</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" name="DebitCard" id="DebitCard" placeholder="Número do Cartão" data-type="debitnumber">
+                </div>
+            </div>
+
+            <div class="field required">
+                <label class="labelCheckPayment">
+                    Nome
+                </label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitName" id="DebitName" placeholder="Nome Impresso no Cartão" data-type="debitname">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field required">
+                    <label class="labelCheckPayment">Data de Validade</label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" class="fieldCheckPayment" name="DebitExpDate" id="DebitExpDate" placeholder="00/00" data-type="debitexpiry" maxlength="7">
+                    </div>
+                </div>
+                <div class="field required">
+                    <label class="labelCheckPayment">CVV</label>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" class="fieldCheckPayment" name="DebitCVV" id="DebitCVV" placeholder="Nº de Segurança" data-type="debitcvv">
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="debitBrandCard" id="debitBrandCard" value="" />
+            <input type="hidden" name="debitIdBrandCard" id="debitIdBrandCard" value="" />
+        </div>
+        <div class="ui divider hidden small"></div>
+        <div class="field">
+            <button class="ui labeled icon action large fluid button GerarPedido" id="btnCardDebit" data-idBrand="" data-externalcode="" data-Card="D">
+                <i class="credit card alternative icon"></i>
+                Pagar com Cartão de Débito
+            </button>
+        </div>
+    </form>
+</div>

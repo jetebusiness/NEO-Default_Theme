@@ -1,0 +1,27 @@
+﻿@model IList<DomainProduct.Entities.Attribute>
+
+@if (Model != null)
+{
+    foreach (var atribute in Model)
+    {
+        <div class="active title">@atribute.name<i class="dropdown icon"></i></div>
+        <div class="active content">
+            <div class="ui form">
+                <div class="grouped fields">
+                    @foreach (var valor in atribute.attributeValues)
+                    {
+                        if (valor.active)
+                        {
+                            <div class="field">
+                                <div class="ui checkbox checkAtribute" id="@valor.idAttributeValue" name="@valor.Value">
+                                    <input type="checkbox" name="@valor.Value" id="checkAtribute_@valor.idAttributeValue" value="@valor.idAttributeValue">
+                                    <label>@valor.Value</label>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

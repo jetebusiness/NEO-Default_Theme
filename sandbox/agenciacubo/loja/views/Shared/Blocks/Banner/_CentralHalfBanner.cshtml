@@ -1,0 +1,18 @@
+﻿@model IList<DomainCompany.Entities.Banner>
+@if (Model != null && Model.Any())
+{
+    <div class="ui container centralHalf">
+        <div class="ui equal width grid images middle aligned center aligned stackable">
+        
+            @foreach (var banner in Model)
+            {
+                <div class="column">
+                    <a href="@banner.Link" class="ui image" title="@banner.Name">
+                        <img src="/assets/image/loading.svg" data-src="@banner.NameFileImage" alt="@banner.Name" title="@banner.Name" class="margin none ui image">
+                    </a>
+                </div>
+            }
+        
+        </div>
+    </div>
+}

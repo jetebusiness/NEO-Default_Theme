@@ -1,0 +1,34 @@
+﻿@model DomainCustomer.Entities.User
+
+@{
+    ViewBag.Title = "Acesse sua conta";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+    List<DomainSocialNetwork.Entities.SocialLogin> SocialLogin = new List<DomainSocialNetwork.Entities.SocialLogin>();
+    if (ViewBag.SocialLogin != null)
+    {
+        SocialLogin = (List<DomainSocialNetwork.Entities.SocialLogin>)ViewBag.SocialLogin;
+    }
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Acesse sua conta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@{
+    ViewBag.SocialLogin = SocialLogin;
+    Html.RenderPartial("~/Views/Customer/_Login.cshtml", "column");
+}

@@ -1,0 +1,196 @@
+﻿@model DomainCheckout.Entities.Cart
+@{
+  bool permiteVenda = true;
+}
+@if (Model != null)
+{
+  <div id="miniCarrinho" class="ui right sidebar carrinho ui grid">
+    <div class="row">
+      <div class="column">
+        <div class="ui grid top aligned elementos">
+          <div class="row two column head middle aligned">
+            <div class="column ten wide mobile">
+              <span id="MiniCartTitle" class="text center left floated">@(Session["idEventList"] == null && Session["EventList"] == null ? "Meu Carrinho" : "Minha Lista")</span>
+            </div>
+            <div class="column right aligned six wide mobile">
+              <a class="ui button icon fecharCarrinho"><i class="remove icon black"></i></a>
+            </div>
+          </div>
+
+          @if (Session["UserAuthenticated"] != null && Session["Seller"] != null)
+          {
+              if (((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).User.UserName != null)
+              {
+              <!-- Comeco Venda Assistida (Com Cliente) -->
+              <div class="row two column stackable venda-assistida">
+                <div class="column">
+                  <div class="info">
+                    <div class="ui items">
+                      <div class="item">
+                        <div class="cliente-vinculado">
+                          <i class="user circle outline icon"></i> <span>Cliente</span>
+                        </div>
+                        <div class="content align-self-center">
+                          <div class="header">@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name.ToString())</div>
+                          <div class="description">
+                            <p>@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Email.ToString())</p>
+                            <p>
+                                CPF: 
+                                @{
+                                    string CpfCnpj = ((DomainCustomer.Entities.Customer) Session["UserAuthenticated"]).Cpf_cnpj;
+
+                                    if (!CpfCnpj.Contains("*")) {
+                                        CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
+                                    }
+                                }
+                                @CpfCnpj
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column middle aligned">
+                    <a href="/assistedsale/index" class="ui black button position-button">
+                        Alterar o cliente
+                    </a>
+                </div>
+              </div>
+              <!-- Fim Venda Assistida -->
+            }
+          }
+          @if (Session["Seller"] != null && ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name == null)
+          {
+            permiteVenda = false;
+            <!-- Comeco Venda Assistida (Sem Cliente) -->
+            <div class="row two column stackable venda-assistida">
+              <div class="column">
+                <div class="info">
+                  <div class="ui items">
+                    <div class="item">
+                      <div class="cliente-vinculado">
+                        <i class="user circle outline icon"></i> <span>Cliente</span>
+                      </div>
+                      <div class="content align-self-center">
+                        <div class="header">Sem cliente vinculado</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="column middle aligned">
+                <a href="/assistedsale/index" class="ui black button position-button">
+                  <i class="user plus icon"></i> Vincular cliente
+                </a>
+              </div>
+            </div>
+            <!-- Fim Venda Assistida -->
+          }
+
+
+
+          <div class="row green info">
+            <div class="column">
+              <i class="lock icon"></i>Compra 100% Segura
+            </div>
+          </div>
+          <div class="row elemento">
+            <div class="column">
+              <div class="ui items relaxed listaItems unstackable" id="ListProductsCheckout">
+                @{
+                  bool ProductInTheCart = false;
+                  if (Model != null && Model.CartItems != null)
+                  {
+                    ProductInTheCart = true;
+                    foreach (var product in Model.CartItems)
+                    {
+                      <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
+                      @Html.Partial("~/Views/Shared/Object/Product/_ProductcartItemMiniCart.cshtml", product)
+                    }
+                  }
+                }
+              </div>
+
+              @if (Session["EventList"] == null)
+              {
+                <div class="ui divided items right aligned dados-carrinho">
+                  <div class="item detalhes text right">
+                    <div class="content">
+                      <div class="description">
+                        Desconto: <span id="descontoCarrinho">@string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item detalhes text right">
+                    <div class="content">
+                      <div class="description">
+                        <strong>Subtotal: <span id="subTotalCarrinho">@string.Format("{0:c}", Model != null ? Model.SubTotal : 0)</span></strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item detalhes">
+                    <div class="content">
+                      <div class="description frete">
+                        <div class="ui form">
+                          <div class="inline field">
+                            <label>Calcular Frete</label>
+                            <div class="ui action input">
+                              <input type="text" placeholder="00000-000"
+                                     class="masked mask_zipcode" size="9" name="cep" id="shipping">
+                              <button class="ui right labeled icon button frete calcular buttonsMiniCart" id="CallServiceShippingMiniCart">
+                                <i class="shipping icon"></i>
+                                Calcular
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="description resultado">
+                        <div class="ui form">
+                          <div class="field">
+                            <label class="frete valor"></label>
+                            <div class="ui">
+                              <button class="ui right labeled icon mini button frete recalcular margin none" id="btn_recalcular_frete">
+                                <i class="refresh icon"></i>
+                                Recalcular
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item detalhes hideme" id="dica_frete">
+                    <div class="content">
+                      <span id="descricao_dica"></span>
+                    </div>
+                  </div>
+                  <div class="item detalhes">
+                    <div class="content">
+                      <span class="subtotal">Total a pagar: <span id="totalCarrinho">@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+          @{
+            if (Session["EventList"] == null)
+            {
+              @Html.Partial("~/Views/Shared/Common/_Cart_Butons_MiniCart.cshtml", Model.QuantityTotalItens != null ? Model.QuantityTotalItens : 0);
+            }
+            else
+            {
+              @Html.Partial("~/Views/Shared/Common/_Cart_Butons_EventList.cshtml")
+            }
+          }
+        </div>
+      </div>
+    </div>
+    <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
+    <input type="hidden" id="id_frete_selecionado" />
+    <input type="hidden" id="cep_selecionado" />
+    <input type="hidden" id="permiteVenda" value="@permiteVenda.ToString()" />
+  </div>
+}

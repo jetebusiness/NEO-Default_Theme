@@ -1,0 +1,248 @@
+﻿@model DomainCustomer.Entities.Contact
+
+@{
+    ViewBag.Title = "Fale Conosco";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui grid stackable middle aligned centered">
+            <div class="row one column">
+                <div class="column">
+                    <h1 class="text uppercase">@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small uppercase">
+                        <a class="section" href="/">Home</a>
+                        <div class="divider"> / </div>
+                        <span class="active section">Fale Conosco</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@{ 
+    List<DomainCustomer.Entities.ContactTopic> ListContactTopics = (List<DomainCustomer.Entities.ContactTopic>)ViewBag.ContactTopics;
+}
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
+            @using (Ajax.BeginForm("Contact", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "onSuccess", OnFailure = "onFailure" }, new { @class = "ui large form", @id = "formContact" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="ui segment">
+                    <div class="ui grid  very relaxed stackable middle aligned grid left aligned">
+                        <div class="row one column">
+                            <div class="column">
+
+                                <div class="field required">
+                                    <label>Nome</label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" maxlength="100" name="Name" placeholder="Nome"
+                                               value="" data-validate="name">
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>E-mail</label>
+                                    <div class="ui left icon input">
+                                        <i class="mail icon"></i>
+                                        <input id="email" type="text" maxlength="100" name="Email" placeholder="E-mail"
+                                               value="" data-validate="email">
+                                    </div>
+                                </div>
+
+
+                                <div class="three fields">
+                                    <div class="field required">
+                                        <label>Telefone</label>
+                                        <div class="ui left icon input">
+                                            <i class="phone icon"></i>
+                                            <input type="text" name="Phone"
+                                                   placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                   data-validate="phone">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Estado</label>
+                                        <select class="ui dropdown search" id="estado_0"
+                                                name="State" data-validate="state">
+                                            <option value="">Selecione</option>
+                                            <option value="AC">Acre</option>
+                                            <option value="AL">Alagoas</option>
+                                            <option value="AP">Amapá</option>
+                                            <option value="AM">Amazonas</option>
+                                            <option value="BA">Bahia</option>
+                                            <option value="CE">Ceará</option>
+                                            <option value="DF">Distrito Federal</option>
+                                            <option value="ES">Espírito Santo</option>
+                                            <option value="GO">Goiás</option>
+                                            <option value="MA">Maranhão</option>
+                                            <option value="MT">Mato Grosso</option>
+                                            <option value="MS">Mato Grosso do Sul</option>
+                                            <option value="MG">Minas Gerais</option>
+                                            <option value="PA">Pará</option>
+                                            <option value="PB">Paraíba</option>
+                                            <option value="PR">Paraná</option>
+                                            <option value="PE">Pernambuco</option>
+                                            <option value="PI">Piauí</option>
+                                            <option value="RJ">Rio de Janeiro</option>
+                                            <option value="RN">Rio Grande do Norte</option>
+                                            <option value="RS">Rio Grande do Sul</option>
+                                            <option value="RO">Rondônia</option>
+                                            <option value="RR">Roraima</option>
+                                            <option value="SC">Santa Catarina</option>
+                                            <option value="SP">São Paulo</option>
+                                            <option value="SE">Sergipe</option>
+                                            <option value="TO">Tocantins</option>
+                                        </select>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Cidade</label>
+                                        <div class="ui input">
+                                            <input type="text" maxlength="100" name="City" placeholder="Cidade"
+                                                   data-validate="city">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="div two fields">
+                                    <div class="field required">
+                                        <label>Descrição</label>
+                                        <select class="ui dropdown" data-validate="select" name="ContactTopic.IdContactTopic">
+                                            <option value="">Selecione</option>
+                                            @if (ListContactTopics != null)
+                                            {
+                                                foreach (var topic in ListContactTopics)
+                                                {
+                                                    <option value="@topic.IdContactTopic">@topic.Description</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Assunto</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" maxlength="100" name="Subject" placeholder="Assunto"
+                                                   value="" data-validate="assunto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field required">
+                                    <label>Mensagem</label>
+                                    <textarea maxlength="6000" name="Message"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column text right">
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Contact" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <a href="/Home" class="ui animated button large basic left floated form_refresh">
+                                    <div class="visible content">Voltar</div>
+                                    <div class="hidden content">
+                                        <i class="arrow left icon"></i>
+                                    </div>
+                                </a>
+                                <button id="submitContact" type="submit"
+                                        class="ui animated button large submit primary right floated continuar"
+                                        tabindex="0">
+                                    <div class="visible content">Enviar</div>
+                                    <div class="hidden content">
+                                        <i class="send icon"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function onSuccess(response) {
+            googleRecaptchaVersion = $('#googleVersion').val();
+            if (response.success == true) {
+                swal({                 
+                    text: response.Message,
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    window.location.href = "/Home";
+                });
+            }
+            else {
+
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else if (googleRecaptchaVersion == '3') {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $("#googleResponse").val('');
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
+                swal({                    
+                    text: response.Message,
+                    type: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function onFailure(response) {
+            googleRecaptchaVersion = $('#googleVersion').val();
+            if (response.success == false) {
+
+                if (googleRecaptchaVersion == '2') {
+                    $("#googleResponse").val('');
+                    grecaptcha.reset();
+                } else if (googleRecaptchaVersion == '3') {
+                    var googleSiteKey = $('#googleSiteKey').val();
+                    $("#googleResponse").val('');
+                    $.ajaxSetup({ async: false });
+                    $.getScript("https://www.google.com/recaptcha/api.js?render=" + googleSiteKey, function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute(googleSiteKey, { action: 'Register' }).then(function (token) {
+                                $("#googleResponse").val(token);
+                            });
+                        });
+                    });
+                }
+
+                swal({
+                    text: response.Message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    window.location.href = "/Home";
+                });
+            }
+        }
+    </script>    
+}

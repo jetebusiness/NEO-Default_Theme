@@ -1,0 +1,90 @@
+﻿@model string
+
+@{
+    List<DomainSocialNetwork.Entities.SocialLogin> SocialLogin = new List<DomainSocialNetwork.Entities.SocialLogin>();
+    if (ViewBag.SocialLogin != null)
+    {
+        SocialLogin = (List<DomainSocialNetwork.Entities.SocialLogin>)ViewBag.SocialLogin;
+    }
+ }
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <div class="@(Model != null ? Model : "") ten wide computer sixteen wide tablet sixteen wide mobile">
+            
+
+                <div class="ui segment">
+                    <div class="ui grid  very relaxed stackable middle aligned grid">
+                        <div class="row two column ">
+                            <div class="column">
+                                <form class="ui large form" id="formLogin">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="ui compact message form-message error">
+                                        <p></p>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="UserName" maxlength="100" id="email" placeholder="E-mail, CPF ou CNPJ">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="lock icon"></i>
+                                            <input type="password" name="password" maxlength="100" id="password" placeholder="Senha">
+                                        </div>
+                                    </div>
+                                    @Html.Action("GetRecaptchaV3", "Company", new { Module = "Login" })
+                                    <br />
+                                    <button type="button" class="ui fluid large submit primary button text uppercase" id="submitForm">
+                                        Entrar
+                                    </button>
+                                    <div class="ui divider"></div>
+                                    <p>Esqueceu sua senha? <a href="/customer/forgot">Recuperar senha</a></p>
+                                    <input type="hidden" name="returnUrl" id="returnUrl" value="@(ViewBag.ReturnURL != null ? ViewBag.ReturnURL : "")" />
+                                </form>
+                            </div>
+                            <div class="divider-column">
+                                <div class="ui vertical divider">
+                                    Ou
+                                </div>
+                            </div>
+                            <div class="column">
+                                <a href="/Customer/AccessKey" class="ui primary button fluid large text uppercase">
+                                    <i class="add user icon"></i>
+                                    Primeiro acesso? <br />Cadastre-se
+                                </a>
+
+
+                                @foreach (var item in SocialLogin)
+                                {
+
+                                    if ("Facebook".Equals(item.Name, StringComparison.OrdinalIgnoreCase) && "A".Equals(item.Status, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div class="ui divider hidden medium"></div>
+                                        <button class="ui facebook button  fluid large text uppercase" id="Facebook" name="provider" value="Facebook">
+                                            <i class="facebook icon"></i>
+                                            Acessar com o Facebook
+                                        </button>
+                                    }
+
+                                    if ("Google".Equals(item.Name, StringComparison.OrdinalIgnoreCase) && "A".Equals(item.Status, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div class="ui divider hidden medium"></div>
+                                        <button class="ui google plus button  fluid large text uppercase" id="Google" name="provider" value="Google">
+                                            <i class="google plus icon"></i>
+                                            Acessar com o Google
+                                        </button>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+        </div>
+    </div>
+</div>

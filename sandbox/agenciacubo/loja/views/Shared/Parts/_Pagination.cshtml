@@ -1,0 +1,67 @@
+﻿@model DomainProduct.Settings
+@{
+    string queryParameters = ViewBag.parameters != null ? ViewBag.parameters : "";
+
+    if(queryParameters != null) {
+        var qscoll = HttpUtility.ParseQueryString(queryParameters);
+
+        foreach (var item in qscoll.AllKeys)
+        {
+            qscoll.Remove("pageNumber");
+        }
+
+        queryParameters = qscoll.ToString();
+
+    }
+    if (Request.QueryString["pageNumber"] != null)
+    {
+        queryParameters = queryParameters.Replace("pageNumber=" + Request.QueryString["pageNumber"].ToString(), "&");
+    }
+    var total_pages = Model.PageCount;
+    var comeco_exibir = Model.PageNumber > 5 ? Model.PageNumber - 5 : 1;
+    var fim_exibir = Model.PageNumber + 5 < total_pages ? Model.PageNumber + 5 : total_pages;
+
+}
+<div class="ui pagination menu">
+    @if (Model.HasPreviousPage)
+    {
+        <a class="item" href="@string.Concat("?pageNumber=", comeco_exibir - 1 > 1 ? comeco_exibir - 1 : 1, queryParameters != "" ? "&"+queryParameters : "")">
+            <i class="angle left icon"></i>
+        </a>
+    }
+    else
+    {
+        <a class="disabled item" href="@string.Concat("?pageNumber=", comeco_exibir - 1 > 1 ? comeco_exibir - 1 : 1, queryParameters != "" ? "&"+queryParameters : "")">
+            <i class="angle left icon"></i>
+        </a>
+    }
+    @for (int i = comeco_exibir - 1; i < fim_exibir; i++)
+    {
+        if ((i + 1) == Model.PageNumber)
+        {
+            <a class="active item">
+                @(i + 1)
+            </a>
+        }
+        else
+        {
+            <a class="item" href="@string.Concat("?pageNumber=", (i + 1), queryParameters != "" ? "&"+queryParameters : "")">
+                @(i + 1)
+            </a>
+        }
+    }
+
+
+    @if (Model.HasNextPage)
+    {
+        <a class="item" href="@string.Concat("?pageNumber=", fim_exibir + 1 < Model.PageCount ? fim_exibir + 1 : Model.PageCount ,queryParameters != "" ? "&"+ queryParameters : "")">
+            <i class="angle right icon"></i>
+        </a>
+    }
+    else
+    {
+        <a class="disabled item" href="@string.Concat("?pageNumber=", fim_exibir + 1 < Model.PageCount ? fim_exibir + 1 : Model.PageCount ,queryParameters != "" ? "&"+ queryParameters : "")">
+            <i class="angle right icon"></i>
+        </a>
+    }
+</div>

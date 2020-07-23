@@ -1,0 +1,49 @@
+﻿@model List<DomainCustomer.Entities.Address>
+
+@if(Model != null)
+{
+    <div class="content">
+        <div class="ui items" id="listAddressData">
+            @foreach (var item in Model)
+            {
+                string identicationCurrent = string.IsNullOrEmpty(item.Identification) ? "Endereço" : item.Identification;
+                string iconAddressCurrent = item.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial ? "home" : "building";
+
+                <div class="item">
+                    <div class="icon margin right medium">
+                        <span class="text massive">
+                            <i class="icon @iconAddressCurrent outline"></i>
+                        </span>
+                    </div>
+                    <div class="content">
+                        <a class="header">@identicationCurrent</a>
+                        <div class="description">
+                            <p>@item.StreetAddress, @item.Number @item.Complement</p>
+                            <p>@item.Neighbourhood</p>
+                            <p>@item.City, @item.State</p>
+                            <p>CEP @item.ZipCode</p>
+                        </div>
+                        <div class="extra">
+
+                            <a class="ui right floated tiny action button utilAddress" data-id="@item.IdAddress">
+                                <i class="check icon"></i>
+                                Utilizar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Address_Add.cshtml")
+    </div>
+    <div class="actions">
+        <div class="ui basic deny button">
+            <i class="close icon"></i>
+            Cancelar
+        </div>
+        <div class="ui action right button" id="addDataAddress">
+            <i class="plus icon"></i>
+            Adicionar
+        </div>
+    </div>
+}

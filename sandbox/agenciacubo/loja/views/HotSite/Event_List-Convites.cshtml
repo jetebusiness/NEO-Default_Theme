@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Lista de Chá de Bebê";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row stackable vertically divided">
+            <div class="sixteen wide mobile five wide tablet four wide computer column">
+                <div class="ui vertical menu aligned fluid">
+                    <a class="item">
+                        Dados da Lista
+                    </a>
+                    <a class="item">
+                        Produtos
+                    </a>
+                    <a class="item">
+                        Lista de Convidados
+                    </a>
+                    <a class="item active">
+                        Configurar Convites
+                    </a>                    
+                </div>
+            </div>
+            <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+                <div class="ui form">
+                    <div class="field" style="display: inline-flex">
+                        <div class="ui checkbox">
+                            <input type="checkbox" checked="checked">
+                        </div>
+                        <label>Sortear os produtos automaticamente?</label>
+                    </div>
+                    <div class="field">
+                        <label>Modelo do convite</label>
+                        <img src="@(Model != null ? Model.UrlPicture : "")" />
+                        <div class="ui input">
+                            <input type="file" name="Picture" />
+                        </div>
+                        <div class="text small">Extensões permitidas: .jpg .png ou .gif</div>
+                    </div>                  
+                    <div class="field">
+                        <label>Mensagem do convite</label>
+                        <div class="ui input">
+                            <textarea></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid stackable">
+                    <div class="row">
+                        <div class="column">
+                            <a href="/Customer/Login" class="ui animated button large basic left floated">
+                                <div class="visible content">Cancelar</div>
+                                <div class="hidden content">
+                                    <i class="remove icon"></i>
+                                </div>
+                            </a>
+                            <button type="submit"
+                                    class="ui animated button large submit action right floated">
+                                <div class="visible content">Enviar Convites</div>
+                                <div class="hidden content">
+                                    <i class="checkmark icon"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

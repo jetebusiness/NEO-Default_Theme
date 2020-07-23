@@ -1,0 +1,263 @@
+﻿@model DomainCustomer.Entities.Address
+
+@{
+    ViewBag.Title = "Adicionar novo endereço";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Adicionar</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row one column">
+        <div class="column">
+            @using (Ajax.BeginForm("EditAddress", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @class = "ui large form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="ui segment">
+                    <input type="hidden" name="IdAddress" value="@Model.IdAddress" />
+                    <input type="hidden" name="Billing" value="@(Model.Billing == true ? "true" : "false")" />
+                    <input type="hidden" name="Default" value="@(Model.Default == true ? "true" : "false")" />
+
+                    <div class="ui grid stackable top aligned left aligned grid">
+                        <div class="row two column divided horizontal">
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Informações do Endereço</h4>
+                                    <div class="field required">
+                                        <label>Identificação</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" required name="Identification" value="@Model.Identification" placeholder="Ex: Casa, Trabalho, etc...">
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Destinatário</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" required name="Receiver" value="@Model.Receiver" placeholder="Nome do Destinatário"
+                                                   data-validate="name">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Telefone</label>
+                                            <div class="ui left icon input">
+                                                <i class="phone icon"></i>
+                                                <input type="text" required value="@Model.PhoneContact" name="PhoneContact"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       data-validate="phone">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Tipo do Endereço</label>
+                                            <select name="CommercialResidentialAddress" required class="ui dropdown">
+                                                <option value="">Selecione</option>
+                                                <option selected="@(Model.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Residencial)" value="0">Residencial</option>
+                                                <option selected="@(Model.CommercialResidentialAddress == DomainCustomer.Entities.Address.enumCommercialResidential.Comercial)" value="1">Comercial</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Endereço</h4>
+                                    <div class="two fields required">
+                                        <div class="field">
+                                            <label>CEP</label>
+                                            <div class="ui left icon input">
+                                                <i class="marker icon"></i>
+                                                <input type="text" required id="zipCode" name="zipCode"
+                                                       placeholder="00000-000"
+                                                       class="masked mask_zipcode" data-validate="ZipCode"
+                                                       value="@Model.ZipCode">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="busca cep">
+                                                <p>
+                                                    Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
+                                                                           target="_blank">Consulte Aqui</a>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Endereço</label>
+                                        <div class="ui input">
+                                            <input type="text" required id="StreetAddress" name="StreetAddress"
+                                                   placeholder="Endereço" data-validate="empty"
+                                                   value="@Model.StreetAddress">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        <div class="field required">
+                                            <label>Número</label>
+                                            <div class="ui input">
+                                                <input type="text" required name="Number" placeholder="Número"
+                                                       data-validate="empty"
+                                                       value="@Model.Number">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Complemento</label>
+                                            <div class="ui input">
+                                                <input type="text" id="Complement" name="Complement"
+                                                       placeholder="Ex: ap. 123"
+                                                       value="@Model.Complement">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Bairro</label>
+                                            <div class="ui input">
+                                                <input type="text" required id="Neighbourhood" placeholder="Bairro"
+                                                       name="Neighbourhood"
+                                                       data-validate="empty"
+                                                       value="@Model.Neighbourhood">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Cidade</label>
+                                            <div class="ui input">
+                                                <input type="text" required id="City" name="City" placeholder="Cidade"
+                                                       data-validate="empty"
+                                                       value="@Model.City">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Estado</label>
+
+                                            <select class="ui dropdown state search" required id="estado_0"
+                                                    name="State" data-validate="select">
+                                                <option value="">Selecione</option>
+                                                <option selected="@(Model.State == "AC")" value="AC">Acre</option>
+                                                <option selected="@(Model.State == "AL")" value="AL">Alagoas</option>
+                                                <option selected="@(Model.State == "AP")" value="AP">Amapá</option>
+                                                <option selected="@(Model.State == "AM")" value="AM">Amazonas</option>
+                                                <option selected="@(Model.State == "BA")" value="BA">Bahia</option>
+                                                <option selected="@(Model.State == "CE")" value="CE">Ceará</option>
+                                                <option selected="@(Model.State == "DF")" value="DF">Distrito Federal</option>
+                                                <option selected="@(Model.State == "ES")" value="ES">Espírito Santo</option>
+                                                <option selected="@(Model.State == "GO")" value="GO">Goiás</option>
+                                                <option selected="@(Model.State == "MA")" value="MA">Maranhão</option>
+                                                <option selected="@(Model.State == "MT")" value="MT">Mato Grosso</option>
+                                                <option selected="@(Model.State == "MS")" value="MS">Mato Grosso do Sul</option>
+                                                <option selected="@(Model.State == "MG")" value="MG">Minas Gerais</option>
+                                                <option selected="@(Model.State == "PA")" value="PA">Pará</option>
+                                                <option selected="@(Model.State == "PB")" value="PB">Paraíba</option>
+                                                <option selected="@(Model.State == "PR")" value="PR">Paraná</option>
+                                                <option selected="@(Model.State == "PE")" value="PE">Pernambuco</option>
+                                                <option selected="@(Model.State == "PI")" value="PI">Piauí</option>
+                                                <option selected="@(Model.State == "RJ")" value="RJ">Rio de Janeiro</option>
+                                                <option selected="@(Model.State == "RN")" value="RN">Rio Grande do Norte</option>
+                                                <option selected="@(Model.State == "RS")" value="RS">Rio Grande do Sul</option>
+                                                <option selected="@(Model.State == "RO")" value="RO">Rondônia</option>
+                                                <option selected="@(Model.State == "RR")" value="RR">Roraima</option>
+                                                <option selected="@(Model.State == "SC")" value="SC">Santa Catarina</option>
+                                                <option selected="@(Model.State == "SP")" value="SP">São Paulo</option>
+                                                <option selected="@(Model.State == "SE")" value="SE">Sergipe</option>
+                                                <option selected="@(Model.State == "TO")" value="TO">Tocantins</option>
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="column">
+                        <a href="/Customer/ChangeAddress" class="ui animated button large basic left floated">
+                            <div class="visible content">Cancelar</div>
+                            <div class="hidden content">
+                                <i class="remove icon"></i>
+                            </div>
+                        </a>
+                        <button type="submit"
+                                class="ui animated button large submit primary right floated"
+                                tabindex="0">
+                            <div class="visible content">Salvar</div>
+                            <div class="hidden content">
+                                <i class="checkmark icon"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section custom_js {
+    <script>
+        function OnSuccess(response) {
+            if (response.Success == true) {
+                swal({                
+                    text: response.Message,
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+                window.setTimeout(function () {
+                    window.location = '@Url.Action("changeAddress", "Customer")';
+                }, 2000)
+            } else {
+                swal({               
+                    text: response.Message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function OnFailure(response) {
+            if (response.Success == false) {
+                swal({                    
+                    text: response.Message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    </script>
+}

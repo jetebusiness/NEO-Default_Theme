@@ -1,0 +1,172 @@
+﻿@{
+    List<DomainSocialNetwork.Entities.SocialNetwork> redesSociais = Session["SocialNetworkLinks"] != null ? (List<DomainSocialNetwork.Entities.SocialNetwork>)Session["SocialNetworkLinks"] : new List<DomainSocialNetwork.Entities.SocialNetwork>();
+}
+
+<div class="ui container fluid newsletter-bar">
+    <div class="ui container">
+        <div class="ui grid middle aligned">
+            <div class="row stackable">
+                <div class="column">
+                    <div class="ui form">
+                        <div class="inline fields margin none">
+                            <div class="field">
+                                <span>
+                                    <i class="icon envelope"></i>
+                                    <h4 class="header">Newsletter</h4>
+                                </span>
+                            </div>
+                            <div class="field textNews">
+                                <span class="text">
+                                    Cadastre seu e-mail e receba novidades e promoções.
+                                </span>
+                            </div>
+                            <div class="field">
+                                <div class="ui left icon input">
+                                    <i class="mail icon"></i>
+                                    <input type="text" placeholder="seu@email.com.br" id="email_news">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <button class="ui button red" id="btn_news">
+                                    Cadastrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui container fluid vertical segment footer">
+    <div class="ui container">
+        <div class="ui four column stackable inverted equal height grid">
+            <div class="ten wide table six wide computer column">
+                <div class="ui grid stackable">
+                    <div class="row two column no padding listMobile">
+                        @Html.Action("CustomPages", "Home")
+                        <div class="column eight wide tablet sixteen wide computer margin top large mobile-hide">
+                            <h4 class="ui inverted header">Siga nos</h4>
+                            <socialbar>
+                                @if (redesSociais.Find(f => f.Identifier == "facebook") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "facebook").Content" target="_blank">
+                                        <i class="facebook icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier == "instagram") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "instagram").Content" target="_blank">
+                                        <i class="instagram icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier == "twitter") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "twitter").Content" target="_blank">
+                                        <i class="twitter icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier == "youtube") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "youtube").Content" target="_blank">
+                                        <i class="youtube icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier == "google plus") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "google plus").Content" target="_blank">
+                                        <i class="google plus icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier.ToUpper() == "WHATSAPP") != null)
+                                {
+                                    <a class="text color white" href="https://api.whatsapp.com/send?text=@HttpContext.Current.Request.Url.ToString()" target="_blank" title="WHATSAPP">
+                                        <i class="whatsapp icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier.ToUpper() == "BLOGER") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "bloger").Content" target="_blank" title="Blogger">
+                                        <i class="wpforms icon"></i>
+                                    </a>
+                                }
+                            </socialbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="six wide tablet five wide computer column">
+                <div class="ui grid stackable">
+                    <div class="row one column no padding listMobile">
+                        @Html.Action("GetList", "EventList")
+                        <div class="column">
+                            <h4 class="ui inverted header">Central de Relacionamento <i class="ui icon chevron right mobile only"></i></h4>
+                            <div class="ui inverted link list">
+                                <p>Preparada para esclarecer suas dúvidas e problemas.</p>
+                                <h5>SAC: @LojaCorp.Control.Company._Company.Phone1</h5>
+                                <a href="/fale-conosco" class="ui button text uppercase tireDuvidas margin top bottom medium">Tire suas dúvidas</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sixteen wide mobile sixteen wide tablet five wide computer column left aligned">
+                <div class="ui grid stackable">
+                    <div class="row one column no padding">
+                        <div class="column seven wide tablet sixteen wide computer margin bottom large">
+                            <h4 class="ui inverted header">FORMAS DE PAGAMENTO</h4>
+                            @Html.Partial("~/Views/Shared/Common/_Payments_List.cshtml")
+                        </div>
+                        <div class="column seven wide tablet sixteen wide computer middle aligned">
+                            <h4 class="ui inverted header">SEGURANÇA</h4>
+                            <div class="ui horizontal list selos">
+                                @Html.Action("EBit", "Company")
+                                @Html.Action("GetCompanySeal", "Company")
+                                @*
+                                    <div class="item">
+                                        <img src="//assets.pagseguro.com.br/ps-integration-assets/banners/seguranca/seguranca_125x125.gif" alt="Banner PagSeguro" title="Compre com PagSeguro e fique sossegado">
+                                    </div>
+                                *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row text center">
+            <div class="ui divider"></div>
+            @Html.Partial("Common/_JetLogo")
+        </div>
+    </div>
+</div>
+<div class="ui container fluid vertical subFooter">
+    <div class="ui container">
+        <div class="ui column grid">
+            <div class="row stackable">
+                <div class="column text small textoEmpresa">
+                    <h6>@LojaCorp.Control.Company._Company.FantasyName</h6> -
+                    <address>
+                        @LojaCorp.Control.Company._Company.ComplementText
+                        <br />
+                        @{
+                            string complementAddress = LojaCorp.Control.Company._Company.Complement != "" ? " " + LojaCorp.Control.Company._Company.Complement + ", " : "";
+                        }
+                        @string.Format("{0}, {1}{2}", LojaCorp.Control.Company._Company.Address, complementAddress, LojaCorp.Control.Company._Company.Neighbourhood) |
+                        @string.Format("{0}-{1}-{2}", LojaCorp.Control.Company._Company.CEP, LojaCorp.Control.Company._Company.City, LojaCorp.Control.Company._Company.State) |
+                        CNPJ: @LojaCorp.Control.Company._Company.CNPJ
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-block">
+
+</div>
+
+
+@*teste pablo*@
+

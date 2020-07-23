@@ -1,0 +1,424 @@
+﻿@model DomainCustomer.Entities.Customer
+
+@{
+    ViewBag.Title = "Cadastre-se e seja nosso cliente!";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+    string termo = string.Empty;
+
+    if (@ViewBag.Termo != null)
+    {
+        termo = WebUtility.HtmlDecode(@ViewBag.Termo); ;
+    }
+}
+
+
+@section breadcrumbs {
+    
+}
+
+<div class="ui grid middle aligned center aligned">
+    <div class="row">
+        <h5 class="ui header">
+            @ViewBag.Title
+        </h5>
+        <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+            @using (Ajax.BeginForm("FinishRegistration", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="IdCustomer" value="@Model.IdCustomer" />
+                <input type="hidden" name="Address[0].IdAddress" value="@Model.Address[0].IdAddress" />
+                <input type="hidden" name="Address[0].Country" value="BRASIL" />
+
+                <div class="ui segment">
+                    <div class="ui grid stackable top aligned left aligned grid">
+                        <div class="row two column divided horizontal">
+                            <div class="column">
+                                <div class="ui form">
+
+                                    <h4 class="ui dividing header">Informações Pessoais</h4>
+                                    <div class="field required">
+                                        <label>Perfil</label>
+                                        <div class="ui dropdown selection tipo cliente">                   
+                                            <div class="default text">Perfil de Cliente</div>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                <input name="typeCustomer" type="hidden" id="auxTypeCustomer" value="@Model.TypeCustomer" />
+                                                <div id="fisica" class="item" data-value="0">Pessoa Física</div>
+                                                <div id="juridica" class="item" data-value="1">Pessoa Jurídica</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required pessoa fisica">
+                                        <label>Nome</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="Name" placeholder="Seu Nome"
+                                                   value="@Model.Name" data-validate="name">
+                                        </div>
+                                    </div>
+                                    <div class="field required pessoa juridica">
+                                        <label>Responsável</label>
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="contact" id="contact" value="@Model.Contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant" />
+                                        </div>
+                                    </div>
+                                    <div class="two fields pessoa juridica">
+                                        <div class="field required pessoa juridica">
+                                            <label>Razão Social</label>
+                                            <div class="ui left icon input">
+                                                <i class="suitcase icon"></i>
+                                                <input type="text" name="name" id="name" placeholder="Razão Social da Empresa"
+                                                       value="@Model.Name" data-validate="businessName">
+                                            </div>
+                                        </div>
+                                        <div class="field required pessoa juridica">
+                                            <label>Nome Fantasia</label>
+                                            <div class="ui left icon input">
+                                                <i class="suitcase icon"></i>
+                                                <input type="text" name="FantasyName" id="FantasyName" placeholder="Nome Fantasia da Empresa"
+                                                       value="@Model.FantasyName" data-validate="businessName2">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="two fields">
+                                        <div class="field required pessoa fisica">
+                                            <label>CPF</label>
+                                            <div class="ui left input">
+                                                <input type="text" value="@Model.Cpf_cnpj" name="Cpf_cnpj" class="masked mask_cpf"
+                                                       placeholder="000.000.000-00"
+                                                       data-validate="cpf">
+                                            </div>
+                                        </div>
+                                        <div class="field pessoa fisica">
+                                            <label>RG</label>
+                                            <div class="ui left input">
+                                                <input type="text" value="@Model.Rg_ie" name="Rg_ie" placeholder="RG">
+                                            </div>
+                                        </div>
+                                        <div class="field required pessoa juridica">
+                                            <label>CNPJ</label>
+                                            <div class="ui left input">
+                                                <input type="text" value="@Model.Cpf_cnpj" name="Cpf_cnpj" class="masked mask_cnpj"
+                                                       placeholder="00.000.000/0000-00"
+                                                       data-validate="cnpj">
+                                            </div>
+                                        </div>
+                                        <div class="field required pessoa juridica">
+                                            <label>IE</label>
+                                            <div class="ui left input">
+                                                <input type="text" value="@Model.Rg_ie" name="Rg_ie" placeholder="Inscrição Estadual" data-validate="ie">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="three fields pessoa fisica">
+                                        <div class="field required">
+                                            <label>Data de Nascimento</label>
+                                            <div class="ui input left icon">
+                                                <i class="calendar icon"></i>
+                                                <input type="text" value="@Model.DateBirth" placeholder="DD/MM/YYYY" class="masked mask_date"
+                                                 name="DateBirth" data-validate="birthday">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Sexo</label>
+                                            <select class="ui dropdown" name="Gender" data-validate="gender">
+                                                <option value="">Selecione</option>
+                                                <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.masculino)" value="0">
+                                                    <i class="male icon"></i>Masculino
+                                                </option>
+                                                <option selected="@(Model.Gender == DomainCustomer.Entities.Customer.enumGender.feminino)" value="1">
+                                                    <i class="female icon"></i>Feminino
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="field">
+                                            <label>Estado Civil</label>
+                                            <select class="ui dropdown" name="MaritalStatus" data-validate="maritalstatus">
+                                                <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.solteiro)" value="1">Solteiro(a)</option>
+                                                <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.casado)" value="0">Casado(a)</option>
+                                                <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.viúvo)" value="3">Viúvo(a)</option>
+                                                <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.desquitado)" value="2">Desquitado(a)</option>
+                                                <option selected="@(Model.MaritalStatus == DomainCustomer.Entities.Customer.enumMaritalStatus.separado)" value="4">Separado(a)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Telefone</label>
+                                            <div class="ui left icon input">
+                                                <i class="phone icon"></i>
+                                                <input type="text" name="Phone.Phone1" value="@Model.Phone.Phone1"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Celular</label>
+                                            <div class="ui left icon input">
+                                                <i class="mobile icon"></i>
+                                                <input type="text" name="Phone.Phone2" value="@Model.Phone.Phone2"
+                                                       placeholder="(00) 00000-0000" class="masked mask_phone"
+                                                       data-validate="mobile">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="ui dividing header">Crie sua conta</h4>
+
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>E-mail</label>
+                                            <div class="ui left icon input">
+                                                <i class="mail icon"></i>
+                                                <input type="text" name="Email" id="Email" @(Model.Email == null ? @Html.Raw("") : @Html.Raw("readonly")) placeholder="Seu Email"
+                                                       value="@Model.Email" data-validate="email">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Senha</label>
+                                            <div class="ui right action left icon input">
+                                                <i class="lock icon"></i>
+                                                <input type="password" name="User.password"
+                                                       placeholder="*******" data-validate="password" class="password_box">
+                                                <div class="ui basic icon button password_unhide">
+                                                    <i class="unhide icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*
+                                            <div class="field required">
+                                                <label>Confirme a Senha</label>
+                                                <div class="ui left icon input">
+                                                    <i class="lock icon"></i>
+                                                    <input type="password" name="User.PasswordConfirm"
+                                                           placeholder="*******" data-validate="passwordcheck">
+                                                </div>
+                                            </div>*@
+                                    </div>
+                                    <div class="field">
+                                        <label>Selecione as categorias que deseja receber por e-mail.</label>
+                                    </div>
+                                    <input type="hidden" name="categories_selected" id="categories_selected" value="" />
+                                    <div class="grouped fields" id="categories_news">
+                                        @{
+                                            if (Model.EmailInfoCategory != null)
+                                            {
+                                                var categorias = Model.EmailInfoCategory;
+
+                                                foreach (var item in categorias)
+                                                {
+                                                    <div class="field">
+                                                        <div class="ui checkbox">
+                                                            <input type="checkbox" id="categoria" data-id="@item.IdEmailInfoCategory" data-nome="@item.Name">
+                                                            <label>@item.Name</label>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="ui form">
+                                    <h4 class="ui dividing header">Endereço</h4>
+                                    <div class="two fields required">
+                                        <div class="field">
+                                            <label>CEP</label>
+                                            <div class="ui left icon input">
+                                                <i class="marker icon"></i>
+                                                <input type="text" value="@Model.Address[0].ZipCode" name="Address[0].ZipCode"
+                                                       placeholder="00000-000"
+                                                       class="masked mask_zipcode" data-validate="zipcode">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="busca cep">
+                                                <p>
+                                                    Não sabe o seu CEP? <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
+                                                                           target="_blank">Consulte Aqui</a>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field required">
+                                        <label>Endereço</label>
+                                        <div class="ui input">
+                                            <input type="text" value="@Model.Address[0].StreetAddress" name="Address[0].StreetAddress" placeholder="Endereço" class="endereco" data-validate="address">
+                                        </div>
+                                    </div>
+                                    <div class="three fields">
+                                        <div class="field required">
+                                            <label>Número</label>
+                                            <div class="ui input">
+                                                <input type="text" value="@Model.Address[0].Number" name="Address[0].Number" placeholder="Número" data-validate="number">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Complemento</label>
+                                            <div class="ui input">
+                                                <input type="text" value="@Model.Address[0].Complement" name="Address[0].Complement"
+                                                       placeholder="Ex: ap. 123" data-validate="complement">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Bairro</label>
+                                            <div class="ui input">
+                                                <input type="text" value="@Model.Address[0].Neighbourhood" name="Address[0].Neighbourhood" placeholder="Bairro" class="bairro" data-validate="neighbourhood">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field required">
+                                            <label>Cidade</label>
+                                            <div class="ui input">
+                                                <input type="text" value="@Model.Address[0].City" name="Address[0].City" placeholder="Cidade" data-validate="city">
+                                            </div>
+                                        </div>
+                                        <div class="field required">
+                                            <label>Estado</label>
+                                            <select class="ui dropdown search" name="Address[0].State" id="estado_0" data-validate="state">
+                                                <option value="">Selecione</option>
+                                                <option selected="@(@Model.Address[0].State == "AC")" value="AC">Acre</option>
+                                                <option selected="@(@Model.Address[0].State == "AL")" value="AL">Alagoas</option>
+                                                <option selected="@(@Model.Address[0].State == "AP")" value="AP">Amapá</option>
+                                                <option selected="@(@Model.Address[0].State == "AM")" value="AM">Amazonas</option>
+                                                <option selected="@(@Model.Address[0].State == "BA")" value="BA">Bahia</option>
+                                                <option selected="@(@Model.Address[0].State == "CE")" value="CE">Ceará</option>
+                                                <option selected="@(@Model.Address[0].State == "DF")" value="DF">Distrito Federal</option>
+                                                <option selected="@(@Model.Address[0].State == "ES")" value="ES">Espírito Santo</option>
+                                                <option selected="@(@Model.Address[0].State == "GO")" value="GO">Goiás</option>
+                                                <option selected="@(@Model.Address[0].State == "MA")" value="MA">Maranhão</option>
+                                                <option selected="@(@Model.Address[0].State == "MT")" value="MT">Mato Grosso</option>
+                                                <option selected="@(@Model.Address[0].State == "MS")" value="MS">Mato Grosso do Sul</option>
+                                                <option selected="@(@Model.Address[0].State == "MG")" value="MG">Minas Gerais</option>
+                                                <option selected="@(@Model.Address[0].State == "PA")" value="PA">Pará</option>
+                                                <option selected="@(@Model.Address[0].State == "PB")" value="PB">Paraíba</option>
+                                                <option selected="@(@Model.Address[0].State == "PR")" value="PR">Paraná</option>
+                                                <option selected="@(@Model.Address[0].State == "PE")" value="PE">Pernambuco</option>
+                                                <option selected="@(@Model.Address[0].State == "PI")" value="PI">Piauí</option>
+                                                <option selected="@(@Model.Address[0].State == "RJ")" value="RJ">Rio de Janeiro</option>
+                                                <option selected="@(@Model.Address[0].State == "RN")" value="RN">Rio Grande do Norte</option>
+                                                <option selected="@(@Model.Address[0].State == "RS")" value="RS">Rio Grande do Sul</option>
+                                                <option selected="@(@Model.Address[0].State == "RO")" value="RO">Rondônia</option>
+                                                <option selected="@(@Model.Address[0].State == "RR")" value="RR">Roraima</option>
+                                                <option selected="@(@Model.Address[0].State == "SC")" value="SC">Santa Catarina</option>
+                                                <option selected="@(@Model.Address[0].State == "SP")" value="SP">São Paulo</option>
+                                                <option selected="@(@Model.Address[0].State == "SE")" value="SE">Sergipe</option>
+                                                <option selected="@(@Model.Address[0].State == "TO")" value="TO">Tocantins</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" value="@Convert.ChangeType(DomainCustomer.Entities.Address.enumAddressType.Entrega, typeof(int))" name="Address[0].AddressType" />
+                                    <input type="hidden" value="@Convert.ChangeType(DomainCustomer.Entities.Address.enumAddressType.Cadastro, typeof(int))" name="Address[1].AddressType" />
+                                    <input type="hidden" name="Address[1].Country" value="BRASIL" />
+
+
+                                    <div class="field">
+                                        <div class="ui checkbox endereco igual">
+                                            <input type="checkbox" readonly checked="checked" name="check" id="check">
+                                            <label>O endereço de cobrança é o mesmo que o endereço de entrega?</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(termo))
+                        {
+                            <div class="row one column">
+                                <div class="column text right">
+                                    <div class="field" style="display:inline-flex">
+                                        <div class="ui checkbox termo aceite">
+                                            <input type="checkbox" checked="checked" data-validate="termo">
+                                        </div>
+                                        <label id="termo_aceite">Concorda com o <a style="cursor: pointer;">termo de aceite?</a></label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="row">
+                            <div class="column">
+                                <a href="/Customer/Login" class="ui animated button large basic left floated">
+                                    <div class="visible content">Cancelar</div>
+                                    <div class="hidden content">
+                                        <i class="remove icon"></i>
+                                    </div>
+                                </a>
+                                <button type="submit"
+                                        class="ui animated button large submit primary right floated"
+                                        tabindex="0">
+                                    <div class="visible content">Cadastrar</div>
+                                    <div class="hidden content">
+                                        <i class="checkmark icon"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                            }
+        </div>
+    </div>
+</div>
+
+<div id="termo" class="hideme">
+    @if (termo != null)
+    {
+        @Html.Raw(termo)
+    }
+</div>
+
+@section custom_js {
+    <script>
+        $(document).ready(function () {
+            if ($("#auxTypeCustomer").val() == "fisica") {
+                $("#fisica").trigger("click")
+            }                
+            else {
+                $("#juridica").trigger("click")
+            }               
+        })
+
+        function OnSuccess(response) {
+            if (response.Success == true) {
+                swal({
+                    text: response.Message,
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    window.location.href = "/area-cliente";
+                });
+            }
+            else {
+                swal({
+                    text: response.Message,
+                    type: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function OnFailure(response) {
+            if (response.Success == false) {
+                swal({
+                    text: response.Message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    window.location.href = "/area-cliente";
+                });
+            }
+        }
+    </script>
+}

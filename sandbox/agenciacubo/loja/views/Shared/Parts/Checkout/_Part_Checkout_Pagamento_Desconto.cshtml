@@ -1,0 +1,22 @@
+﻿@model List<DomainCheckout.Entities.PaymentBrand>
+
+@foreach (var item in Model)
+{
+    <div class="hideme" id="pagamento-desconto">
+        <div class="title text big color black">
+            <i class="tags icon"></i>
+            @item.NamePayment
+            <i class="ui icon dropdown floated right"></i>
+        </div>
+        <div class="content">
+            <p class="transition hidden"></p>
+            <div class="field">
+                <button class="ui labeled icon action large fluid button GerarPedido" data-idBrand="@item.IdPaymentBrand" data-externalcode="@item.ExternalCode" data-Card="N">
+                    <i class="tags icon"></i>
+                    Pagar com Desconto
+                    <input type="hidden" name="parcelamento" class="idInstallment" value="0" />
+                </button>
+            </div>
+        </div>
+    </div>
+}

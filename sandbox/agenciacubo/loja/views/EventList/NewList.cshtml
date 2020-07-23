@@ -1,0 +1,83 @@
+﻿@model List<DomainCustomer.Entities.EventListType>
+
+@{
+    ViewBag.Title = "Nova Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/eventlist/index">Gerenciar Lista de Eventos</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Nova Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui container margin bottom large">
+    <div class="ui grid">
+        <div class="row one column">
+            <div class="column">
+                <div class="ui grid stackable">
+                    <h4>Selecione o tipo de lista adequado ao seu evento.</h4>
+                    <div class="row one column">
+                        <div class="column">
+                            <div class="ui two items very relaxed divided menuclient listEventList">
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var type in Model)
+                                    {
+                                        var icon = "";
+                                        switch (type.IdType)
+                                        {
+                                            case 1:
+                                                icon = "heart red";
+                                                break;
+                                            case 2:
+                                                icon = "bar orange";
+                                                break;
+                                            case 3:
+                                                icon = "coffee blue";
+                                                break;
+                                            case 4:
+                                                icon = "child purple";
+                                                break;
+                                            case 5:
+                                                icon = "gift yellow";
+                                                break;
+                                        }
+
+                                        <a class="item text-align center-t-d" href="/EventList/ManagerList?typeId=@type.IdType">
+                                            <div class="ui small">
+                                                <i class="ui icon big @icon"></i>
+                                            </div>
+                                            <div class="content">
+                                                <div class="header">@Html.Raw(type.Title)</div>
+                                                <div class="description">
+                                                  <p>@Html.Raw(type.Desc)</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

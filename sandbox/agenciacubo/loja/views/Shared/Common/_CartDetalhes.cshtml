@@ -1,0 +1,112 @@
+﻿@model DomainCheckout.Entities.Cart
+
+<div id="miniCarrinho" class="ui right sidebar carrinho ui grid">
+    <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
+    <div class="row">
+        <div class="column">
+            <div class="ui grid top aligned elementos">
+                <div class="row two column head middle aligned">
+                    <div class="column">
+                        <h3 class="text center left floated">Meu Carrinho</h3>
+                    </div>
+                    <div class="column right aligned">
+                        <a class="ui button icon fecharCarrinho"><i class="remove icon"></i></a>
+                    </div>
+                </div>
+                <div class="row black info">
+                    <div class="column">
+                        <i class="lock icon"></i>Compra 100% Segura
+                    </div>
+                </div>
+                <div class="row elemento">
+                    <div class="column">
+                        <div class="ui divided items relaxed listaItems" id="ListProductsCheckout">
+                            @if (Model != null && Model.CartItems != null)
+                            {
+                                foreach (var product in Model.CartItems)
+                                {
+                                    <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
+                                    @Html.Partial("~/Views/Shared/Object/Product/_ProductCartItemDetalhes.cshtml", product)
+                                }
+                            }
+                        </div>
+                        <div class="ui divided items right aligned">
+                            <div class="item detalhes text right">
+                                <div class="content">
+                                    @*<div class="description">
+                                        Desconto: <span id="descontoCarrinho">@string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)</span>
+                                    </div>*@
+                                </div>
+                            </div>
+                            <div class="item detalhes text right">
+                                <div class="content">
+                                    <div class="description">
+                                        <strong>Subtotal: <span id="subTotalCarrinho">@string.Format("{0:c}", Model != null ? Model.SubTotal : 0)</span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--ESCONDENDO FRETE NA V1-->
+                            @*<div class="item detalhes">
+                                <div class="content">
+                                    <div class="description frete">
+                                        <div class="ui form">
+                                            <div class="inline field">
+                                                <label>Calcular Frete</label>
+                                                <div class="ui action input">
+                                                    <input type="text" placeholder="00000-000"
+                                                           class="masked" size="9" name="cep" data-inputmask="'mask': '99999-999'">
+                                                    <button class="ui yellow right labeled icon button frete calcular" id="#CallServiceShipping">
+                                                        <i class="shipping icon"></i>
+                                                        Calcular
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="description resultado">
+                                        <div class="ui form">
+                                            <div class="inline field">
+                                                <label class="frete valor"></label>
+                                                <div class="ui input">
+                                                    <button class="ui orange right labeled icon mini button frete recalcular">
+                                                        <i class="refresh icon"></i>
+                                                        Recalcular
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <h3>Total a pagar: <span id="totalCarrinho">@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row two column botoes">
+                    <div class="column">
+                        <a href="/checkout" class="ui animated button fluid large basic"
+                           tabindex="0">
+                            <div class="visible content">Carrinho</div>
+                            <div class="hidden content">
+                                <i class="cart icon"></i>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="column">
+                        <a type="submit" class="ui animated button fluid large submit action" tabindex="0" href="@(Session["UserAuthenticated"] == null ? "/checkout/Identification" : "/checkout/Payment")" >
+                            <div class="visible content">Finalizar Compra</div>
+                            <div class="hidden content">
+                                <i class="right arrow icon"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+﻿@model List<DomainCustomer.Entities.EventList>
+@{
+    ViewBag.Title = "Gerenciar Lista de Eventos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/customer">Área do Cliente</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section">Gerenciar Lista de Eventos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row margin bottom large fluid">
+    @if (Model != null && Model.Any())
+    {
+        <div class="ui icon message tiny">
+            <i class="warning circle icon"></i>
+            <div class="content">
+                <p>Selecione a opção "Divulgar" para que sua lista esteja disponível e seus convidados realizem as compras em nossa loja.</p>
+            </div>
+        </div>
+    }
+    <div class="row">
+      
+        
+        
+        <div class="ui cards stackable three column grid">
+            @if (ViewBag.HasEventListTypes == true)
+            {
+                <div class="card">
+                    <div class="content">
+                        <i class="right floated calendar outline large teal icon"></i>
+                        <div class="header titleList">
+                            Nova Lista de Eventos
+                        </div>
+                    </div>
+                    <div class="extra">
+                        <span>
+                            <a href="/EventList/NewList" class="ui small compact icon primary basic button text uppercase">
+                                <i class="ui icon add circle primary"></i> Criar uma nova lista
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            }
+            @if (Model != null && Model.Any())
+            {
+                foreach (var lista in Model)
+                {
+                    <div class="card">
+                        <div class="content">
+
+                            <i class="right floated calendar large teal icon"></i>
+                            <div class="header">
+                                @{
+                                    var TitleList = lista.Title.ToLower();
+                                    var iconList = "";
+                                    
+                                    switch (TitleList)
+                                    {
+                                        case "presentes":
+                                            iconList = "gift large yellow icon";
+                                            break;
+    
+                                        case "casamento":
+                                            iconList = "icon big heart red";
+                                            break;
+    
+                                        case "chá bar":
+                                            iconList = "icon big bar orange";
+                                            break;
+    
+                                        case "chá de cozinha":
+                                            iconList = "gift large gray icon";
+                                            break;
+                                        
+                                        case "chá de bebe":
+                                            iconList = "icon big child purple";
+                                            break;
+    
+                                    }
+                                }
+                                <i class="@iconList"></i>
+                                @lista.Title
+                            </div>
+                            <div class="meta">
+                                @lista.EventDate.ToShortDateString()
+                            </div>
+                            <div class="description">
+                                <span>@(lista.EventDate < DateTime.Now ? "Encerrado" : !lista.Status ? "Inativo" : lista.DateDivugaltionList != null ? "Divulgada" : "Ativo")</span>
+                            </div>
+                        </div>
+                        <div class="extra">
+                            @if (lista.EventDate >= DateTime.Now)
+                            {
+                                <div class="ui two columns row stackable">
+                                    <a href="@Url.Action("ManagerList", "EventList", new {listId = lista.IdEventList})" class="ui small compact icon primary basic button text uppercase">
+                                        <i class="check icon"></i>
+                                        Alterar
+                                    </a>
+                                    <button id="btnShareEventList_@lista.IdEventList" class="ui small compact icon text uppercase @(lista.Status ? "primary" : "disabled") button right floated" data-id="@lista.IdEventList">
+                                        <i class="check icon"></i>
+                                        Divulgar
+                                    </button>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="ui one buttons">
+                                    <button class="ui small compact icon red button">
+                                        <i class="delete icon"></i>
+                                        Encerrado
+                                    </button>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

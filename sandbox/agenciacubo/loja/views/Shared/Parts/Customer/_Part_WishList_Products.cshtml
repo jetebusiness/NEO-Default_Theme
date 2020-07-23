@@ -1,0 +1,205 @@
+﻿@model ViewModels.ViewModelStore.Cliente.WishListViewModel
+
+<div id="ListProductWishList">
+  @{
+    bool hasProductsAvaibleToAddCart = false;
+
+    foreach (var item in Model.WishListItems)
+    {
+      <div class="row">
+        <div class="column">
+          <div class="ui grid stackable wishlistProduct">
+            <div class="row four column">
+              <div class="column center aligned display-flex-m-d justify-content-center-m-d">
+                @{
+                  string image = "";
+                  if (item.Sku != null && item.Sku.Count() > 0)
+                  {
+                    var variationsFirstOrDefault = item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault();
+                    int idVariationColor = variationsFirstOrDefault != null ? variationsFirstOrDefault.IdVariation : 0;
+                    item.Images = item.Images.Where(v => v.Variacao_ids != null).ToList();
+                    if (item.Images.Count() > 0 && idVariationColor != 0)
+                    {
+                      var preImage = item.Images.Where(i => i.Variacao_ids.Where(v => v == idVariationColor).Count() > 0).FirstOrDefault();
+                      if (preImage != null)
+                      {
+                        image = preImage.ImageDefault;
+                      }
+                    }
+                    else
+                    {
+                      image = item.ImageHome;
+                    }
+                  }
+                  else
+                  {
+                    image = item.ImageHome;
+                  }
+                }
+                <a href="@Html.Raw(!string.IsNullOrEmpty(item.UrlFriendlyCustom) ? item.UrlFriendlyCustom : item.UrlFriendly)"><img class="ui image small" src="@image" onerror="imgError(this)"></a>
+              </div>
+              <div class="column middle aligned content display-flex-m-d justify-content-center-m-d">
+                <a href="@Html.Raw(!string.IsNullOrEmpty(item.UrlFriendlyCustom) ? item.UrlFriendlyCustom : item.UrlFriendly)" class="display-flex-m-d flex-column-m-d align-items-center-m-d">
+                  <div class="header">@item.ProductName</div>
+                  <div class="description">Adicionado em @item.DateInsert</div>
+                </a>
+                
+                  @if (item.Sku != null && item.Sku.Count() > 0)
+                  {
+                    <div class="display-flex align-items-center justify-content-center-m-d">
+
+                   @{ var colorVariation = item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault() != null ? item.Sku.FirstOrDefault().Variations.Where(v => v.Color != null).FirstOrDefault().Color : ""; }
+
+                    @if (colorVariation != "")
+                    {
+                      <div class="ui left floated margin top small">
+                        <button class="ui basic button radio variacao cor none padding" style="background-color: @colorVariation  !important;" data-tooltip="Cor: @item.Sku.FirstOrDefault().Variations.Where(v=>v.Color != null).FirstOrDefault().Name">&nbsp;</button>
+                      </div>
+                    }
+
+                  @if (item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault() != null)
+                    {
+                      <div class="ui left floated margin top small">
+                        <button class="ui primary button radio variacao cor none padding" data-tooltip="@item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault().Name">@item.Sku.FirstOrDefault().Variations.Where(v => v.Color == null).FirstOrDefault().Name</button>
+                      </div>
+                    }
+                    </div>
+                  }
+
+              </div>
+              @if (item.IsProductActive || item.IsSkuActive)
+              {
+                <div class="column middle aligned content text-center">
+                  @{
+                    if (item.Sku != null && item.Sku.Count() > 0)
+                    {
+                      if (item.Sku.FirstOrDefault().PricePromotion != null && item.Sku.FirstOrDefault().PricePromotion > 0)
+                      {
+                        <div class="de-price-por">de <span>@string.Format("{0:C}", item.Sku.FirstOrDefault().Price)</span> por</div>
+                        <div class="price">@string.Format("{0:C}", item.Sku.FirstOrDefault().PricePromotion)</div>
+                        <div class="parcelamento">em @item.Sku.FirstOrDefault().InstallmentMax.MaxNumber x de @string.Format("{0:C}", item.Sku.FirstOrDefault().InstallmentMax.Value) (sem juros)</div>
+                      }
+                      else
+                      {
+                        <div class="price">@string.Format("{0:C}", item.Sku.FirstOrDefault().Price)</div>
+                        if (item.Sku.FirstOrDefault().InstallmentMax != null)
+                        {
+                          <div class="parcelamento">em @item.Sku.FirstOrDefault().InstallmentMax.MaxNumber x de @string.Format("{0:C}", item.Sku.FirstOrDefault().InstallmentMax.Value) (sem juros)</div>
+                        }
+                      }
+                    }
+                    else
+                    {
+                      if (item.PricePromotion != null && item.PricePromotion > 0)
+                      {
+                        <div class="de-price-por">de <span>@string.Format("{0:C}", item.Price)</span> por</div>
+                        <div class="price">@string.Format("{0:C}", item.PricePromotion)</div>
+                        <div class="parcelamento">em @item.InstallmentMax.MaxNumber x de @string.Format("{0:C}", item.InstallmentMax.Value) (sem juros)</div>
+                      }
+                      else
+                      {
+                        <div class="price">@string.Format("{0:C}", item.Price)</div>
+                        <div class="parcelamento">em @item.InstallmentMax.MaxNumber x de @string.Format("{0:C}", item.InstallmentMax.Value) (sem juros)</div>
+                      }
+                    }
+                  }
+                </div>
+              }
+              else
+              {
+                <div class="column middle aligned content text-center"></div>
+              }
+              <div class="column center aligned middle aligned content">
+                @{
+                  string variations = string.Empty;
+                  if (item.Sku != null)
+                  {
+                    foreach (var itemVariations in item.Sku.FirstOrDefault().Variations)
+                    {
+                      variations += $"{itemVariations.IdVariation},";
+                    }
+                    variations = variations.Substring(0, variations.Length - 1);
+                  }
+
+                  decimal stock = 0;
+                  if (item.Sku != null && item.Sku.Count() > 0)
+                  {
+                    stock = (decimal)item.Sku.FirstOrDefault().Stock;
+                  }
+                  else
+                  {
+                    stock = (decimal)item.Stock;
+                  }
+
+                  if (item.IsProductActive || item.IsSkuActive)
+                  {
+                    if (stock > 0 && !item.FlagExhausted)
+                    {
+                      <button id="addProducInCart" data-idproduct="@item.IdProduct" data-idsku="@Html.Raw(item.Sku != null ? item.Sku.FirstOrDefault().IdSku : 0)"
+                              data-variations="@Html.Raw(variations)" class="ui action button w-100">
+                        <i class="icon shopping cart"></i>
+                        Adicionar ao carrinho
+                      </button>
+                    }
+                    else
+                    {
+                      <button class="ui grey button w-100 disabled">
+                        <i class="icon exclamation circle"></i>
+                        Esgotado
+                      </button>
+                    }
+                  }
+                  else
+                  {
+                    <button class="ui grey button w-100 disabled">
+                      <i class="icon exclamation circle"></i>
+                      Indisponível
+                    </button>
+                  }
+                }
+
+                <button id="deleteProductWishList" data-idproduct="@item.IdProduct" data-idsku="@Html.Raw(item.Sku != null ? item.Sku.FirstOrDefault().IdSku :(int) item.IdSku)"
+                        data-variations="@Html.Raw(variations)" class="ui basic button margin top small w-100">
+                  <i class="icon trash alternate outline"></i>
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="ui divider"></div>
+      </div>
+
+      if (item.Sku != null && item.Sku.Count() > 0)
+      {
+        if (!item.FlagExhausted && item.Sku.FirstOrDefault().Stock > 0 && item.IsSkuActive)
+        {
+          hasProductsAvaibleToAddCart = true;
+        }
+      }
+      else
+      {
+        if (!item.FlagExhausted && item.Stock > 0 && item.IsProductActive)
+        {
+          hasProductsAvaibleToAddCart = true;
+        }
+      }
+    }
+  }
+</div>
+<div class="column margin rl-auto">
+  <div class="row">
+    <button id="addWishListInCart" class="ui action button @Html.Raw(hasProductsAvaibleToAddCart ? "" : "disabled")" style="width: 240px">
+      <i class="icon shopping cart"></i>
+      Adicionar todos ao carrinho
+    </button>
+  </div>
+  <div class="row">
+    <button id="deleteAllProductsWishList" class="ui basic button margin top small" style="width: 240px">
+      <i class="icon trash alternate outline"></i>
+      Excluir todos
+    </button>
+  </div>
+</div>
