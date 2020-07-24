@@ -12,17 +12,41 @@ const inputMessage = document.querySelector('textarea[name=message]')
 function getStorageinfo() {
   const dataStorage = sessionStorage.getItem('@lais:contato');
 
-  if (dataStorage && inputName) {
-    inputName.value = JSON.parse(dataStorage).name
-    inputEmail.value = JSON.parse(dataStorage).email
-    inputPhone.value = JSON.parse(dataStorage).phone
-    inputSubject.value = JSON.parse(dataStorage).subject
-    inputMessage.value = JSON.parse(dataStorage).message
+  if (inputName){    
+    inputName.addEventListener('keyup', onKeyup);
+    inputEmail.addEventListener('keyup', onKeyup);
+    inputPhone.addEventListener('keyup', onKeyup);
+    inputSubject.addEventListener('keyup', onKeyup);
+    inputMessage.addEventListener('keyup', onKeyup);
+
+    if (dataStorage) {
+      inputName.value = JSON.parse(dataStorage).name
+      inputEmail.value = JSON.parse(dataStorage).email
+      inputPhone.value = JSON.parse(dataStorage).phone
+      inputSubject.value = JSON.parse(dataStorage).subject
+      inputMessage.value = JSON.parse(dataStorage).message
+    }
+
+    try{
+    document.querySelector('#name').innerHTML = inputName.value
+    document.querySelector('#email').innerHTML = inputEmail.value
+    document.querySelector('#phone').innerHTML = inputPhone.value
+    document.querySelector('#subject').innerHTML = inputSubject.value
+    document.querySelector('#message').innerHTML = inputMessage.value 
+    }catch(e){
+      console.error(e)
+    }   
   }
 }
 
 getStorageinfo()
 })
+
+function onKeyup(e){
+  const target = e.target
+  const element = document.querySelector("#"+target.name)
+  element.innerHTML = target.value
+}
 
 function getDataInputs(e) {
 
