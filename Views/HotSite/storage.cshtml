@@ -3,9 +3,63 @@
     Layout = "~/Views/Shared/Base/_Layout.cshtml";
 }
 
-  <p id="name"></p>
-  <p id="email"></p>
-  <p id="phone"></p>
-  <p id="subject"></p>
-  <p id="message"></p>
+  <div class="formulario">  
+  <div class="row">
+      <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+          <h2>Dados</h2>
+          <form name="contato_teste" id="contato_teste" onsubmit="getDataInputs()">            
+            <div class="ui segment">
+              <div class="ui grid stackable top aligned left">
+                  <div class="row two column divided horizontal">
+                      <div class="column">
+                          <div class="ui form">
+                              <div class="field required pessoa fisica">
+                                  <label>Nome</label>
+                                  <div class="ui left icon input">
+                                      <i class="user icon"></i>
+                                      <input type="text" name="name" placeholder="Nome" data-validate="name" required>
+                                  </div>
+                              </div>
+                              <div class="field required">
+                                  <label>E-mail</label>
+                                  <div class="ui left icon input">
+                                      <i class="mail icon"></i>
+                                      <input type="email" name="email" id="Email" placeholder="E-mail" value="" data-validate="email" required>
+                                  </div>
+                              </div>
+                              <div class="field required">
+                                  <label>Telefone</label>
+                                  <div class="ui left icon input">
+                                      <i class="phone icon"></i>
+                                      <input type="tel" name="phone" placeholder="(00) 00000-0000" value="" class="masked mask_phone" data-validate="phone" required>
+                                  </div>
+                              </div>
+                              <div class="field required">
+                                  <label>Assunto</label>
+                                  <div class="ui left icon input">
+                                      <input type="text" name="subject" value="" placeholder="Dúvidas" required>
+                                  </div>
+                              </div>
+                              <div class="field required">
+                                  <label>Mensagem</label>
+                                  <div class="ui input">
+                                      <textarea name="message" required></textarea>
+                                  </div>
+                              </div>
+                              <button action="#" type="submit"
+                                      class="ui animated button large submit green right floated">
+                                  <div class="visible content">Salvar</div>
+                                  <div class="hidden content">
+                                      <i class="checkmark icon"></i>
+                                  </div>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          </form>          
+      </div>
+  </div>
+</div>
   

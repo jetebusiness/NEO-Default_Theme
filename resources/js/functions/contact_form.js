@@ -1,3 +1,4 @@
+$(document).ready(function(){
 const form = document.getElementById('contato_teste');
 form.onsubmit = getDataInputs;
 
@@ -11,7 +12,7 @@ const inputMessage = document.querySelector('textarea[name=message]')
 function getStorageinfo() {
   const dataStorage = sessionStorage.getItem('@lais:contato');
 
-  if(dataStorage) {
+  if (dataStorage && inputName) {
     inputName.value = JSON.parse(dataStorage).name
     inputEmail.value = JSON.parse(dataStorage).email
     inputPhone.value = JSON.parse(dataStorage).phone
@@ -21,8 +22,17 @@ function getStorageinfo() {
 }
 
 getStorageinfo()
+})
 
 function getDataInputs(e) {
+
+  e.preventDefault()
+
+  const inputName = document.querySelector('input[name=name]')
+  const inputEmail = document.querySelector('input[name=email]')
+  const inputPhone = document.querySelector('input[name=phone]')
+  const inputSubject = document.querySelector('input[name=subject]')
+  const inputMessage = document.querySelector('textarea[name=message]')
   
   const formData = {
     name: inputName.value,
@@ -34,9 +44,8 @@ function getDataInputs(e) {
 
   sessionStorage.setItem('@lais:contato', JSON.stringify(formData))
 
-  console.log(formData)
+  console.log(formData)  
 
-  e.preventDefault()
-
-  return formData
+  window.location = 'storage'
+  //return formData
 }
