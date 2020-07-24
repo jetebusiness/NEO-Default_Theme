@@ -13,11 +13,11 @@ function getStorageinfo() {
   const dataStorage = sessionStorage.getItem('@lais:contato');
 
   if (inputName){    
-    inputName.addEventListener('keyup', onKeyup);
-    inputEmail.addEventListener('keyup', onKeyup);
-    inputPhone.addEventListener('keyup', onKeyup);
-    inputSubject.addEventListener('keyup', onKeyup);
-    inputMessage.addEventListener('keyup', onKeyup);
+    inputName.addEventListener('change', onChangeInput);
+    inputEmail.addEventListener('change', onChangeInput);
+    inputPhone.addEventListener('change', onChangeInput);
+    inputSubject.addEventListener('change', onChangeInput);
+    inputMessage.addEventListener('change', onChangeInput);
 
     if (dataStorage) {
       inputName.value = JSON.parse(dataStorage).name
@@ -42,7 +42,7 @@ function getStorageinfo() {
 getStorageinfo()
 })
 
-function onKeyup(e){
+function onChangeInput(e){
   const target = e.target
   const element = document.querySelector("#"+target.name)
   element.innerHTML = target.value
