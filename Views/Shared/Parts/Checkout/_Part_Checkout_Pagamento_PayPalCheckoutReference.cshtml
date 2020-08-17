@@ -16,26 +16,42 @@
             Env = "production";
         }
     }
+
+    Session["PayPalReferenceUUID"] = string.Concat(DateTime.Now.ToString("yyyyMMddHHmmss"), "PAYPALREFERENCENEO");
 }
 
 @foreach (var item in Model)
 {
-    <div class="ui tab segment" data-tab="paypalCheckoutReference">
+    <div class="ui tiny scrolling modal paypal-reference" id="modal-paypal-reference">
+        @Html.Action("ValeCompraLogin", "Checkout")
+    </div>
+    <div class="ui tab segment" data-tab="paypalCheckoutReference" style="display: none !important;">
         <div class="content">
-            <div class="description">
+            <div class="description" id="payPalReferenceDescription">
                 <div class="ui list">
                     <div class="item">
+                        <img src="~/assets/image/checkout/paypal_anuncio.png" style="width: 100%; max-width: 400px;" /><br /><br />
                         Após se autenticar em sua conta Paypal, suas informações serão salvas garantindo uma compra mais rápida e segura em sua próxima visita.
                     </div>
                 </div>
             </div>
             <p class="transition hidden"></p>
             <div class="field">
-                <input type="hidden" name="IdPaymentBrandPayPalCheckoutReference" id="IdPaymentBrandPayPalCheckoutReference" value="@item.IdPaymentBrand"/>
-                <input type="hidden" name="EnvPayPalCheckoutReference" id="EnvPayPalCheckoutReference" value="@Env"/>
-                <input type="hidden" name="ButtonColorPayPalCheckoutReference" id="ButtonColorPayPalCheckoutReference" value="@ButtonColor"/>
-                <input type="hidden" name="ButtonFormatPayPalCheckoutReference" id="ButtonFormatPayPalCheckoutReference" value="@ButtonFormat"/>
-                <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+                <input type="hidden" name="IdPaymentBrandPayPalCheckoutReference" id="IdPaymentBrandPayPalCheckoutReference" value="@item.IdPaymentBrand" />
+                <input type="hidden" name="EnvPayPalCheckoutReference" id="EnvPayPalCheckoutReference" value="@Env" />
+                <input type="hidden" name="ButtonColorPayPalCheckoutReference" id="ButtonColorPayPalCheckoutReference" value="@ButtonColor" />
+                <input type="hidden" name="ButtonFormatPayPalCheckoutReference" id="ButtonFormatPayPalCheckoutReference" value="@ButtonFormat" />
+                <script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
+                    {
+                    "f":"@Session["PayPalReferenceUUID"]",
+                    "s":"JET_JETNEO_ECOM_RT"
+                    }
+                </script>
+                <script type="text/javascript" src="https://c.paypal.com/da/r/fb.js"></script>
+                <noscript>
+                    <img src="https://c.paypal.com/v1/r/d/b/ns?f=@Session["PayPalReferenceUUID"]&s=JET_JETNEO_ECOM_RT&js=0&r=1" />
+                </noscript>
+                <script src="https://www.paypalobjects.com/api/checkout.js?commit=false&debug=true&currency=BRL&disable-funding=card,credit&locale=pt_BR"></script>
                 <div id="paypal-button-reference"></div>
             </div>
         </div>

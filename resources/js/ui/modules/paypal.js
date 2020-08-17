@@ -1,4 +1,7 @@
 
+import { createModelExhausted } from "../../api/checkout/mini_cart";
+
+
 var xhrPayPalReference = null;
 var xhrPayPalInstallments  = null;
 var xhrPayPalReferenceDelete = null;
@@ -211,7 +214,7 @@ function PayPalCheckoutInCart2() {
                         IdAddress: ""
                     },
                     success: function (response) {
-                        if (response.links.length > 0) {
+                        if (response.links != null && response.links.length > 0) {
                             for (var key in response.links) {
                                 if (response.links[key].rel == "approval_url") {
                                     token = response.links[key].href.match(/EC-\w+/)[0];
@@ -359,8 +362,10 @@ export function PayPalCheckoutReference() {
                                     let Value = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(_installmentsNeo[i].Value);
 
                                     if (i === 0) {
-                                        let DiscountAmount = _installmentsPayPal[0].discount_amount.value;
-                                        let DiscountAmountPercent = _installmentsPayPal[0].discount_percentage;
+                                        let DiscountAmount = 0;
+                                        if (_installmentsPayPal[0].discount_amount !== null) DiscountAmount = _installmentsPayPal[0].discount_amount.value;
+                                        let DiscountAmountPercent = 0;
+                                        if (_installmentsPayPal[0].discount_percentage !== null) DiscountAmountPercent = _installmentsPayPal[0].discount_percentage;
                                         InstallmentValue = _installmentsPayPal[0].monthly_payment.value;
                                         InstallmentTotal = _installmentsPayPal[0].total_cost.value;
                                         if (parseFloat(DiscountAmount) > 0) {
@@ -375,7 +380,10 @@ export function PayPalCheckoutReference() {
                                 _html += "</select></p>";
                                 _html += "<button id=\"finalizarPedidoPayPalReference\" class=\"ui labeled icon action large fluid button\">Finalizar Pedido</button>";
                                 _html += "</form>";
+
                                 $('#paypal-button-reference').empty().append(_html);
+
+                                $('#payPalReferenceDescription').hide();
 
                                 $('#payPalDeleteReference').unbind().click(function () {
                                     if (xhrPayPalReference !== null) {
@@ -403,6 +411,24 @@ export function PayPalCheckoutReference() {
                                 });
 
                                 $('#finalizarPedidoPayPalReference').unbind().click(function () {
+
+                                    let _totalCarrinho = parseFloat($('#total_checkout').html().trim().replace('R$', '').trim().replace('.', '').replace(',', '.').trim());
+                                    let _totalReference = parseFloat($('#installmentsReference > option:selected').data('installmenttotal')) + parseFloat($('#installmentsReference > option:selected').data('installmentdiscount'));
+                                    if (_totalCarrinho !== _totalReference) {
+                                        swal({
+                                            title: 'Falha',
+                                            html: "O parcelamento está desatualizar, tente novamente!",
+                                            type: 'warning',
+                                            showCancelButton: false,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'OK'
+                                        }).then(function () {
+                                            window.location.reload(true);
+                                        });
+                                        return false;
+                                    }
+
                                     var idCustomer = $("#idCustomer").val();
                                     var idAddress = $("#idAddress").val();
                                     var presente = $("#presente").val();
@@ -577,6 +603,7 @@ export function PayPalCheckoutReference() {
                         }
                     });
                 } else {
+                    $('#payPalReferenceDescription').show();
                     $('#paypal-button-reference').empty();
 
                     paypal.Button.render({
@@ -587,7 +614,8 @@ export function PayPalCheckoutReference() {
                             color: $('#ButtonColorPayPalCheckoutReference').val(), // gold & blue & silver & white & black
                             shape: $('#ButtonFormatPayPalCheckoutReference').val(),
                             label: 'pay', // checkout & pay & buynow & paypal
-                            fundingicons: 'true'
+                            fundingicons: 'false',
+                            tagline: 'false'
                         },
                         // 1. Creating the Billing Agreement Token
                         payment: function (data, actions) {
@@ -621,7 +649,8 @@ export function PayPalCheckoutReference() {
                                 }
                             });
 
-                        }, onError: function (data, actions) {
+                        },
+                        onError: function (data, actions) {
                             // Show generic error message to the customer and return him to the checkout page
                             swal({
                                 title: '',
@@ -632,7 +661,8 @@ export function PayPalCheckoutReference() {
                                 cancelButtonColor: '#d33',
                                 confirmButtonText: 'OK'
                             });
-                        }, onCancel: function (data, actions) {
+                        },
+                        onCancel: function (data, actions) {
                             // Return the customer to the checkout page
                         }
                     }, '#paypal-button-reference');
@@ -810,6 +840,7 @@ export function PayPalCheckoutTransparent() {
 
     if ($('#paypal-cc-form').length > 0) {
         $('#continueButton').hide();
+        $("#installmentCheckoutTransparent").html("<option>Aguarde carregando.</option>");
 
         $.ajax({
             method: "POST",
@@ -1244,11 +1275,10 @@ function messageListener(event) {
     catch (exc) { }
 }
 
-
 $(document).ready(function () {
 
     PayPalCheckout();
-    PayPalCheckoutReference();
+    //PayPalCheckoutReference();
     PayPalCheckoutInCart2();
 
     window.onload = function () {

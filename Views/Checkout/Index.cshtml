@@ -116,7 +116,7 @@
                     <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
                         @if (Model != null && Model.CartItems != null)
                         {
-                            foreach (var product in Model.CartItems)
+                            foreach (var product in Model.CartItems.OrderByDescending(c => c.IdCartItem))
                             {
                                 <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
                                 @Html.Partial("~/Views/Shared/Object/Product/_ProductCartItem.cshtml", product)
@@ -217,7 +217,7 @@
                                             <span class="text medium">ou</span>
                                         </div>
                                         
-                                        <div id="paypal-button-container-incart" class="buttonsMiniCart"></div>
+                                        <div id="paypal-button-container-incart" class="buttonsMiniCart paypalBtn" data-container="checkout_products_list_cart"></div>
                                     }
                                 </div>
                             </div>

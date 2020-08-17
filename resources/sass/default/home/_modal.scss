@@ -2,3 +2,29 @@
     width: 90% !important;
     margin-bottom: 40px;
 }
+
+.modal-exhausted {
+    
+    .header {
+        font-size: 16px;
+        
+        span {
+            font-size: 15px;
+            line-height: 20px;
+        }
+    }
+    
+    #list-exhausted {
+        a {
+            font-size: 14px;
+            h1 {
+                font-size: 14px;
+                
+            }
+            
+            > div {
+                text-transform:lowercase;
+            }
+        }
+    }
+}

@@ -38,13 +38,13 @@
             <input type="hidden" name="ButtonColorPayPalCheckoutInCart" id="ButtonColorPayPalCheckoutInCart" value="@ButtonColor" />
             <input type="hidden" name="ButtonFormatPayPalCheckoutInCart" id="ButtonFormatPayPalCheckoutInCart" value="@ButtonFormat" />
 
-            <script src="https://www.paypal.com/sdk/js?client-id=@ClientId&currency=BRL&commit=false"></script>
+            <script src="https://www.paypal.com/sdk/js?client-id=@ClientId&currency=BRL&commit=false&disable-funding=card&locale=pt_BR"></script>
             
             <div class="ui horizontal divider dividerPaypal">
                 <span class="text medium">ou</span>
             </div>
             
-            <div id="paypal-button-container-incart" class="buttonsMiniCart margin top small"></div>
+            <div id="paypal-button-container-incart" class="buttonsMiniCart paypalBtn margin top small" data-container="ListProductsCheckout"></div>
         }
     </div>
 </div>

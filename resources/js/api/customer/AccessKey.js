@@ -1,6 +1,6 @@
 ﻿import { _alert, _confirm } from "../../functions/message";
 import { validarEmail } from "../../functions/validate";
-import { generateRecaptcha }  from "../../ui/modules/recaptcha";
+import { generateRecaptcha } from "../../ui/modules/recaptcha";
 
 $(document).ready(function () {
     if ($("#login").val() == "") {
@@ -61,6 +61,7 @@ $(document).ready(function () {
     $(document).on('submit', '#form-accesskey', function () {
 
         let strLogin = $('#login').val();
+        let googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
 
         let isValidEmail = validarEmail(strLogin);
         let isValidCpf = $.fn["jetCheckout"].validateCPF(strLogin);
@@ -72,7 +73,8 @@ $(document).ready(function () {
             data: {
                 __RequestVerificationToken: gettoken(),
                 email: isValidEmail ? strLogin : "",
-                cpfCnpj: (isValidCpf || isValidCnpj) ? strLogin : ""
+                cpfCnpj: (isValidCpf || isValidCnpj) ? strLogin : "",
+                googleResponse: googleResponse
             },
             success: function (data) {
                 if (data.Success == true && data.Message == "Login") {
@@ -95,6 +97,15 @@ $(document).ready(function () {
             },
             error: function (data) {
                 _alert("", data.message, "error");
+            },
+            complete: function () {
+                if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                    if ($("[id^=googleVersion_]").eq(0).val() === "2") {
+                        grecaptcha.reset();
+                    } else {
+                        generateRecaptcha($("[id^=googleModule]").val(), "body");
+                    }
+                }
             }
         });
         return false;

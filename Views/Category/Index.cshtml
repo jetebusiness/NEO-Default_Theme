@@ -21,9 +21,23 @@
         <div class="column">
           <h1>@(Model != null ? Model.Name : "")</h1>
           <div class="ui breadcrumb text small">
-            <a class="section" href="/">Home</a>
-            <i class="right angle icon divider"></i>
-            <div class="active section">@(Model != null ? Model.Name : "")</div>
+              <a class="section" href="/">Home</a>
+              @{
+                  var index = 0;
+                  foreach (var category in Model.RelatedCategories)
+                  {
+                      index++;
+                      <i class="right angle icon divider"></i>
+                      if (index == Model.RelatedCategories.Count)
+                      {
+                          <div class="active section">@(category != null ? category.Name : "")</div>
+                      }
+                      else
+                      {
+                          <div class="section">@(category != null ? category.Name : "")</div>
+                      }
+                  }
+              }
           </div>
         </div>
       </div>

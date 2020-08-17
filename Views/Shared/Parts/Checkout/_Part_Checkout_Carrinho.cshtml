@@ -1,4 +1,5 @@
-﻿@model DomainCheckout.Entities.Cart
+﻿@using DomainCheckout.Entities
+@model DomainCheckout.Entities.Cart
 <div class="ui segment">
     
     
@@ -19,7 +20,7 @@
                     {
                         foreach (var product in Model.CartItems)
                         {
-                            <div class="item">
+                            <div class="item @(product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-cart="@product.IdCartItem"  id="itemCartProduct_@product.IdCartItem">
                                 <div class="image">
                                     <img src="@product.ProductImage.ImageDefault" onerror="imgError(this)"/>
                                 </div>
@@ -27,6 +28,14 @@
                                     <a class="product title description"><strong>@Html.Raw(product.NameProduct)</strong></a>
                                     <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
                                     <div class="extra text color black left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
+                                    
+                                    @if (product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
+                                    {
+                                         <span class="ui label basic primary margin top small exhausted">PRODUTO ESGOTADO</span>
+                                         <button class="removeCartItem payment-cart" data-id="@product.IdCartItem">
+                                             <i class="trash alternate outline icon"></i>
+                                         </button>
+                                    }
                                 </div>
                             </div>
                         }

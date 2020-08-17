@@ -15,6 +15,12 @@
 
 @foreach (var item in Model)
 {
+    if (payPal.ViewSavedCards)
+    {
+    <div class="ui tiny scrolling modal paypal-transparent" id="modal-paypal-transparent">
+        @Html.Action("ValeCompraLogin", "Checkout")
+    </div>
+    }
     <div class="ui tab segment active" data-tab="paypalCheckoutTransparent">
         <div class="content margin bottom medium">
             <p class="transition hidden"></p>
@@ -23,7 +29,7 @@
                 <input type="hidden" name="EnvPayPalCheckoutTransparent" id="EnvPayPalCheckoutTransparent" value="@Env" />
                 <input type="hidden" name="PaymentIdPayPalCheckoutTransparent" id="PaymentIdPayPalCheckoutTransparent" value="" />
                 <script src="https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js"></script>
-                <form class="ui form">
+                <form class="ui form" id="frm-paypal-checkout-transparent" style="display: none;">
                     <select id="installmentCheckoutTransparent" class="fieldCheckPayment">
                         <option value="0">Selecione o parcelamento</option>
                     </select>

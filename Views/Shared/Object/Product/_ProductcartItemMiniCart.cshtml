@@ -1,4 +1,5 @@
-﻿@model DomainCheckout.Entities.CartItem
+﻿@using DomainCheckout.Entities
+@model DomainCheckout.Entities.CartItem
 
 @{
   string classe_qtd = "ui icon button ";
@@ -12,22 +13,15 @@
   {
     classe_qtd += "qtdActionEventList";
     classe_remove += "removeItemEventList";
-    id_ipt_qtd += Model.IdCartItem;
-    classe_stock += Model.IdCartItem;
-    classe_ipt_qtd += "event_list";
   }
   else
   {
     classe_qtd += "qtdActionMiniCart";
     classe_remove += "removeCartItem";
-    id_ipt_qtd += Model.IdCartItem;
-    classe_stock += Model.IdCartItem;
-    classe_ipt_qtd += "mini_cart";
-    data_signature = Model.IsRecurrent;
   }
 }
 
-<div class="item item-cart-product" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
+<div class="item item-cart-product @(Model.Stock == 0 || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
 
     <div class="image">
         <a href="/Product/Details/@Model.IdProduct" class="product image" id="name_@Model.IdCartItem">
@@ -63,24 +57,33 @@
         <div class="priceProduct" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
         
         <div class="description">
-            <div class="ui qtd action mini input">
-                <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
-                    <i class="icon minus"></i>
-                </button>
-                <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity"/>
-                <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem"/>
-                <input type="number" class="text center quantidade" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt"/>
+             @if (Model.Stock == 0 || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
+             {
+                 <span class="ui label basic primary exhausted">PRODUTO ESGOTADO</span>
+             }
+             else
+             {
+                 <div class="ui qtd action mini input">
+                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                         <i class="icon minus"></i>
+                     </button>
+                     <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity"/>
+                     <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem"/>
+                     <input type="number" class="text center quantidade" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt"/>
 
-                <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
-                    <i class="icon plus"></i>
-                </button>
-            </div>
+                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                         <i class="icon plus"></i>
+                     </button>
+                 </div>
+             }
         </div>
         
         <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
             <i class="trash alternate outline icon"></i>
         </button>
     </div>
+    
+    <div class="ui divider"></div>
+    
 </div>
 
-<div class="ui divider"></div>

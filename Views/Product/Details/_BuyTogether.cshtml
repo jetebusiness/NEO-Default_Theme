@@ -22,11 +22,11 @@
                         <div class="ui image medium">
                             @if (@Model.ImageHome != null)
                             {
-                                <img src="@Model.ImageHome" alt="@Model.Name"  onerror="imgError(this)">
+                                <img src="/assets/image/img_default.png" data-src="@Model.ImageHome" alt="@Model.Name"  onerror="imgError(this)">
                             }
                             else
                             {
-                                <img src="@Model.ProductImages.FirstOrDefault().ImageDefault" alt="@Model.Name"  onerror="imgError(this)">
+                                <img src="/assets/image/img_default.png" data-src="@Model.ProductImages.FirstOrDefault().ImageDefault" alt="@Model.Name"  onerror="imgError(this)">
                             }
                         </div>
                         <div class="content">

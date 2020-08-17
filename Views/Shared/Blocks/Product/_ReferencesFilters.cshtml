@@ -30,7 +30,7 @@
                                     else if (!string.IsNullOrEmpty(variation.Image))
                                     {
                                         <div class="ui variacao image checkImage" id="@variation.IdVariation" data-type="variations" data-reference="@reference.Name.ToLower()">
-                                            <img src="@variation.Image" alt="@variation.Name" onerror="imgError(this)">
+                                            <img src="@variation.Image" alt="@variation.Name" title="@variation.Name" onerror="imgError(this)">
                                             <div class="ui checkbox hideme">
                                                 <input type="checkbox" name="@variation.Name" id="variation_@variation.IdVariation">
                                                 <label>@variation.Name</label>

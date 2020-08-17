@@ -106,7 +106,7 @@
                                         if (Model != null && Model.CartItems != null)
                                         {
                                             ProductInTheCart = true;
-                                            foreach (var product in Model.CartItems)
+                                            foreach (var product in Model.CartItems.OrderByDescending(c => c.IdCartItem))
                                             {
                                                 <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
                                                 @Html.Partial("~/Views/Shared/Object/Product/_ProductcartItemMiniCart.cshtml", product)
