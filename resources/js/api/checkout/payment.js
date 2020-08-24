@@ -379,8 +379,8 @@ function clickShipping() {
         $("#GetShippping .card, #GetShippping .card .checkbox").removeClass("checked")
         $(this).addClass("checked").find(".checkbox").addClass("checked")
 
-        $(".agendar").hide("slow");
-        $('.hasDatepicker').datepicker('setDate', null);
+        $(".card:not(.checked) .agendar", "#GetShippping").hide("slow");
+        $(".card:not(.checked) .hasDatepicker", "#GetShippping").datepicker('setDate', null);
 
         var ponteiroCurrent = $(".shippingGet", this);
         $(".shippingGet").attr("checked", false);
