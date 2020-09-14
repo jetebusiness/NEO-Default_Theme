@@ -7,7 +7,7 @@ import { openModalQuickView, openLongModal } from "../../functions/modal";
 import { LoadCarrinho } from "../../functions/mini_cart_generic";
 import { SomenteNumerosPositivos } from "../../functions/form-control";
 import { LoadCarrinhoEventList } from "../../functions/mini_cart_generic";
-import { CarregarParcelamento, CarregaParcelamentoPagSeguro } from "../../api/product/detail_b2b.js";
+import { CarregarParcelamento, CarregaParcelamentoPagSeguro, CarregaParcelamentoPagSeguroApp } from "../../api/product/detail_b2b.js";
 import { CompraRecorrenteCart, CompraRecorrenteStorage } from '../../functions/recurringPurchase';
 
 import { VariacaoDropDown, VariacaoCor, VariacaoImagem, VariacaoRadio, AtualizarCompreJunto } from "./variations-floating";
@@ -168,6 +168,7 @@ $(document).ready(function () {
 
         //parcelamento PAGSEGURO
         CarregaParcelamentoPagSeguro();
+        CarregaParcelamentoPagSeguroApp();
 
         //funcao AVISE-ME
         alertSendStock()

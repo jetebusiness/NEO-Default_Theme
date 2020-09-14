@@ -1,6 +1,8 @@
 ﻿@{
     ViewBag.Title = "Identificação";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+
+    var _paypalCheckoutInCart = Session["PreOrderPayPalCheckoutInCart"] != null ? "true" : "false";
 }
 
 @section steps{
@@ -45,6 +47,7 @@
                 <form action="" method="POST" id="identificationForm" class="ui large form jet checkout">
                     <input type="hidden" name="email" id="email" value="" />
                     <input type="hidden" name="cpfCnpj" id="cpfCnpj" value="" />
+                    <input type="hidden" name="payPalCheckoutInCart" id="payPalCheckoutInCart" value="@_paypalCheckoutInCart" />
                     <div class="ui segment">
                         <div class="ui grid very relaxed stackable">
                             <div class="row one column left aligned">

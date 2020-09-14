@@ -49,7 +49,7 @@ export function getMaskMultipleDocument() {
 }
 
 export function getMaskZipCode() {
-	$('.mask_zipcode').mask('00000-0000');
+	$('.mask_zipcode').mask('00000-000');
 }
 
 export function getMaskDate() {

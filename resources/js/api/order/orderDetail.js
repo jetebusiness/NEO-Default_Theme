@@ -50,9 +50,9 @@ function createHtmlItau(el) {
                   </div>
                 </div>`;
 
-        el.after(html);
-        resolve(el.attr("data-id-order"));
-    });
+    el.after(html);
+    resolve(el.attr("data-id-order"));
+});
 }
 
 /*
@@ -69,9 +69,9 @@ function createHtmlMaxiPago(el) {
                   </div>
                 </div>`;
 
-        el.after(html);
-        resolve(el.attr("data-id-order"));
-    });
+    el.after(html);
+    resolve(el.attr("data-id-order"));
+});
 }
 
 $(document).ready(function () {
@@ -106,19 +106,19 @@ $(document).ready(function () {
     $(document).on("click", ".__reprintBankSlip", function () {
         createHtmlItau($(this)).then((idOrder) => {
             openShopline(true);
-            $.ajax({
-                method: "GET",
-                url: "/Checkout/ReprintBankSlip",
-                data: {
-                    id: idOrder
-                },
-                success: function (data) {
-                    $("#tokenBankSlip").val(data.msg)
-                    $("#itauShopline").submit()
-                },
-                error: function (data) { }
-            });
+        $.ajax({
+            method: "GET",
+            url: "/Checkout/ReprintBankSlip",
+            data: {
+                id: idOrder
+            },
+            success: function (data) {
+                $("#tokenBankSlip").val(data.msg)
+                $("#itauShopline").submit()
+            },
+            error: function (data) { }
         });
+    });
     })
 
     $(document).on("click", "#reprintBankSlipMaxiPago", function () {

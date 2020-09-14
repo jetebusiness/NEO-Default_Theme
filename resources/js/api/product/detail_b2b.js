@@ -193,6 +193,7 @@ export function CarregarParcelamento(isB2b) {
     }
     $("#parcelamento_info").html(html);
     CarregaParcelamentoPagSeguro();
+    CarregaParcelamentoPagSeguroApp();
 
     if ($('#pagSeguroParcelamento').length) {
         carregar_resumo_parcelamento = false;
@@ -439,6 +440,104 @@ export function CarregaParcelamentoPagSeguro() {
                                 });
 
                                 if(detalhes_maiorParc > maximumInstallment) {
+                                    $("#max-value").text(moneyPtBR(detalhes_valorParc));
+                                    $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
+                                    $("#description").text("(" + detalhes_descricao + ")");
+                                }
+
+                            },
+                            error: function (responseInstallment) {
+                                console.log(responseInstallment);
+                            }
+                        });
+
+                    });
+                });
+            }
+        });
+    }
+}
+
+export function CarregaParcelamentoPagSeguroApp() {
+    if ($('.pagSeguroAppParcelamento').length > 0) {
+
+
+        detalhes_maiorParc = 0;
+
+        $('.pagSeguroAppParcelamento').html("Carregando...");
+        $.ajax({
+            method: "GET",
+            url: "/Checkout/GetConfigPagSeguroApp",
+            success: function (responseConfig) {
+                var urlJS = '';
+                if (responseConfig.config.production) {
+                    urlJS = 'https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
+                }
+                else {
+                    urlJS = 'https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js'
+                }
+
+                $.getScript(urlJS, function () {
+                    PagSeguroDirectPayment.setSessionId(responseConfig.session.Id);
+
+                    var totalCheckout = 0;
+
+
+
+                    if ($('#preco').length > 0)
+                        totalCheckout = SomenteNumeros($('#preco').text());
+                    else
+                        totalCheckout = SomenteNumeros($('#conjunto-total-final').text());
+
+                    $.each($('.pagSeguroAppParcelamento'), function (key, item) {
+                        var divParcelamento = $(item);
+                        var _brand = $(divParcelamento).data("brand");
+
+                        PagSeguroDirectPayment.getInstallments({
+                            amount: totalCheckout,
+                            brand: _brand,
+                            maxInstallmentNoInterest: responseConfig.config.MaximumInstallmentWithoutInterest,
+                            success: function (responseInstallment) {
+
+
+
+                                //var auxTotalProduto = Number.parseFloat(totalCheckout);
+                                //var jurosTotal = 0;
+                                //var taxaMensal = 0;
+                                var maximumInstallment = parseInt($("#qtd-parcela-maxima-unidade").val());
+
+                                $.each(responseInstallment.installments, function (key, ResponseBrand) {
+                                    //jurosTotal = Number.parseFloat(item.totalAmount) - auxTotalProduto;
+
+                                    //taxaMensal = (jurosTotal / (auxTotalProduto * Number.parseFloat(item.quantity))) * 100;
+                                    $("div.pagSeguroAppParcelamento[data-brand=" + key + "]").empty();
+
+                                    $.each(ResponseBrand, function (key2, item) {
+
+
+                                        if (detalhes_maiorParc < item.quantity && item.interestFree)//maior parcela sem juros
+                                        {
+                                            detalhes_maiorParc = item.quantity;
+                                            detalhes_valorParc = item.installmentAmount;
+                                            detalhes_descricao = "Sem juros";
+
+                                        }
+                                        //if(item.quantity <= maximumInstallment)
+                                        //{
+                                        $("div.pagSeguroAppParcelamento[data-brand=" + key + "]").append(
+                                            '<span class="item parcelamentos">' +
+                                            '<span class="parcelas">' + item.quantity + ' x </span>' +
+                                            '<span class="valor">' + item.installmentAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + ' </span>' +
+                                            '<span class="modelo">(' + ((item.interestFree) ? 'Sem juros' : 'Com juros') + ')</span>' +
+                                            //'<span class="modelo">(' + ((item.interestFree)? 'Sem Juros' : 'juros de ' + taxaMensal.toFixed(4) + '% ao mês') + ')</span>' +
+                                            '<span class="total">Total Parcelado: ' + item.totalAmount.toLocaleString('en-US', { style: 'currency', currency: 'BRL' }) + '</span>' +
+                                            '</span>'
+                                        );
+                                        //}
+                                    });
+                                });
+
+                                if (detalhes_maiorParc > maximumInstallment) {
                                     $("#max-value").text(moneyPtBR(detalhes_valorParc));
                                     $("#max-p").text(detalhes_maiorParc.toString() + "X de ");
                                     $("#description").text("(" + detalhes_descricao + ")");

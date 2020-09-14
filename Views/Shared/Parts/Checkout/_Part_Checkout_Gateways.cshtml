@@ -21,7 +21,7 @@
             </div>
             <div class="active content">
                 <div class="sixteen wide mobile sixteen wide tablet six wide computer column" id="formas-pagamento">
-                        
+
                     <div class="ui secondary menu stackable" id="tabPayment"></div>
                     @foreach (var itemM in lstPaymentMethods)
                     {
@@ -87,10 +87,11 @@
                         }
                     }
                     <input type="hidden" name="hasPagSeguro" id="hasPagSeguro" value="@Session["PagSeguro"]" />
+                    <input type="hidden" name="hasPagSeguroApp" id="hasPagSeguroApp" value="@Session["PagSeguroApp"]" />
                     <input type="hidden" name="SessionPayment" id="PaymentSession" value="" />
                     <input type="hidden" name="HashPayment" id="PaymentHash" value="" />
                     @{
-                        if (Convert.ToInt32(Session["PagSeguro"].ToString()) > 0)
+                        if (Convert.ToInt32(Session["PagSeguro"].ToString()) > 0 || Convert.ToInt32(Session["PagSeguroApp"].ToString()) > 0)
                         {
                             <input type="hidden" name="MaximumInstallmentWithoutInterest" id="MaximumInstallmentWithoutInterest" value="0" />
                             <input type="hidden" name="MaximumInstallment" id="MaximumInstallment" value="0" />

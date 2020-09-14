@@ -1,306 +1,307 @@
 .ui.button.basic {
 
-  &.primary {
-    background-color: transparent !important;
-    box-shadow: 0 0 0 1px $primary-color inset !important;
-    color: $primary-color !important;
+    &.primary {
+        background-color: transparent !important;
+        box-shadow: 0 0 0 1px $primary-color inset !important;
+        color: $primary-color !important;
 
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active{
-      background-color: $primary-color !important;
-      box-shadow: 0 0 0 1px $primary-color inset !important;
-      box-shadow: none !important;
-      color: white !important;
-    }
-  }
-
-  &.secondary {
-    background-color: transparent !important;
-    box-shadow: 0 0 0 1px $secondary-color inset !important;
-    color: $secondary-color !important;
-
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active{
-      background-color: $secondary-color !important;
-      box-shadow: none !important;
-      color: white !important;
-    }
-  }
-  &.ascent-1 {
-    box-shadow: 0 0 0 1px $ascent-1-color inset !important;
-    color: $ascent-1-color !important;
-
-    &:hover {
-      background-color: $ascent-1-color !important;
-      box-shadow: none !important;
-      color: white !important;
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active{
+            background-color: $primary-color !important;
+            box-shadow: 0 0 0 1px $primary-color inset !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
     }
 
-    &:focus {
-      box-shadow: 0 0 0 1px $active-color inset !important;
-      color: $active-color !important;
+    &.secondary {
+        background-color: transparent !important;
+        box-shadow: 0 0 0 1px $secondary-color inset !important;
+        color: $secondary-color !important;
+
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active{
+            background-color: $secondary-color !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
     }
-  }
+    &.ascent-1 {
+        box-shadow: 0 0 0 1px $ascent-1-color inset !important;
+        color: $ascent-1-color !important;
 
-  &.ascent-2 {
-    box-shadow: 0 0 0 1px $ascent-2-color inset !important;
-    color: $ascent-2-color !important;
+        &:hover {
+            background-color: $ascent-1-color !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
 
-    &:hover {
-      background-color: $ascent-2-color !important;
-      box-shadow: none !important;
-      color: white !important;
-    }
-
-    &:focus {
-      box-shadow: 0 0 0 1px $active-color inset !important;
-      color: $active-color !important;
-    }
-  }
-
-  &.ascent-3 {
-    box-shadow: 0 0 0 1px $ascent-3-color inset !important;
-    color: $ascent-3-color !important;
-
-    &:hover {
-      background-color: $ascent-3-color !important;
-      box-shadow: none !important;
-      color: white !important;
+        &:focus {
+            box-shadow: 0 0 0 1px $active-color inset !important;
+            color: $active-color !important;
+        }
     }
 
-    &:focus {
-      box-shadow: 0 0 0 1px $active-color inset !important;
-      color: $active-color !important;
-    }
-  }
+    &.ascent-2 {
+        box-shadow: 0 0 0 1px $ascent-2-color inset !important;
+        color: $ascent-2-color !important;
 
-  &.heart {
+        &:hover {
+            background-color: $ascent-2-color !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
 
-    &:hover {
-      background-color: $ascent-3-color !important;
-      box-shadow: none !important;
-      color: white !important;
-    }
-
-    &:focus {
-      box-shadow: 0 0 0 1px $ascent-3-color inset !important;
-      color: $ascent-3-color !important;
-    }
-  }
-
-  &.default {
-
-    &:hover {
-      background-color: $ascent-1-color !important;
-      box-shadow: none !important;
-      color: white !important;
+        &:focus {
+            box-shadow: 0 0 0 1px $active-color inset !important;
+            color: $active-color !important;
+        }
     }
 
-    &:focus {
-      box-shadow: 0 0 0 1px $ascent-1-color inset !important;
-      color: $ascent-1-color !important;
+    &.ascent-3 {
+        box-shadow: 0 0 0 1px $ascent-3-color inset !important;
+        color: $ascent-3-color !important;
+
+        &:hover {
+            background-color: $ascent-3-color !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 1px $active-color inset !important;
+            color: $active-color !important;
+        }
     }
-  }
+
+    &.heart {
+
+        &:hover {
+            background-color: $ascent-3-color !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 1px $ascent-3-color inset !important;
+            color: $ascent-3-color !important;
+        }
+    }
+
+    &.default {
+
+        &:hover {
+            background-color: $ascent-1-color !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 1px $ascent-1-color inset !important;
+            color: $ascent-1-color !important;
+        }
+    }
 }
 
 .ui.button {
-  &.desabilitado {
-    background: rgba(0,0,0,0.1);
-    cursor: pointer;
-    color: rgba(0,0,0,0.4);
-  }
+    &.desabilitado {
+        background: rgba(0,0,0,0.1);
+        cursor: pointer;
+        color: rgba(0,0,0,0.4);
+    }
 
-  &.primary {
-    background-color: $primary-color !important;
-    box-shadow: 0 0 0 1px $primary-color inset !important;
-    color: $white !important;
+    &.primary {
+        background-color: $primary-color !important;
+        box-shadow: 0 0 0 1px $primary-color inset !important;
+        color: $white !important;
 
-    &.labeled {
-      &:not(.toggle) {
-        i {
-          background-color: darken($primary-color, 5) !important;
+        &.labeled {
+            &:not(.toggle) {
+                i {
+                    background-color: darken($primary-color, 5) !important;
+                }
+            }
         }
-      }
-    }
 
 
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active {
-      background-color: darken($primary-color, 5) !important;
-      box-shadow: 0 0 0 1px darken($primary-color, 5) inset !important;
-      color: white !important;
-    }
-  }
-
-  &.secondary {
-    background-color: $secondary-color !important;
-    box-shadow: 0 0 0 1px $secondary-color inset !important;
-    color: $white !important;
-
-    &.labeled {
-      &:not(.toggle) {
-        i {
-          background-color: darken($secondary-color, 5) !important;
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active {
+            background-color: darken($primary-color, 5) !important;
+            box-shadow: 0 0 0 1px darken($primary-color, 5) inset !important;
+            color: white !important;
         }
-      }
     }
 
+    &.secondary {
+        background-color: $secondary-color !important;
+        box-shadow: 0 0 0 1px $secondary-color inset !important;
+        color: $white !important;
 
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active {
-      background-color: darken($secondary-color, 5) !important;
-      box-shadow: 0 0 0 1px darken($secondary-color, 5) inset !important;
-      color: white !important;
-    }
-  }
-
-  &.action {
-    background-color: $action !important;
-    box-shadow: 0 0 0 1px $action inset !important;
-    color: $white !important;
-
-    &.labeled {
-      &:not(.toggle) {
-        i {
-          background-color: darken($action, 5) !important;
+        &.labeled {
+            &:not(.toggle) {
+                i {
+                    background-color: darken($secondary-color, 5) !important;
+                }
+            }
         }
-      }
-    }
 
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active {
-      opacity: .9 !important;
-      background-color: $action !important;
-      box-shadow: 0 0 0 1px $action inset !important;
-      color: white !important;
-    }
-  }
 
-  &.recurring {
-    background-color: $recurring-color !important;
-    box-shadow: 0 0 0 1px $recurring-color inset !important;
-    color: $white !important;
-
-    &.labeled {
-      &:not(.toggle) {
-        i {
-          background-color: darken($recurring-color, 5) !important;
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active {
+            background-color: darken($secondary-color, 5) !important;
+            box-shadow: 0 0 0 1px darken($secondary-color, 5) inset !important;
+            color: white !important;
         }
-      }
     }
 
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active {
-      opacity: .9 !important;
-      background-color: $recurring-color !important;
-      box-shadow: 0 0 0 1px $recurring-color inset !important;
-      color: white !important;
-    }
-  }
-
-  .button {
-    margin-bottom: 0 !important;
-  }
-
-  &.toggle {
-    background-color: $action !important;
-    box-shadow: none !important;
-    color: white !important;
-
-    &:hover,
-    &:focus,
-    &:checked,
-    &:active,
-    &.active {
-      background-color: $action !important;
-      opacity: .9 !important;
-      box-shadow: none !important;
-      color: white !important;
-    }
-
-    &.active {
-      &:hover,
-      &:focus,
-      &:checked,
-      &:active {
+    &.action {
         background-color: $action !important;
-        opacity: .9 !important;
+        box-shadow: 0 0 0 1px $action inset !important;
+        color: $white !important;
+
+        &.labeled {
+            &:not(.toggle) {
+                i {
+                    background-color: darken($action, 5) !important;
+                }
+            }
+        }
+
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active {
+            opacity: .9 !important;
+            background-color: $action !important;
+            box-shadow: 0 0 0 1px $action inset !important;
+            color: white !important;
+        }
+    }
+
+    &.recurring {
+        background-color: $recurring-color !important;
+        box-shadow: 0 0 0 1px $recurring-color inset !important;
+        color: $white !important;
+
+        &.labeled {
+            &:not(.toggle) {
+                i {
+                    background-color: darken($recurring-color, 5) !important;
+                }
+            }
+        }
+
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active {
+            opacity: .9 !important;
+            background-color: $recurring-color !important;
+            box-shadow: 0 0 0 1px $recurring-color inset !important;
+            color: white !important;
+        }
+    }
+
+    .button {
+        margin-bottom: 0 !important;
+    }
+
+    &.toggle {
+        background-color: $action !important;
         box-shadow: none !important;
         color: white !important;
-      }
+
+        &:hover,
+        &:focus,
+        &:checked,
+        &:active,
+        &.active {
+            background-color: $action !important;
+            opacity: .9 !important;
+            box-shadow: none !important;
+            color: white !important;
+        }
+
+        &.active {
+            &:hover,
+            &:focus,
+            &:checked,
+            &:active {
+                background-color: $action !important;
+                opacity: .9 !important;
+                box-shadow: none !important;
+                color: white !important;
+            }
+        }
     }
-  }
 
-  &.colorcheck {
+    &.colorcheck {
 
-    .label {
-      padding: .5833em .533em !important;
+        .label {
+            padding: .5833em .533em !important;
+        }
     }
-  }
 
-  &.btn-checkout-success-dark {
-    background: $button-bg-checkout-success-dark !important;
-    border: 1px solid $button-border-checkout-success-dark !important;
-    color: $button-text-checkout-success-dark !important;
-  }
+    &.btn-checkout-success-dark {
+        background: $button-bg-checkout-success-dark !important;
+        border: 1px solid $button-border-checkout-success-dark !important;
+        color: $button-text-checkout-success-dark !important;
+    }
+
 }
 
 .ui.form {
 
-  .field {
+    .field {
 
-    > .button {
-      margin-bottom: 10px;
+        > .button {
+            margin-bottom: 10px;
+        }
     }
-  }
 }
 
 .qtd.action {
 
-  input {
-    border-radius: 0px !important;
-    padding-left: 10px;
-    padding-right: 10px;
-    width: 40px;
-  }
+    input {
+        border-radius: 0px !important;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 40px;
+    }
 
-  input[type=number]::-webkit-outer-spin-button,
-  input[type=number]::-webkit-inner-spin-button {
-    margin: 0;
-    -webkit-appearance: none;
-  }
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        margin: 0;
+        -webkit-appearance: none;
+    }
 
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
 
-  .button:first-child {
-    border-radius: .28571429rem 0 0 .28571429rem !important;
-  }
+    .button:first-child {
+        border-radius: .28571429rem 0 0 .28571429rem !important;
+    }
 }
 
 .ui.basic.button.inverted {
 
-  &.white {
+    &.white {
 
-    &:hover,
-    &:focus,
-    &:active,
-    .active {
-      background: white !important;
-      color: rgba(0, 0, 0, .8) !important;
+        &:hover,
+        &:focus,
+        &:active,
+        .active {
+            background: white !important;
+            color: rgba(0, 0, 0, .8) !important;
+        }
     }
-  }
 }

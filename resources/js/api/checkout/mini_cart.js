@@ -151,16 +151,10 @@ $(document).ready(function () {
 
         limparFrete();
 
-        // $("#btn_recalcular_frete").click();
-
         var action = $(this).attr("data-action");
         var idCurrent = $(this).attr("data-id");
         var valorInput = new Number($("#qtd_" + idCurrent).val());
         var valorStock = new Number($("#stock_" + idCurrent).val());
-
-        //console.log(e);
-
-        isLoading("#miniCarrinho");
 
         if (valorInput <= valorStock && valorInput < 1000) {
             disparaAjaxUpdate(idCurrent, valorInput, action, true);

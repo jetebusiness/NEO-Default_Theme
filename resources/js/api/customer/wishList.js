@@ -19,7 +19,7 @@ $(document).ready(function () {
 			if (local == 'detail') {
 				_data.skuID = $("#produto-sku").val();
 				let loginOk = ValidateWishlist(_data, this, userAuthentication);
-                if (loginOk) {
+				if (loginOk) {
                     if (sku != undefined && sku != "") _data.skuID = sku;
 					ValidateReferences(productID, this, _data, userAuthentication);
 				}

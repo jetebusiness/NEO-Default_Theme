@@ -46,10 +46,10 @@ $(document).ready(function () {
     })
 
     var creditcard_config = {
-        numberInput: "[id='CreditCard']", // optional — default input[name="number"]
-        cvcInput: "[id='CVV']",
-        nameInput: "[id='Name']"
-    },
+            numberInput: "[id='CreditCard']", // optional — default input[name="number"]
+            cvcInput: "[id='CVV']",
+            nameInput: "[id='Name']"
+        },
         creditcard_config1 = {
             numberInput: "[id='CreditCard1']", // optional — default input[name="number"]
             cvcInput: "[id='CVV1']",

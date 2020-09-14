@@ -11,7 +11,7 @@ $(document).ready(function () {
 
 function checkLogin() {
 
-    $("#checkLogin").on("click", function () {
+    $("#checkLogin").unbind().on("click", function () {
         $(this).addClass("loading");
         var strLogin = $("#login").val();
         var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
@@ -39,7 +39,22 @@ function checkLogin() {
                 },
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.action;
+
+                        if ($('#payPalCheckoutInCart').val() === "true") {
+                            swal({
+                                title: '',
+                                html: "Identificamos que você já possui uma conta em nossa loja e lhe redirecionaremos para a página de pagamento. Por gentileza, revise seu pedido antes de concluí-lo!",
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            }).then(function () {
+                                window.location.href = response.action;
+                            });
+                        } else {
+                            window.location.href = response.action;
+                        }
                     }
                     else
                     {

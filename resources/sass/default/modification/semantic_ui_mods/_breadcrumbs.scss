@@ -1,28 +1,28 @@
 /* Breadbrumbs */
 .breadcrumbs {
-	h1 {
-		margin: 0;
-		font-size: 1.5em;
-	}
+    h1 {
+        margin: 0;
+        font-size: 1.5em;
+    }
 }
 
 .ui.breadcrumb {
-  text-transform: uppercase;
-  color: $black;
-  font-size: 12px;
-  margin: 10px !important;
-  padding: 0;
+    text-transform: uppercase;
+    color: $black;
+    font-size: 12px;
+    margin: 10px !important;
+    padding: 0;
 
-  a {
-    color: #666666;
-    &.cursor-default {
-      cursor: default;
+    a {
+        color: #666666;
+        &.cursor-default {
+            cursor: default;
+        }
     }
-  }
 
-  li {
-    display: inline-block;
-  }
+    li {
+        display: inline-block;
+    }
 
 
 

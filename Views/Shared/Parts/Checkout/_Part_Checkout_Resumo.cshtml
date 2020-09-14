@@ -27,6 +27,14 @@
             <div class="item">
                 <div class="content">
                     <div class="description">
+                        <span>Juros</span>
+                        <span class="ui floated right" id="interest_checkout">@string.Format("{0:c}", 0)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <div class="description">
                         <span>Desconto</span>
                         <span class="ui floated right" id="desconto_checkout" data-discount-initial="@(Model.TotalDiscount != null ? Model.TotalDiscount : 0)">@string.Format("{0:c}", Model.TotalDiscount != null ? Model.TotalDiscount : 0)</span>
                     </div>
@@ -49,7 +57,7 @@
                 <div class="content">
                     <div class="description">
                         <span class="text bold">Total à pagar</span>
-                        <strong class="ui floated right text bold" id="total_checkout">
+                        <strong class="ui floated right text bold" id="total_checkout" data-totalcheckout="@(Model.Total != null ? Model.Total : 0)">
                             @string.Format("{0:c}", Model.Total != null ? Model.Total : 0)
                         </strong>
                     </div>

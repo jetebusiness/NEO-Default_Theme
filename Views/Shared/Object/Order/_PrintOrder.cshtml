@@ -307,6 +307,10 @@
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalShipping)</th>
                         </tr>
                         <tr>
+                            <th colspan="4" class="right aligned">Juros</th>
+                            <th class="right aligned">@string.Format("{0:c}", (Model.InterestValue != null ? Model.InterestValue : 0))</th>
+                        </tr>
+                        <tr>
                             <th colspan="4" class="right aligned">Valor do Desconto</th>
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalDiscount)</th>
                         </tr>

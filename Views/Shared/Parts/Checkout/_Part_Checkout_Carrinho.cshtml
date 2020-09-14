@@ -20,7 +20,8 @@
                     {
                         foreach (var product in Model.CartItems)
                         {
-                            <div class="item @(product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-cart="@product.IdCartItem"  id="itemCartProduct_@product.IdCartItem">
+                            <div class="item @(product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" 
+                                 data-id-cart="@product.IdCartItem" data-recurrent="@product.IsRecurrent" id="itemCartProduct_@product.IdCartItem">
                                 <div class="image">
                                     <img src="@product.ProductImage.ImageDefault" onerror="imgError(this)"/>
                                 </div>
@@ -31,10 +32,10 @@
                                     
                                     @if (product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
                                     {
-                                         <span class="ui label basic primary margin top small exhausted">PRODUTO ESGOTADO</span>
-                                         <button class="removeCartItem payment-cart" data-id="@product.IdCartItem">
-                                             <i class="trash alternate outline icon"></i>
-                                         </button>
+                                        <span class="ui label basic primary margin top small exhausted">PRODUTO ESGOTADO</span>
+                                        <button class="removeCartItem payment-cart" data-id="@product.IdCartItem">
+                                            <i class="trash alternate outline icon"></i>
+                                        </button>
                                     }
                                 </div>
                             </div>
