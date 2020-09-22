@@ -34,14 +34,12 @@
     </div>
     
     @foreach (var item in Model)
-    {
-        string name = item.NamePayment;
-            
+    {            
         <div class="blocoTypePayment" data-typePayment="@item.IdPaymentBrand">
             <div class="titleTypePayment">
                 <div class="ui radio checkbox">
                     <input type="radio" name="type-@(item.IdPaymentBrand)" tabindex="0" class="hidden">
-                    <label for="type-@(item.IdPaymentBrand)">@(item.IdPaymentBrand == 277 ? name + " - Pagseguro" : name)</label>
+                    <label for="type-@(item.IdPaymentBrand)">@item.NamePayment</label>
                 </div>
             </div>
             <div class="contentPayment" data-payment="@item.IdPaymentBrand">
