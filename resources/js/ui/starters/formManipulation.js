@@ -259,17 +259,17 @@ export const formSettings = {
         }
 
     },
-    onSuccess: function() {        
+    onSuccess: function() {
         if($("[id^=googleResponse]", $(this)).length > 0 && $("[id^=googleVersion]", $(this)).val() === '3') {
-            
+
             var form = $(this),
                 module = $("[id^=googleModule]", form).val();
-            
+
             window.setTimeout(function() {
                 generateRecaptcha(module, form);
             },1500)
-        }        
-        
+        }
+
     }
 };
 
@@ -358,12 +358,8 @@ $(document).ready(function () {
 $(document).on("click", ".form_refresh", function () {
     $(".ui.form").form('clear');
 })
-    .on("click", ".searchcolumn:not(.active)", function () {
-        toggleSearch();
-    })
-    .on("click", ".searchcolumn .icon.remove.circle", function () {
-        $(".search .prompt").val("")
-        toggleSearch();
+    .on("click", ".searchcolumn", function () {
+        $(this).toggleClass("active");
     })
     .on("click", ".password_unhide", function () {
         "use strict";
@@ -377,18 +373,11 @@ $(document).on("click", ".form_refresh", function () {
         }
 
     })
-   
+
     .on("click", ".searchMobile>.button", function () {
         $(".blocoBusca").toggleClass("active");
     })
 
-
-
-
-function toggleSearch() {
-    $(".searchcolumn").toggleClass("active");
-    $(".searchcolumn .icon").toggleClass("remove circle");
-}
 
 
 $(function () {

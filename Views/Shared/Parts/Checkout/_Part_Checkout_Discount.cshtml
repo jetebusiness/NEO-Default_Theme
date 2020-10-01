@@ -19,8 +19,8 @@
                             decimal _exibeDescontoDebito = 0;
                             if (ViewBag.TotalCarrinho != null)
                             {
-                                    if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
-                                    {
+                                if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
+                                {
                                     _exibeDescontoDebito = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
                                 }
                                 else
@@ -59,8 +59,8 @@
                                 decimal _exibeDescontoBoleto = 0;
                                 if (ViewBag.TotalCarrinho != null)
                                 {
-                                        if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
-                                        {
+                                    if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
+                                    {
                                         _exibeDescontoBoleto = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
                                     }
                                     else

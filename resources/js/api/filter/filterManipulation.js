@@ -209,8 +209,8 @@ var newFilter = {
                     }
 
 
-                    if(JSON.parse(sessionStorage.getItem(configFilter.config.nameSession))["keyWord"].replace(/%/gi, '') !==
-                        decodeURIComponent(result).replace(/%/gi, ''))
+                    if(JSON.parse(sessionStorage.getItem(configFilter.config.nameSession))["keyWord"].replace(/[^a-z0-9\s+]/gi, '') !==
+                        decodeURIComponent(result).replace(/[^a-z0-9\s+]/gi, '').replace(/\+/gi, ' '))
                         return false;
                     else
                         return true;

@@ -8,7 +8,7 @@
         <div class="active content">
             <div class="ui form">
                 <div class="grouped fields">
-                    @foreach (var valor in atribute.attributeValues.OrderBy(c => c.Value))
+                    @foreach (var valor in atribute.attributeValues.OrderBy(c => c.orderBy).ThenBy(c => c.Value))
                     {
                         if (valor.active)
                         {
