@@ -1,0 +1,20 @@
+﻿@model DomainCompany.Entities.PolicyPrivacyCompany
+
+@if (Model.StatusPolicyPrivacy)
+{
+    <div class="privacy-police">
+        <div class="content">
+            <div class="ui grid two column stackable text center middle aligned">
+                <div class="row">
+                    <div class="column thirteen wide">
+                        <p>@Html.Raw(Model.AlertText)</p>
+                    </div>
+                    <div class="column three wide">
+                        <button class="ui button action fluid large circular" id="accept-policy">Entendi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

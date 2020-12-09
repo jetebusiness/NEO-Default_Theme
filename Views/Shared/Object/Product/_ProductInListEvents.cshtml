@@ -17,11 +17,12 @@
                 <div class="row two column stackable doubling">
                     @if (Model.AvailableReferences != null)
                     {
+                        string combinacoes = "";
                         foreach (var reference in Model.AvailableReferences)
                         {
                             <div class="column">
                                 <div id="referencefromproduct_@Model.IdProduct" class="ui fluid selection dropdown dropdownreference" data-idproduct="@Model.IdProduct">
-                                    <input type="hidden" name="reference" id="@reference.Name">
+                                    <input type="hidden" name="reference_@Model.IdProduct" data-id-reference="@reference.IdReference" id="@reference.Name">
                                     <i class="dropdown icon"></i>
                                     <span class="text">@reference.Name</span>
                                     <div class="menu">
@@ -31,13 +32,34 @@
                                         <div class="scrolling menu">
                                             @foreach (var variation in reference.Variations)
                                             {
-                                                <div id="idVariation" class="item" data-value="@variation.IdVariation">
-                                                    @if (variation.Color != null)
+                                                combinacoes = "";
+                                                if (Model.SKUs != null)
+                                                {
+                                                    foreach (var skus in Model.SKUs)
                                                     {
-                                                        <div class="ui empty circular label" style="background-color: @LojaCorp.Control.Static.HexaToRgb(variation.Color) !important; border-color: #1B1C1D !important;"></div>
+                                                        if (!LojaCorp.Control.Company._Company.ShowProductOutOfStock || (LojaCorp.Control.Company._Company.ShowProductOutOfStock && skus.Stock > 0 && (skus.Price > 0 || skus.PricePromotion > 0)))
+                                                        {
+                                                            if (skus.Variations.Where(c => c.IdVariation == variation.IdVariation).ToArray().Count() > 0)
+                                                            {
+                                                                var sku = skus.Variations;
+                                                                foreach (var Variacao in skus.Variations)
+                                                                {
+                                                                    combinacoes += "|" + Variacao.IdVariation;
+                                                                }
+                                                            }
+                                                        }
                                                     }
-                                                    @variation.Name
-                                                </div>
+                                                }
+                                                if (combinacoes != "")
+                                                {
+                                                    <div class="item" data-value="@variation.IdVariation" data-sku="@combinacoes">
+                                                        @if (variation.Color != null)
+                                                        {
+                                                            <div class="ui empty circular label" style="background-color: @LojaCorp.Control.Static.HexaToRgb(variation.Color) !important; border-color: #1B1C1D !important;"></div>
+                                                        }
+                                                        @variation.Name
+                                                    </div>
+                                                }
                                             }
                                         </div>
                                     </div>

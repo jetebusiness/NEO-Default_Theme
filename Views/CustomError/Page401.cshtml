@@ -1,17 +1,27 @@
-﻿
-@{
-    Layout = null;
+﻿@{
+    ViewBag.Title = "Error 401";
+    Layout = "~/Views/Shared/Base/_LayoutErrors.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Page401</title>
-</head>
-<body>
-    <div> 
+<div class="customError margin top bottom large">
+    <div class="ui container text center">
+        <div class="row">
+            <div class="customImg">
+                <img src="~/assets/image/error/401.png" />
+                <img src="~/assets/image/error/oops.png" />
+            </div>
+            <div class="text-1">
+                <span>Acesso não autorizado</span>
+            </div>
+            <div class="text-2">
+                <span>A página que você está tentando acessar não existe.</span>
+            </div>
+            <a href="/home" class="ui button basic primary black margin none">
+                Retornar para página principal
+            </a>
+            <div class="customImgLogo">
+                <img src="~/assets/image/error/logo-jet.png" />
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>

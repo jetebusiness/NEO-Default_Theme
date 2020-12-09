@@ -1,106 +1,110 @@
 .ui.form {
 
-	&.right.aligned {
+    &.right.aligned {
 
-	  .inline.fields {
+        .inline.fields {
 
-		.field {
-		  padding: 0 0 0 1em;
-		}
-	  }
-	}
+            .field {
+                padding: 0 0 0 1em;
+            }
+        }
+    }
 
-	.field.success {
+    .field.success {
 
-	  label {
-		color: $semantic-success-green;
-	  }
+        label {
+            color: $semantic-success-green;
+            
+            a {
+                color: $semantic-success-green;
+            }
+        }
 
-	  input {
-		background: #f4faf4 none repeat scroll 0 0;
-		border-color: $semantic-success-green-border;
-		border-radius: 0.285714rem;
-		box-shadow: none;
-		color: $semantic-success-green;;
-	  }
+        input {
+            background: #f4faf4 none repeat scroll 0 0;
+            border-color: $semantic-success-green-border;
+            border-radius: 0.285714rem;
+            box-shadow: none;
+            color: $semantic-success-green;;
+        }
 
-	  ::-webkit-input-placeholder,
-	  ::-ms-input-placeholder,
-	  ::-moz-placeholder,
-	  :focus::-webkit-input-placeholder,
-	  :focus::-ms-input-placeholder,
-	  :focus::-moz-placeholder{
-		color:$semantic-success-green-color;
-	  }
-	}
+        ::-webkit-input-placeholder,
+        ::-ms-input-placeholder,
+        ::-moz-placeholder,
+        :focus::-webkit-input-placeholder,
+        :focus::-ms-input-placeholder,
+        :focus::-moz-placeholder{
+            color:$semantic-success-green-color;
+        }
+    }
 
-	.icon {
+    .icon {
 
-	  &.shopping.basket {
+        &.shopping.basket {
 
-		&::before {
-		  margin-left: -1px;
-		}
-	  }
-	}
+            &::before {
+                margin-left: -1px;
+            }
+        }
+    }
 
-	.ui.transparent.inverted {
+    .ui.transparent.inverted {
 
-	  input:focus:not([type]),
-	  input[type="text"]:focus,
-	  input[type="email"]:focus,
-	  input[type="search"]:focus,
-	  input[type="password"]:focus,
-	  input[type="date"]:focus,
-	  input[type="datetime-local"]:focus,
-	  input[type="tel"]:focus,
-	  input[type="time"]:focus,
-	  input[type="file"]:focus,
-	  input[type="url"]:focus,
-	  input[type="number"]:focus {
-		color: white;
-	  }
-	}
+        input:focus:not([type]),
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="search"]:focus,
+        input[type="password"]:focus,
+        input[type="date"]:focus,
+        input[type="datetime-local"]:focus,
+        input[type="tel"]:focus,
+        input[type="time"]:focus,
+        input[type="file"]:focus,
+        input[type="url"]:focus,
+        input[type="number"]:focus {
+            color: white;
+        }
+    }
 
-	.ui.images {
+    .ui.images {
 
-	  &.grid-banners {
+        &.grid-banners {
 
-		> img {
+            > img {
 
-		  margin: 0px 0px 20px 20px !important;
-		}
-	  }
+                margin: 0px 0px 20px 20px !important;
+            }
+        }
 
-	  &.left {
+        &.left {
 
-		> img {
-		  float: left;
-		}
-	  }
-	}
+            > img {
+                float: left;
+            }
+        }
+    }
 
-	.clear {
+    .clear {
 
-	  &.left {
-		clear: left;
-	  }
+        &.left {
+            clear: left;
+        }
 
-	  &.right {
-		clear: right;
-	  }
+        &.right {
+            clear: right;
+        }
 
-	  &.both {
-		clear: both;
-	  }
-	}
+        &.both {
+            clear: both;
+        }
+    }
 
 
 
-	.ui.image {
+    .ui.image {
 
-	  > .ribbon.label {
-		z-index: 9;
-	  }
-	}
-  }
+        > .ribbon.label {
+            z-index: 9;
+        }
+    }
+}

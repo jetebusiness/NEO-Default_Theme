@@ -20,7 +20,7 @@ import { isMobile } from "./mobile";
             fieldGroupSelector: ".fields",
             activeClass: "ativo",
             profile: {
-                active: "",
+                active: ".pessoa.fisica",
                 selector: {
                     pf: ".pessoa.fisica",
                     pj: ".pessoa.juridica"
@@ -98,6 +98,18 @@ import { isMobile } from "./mobile";
                     type: "select",
                     message: "Escolha uma opção."
                 },
+                checkedPolicy: {
+                    type: "checked",
+                    message: "Você deve aceitar nossa Política de Privacidade",
+                    onValidateInputComplete: function () {
+                    }
+                },
+                checkedTerm: {
+                    type: "checked",
+                    message: "Você deve aceitar nossos termos",
+                    onValidateInputComplete: function () {
+                    }
+                },
                 zipcode: {
                     type: "zipcode",
                     message: "CEP inválido.",
@@ -126,7 +138,6 @@ import { isMobile } from "./mobile";
             disableEvent: function () {
             },
             onFinishedForm: function (form, fields) {
-                console.log(form)
             },
             onUnFinishedForm: function (form, field) {
             }
@@ -145,12 +156,14 @@ import { isMobile } from "./mobile";
             let $element      = $(this.element),
                 jet           = this,
                 groupSelector = this.settings.fieldGroupSelector,
-                fieldSelector = this.settings.fieldSelector;
+                fieldSelector = this.settings.fieldSelector,
+                active        = this.settings.profile.active;
 
             this.tabIndex = 0;
 
             if(!isMobile()) {
-                $element.find(`${groupSelector}:not([data-jet-active="true"]), ${fieldSelector}:not([data-jet-active="true"]), [data-jet-active="false"]`)
+                
+                $element.find(`${groupSelector}:not([data-jet-active="true"]), ${fieldSelector}:not([data-jet-active="true"]), [data-jet-active="false"], ${fieldSelector}:not("${active}"):not(.required)`)
                     .hide()
                     .find("input")
                     .each(function () {
@@ -159,9 +172,9 @@ import { isMobile } from "./mobile";
             }
 
             $element.show();
-            
+
             if($(".cpf_cnpj_checkout").is(":visible")) {
-                
+
                 var $thisProfile = $(".cpf_cnpj_checkout").val()                
                 if (cleanString($thisProfile).length === 14) {
                     jet.changeProfile("pj");
@@ -193,14 +206,22 @@ import { isMobile } from "./mobile";
                 $input.keyup((e) => {
                     $input.val($input.val().replace(/\s+/g, ' '))});
 
-                if(keyCode === 10 || keyCode === 13)
-                    return false;
+                if(keyCode === 10 || keyCode === 13) {
+
+                    if (!jet.validateField($this)) {
+                        e.preventDefault();
+                        $input.focus();
+                    } else {
+                        $('.field.required:visible:not(.success)').first().find("input:not(.search)").focus()
+                        return false;
+                    }
+                }
 
                 if (keyCode === 9) {
                     if (!jet.validateField($this)) {
                         e.preventDefault();
                         $input.focus();
-                    } 
+                    }
                 }
                 keypressDelay(function () {
                     if (jet.validateField($this)) {
@@ -210,19 +231,16 @@ import { isMobile } from "./mobile";
 
                 }, 500);
             });
-                $input.on("blur change", () => {
-                    jet.settings.onInputComplete.call($this);
-                if (jet.validateField($this)) {
-                    jet.settings.onNext.call($this);
-                    jet.showNextField($this);
-                    if ($(this).attr("data-jet-valid")) {
-                        jet.settings.disableEvent($this);
-                    }
-                }
-            });
 
-                $input.on("blur", function() {
-                    $('.field.required:visible:not(.success)').first().find("input:not(.search)").focus()
+                $input.on($input.attr("type") === "checkbox" ? "change" : "blur change", () => {
+                    jet.settings.onInputComplete.call($this);                    
+                    if (jet.validateField($this)) {
+                        jet.settings.onNext.call($this);
+                        jet.showNextField($this);
+                        if ($(this).attr("data-jet-valid")) {
+                            jet.settings.disableEvent($this);
+                        }
+                    }
                 });
             });
 
@@ -298,6 +316,20 @@ import { isMobile } from "./mobile";
                                 jet.fieldIsValid($field, id);
                                 return true;
                             }
+                        }
+                        else if (validateOptions.type === "checked") {
+
+                            $input = $field.find(".checkbox input");
+                            value = $input.prop("checked");                            
+                           
+                            if (value) {                                    
+                                regex = true;
+                                validateOptions.onValidateInputComplete();
+                            }
+                            else {
+                                regex = false;
+                            }
+                            
                         }
                         else if (validateOptions.type === "zipcode") {
                             let validacep = /^[0-9]{8}$/;
@@ -410,7 +442,7 @@ import { isMobile } from "./mobile";
                 return false;
             }
 
-            for (let key in jet.settings.profile.selector) {
+            for (let key in jet.settings.profile.selector) {                
                 if (profile === "clear") {
                     $(`${jet.settings.profile.selector[key]}`).hide().find("input:first").val("").attr("disabled", true);
                 }
@@ -523,7 +555,7 @@ import { isMobile } from "./mobile";
             }
             else {
                 jet.validateShowField($nextElement);
-                
+
                 return false;
             }
         },

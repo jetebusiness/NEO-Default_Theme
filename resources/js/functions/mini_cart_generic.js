@@ -4,6 +4,8 @@ import { isLoading } from "../api/api_config";
 import { CompraRecorrenteStorage, CompraRecorrenteCart } from '../functions/recurringPurchase';
 
 export function LoadCarrinho(showSidebar) {
+    $("#ListProductsCheckout").html('<div class="row text center"><img src="/assets/image/loading.svg"></div>')
+    
     if (showSidebar === null) showSidebar = false;
     $.ajax({
         method: "GET",

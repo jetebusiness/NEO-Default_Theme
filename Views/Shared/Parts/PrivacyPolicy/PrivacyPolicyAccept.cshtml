@@ -1,0 +1,101 @@
+﻿@model DomainCompany.Entities.PolicyPrivacyCompany
+
+@{
+    ViewBag.Title = "Política de Privacidade";
+    Layout = "~/Views/Shared/Base/" + (Request.QueryString["returnUrl"] != null && Request.QueryString["returnUrl"].Contains("/checkout/") ? "_LayoutCheckout.cshtml" : "_Layout.cshtml");
+}
+
+
+<div class="ui container margin top medium">
+    <div class="ui two column grid stackable middle aligned">
+        <div class="row">
+            <div class="column">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="ui container margin bottom large">
+    <div class="ui two column grid stackable middle aligned margin bottom large">
+        <div class="row one column">
+            <div class="column">
+                @using (Ajax.BeginForm("PrivacyPolicyAcceptUser", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+                {
+                    <div class="ui grid one column">
+                        <div class="column">
+                            <p>Os Termos da nossa Política de Privacidade foram atualizados em <strong>@Model.ModifiedDate.Value.ToString("dd/MM/yyyy")</strong></p>
+                            <p>Para continuar, é necessário ler e aceitar o documento atualizado.</p>
+                        </div>
+                        <div class="column">
+                            <div class="inline field">
+                                <div class="ui checkbox check-policy">
+                                    <input type="checkbox" class="" data-validate="politica-privacidade">
+                                    <label id="text-policy">Declaro que li e aceito os termos da <strong>Política de Privacidade</strong></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <button type="submit" class="ui button action large disabled" id="btn-policy">CONFIRMAR</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui modal modal-policy">
+    <div class="scrolling content">
+        <div class="ui header">@ViewBag.Title</div>
+        @Html.Raw(Model.PolicyPrivacy)
+    </div>
+    <div class="actions">
+        <div class="ui basic button deny">
+            Fechar
+        </div>
+    </div>
+</div>
+
+<script>
+    function OnSuccess(response) {
+
+        if (response.success == true) {
+            if(document.location.search.indexOf("=") > 0)
+                window.location.href = decodeURIComponent(document.location.search.split("=").pop())
+        }
+        else {
+
+            swal({
+                title: '',
+                html: response.message,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#16ab39',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+
+    function OnFailure(response) {
+
+        if (response.success == false) {
+
+            swal({
+                title: '',
+                text: response.message,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#16ab39',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            }).then(function () {
+                window.location.href = "";
+            });
+        }
+    }
+</script>
+
+

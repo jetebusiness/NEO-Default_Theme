@@ -20,6 +20,7 @@ $(document).ready(function () {
     $(document).on("click", "#Entrar", function () {
         var userName = $("#UserName").val();
         var password = $("#Password").val();
+        var returnUrl = $('.ui.modal.key-login').data("url");
         var $this = $(this);
 
         var form = $('#formAccessKey');
@@ -32,16 +33,16 @@ $(document).ready(function () {
             $this.addClass("loading");
 
             if (googleRecaptchaStatus) {
-                customerLogin(userName, password);
+                customerLogin(userName, password, returnUrl);
             } else{
 
                 if($("[id^=googleVersion]", form).val() === "2") {
                     if(generateRecaptcha($("[id^=googleModule]", form).val(), form))
-                        customerLogin(userName, password);
+                        customerLogin(userName, password, returnUrl);
                     else
                         $this.removeClass("loading");
                 } else {
-                    customerLogin(userName, password, $("[id^=googleResponse]").val());
+                    customerLogin(userName, password, returnUrl, $("[id^=googleResponse]").val());
                 }
 
 
@@ -79,7 +80,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data.Success == true && data.Message == "Login") {
                     $("#UserName").val(strLogin);
-                    $('.ui.modal').modal('show');
+                    $('.ui.modal.key-login').modal('show');
                 } else if (data.Success == true && data.Message == "CadastrarSenha") {
                     window.location.href = "/Customer/CheckAccessKey?email=" + data.Email;
                 } else if (data.Success == true && data.Message == "Cadastro") {
@@ -117,7 +118,7 @@ function gettoken() {
     return token;
 }
 
-function customerLogin(userName, password, tokenGoogleRecaptchaV3 = "") {
+function customerLogin(userName, password, returnUrl, tokenGoogleRecaptchaV3 = "") {
 
     var form = $('#formAccessKey');
     
@@ -128,6 +129,7 @@ function customerLogin(userName, password, tokenGoogleRecaptchaV3 = "") {
             __RequestVerificationToken: gettoken(),
             UserName: userName,
             Password: password,
+            returnUrl: returnUrl,
             googleResponse: tokenGoogleRecaptchaV3
         },
         success: function (data) {

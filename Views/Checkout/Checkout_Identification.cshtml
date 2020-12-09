@@ -45,9 +45,10 @@
         <div class="row">
             <div class="twelve wide computer sixteen wide tablet sixteen wide mobile column">
                 <form action="" method="POST" id="identificationForm" class="ui large form jet checkout">
-                    <input type="hidden" name="email" id="email" value="" />
-                    <input type="hidden" name="cpfCnpj" id="cpfCnpj" value="" />
-                    <input type="hidden" name="payPalCheckoutInCart" id="payPalCheckoutInCart" value="@_paypalCheckoutInCart" />
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="email" id="email" value=""/>
+                    <input type="hidden" name="cpfCnpj" id="cpfCnpj" value=""/>
+                    <input type="hidden" name="payPalCheckoutInCart" id="payPalCheckoutInCart" value="@_paypalCheckoutInCart"/>
                     <div class="ui segment">
                         <div class="ui grid very relaxed stackable">
                             <div class="row one column left aligned">
@@ -67,7 +68,7 @@
                                         </div>
                                     </button>
                                 </div>
-                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "FirstAccess" })
+                                @Html.Action("GetRecaptchaV3", "Company", new {Module = "FirstAccess"})
                             </div>
                         </div>
                     </div>
@@ -82,7 +83,7 @@
                         Utilizamos seu e-mail para identificação e
                         facilitar o processo de compra.
                         Não se preocupe, a partir desse momento
-                        todas as <strong>informações são criptogradas</strong>.
+                        todas as <strong>informações são criptografadas</strong>.
                     </span>
                     <div class="codeSymbol">*****</div>
                 </div>
@@ -90,3 +91,6 @@
         </div>
     </div>
 </div>
+
+<!-- ~/Views/Shared/Parts/Customer/_Part_Customer_Password.cshtml -->
+@Html.Partial("Parts/Customer/_Part_Customer_Password", "/checkout/Payment")

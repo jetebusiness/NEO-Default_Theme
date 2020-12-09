@@ -25,10 +25,17 @@ $(document).ready(function () {
             $("#progress_checkout").progress('increment');
         },
         onFinishedForm: function (form, fields) {
-            $(".row.barra-finalizacao").show();
+            $(".row.barra-finalizacao").show();            
+            $(".info-message-mobile").addClass("hideme")
+            $("button", ".row.barra-finalizacao").removeClass('disabled');
         },
         onUnFinishedForm: function (form, fields) {
-            $(".row.barra-finalizacao").hide();
+            if($(".info-message-mobile").length === 0) 
+                $('<div class="row info-message-mobile text center"><div class="column"><span class="ui label basic">Preencha os campos corretamente para prosseguir</span></div></div>').insertBefore($(".row.barra-finalizacao"))
+            else
+                $(".info-message-mobile").removeClass("hideme")
+            
+            $("button", ".row.barra-finalizacao").addClass('disabled');
         }
     });
 
@@ -279,17 +286,39 @@ $(document).ready(function () {
         }
     });
 
-    $(".termo.aceite").checkbox({
+    $(".termo-checkout").checkbox({
         onChecked: function () {
-            $(".continuar").attr("disabled", true);
-        },
-        onUnchecked: function () {
-            $(".continuar").attr("disabled", false);
+            if(sessionStorage.getItem(".modal-term") === null) {
+                $(".modal-term").modal("show")
+                sessionStorage.setItem(".modal-term", "true");
+            }
         }
     });
-    $(".ui.dropdown.estado").dropdown({
+
+    $(".termo.aceite, .politica-privacidade").checkbox({
+        onChecked: function () {
+            if($(".termo.aceite").checkbox("is checked") && $(".politica-privacidade").checkbox("is checked"))
+                $(".row.barra-finalizacao").show();
+
+        },
+        onUnchecked: function () {
+            $(".row.barra-finalizacao").hide();
+        }
+    });
+
+
+    $("a", ".politica-privacidade").on("click", function() {
+        $(".modal-policy").modal({
+            closable  : false
+        }).modal('show')
+    })
+    
+    $(".ui.dropdown.search").dropdown({
         onChange: function (value, text, $selectedItem) {
-            $(this).parent().addClass("success");
+            if($(".form.jet.checkout").length === 1 && value !== "") {
+                $(this).closest(".required").addClass("success").data("jet-active", true)
+                $("input", this).blur();
+            }
         }
     });
     if (!isMobile()) {
@@ -315,11 +344,5 @@ $(document).ready(function () {
     if (isMobile()) {
         $(".box.detalhes, .box.success").sticky("destroy");
         $(".ui.accordion.compra div, .ui.accordion.resumo div, .ui.accordion.usuario div").removeClass("active");
-    }
-});
-
-$(".ui.dropdown").dropdown({
-    onChange: function () {
-        $(this).closest(".required").addClass("success").data("jet-active", true);
     }
 });

@@ -22,7 +22,7 @@
             @ViewBag.Title
         </h5>
         <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
-            @using (Ajax.BeginForm("FinishRegistration", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente" }))
+            @using (Ajax.BeginForm("FinishRegistration", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { id = "registro_cliente", @class = "ui form" }))
             {
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="IdCustomer" value="@Model.IdCustomer" />
@@ -185,15 +185,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @*
-                                    <div class="field required">
-                                        <label>Confirme a Senha</label>
-                                        <div class="ui left icon input">
-                                            <i class="lock icon"></i>
-                                            <input type="password" name="User.PasswordConfirm"
-                                                   placeholder="*******" data-validate="passwordcheck">
-                                        </div>
-                                    </div>*@
                                     </div>
                                     <div class="field">
                                         <label>Selecione as categorias que deseja receber por e-mail.</label>
@@ -324,19 +315,33 @@
                                 </div>
                             </div>
                         </div>
-                        @if (!string.IsNullOrEmpty(termo))
-                        {
-                            <div class="row one column">
-                                <div class="column text right">
-                                    <div class="field" style="display:inline-flex">
+                        
+                        <div class="row one column">
+                            <div class="column">
+                                @if (!string.IsNullOrEmpty(termo))
+                                {
+                                
+                                    <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field">
                                         <div class="ui checkbox termo aceite">
-                                            <input type="checkbox" checked="checked" data-validate="termo">
+                                            <input type="checkbox" data-validate="termo">
+                                            <label id="termo-aceite">Li e concordo com o termo de aceite</label>
                                         </div>
-                                        <label id="termo_aceite">Concorda com o <a style="cursor: pointer;">termo de aceite?</a></label>
                                     </div>
-                                </div>
+                                
+                                }
+                                @if (ViewBag.PolicyPrivacy)
+                                {
+                               
+                                    <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field">
+                                        <div class="ui checkbox politica-privacidade">
+                                            <input type="checkbox" class="" data-validate="politica-privacidade" id="PolicyPrivacyAccepted" name="PolicyPrivacyAccepted" value="true">
+                                            <label>Li e concordo com a @Html.Raw(ViewBag.PolicyPrivacyLink)</label>
+                                        </div>
+                                    </div>
+                                }
                             </div>
-                        }
+                           
+                        </div>
                         <div class="row">
                             <div class="column">
                                 <a href="/Customer/Login" class="ui animated button large basic left floated">
@@ -362,12 +367,38 @@
     </div>
 </div>
 
-<div id="termo" class="hideme">
-    @if (termo != null)
-    {
-        @Html.Raw(termo)
-    }
-</div>
+@if (!string.IsNullOrEmpty(termo))
+{
+    <div id="termo" class="ui modal modal-term">
+        <div class="scrolling content">
+            @if (termo != null)
+            {
+                @Html.Raw(termo)
+            }
+        </div>
+        <div class="actions">
+            <div class="ui basic button deny">
+                Fechar
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (ViewBag.PolicyPrivacy)
+{
+    <div class="ui modal modal-policy">
+        <div class="scrolling content">
+            @Html.Raw(ViewBag.PolicyText)
+        </div>
+        <div class="actions">
+            <div class="ui basic button deny">
+                Fechar
+            </div>
+        </div>
+    </div> 
+}
+
 
 @section custom_js {
     <script>

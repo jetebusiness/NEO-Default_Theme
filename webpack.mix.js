@@ -55,16 +55,15 @@ mix.browserSync({
 mix.options({
     publicPath: './',
     uglify: {
-        compress: true,
+        compress: {
+            warnings: false
+        },
         comment: false
     },
     clearConsole:true
 });
 
-mix.js('resources/js/app.js', 'assets/js')
-    .sourceMaps()
-    .extract(['jquery', 'slick-carousel', 'sweetalert2', 'easyzoom', 'jquery-datepicker'])
-    .version();
+mix.js('resources/js/app.js', 'assets/js');
 
 mix.sass('resources/sass/style.scss', 'assets/css')
     .sourceMaps();

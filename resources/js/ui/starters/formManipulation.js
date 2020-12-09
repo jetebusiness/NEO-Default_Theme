@@ -185,6 +185,13 @@ export const formSettings = {
                 prompt: "{name} não foi selecionado"
             }]
         },
+        policy: {
+            identifier: "politica-privacidade",
+            rules: [{
+                type: "checked",
+                prompt: "{name} não foi selecionado"
+            }]
+        },
         matchemail: {
             identifier: "matchemail",
             rules: [{

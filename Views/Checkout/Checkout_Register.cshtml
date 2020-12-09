@@ -4,6 +4,14 @@
 
     ViewBag.Title = "Identificação";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+    
+    
+    string termo = string.Empty;
+
+    if (ViewBag.Termo != null)
+    {
+        termo = WebUtility.HtmlDecode(ViewBag.Termo);
+    }
 }
 @section steps{
     <div class="jet checkout jBreadCrumb ">
@@ -57,26 +65,26 @@
                                                 <div class="ui left icon input disabled ">
                                                     <i class="checkmark box icon"></i>
                                                     <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
-                                                           value="@ViewBag.EmailUser" data-jet-validate="email" autocomplete="off">
+                                                           value="@ViewBag.EmailUser" data-jet-validate="email" autocomplete="off" tabindex="0">
                                                 </div>
                                             </div>
                                         }
                                         else
                                         {
-                                            <div class="field required success" id="valid_cpf_cnpj"  data-jet-active="true">
+                                            <div class="field required success" id="valid_cpf_cnpj" data-jet-active="true">
                                                 <div class="ui left icon input disabled ">
                                                     <i class="icon id card"></i>
                                                     <input id="cpf_cnpj" type="text" name="Cpf_cnpj" value="@ViewBag.CpfCnpjUser" class="masked mask_document mask_document_cnpj cpf_cnpj_checkout"
                                                            placeholder="CPF / CNPJ"
                                                            data-jet-validate="cpfCnpj"
                                                            data-jet-type="profileChanger"
-                                                           tabindex="1"
+                                                           tabindex="0"
                                                            autocomplete="off">
                                                 </div>
                                             </div>
                                         }
                                     }
-                                    
+
                                     <div class="field required" data-jet-active="true">
                                         <label>Nome Completo</label>
                                         <div class="ui left icon input">
@@ -84,7 +92,7 @@
                                             <input type="text" name="Name" placeholder="Seu Nome Completo"
                                                    value=""
                                                    data-jet-validate="name"
-                                                   tabindex="0">
+                                                   tabindex="1">
                                         </div>
                                     </div>
                                     <div class="three fields">
@@ -97,7 +105,7 @@
                                                         <i class="checkmark box icon"></i>
                                                         <input type="email" id="email" name="User.UserName" placeholder="Seu Email"
                                                                data-jet-validate="email"
-                                                               autocomplete="false">
+                                                               autocomplete="false" tabindex="2">
                                                     </div>
                                                 </div>
                                             }
@@ -111,13 +119,13 @@
                                                                placeholder="CPF / CNPJ"
                                                                data-jet-validate="cpfCnpj"
                                                                data-jet-type="profileChanger"
-                                                               tabindex="1"
+                                                               tabindex="2"
                                                                autocomplete="off">
                                                     </div>
                                                 </div>
                                             }
                                         }
-                                                                            
+
                                         <div class="field required">
                                             <label>Telefone</label>
                                             <div class="ui left icon input">
@@ -125,7 +133,7 @@
                                                 <input type="tel" name="Phone.Phone1"
                                                        placeholder="(00) 0000-0000" class="masked mask_phone"
                                                        data-jet-validate="phone"
-                                                       tabindex="8">
+                                                       tabindex="3">
                                             </div>
                                         </div>
                                         <div class="field required pessoa fisica">
@@ -135,7 +143,7 @@
                                                 <input type="text" placeholder="DD/MM/YYYY" class="masked mask_date"
                                                        name="DateBirth"
                                                        data-jet-validate="datebirth"
-                                                       tabindex="3">
+                                                       tabindex="4">
                                             </div>
                                         </div>
                                         <div class="field pessoa juridica">
@@ -143,7 +151,7 @@
                                             <div class="ui left icon input">
                                                 <i class="icon id card"></i>
                                                 <input class="ie_checkout" type="text" name="Rg_ie" placeholder="Instrição Estadual"
-                                                       tabindex="4"
+                                                       tabindex="5"
                                                        autocomplete="off">
                                             </div>
                                             <div class="text small text color grey">
@@ -158,7 +166,7 @@
                                             <input type="text" name="Contact" id="Contact" data-jet-validate="name"
                                                    placeholder="Responsável pela Empresa"
                                                    data-validate="businessRepresentant"
-                                                   tabindex="5">
+                                                   tabindex="6">
                                         </div>
                                     </div>
                                     <div class="two fields pessoa juridica">
@@ -178,7 +186,7 @@
                                                 <i class="suitcase icon"></i>
                                                 <input type="text" name="FantasyName" data-jet-validate="empty"
                                                        placeholder="Nome Fantasia da Empresa"
-                                                       tabindex="7">
+                                                       tabindex="8">
                                             </div>
                                         </div>
                                     </div>
@@ -292,23 +300,25 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row one column" data-jet-revel="true">
-                                <div class="column text right" data-jet-revel="true">
-                                    <div class="field" data-jet-revel="true">
-                                        <div class="ui checkbox termo aceite">
-                                            <input type="checkbox" checked="" data-validate="termo"
-                                                   class="termo aceite"
-                                                   tabindex="16">
-                                            <label>
-                                                Concorda com o <a href="" target="_blank">
-                                                    termo de
-                                                    aceite?
-                                                </a>
-                                            </label>
+                                    @if (!string.IsNullOrEmpty(termo))
+                                    {
+                                        <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field required">
+                                            <div class="ui checkbox termo-checkout">
+                                                <input type="checkbox" id="termo-aceite" name="termo-aceite" data-jet-validate="checkedTerm" value="true" tabindex="16">
+                                                <label>Li e concordo com o termo de aceite?</label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+                                    @if (ViewBag.PolicyPrivacy)
+                                    {
+                                       
+                                        <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field required">
+                                            <div class="ui checkbox politica-privacidade">
+                                                <input type="checkbox" id="PolicyPrivacyAccepted" name="PolicyPrivacyAccepted" data-jet-validate="checkedPolicy" value="true" tabindex="17">
+                                                <label>Li e concordo com a @Html.Raw(ViewBag.PolicyPrivacyLink)</label>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div class="row">
@@ -331,7 +341,7 @@
                                 <div class="column">
                                     <button type="submit"
                                             class="ui animated button submit action right floated continuar"
-                                            tabindex="17"
+                                            tabindex="18"
                                             id="goPayment">
                                         <div class="visible content">Fazer o Pagamento</div>
                                         <div class="hidden content">
@@ -352,6 +362,39 @@
         </div>
     </div>
 </div>
+
+@if (!string.IsNullOrEmpty(termo))
+{
+    <div id="termo" class="ui modal modal-term">
+        <div class="scrolling content">
+            @if (termo != null)
+            {
+                @Html.Raw(termo)
+            }
+        </div>
+        <div class="actions">
+            <div class="ui basic button deny">
+                Fechar
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (ViewBag.PolicyPrivacy)
+{
+    <div class="ui modal modal-policy">
+        <div class="scrolling content">
+            @Html.Raw(ViewBag.PolicyText)
+        </div>
+        <div class="actions">
+            <div class="ui basic button deny">
+                Fechar
+            </div>
+        </div>
+    </div> 
+}
+
 
 @section custom_js {
     

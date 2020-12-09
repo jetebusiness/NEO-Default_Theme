@@ -31,8 +31,9 @@ $(document).ready(function () {
                         "use strict";
                         $(`#estado_${id}`).dropdown("set selected", uf);
 
-                        if ($(`#estado_${id}`).closest(".jet.checkout").length === 1) {
-                            $(`#estado_${id}`).closest(".field").addClass("success");
+                        if ($(".form.jet.checkout").length === 1) {
+                            $(`#estado_${id}`).closest(".field").addClass("success").data("jet-active", true);
+                            $(`#estado_${id}`).siblings("input.search").blur();
                         }
                     },
                     loading: function (text) {
@@ -50,25 +51,17 @@ $(document).ready(function () {
         $(element).buscaCep(options);
     }
 
-    var ZipCode1,
-        ZipCode2;
 
-
-    $("input[name='Address[0].ZipCode']").keypress(function() {
-        ZipCode1 = $(this).val()
-    });
-
-    $("input[name='Address[1].ZipCode']").keypress(function() {
-        ZipCode2 = $(this).val()
-    });
-
-    $("input[name='Address[0].ZipCode']").focusout(function() {
-        if($(this).val() != ZipCode1)
+    $("input[name='Address[0].ZipCode']").mask('00000-000').on("keyup", function() {        
+        if($(this).cleanVal().split('').length === 8) {
             buscaCep($(this), 0);
+        }
     });
-    $("input[name='Address[1].ZipCode']").focusout(function() {
-        if($(this).val() != ZipCode2)
+
+    $("input[name='Address[1].ZipCode']").mask('00000-000').on("keyup", function() {
+        if($(this).cleanVal().split('').length === 8) {
             buscaCep($(this), 1);
+        }
     });
 
 

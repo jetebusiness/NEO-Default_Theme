@@ -35,7 +35,7 @@
                                     <label>E-mail, CPF ou CNPJ</label>
                                     <div class="ui left icon input">
                                         <i class="user icon"></i>
-                                        <input type="text" autocomplete="off" name="login" id="login" value="@Session["Login"]" placeholder="E-mail, CPF ou CNPJ" />
+                                        <input type="text" autocomplete="off" name="login" id="login" value="@Session["Login"]" placeholder="E-mail, CPF ou CNPJ"/>
                                     </div>
                                 </div>
                             </div>
@@ -58,39 +58,17 @@
                                 </button>
                             </div>
                         </div>
-                        @Html.Action("GetRecaptchaV3", "Company", new { Module = "FirstAccess" })
+                        @Html.Action("GetRecaptchaV3", "Company", new {Module = "FirstAccess"})
                     </div>
                 </div>
                 <div class="ui error message"></div>
-             </form>
+            </form>
         </div>
     </div>
 </div>
 
 
-<div class="ui mini modal" data-modal="">
-    <i class="close icon"></i>
-    <div class="content">
-        <div class="ui form" id="formAccessKey">
-            <h4>Já sou cadastrado</h4>
-            <div class="field">
-                <div class="ui left icon input">
-                    <i class="mail icon"></i>
-                    <input class="field disabled" type="text" name="UserName" id="UserName" placeholder="Email">
-                </div>
-            </div>
-            <div class="field">
-                <div class="ui left icon input">
-                    <i class="lock icon"></i>
-                    <input type="password" name="Password" id="Password" placeholder="Senha">
-                </div>
-            </div>
-            @Html.Action("GetRecaptchaV3", "Company", new { Module = "Login" })
-            <button type="button" id="Entrar" class="ui fluid large submit primary button">Entrar</button>
-            <div class="ui divider"></div>
-            <p>
-                Esqueceu sua senha? <a href="/Customer/Forgot/">Recuperar senha</a>
-            </p>
-        </div>
-    </div>
-</div>
+
+<!-- ~/Views/Shared/Parts/Customer/_Part_Customer_Password.cshtml-->
+@Html.Partial("Parts/Customer/_Part_Customer_Password", "/customer/index")
+

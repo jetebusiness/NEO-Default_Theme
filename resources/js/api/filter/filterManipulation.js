@@ -4,7 +4,6 @@ import { _alert, _confirm } from "../../functions/message";
 
 var configFilter = {
     config: {
-        url: '/product/getproducts/', //url para buscar os produtos
         urlEventList: '/product/getproductslistevents/', //url para buscar os produtos        
         father: "#list", //div que recebe o conteudo
         container: '#filtroList', //div responsavel por receber as referencias
@@ -70,6 +69,14 @@ var newFilter = {
         } else
             this.getFilter(); //recuperando valores
 
+    },
+    urlProducts: function() {
+        return "/product/getproducts"+
+            ($(configFilter.config.currentPage).length > 0 
+                && $(configFilter.config.currentPage).val() !== "" 
+                && $(configFilter.config.currentPage).val() !== "keyWord"
+                ? $(configFilter.config.currentPage).val()
+            : "")+"/";
     },
     actionFilter: function() { //atribuindo acoes aos filtros das paginas de listagem
 
@@ -412,8 +419,8 @@ var newFilter = {
                     initialPrice: "", //preco inicial
                     finalPrice: "", //preco final
                     pageNumber: 1
-                }
-
+                }  
+                
                 newFilter.getFilter(params);
 
             } else {
@@ -434,7 +441,7 @@ var newFilter = {
             var queryString = window.location.origin + window.location.pathname + '?' +
                 Object.keys(filters).map(function (key) {
                     if (key !== "" && filters[key] !== "" && key !== "path") {
-                        return ((key === "keyWord") ? "n" : encodeURIComponent(key)) + '=' + encodeURIComponent(filters[key]);
+                        return ((key === "keyWord") ? "n" : key) + '=' + filters[key];
                     } else {
                         return "";
                     }
@@ -445,7 +452,7 @@ var newFilter = {
 
         }
     },
-    getFilter: function(params) { //verificando se existe conteudo para atualizar   
+    getFilter: function(params) { //verificando se existe conteudo para atualizar
 
         var update = true;
 
@@ -523,7 +530,7 @@ var newFilter = {
 
                         $.when(
                             $.ajax({
-                                url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                                url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : this.urlProducts()),
                                 method: "GET",
                                 dataType: "html",
                                 data: filters
@@ -558,7 +565,7 @@ var newFilter = {
             } else {
 
                 $.ajax({
-                    url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                    url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : this.urlProducts()),
                     method: "GET",
                     dataType: "html",
                     data: filters,
@@ -585,7 +592,7 @@ var newFilter = {
             isLoading(configFilter.config.father);
 
             $.ajax({
-                url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : configFilter.config.url),
+                url: ($(configFilter.config.eventList).length > 0 && $(configFilter.config.eventList).val() !== "" ? configFilter.config.urlEventList : this.urlProducts()),
                 method: "GET",
                 dataType: "html",
                 data: filters,

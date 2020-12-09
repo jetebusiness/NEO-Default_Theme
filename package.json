@@ -14,7 +14,6 @@
         "axios": "^0.19.0",
         "card": "^2.4.0",
         "easyzoom": "^2.5.0",
-        "jetcheckout": "^1.0.10",
         "jetroute": "^1.0.3",
         "jquery": "^3.4.0",
         "jquery-ajax-unobtrusive": "^3.2.4",

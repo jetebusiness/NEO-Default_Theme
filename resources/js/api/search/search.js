@@ -138,7 +138,7 @@ $(document).ready(function () {
                         promptValue = $(this).val();
                     }
                 });
-                settings.data.n = decodeURIComponent(promptValue.replace(/[^a-z0-9\s]/gi, ''));
+                settings.data.n = decodeURIComponent(promptValue.replace(/[^a-zA-Z0-9À-ž\s]/gi, ''));
                 // Quando for utilizar a busca com metadata separados por "|"
                 // settings.data.mdf = 'feature';
                 // settings.data.mdv = 'produto';

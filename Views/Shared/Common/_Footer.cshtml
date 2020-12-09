@@ -2,6 +2,8 @@
     List<DomainSocialNetwork.Entities.SocialNetwork> redesSociais = Session["SocialNetworkLinks"] != null ? (List<DomainSocialNetwork.Entities.SocialNetwork>)Session["SocialNetworkLinks"] : new List<DomainSocialNetwork.Entities.SocialNetwork>();
 }
 
+@Html.Action("GetPrivacyPolicyAlertText", "Company")
+
 <div class="ui container fluid newsletter-bar">
     <div class="ui container">
         <div class="ui grid middle aligned">

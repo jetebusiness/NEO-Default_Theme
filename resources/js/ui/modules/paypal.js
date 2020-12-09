@@ -937,7 +937,8 @@ export function PayPalCheckoutTransparent() {
 
                                             let _customerFirstName = customer.Name;
                                             let _customerLastName = "";
-                                            let arrCustomerName = customer.Name.split(' ');
+                                            _customerFirstName = _customerFirstName.trim();
+                                            let arrCustomerName = _customerFirstName.split(' ');
                                             if (arrCustomerName.length > 1) {
                                                 _customerFirstName = arrCustomerName[0];
                                                 _customerLastName = arrCustomerName[arrCustomerName.length - 1];

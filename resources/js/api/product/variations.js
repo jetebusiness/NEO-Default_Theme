@@ -577,7 +577,7 @@ variations = {
         //setando as variacoes selecionadas para utilizacao no aviseme
         var variationSelect = new Array();
 
-        $('.references .variacao.select', this.config.container).each(function() {
+        $('.references .variacao.select', "#variations-container").each(function() {
             variationSelect.push($(this).data('variation'))
         });
 

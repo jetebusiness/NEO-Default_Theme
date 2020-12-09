@@ -40,15 +40,12 @@ require('./modules/jquery-ui.min');
 //--------------------[ LazyLoad ]--------------------//
 require('../functions/lazy_load');
 
+//--------------------[ Policy ]--------------------//
+require('./modules/policy');
+
 //--------------------[ Start Document ]--------------------//
 $(document).ready(function(){
-    "use strict";
-    
-    setTimeout(function (){
-        $(".intial-loader").fadeOut(800, function(){
-            $(this).remove();
-        });
-    }, 1000);
+    "use strict";    
 });
 
 window.imgError = function imgError(event) {
