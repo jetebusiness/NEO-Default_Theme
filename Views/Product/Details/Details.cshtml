@@ -348,10 +348,13 @@
                         </div>
                     </div>
                     <!--COMEÇO DICA DE COMPRA-->
-                    <div id="dica_compra_partial">
-                        @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
-                    </div>
+                    
+                    @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
                     <!--FIM DICA DE COMPRA-->
+
+                   @Html.Partial("~/Views/Product/Details/_FlagDiscount.cshtml", Model)
+
+
                     <div class="row product-grid">
                         <div class="column blocoInfo">
                             <div class="ui middle aligned margin bottom medium blocoValores">
@@ -362,36 +365,34 @@
                                 }
                                 else
                                 {
-                                    <!--COMEÇO VARIAÇÔES-->
-                                    if (!Model.FlagExhausted)
+                                   
+                                    <input type="hidden" id="hdnShowProductOutOfStock" value="@(!LojaCorp.Control.Company._Company.ShowProductOutOfStock ? 0 : 1)" />
+                                    if (Model.AvailableReferences != null)
                                     {
-                                        <input type="hidden" id="hdnShowProductOutOfStock" value="@(!LojaCorp.Control.Company._Company.ShowProductOutOfStock ? 0 : 1)" />
-                                        if (Model.AvailableReferences != null)
+                                        <div class="one column ui attached segment">
+                                            @if (Model.ProductGrouping != null)
+                                            {
+                                                @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
+                                            }
+                                            <div class="column">
+                                                <div id="variations-container" class="grid-variations"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if (Model.ProductGrouping != null)
                                         {
                                             <div class="one column ui attached segment">
-                                                @if (Model.ProductGrouping != null)
-                                                {
-                                                    @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
-                                                }
                                                 <div class="column">
-                                                    <div id="variations-container" class="grid-variations"></div>
+                                                    @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
                                                 </div>
                                             </div>
                                         }
-                                        else
-                                        {
-                                            if (Model.ProductGrouping != null)
-                                            {
-                                                <div class="one column ui attached segment">
-                                                    <div class="column">
-                                                        @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
-                                                    </div>
-                                                </div>
-                                            }
-                                        }
-
-                                        @*@Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })*@
                                     }
+
+                                    @*@Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })*@
+                                    
                                     <!--FIM VARIAÇÔES-->
 
                                     if (Model.IsKit)
@@ -400,6 +401,7 @@
                                     }
 
                                     <div class="column ui attached segment">
+
                                         <div class="ui grid">
                                             <div class="row stackable two column">
                                                 <div class="column middle aligned padding-top no blocoQtd">
@@ -408,7 +410,7 @@
                                                             <i class="minus icon"></i>
                                                         </button>
                                                         <input type="number" min="1" step="1" size="3" value="1"
-                                                               name="quantidade" id="quantidade" class="text center" />
+                                                                name="quantidade" id="quantidade" class="text center" />
                                                         <button class="ui grey icon button qtdplus" id="qtdplus-detalhes">
                                                             <i class="add icon"></i>
                                                         </button>
@@ -523,27 +525,27 @@
                                                     <div class="sixteen wide column text right signature-line">
                                                         <span itemprop="price" class="signature-value" data-preco-inicial="@Model.PricepromotionCA">@string.Format("R${0:0.00}", Model.PricepromotionCA)</span>
                                                         <span class="recurrentperiods" data-html="Périodos de Assinatura Disponível:<br/>
-                                                              @foreach (var item in Model.ProductRecurrentPeriod)
-                                                              {
-                                                                  @Html.Raw(" - " + item.TipoEntrega + "<br/>")
-                                                              }
-                                                              ">&nbsp;na assinatura&nbsp;<i class="info circle icon"></i></span>
+                                                    @foreach (var item in Model.ProductRecurrentPeriod)
+                                                    {
+                                                        @Html.Raw(" - " + item.TipoEntrega + "<br/>")
+                                                    }
+                                                    ">&nbsp;na assinatura&nbsp;<i class="info circle icon"></i></span>
                                                     </div>
                                                 }
                                                 <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column btnComprar">
                                                     @if (!Model.ProductSignature)
                                                     {
                                                         <a class="@(Model.Stock == 0 || Model.FlagExhausted || Model.ProductSignature ? " disabled " : " ") ui animated button detalhes @(Session["EventList"] != null ? "btn-add-event-list" : "btn-comprar") @(Model.FlagExhausted || Model.ProductSignature || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0) ? "disabled action" : "action" )">
-                                                        @if (Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0))
-                                                        {
+                                                            @if (Model.FlagExhausted || (Model.HaveSku && SKUPadrao.Stock == 0) || (Model.Stock == 0))
+                                                            {
                                                                 <div class="visible content">PRODUTO ESGOTADO</div>
-                                                        }
-                                                        else
-                                                        {
-                                                            <div class="visible content">
-                                                                @(Session["EventList"] != null ? "ADICIONAR À LISTA" : "ADICIONAR AO CARRINHO")
-                                                            </div>
-                                                        }
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="visible content">
+                                                                    @(Session["EventList"] != null ? "ADICIONAR À LISTA" : "ADICIONAR AO CARRINHO")
+                                                                </div>
+                                                            }
                                                             <div class="hidden content">
                                                                 <i class="add to cart icon"></i>
                                                             </div>
@@ -553,10 +555,10 @@
                                                     {
                                                         <a class="ui animated button recurring btn-comprar-assinar detalhes">
                                                             <div class="visible content">ASSINAR PRODUTO</div>
-                                                        <div class="hidden content">
-                                                            <i class="add to cart icon"></i>
-                                                        </div>
-                                                    </a>
+                                                            <div class="hidden content">
+                                                                <i class="add to cart icon"></i>
+                                                            </div>
+                                                        </a>
                                                     }
                                                     <br />
                                                     @if (!Model.ProductSignature)

@@ -33,6 +33,8 @@ function checkLogin() {
             $.ajax({
                 method: "POST",
                 url: "/checkout/CheckLogin",
+                cache: false,
+                async:false,
                 data: {
                     email: isValidEmail ? strLogin : "",
                     cpfCnpj: (isValidCpf || isValidCnpj) ? strLogin : "",
@@ -42,7 +44,28 @@ function checkLogin() {
                     if (response.success) {
                         
                         if(response.modalPrivacyType !== "") {
-                            openModalPolicy(response.modalPrivacyType);
+                            $(".modal-policy").modal({
+                                closable  : false,
+                                onHidden : function() {
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "/Customer/PrivacyPolicyAcceptUser",
+                                        success: function () {
+                                            window.location.href = '/Checkout/' + response.action;
+                                        }
+                                    });
+                                },
+                                onVisible: function() {
+                                    $(".check-policy-modal").checkbox({
+                                        onChecked: function () {                                            
+                                            $("#btn-payment-go").removeClass("disabled")
+                                        },
+                                        onUnchecked: function () {
+                                            $("#btn-payment-go").addClass("disabled")
+                                        }
+                                    });
+                                }
+                            }).modal('show')
                         } else {
                             if ($('#payPalCheckoutInCart').val() === "true") {
                                 swal({

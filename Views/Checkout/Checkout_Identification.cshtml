@@ -92,5 +92,27 @@
     </div>
 </div>
 
-<!-- ~/Views/Shared/Parts/Customer/_Part_Customer_Password.cshtml -->
-@Html.Partial("Parts/Customer/_Part_Customer_Password", "/checkout/Payment")
+
+@if (ViewBag.PolicyPrivacy)
+{
+    <div class="ui modal modal-policy">
+        <div class="scrolling content">
+            @Html.Raw(ViewBag.PolicyText)
+        </div>
+        <div class="actions padding top bottom no">
+            <div class="ui grid two column stackable middle aligned">
+                <div class="column eleven wide text left">
+                    <div class="inline field">
+                        <div class="ui checkbox check-policy-modal">
+                            <input id="valida-modal" type="checkbox">
+                            <label for="valida-modal">Declaro que li e aceito os termos da <strong>Política de Privacidade</strong>.</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="column five wide"><div class="ui basic button deny action disabled" id="btn-payment-go">Continuar</div></div>
+            </div>
+        </div>
+    </div>
+    
+    
+}

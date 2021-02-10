@@ -234,6 +234,7 @@
                         @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = Model.SKUPadrao != null ? Model.SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
+                    @Html.Partial("~/Views/Product/Details/_FlagDiscount.cshtml", Model)
                     <!--GRADE B2B-->
                     @if (Model.SKUs != null)
                     {

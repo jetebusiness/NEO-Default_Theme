@@ -21,6 +21,26 @@ h6.codProduto {
             display: table;
         }
     }
+    
+    #discount-detail {
+        .flag-discount {
+            max-width: 100%;
+            max-height: 80px;
+        }
+        
+        .discount-rules {
+            color:#444;
+            font-size: 13px;
+            margin-top:.5rem;
+            
+            span {
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        }
+    }
+    
+    
 
 
     .marcaProduto {

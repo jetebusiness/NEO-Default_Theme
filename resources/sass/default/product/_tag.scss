@@ -7,3 +7,18 @@
 	  max-height: 80px !important;
 	}
   }
+
+.ui {
+    &.label {
+        &.imageDiscount {
+            text-align: center;
+            z-index: 4;
+            background: transparent;
+
+            img {
+                height: initial !important;
+                max-width: 100%;
+            }
+        }
+    }
+}

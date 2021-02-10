@@ -67,7 +67,7 @@ $(document).on("keypress", ".prompt", function (e) {
 
     if (e.which === 13) {
         if (value.length >= minCharacters)
-        location.href = `/busca?n=${value}&mdf=${$("#metaDataField").val()}&mdv=${$("#metaDataValue").val()}`;
+            location.href = `/busca?n=${value}&mdf=${$("#metaDataField").val()}&mdv=${$("#metaDataValue").val()}`;
         else
             _alert("Busca", `Informe ao mínimo ${minCharacters} caracteres para efetuar a busca`, "warning");
     }
@@ -132,13 +132,8 @@ $(document).ready(function () {
         duration: 300,
         apiSettings: {
             beforeSend: function (settings) {
-                let promptValue = "";
-                $(".prompt").each(function () {
-                    if ($(this).val().length > 0) {
-                        promptValue = $(this).val();
-                    }
-                });
-                settings.data.n = decodeURIComponent(promptValue.replace(/[^a-zA-Z0-9À-ž\s]/gi, ''));
+
+                settings.data.n = $(".prompt:visible").val();
                 // Quando for utilizar a busca com metadata separados por "|"
                 // settings.data.mdf = 'feature';
                 // settings.data.mdv = 'produto';
@@ -148,7 +143,7 @@ $(document).ready(function () {
             onResponse: function (searchResponse) {
                 var response = {
                     results: [],
-                    query: this.urlData.query,
+                    query: decodeURIComponent(this.urlData.query),
                     metadatafield: this.urlData.metadatafield,
                     metadatavalue: this.urlData.metadatavalue
                 };

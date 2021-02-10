@@ -46,7 +46,7 @@
             @ViewBag.Title
         </h5>
         <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
-            @using (Ajax.BeginForm("Register", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente" }))
+            @using (Ajax.BeginForm("Register", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente", @class = "ui form" }))
             {
                 @Html.AntiForgeryToken()
 

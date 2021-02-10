@@ -38,15 +38,3 @@ $(function() {
     
     
 })
-
-
-export function openModalPolicy(type) {
-    
-    if(type === "ModalLogin") {
-        $("#UserName").val($("#login").val());
-        $('.ui.modal.key-login').modal('show');        
-    } else {
-        window.location.href = "/Customer/CheckAccessKey?email=" + type.split("-").pop();
-    }
-    
-}

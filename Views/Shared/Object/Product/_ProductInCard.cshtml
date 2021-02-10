@@ -61,9 +61,19 @@
 
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
-                    <div class="ui bottom right attached label massive imagetag">
+                    <div class="ui top right attached label imagetag">
                         <img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                     </div>
+                }
+                
+                @if (Model.ProgressiveDiscount != null && (Session["segment"] == null || Session["segment"].ToString() != "b2b"))
+                {
+                    if (!String.IsNullOrEmpty(Model.ProgressiveDiscount.Image)) 
+                    {
+                        <div class="ui bottom attached label imageDiscount">        
+                            <img src="@Model.ProgressiveDiscount.Image" id="imgProgressiveDiscount" class="ui image"  alt="" title="">
+                        </div>
+                    }
                 }
             </a>
         }
@@ -73,12 +83,24 @@
                 <img id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
-                    <div class="ui bottom right attached label massive imagetag">
+                    <div class="ui top right attached label imagetag">
                         <img src="@Model.SealStatus.Image" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                     </div>
                 }
+
+                @if (Model.ProgressiveDiscount != null && (Session["segment"] == null || Session["segment"].ToString() != "b2b"))
+                {
+                    if (!String.IsNullOrEmpty(Model.ProgressiveDiscount.Image))
+                    {
+                        <div class="ui bottom attached label imageDiscount">
+                            <img src="@Model.ProgressiveDiscount.Image" id="imgProgressiveDiscount" class="ui image" alt="" title="">
+                        </div>
+                    }
+                }
             </a>
         }
+
+       
         <div class="ui horizontal divider avaliacao">
             <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
         </div>
@@ -123,8 +145,8 @@
                                                 }
                                             }
                                         }
-                    if (combinacoes != "")
-                    {
+                                        if (combinacoes != "")
+                                        {
                                             <div class="item" data-value="@variation.IdVariation" data-sku="@combinacoes">
                                                 @if (variation.Color != null)
                                                 {
@@ -164,22 +186,22 @@
                 }
                 else
                 {
-          if (Model.PurchaseRecurring == true)
-          {
-            <a id="btn-assinatura-card-@Model.IdProduct" title="Assinar" class="ui labeled icon button recurring fluid btn-assinatura-card text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
-              <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
-              Assinar
-            </a>
-            <div class="ui small divider hidden"></div>
-          }
-          if (Model.ProductSignature == false)
-          {
-                    <a id="btn-comprar-card-@Model.IdProduct" title="Comprar" class="ui labeled icon button action fluid btn-comprar-card text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
-                        <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
-                        Comprar
-                    </a>
+                    if (Model.PurchaseRecurring == true)
+                    {
+                        <a id="btn-assinatura-card-@Model.IdProduct" title="Assinar" class="ui labeled icon button recurring fluid btn-assinatura-card text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                            <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
+                            Assinar
+                        </a>
+                        <div class="ui small divider hidden"></div>
+                    }
+                    if (Model.ProductSignature == false)
+                    {
+                        <a id="btn-comprar-card-@Model.IdProduct" title="Comprar" class="ui labeled icon button action fluid btn-comprar-card text uppercase" data-idproduct="@Model.IdProduct" data-name="@Model.Name">
+                            <i id="btn-icon-card-@Model.IdProduct" class="icon add to cart"></i>
+                            Comprar
+                        </a>
+                    }
                 }
-        }
             </div>
             <div class="dados">
                 <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">

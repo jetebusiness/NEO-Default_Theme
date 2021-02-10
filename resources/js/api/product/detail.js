@@ -208,6 +208,11 @@ $(document).ready(function () {
 
             variations.init()
         }
+        
+        
+        $(".discount-rules").on("click", function() {
+            $(".modal-discount-rules").modal("show")
+        })
 
     }();
 });

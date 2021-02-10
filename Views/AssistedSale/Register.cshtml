@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "Cadastrar novo Cliente";
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+    string termo = string.Empty;
+    if (@ViewBag.Termo != null)
+    {
+        termo = WebUtility.HtmlDecode(@ViewBag.Termo); ;
+    }
 }
 
 @section breadcrumbs {
@@ -33,7 +38,7 @@
 <div class="ui grid middle aligned center aligned">
     <div class="row">
         <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
-            @using (Ajax.BeginForm("Register", "AssistedSale", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente" }))
+            @using (Ajax.BeginForm("Register", "AssistedSale", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "registro_cliente", @class = "ui form" }))
             {
                 <input type="hidden" name="Address[0].Country" value="BRASIL" />
                 @Html.AntiForgeryToken()
@@ -185,48 +190,48 @@
                                     <h4 class="ui dividing header">Crie sua conta</h4>
 
                                     @*<div class="fields">*@
-                                        <div class="field required">
-                                            <label>E-mail</label>
-                                            <div class="ui left icon input">
-                                                <i class="mail icon"></i>
-                                                <input type="text" name="Email" id="Email" placeholder="E-mail"
-                                                       value="@(string.IsNullOrEmpty((string)Session["Email"]) ? @Html.Raw("") : @Html.Raw((string)Session["Email"]))" data-validate="email">
-                                            </div>
+                                    <div class="field required">
+                                        <label>E-mail</label>
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" name="Email" id="Email" placeholder="E-mail"
+                                                   value="@(string.IsNullOrEmpty((string)Session["Email"]) ? @Html.Raw("") : @Html.Raw((string)Session["Email"]))" data-validate="email">
                                         </div>
-                                        @*<div class="field required">
-                                            <label>Senha</label>
-                                            <div class="ui right action left icon input">
-                                                <i class="lock icon"></i>
-                                                <input type="password" name="User.password"
-                                                       placeholder="*******" data-validate="password" class="password_box">
-                                                <div class="ui basic icon button password_unhide">
-                                                    <i class="unhide icon"></i>
-                                                </div>
-                                            </div>
-                                        </div>*@
+                                    </div>
+                                    @*<div class="field required">
+                        <label>Senha</label>
+                        <div class="ui right action left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="User.password"
+                                   placeholder="*******" data-validate="password" class="password_box">
+                            <div class="ui basic icon button password_unhide">
+                                <i class="unhide icon"></i>
+                            </div>
+                        </div>
+                    </div>*@
                                     @*</div>*@
                                     @*<div class="field">
-                                        <label>Selecione as categorias que deseja receber por e-mail.</label>
-                                    </div>
-                                    <input type="hidden" name="categories_selected" id="categories_selected" value="" />
-                                    <div class="grouped fields" id="categories_news">
-                                        @{
-                                            if (Model.EmailInfoCategory != null)
-                                            {
-                                                var categorias = Model.EmailInfoCategory;
+                        <label>Selecione as categorias que deseja receber por e-mail.</label>
+                    </div>
+                    <input type="hidden" name="categories_selected" id="categories_selected" value="" />
+                    <div class="grouped fields" id="categories_news">
+                        @{
+                            if (Model.EmailInfoCategory != null)
+                            {
+                                var categorias = Model.EmailInfoCategory;
 
-                                                foreach (var item in categorias)
-                                                {
-                                                    <div class="field">
-                                                        <div class="ui checkbox">
-                                                            <input type="checkbox" id="categoria" data-id="@item.IdEmailInfoCategory" data-nome="@item.Name">
-                                                            <label>@item.Name</label>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            }
-                                        }
-                                    </div>*@
+                                foreach (var item in categorias)
+                                {
+                                    <div class="field">
+                                        <div class="ui checkbox">
+                                            <input type="checkbox" id="categoria" data-id="@item.IdEmailInfoCategory" data-nome="@item.Name">
+                                            <label>@item.Name</label>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>*@
 
                                 </div>
                             </div>
@@ -427,6 +432,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row one column">
+                            <div class="column">
+                                @if (!string.IsNullOrEmpty(termo))
+                                {
+
+                                    <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field">
+                                        <div class="ui checkbox termo aceite">
+                                            <input type="checkbox" data-validate="termo">
+                                            <label id="termo-aceite">Li e concordo com o termo de aceite</label>
+                                        </div>
+                                    </div>
+
+                                }
+                                @if (ViewBag.PolicyPrivacy)
+                                {
+
+                                    <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field">
+                                        <div class="ui checkbox politica-privacidade">
+                                            <input type="checkbox" class="" data-validate="politica-privacidade" id="PolicyPrivacyAccepted" name="PolicyPrivacyAccepted" value="true">
+                                            <label>Li e concordo com a @Html.Raw(ViewBag.PolicyPrivacyLink)</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="column text right">
                                 @Html.Action("GetRecaptchaV3", "Company", new { Module = "Register" })
@@ -457,6 +487,38 @@
     </div>
 </div>
 
+@if (!string.IsNullOrEmpty(termo))
+{
+    <div id="termo" class="ui modal modal-term">
+        <div class="scrolling content">
+            @if (termo != null)
+            {
+                @Html.Raw(termo)
+            }
+        </div>
+        <div class="actions">
+            <div class="ui basic button deny">
+                Fechar
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (ViewBag.PolicyPrivacy)
+{
+    <div class="ui modal modal-policy">
+        <div class="scrolling content">
+            @Html.Raw(ViewBag.PolicyText)
+        </div>
+        <div class="actions">
+            <div class="ui basic button deny">
+                Fechar
+            </div>
+        </div>
+    </div>
+}
+
 <script>
     function OnSuccess(response) {
 
@@ -473,7 +535,7 @@
                 window.location.href = "/assistedsale/index";
             });
         }
-        else {           
+        else {
 
             swal({
                 title: '',
@@ -490,7 +552,7 @@
     function OnFailure(response) {
 
         if (response.Success == false) {
-            
+
 
             swal({
                 title: '',
