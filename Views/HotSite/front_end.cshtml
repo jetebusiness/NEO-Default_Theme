@@ -1,0 +1,134 @@
+@{
+    ViewBag.Title = "Hotsite Teste";
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+        
+    }
+<!--Formatar o front end-->
+
+
+        
+<div class="ui container margin bottom large page-result">
+    <div class="ui grid">
+        <div class="row two column">
+            <div class="column">
+                <div class="ui segment">
+                <form id ="frmCadastro"class="ui large form formMessage">
+                    <div class="ui compact message form-message error">
+                        <p>Mensagem de texto</p>
+                    </div>
+                    <div class="field required">
+                        <label>Nome</label>
+                        <div class="ui left icon input"> 
+                            <i class="user icon"></i>                        
+                            <input name ="form_name"type="text" id="txtNome" required=""/>
+                        </div>
+                    </div>
+                     <div class="field required">
+                        <label>E-mail</label>
+                        <div class="ui left icon input">
+                            <i class="mail icon"></i>                        
+                            <input name="form_email" type="email" id="txtEmail" required=""/>
+                        </div>
+                    </div>
+                        
+                    <div class="field required">
+                        <label>Telefone</label>
+                        <div class="ui left icon input">
+                        <i class="phone icon"></i>                            
+                            <input name="form_phone" pattern="^\d{2}\d{5}\d{3,4}$"type="tel" id="txtTelefone" required=""/>
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label>Assunto</label>
+                        <div class="ui left icon input">
+                        <i class="comment icon"></i>                          
+                            <input name="form_subject"type="text" id="txtAssunto" required=""/>
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label>Mensagem</label> 
+                        <div class="ui left  input"> 
+                                                
+                            <textarea name="form_messenge"  required id="txtMensagem" cols="30" rows="10" style="resize:none; "></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="ui divider hidden"></div>
+                    <div class="row">
+                    
+                    <a href="/Home" class="ui animated button large basic left  form_refresh">
+                                    <div class="visible content">Voltar</div>
+                                    <div class="hidden content">
+                                        <i class="arrow left icon"></i>
+                                    </div>
+                                </a>
+                    
+                    <button type="submit" class="ui animated button large submit primary right floated continuar"
+                                        tabindex="0" id="btnsalvar">
+                                    <div class="visible content">Enviar</div>
+                                    <div class="hidden content">
+                                        <i class="send icon"></i>
+                                    </div>
+                        
+                        
+                    </button> 
+                 
+                        
+                    </div>                                 
+                </form>
+                </div>
+            </div>
+            <div class="column">
+                 <p>
+                    <br>
+                    <br>
+                    <b>Nome: <span class="form_name"></span></b><br>
+                    <hr>
+                    <br>
+                    <br>
+                    <b>E-mail: <span class="form_email"></span></b><br>
+                    <hr>
+                    <br>
+                    <br>
+                    <b>Telefone: <span class="form_phone"></span></b><br>
+                    <hr>
+                    <br>
+                    <br>
+                    
+                    <b>Assunto: <span class="form_subject"></span></b><br>
+                    <hr>
+                    <br>
+                    <br>
+                    
+                    <b>Mensagem: <span class="form_messenge"></span></b><br>
+                    <hr>
+                 </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui segment">
+<div class="ui container margin bottom medium page-result">
+    <div class="ui grid">
+        <div class="row one column">  
+          <div class="item">
+                <h1>Contatos</h1>
+                            <div class="ui clearing divider"></div>    
+                </div>    
+            
+                     
+            <div class="column" id="tblListar">
+                
+                
+                
+                
+                
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+	

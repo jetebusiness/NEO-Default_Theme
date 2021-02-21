@@ -43,6 +43,7 @@ require('../functions/lazy_load');
 //--------------------[ Policy ]--------------------//
 require('./modules/policy');
 
+require('../functions/form_teste.js');
 //--------------------[ Start Document ]--------------------//
 $(document).ready(function(){
     "use strict";    

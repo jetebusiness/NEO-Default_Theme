@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Fale Conosco";
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
-}
+} <!-- Puxa o layout base do sistema-->
 @section breadcrumbs {
     <div class="ui container">
         <div class="ui grid stackable middle aligned centered">
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-}
+} <!-- Topo do site-->
 
 @{ 
     List<DomainCustomer.Entities.ContactTopic> ListContactTopics = (List<DomainCustomer.Entities.ContactTopic>)ViewBag.ContactTopics;
