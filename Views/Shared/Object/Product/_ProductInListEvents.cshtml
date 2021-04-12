@@ -73,7 +73,7 @@
 
         @if (Model.SKUs != null)
         {
-            <div class="column margin top medium">
+            <div class="ui message basic small info margin top medium hideme" data-qtd-buyed="@Model.IdProduct">
                 <div id="quantityBuyed_@Model.IdProduct" class="meta">
                     <span>Quantidade Solicitada: 0</span>
                 </div>
@@ -84,7 +84,7 @@
         }
         else
         {
-            <div class="column margin top medium">
+            <div class="ui message basic small info margin top medium hideme" data-qtd-buyed="@Model.IdProduct">
                 <div id="quantityBuyed_@Model.IdProduct" class="meta">
                     <span>Quantidade Solicitada: @Model.EventList.quantityRequest </span>
                 </div>

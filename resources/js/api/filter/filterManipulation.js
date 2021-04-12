@@ -461,7 +461,8 @@ var newFilter = {
         if(params) {
 
             Object.entries(params).forEach(function (key) {
-                filters[key[0]] = key[1];
+                if(key[0] !== $(configFilter.config.currentPage).val())
+                    filters[key[0]] = key[1];
             });
 
             update = false;

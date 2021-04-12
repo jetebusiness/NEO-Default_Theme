@@ -1152,6 +1152,8 @@ function messageListener(event) {
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
+                    }).then(function () {
+                        PayPalCheckoutTransparent();
                     });
 
                     //Generic error, inform the customer to try again; generate a new approval_url and reload the iFrame.
@@ -1170,6 +1172,8 @@ function messageListener(event) {
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
+                    }).then(function () {
+                        PayPalCheckoutTransparent();
                     });
                     //Risk denial, inform the customer to try again; generate a new approval_url and reload the iFrame.
                     // <<Insert Code Here>>
@@ -1184,6 +1188,8 @@ function messageListener(event) {
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
+                    }).then(function () {
+                        PayPalCheckoutTransparent();
                     });
                     //03 maximum payment attempts with error, inform the customer to try again; generate a new approval_url and reload the iFrame.
                     // <<Insert Code Here>>
@@ -1198,6 +1204,8 @@ function messageListener(event) {
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
+                    }).then(function () {
+                        PayPalCheckoutTransparent();
                     });
                     //User session is expired, inform the customer to try again; generate a new approval_url and reload the iFrame.
                     // <<Insert Code Here>>
@@ -1212,6 +1220,8 @@ function messageListener(event) {
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
+                    }).then(function () {
+                        PayPalCheckoutTransparent();
                     });
                     //Missing or invalid credit card information, inform your customer to check the inputs.
                     // <<Insert Code Here>>
@@ -1226,10 +1236,11 @@ function messageListener(event) {
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
+                    }).then(function () {
+                        PayPalCheckoutTransparent();
                     });
-                //Generic error, inform the customer to try again; generate a new approval_url and reload the iFrame.
-                // <<Insert Code Here>>
-
+                    //Generic error, inform the customer to try again; generate a new approval_url and reload the iFrame.
+                    // <<Insert Code Here>>
             }
 
         }

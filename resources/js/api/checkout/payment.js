@@ -1368,12 +1368,12 @@ function validaCartaoCreditoBandeira(idOnBlur, btnCard, updateBrand, idPaymentBr
                 diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
                 discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
                 dinersClub: /^3(?:0[0-5]|[68][0-9])[0-9]{11}/,
-                hipercard: /^(38[0-9]{17}|60[0-9]{14})$/,
+                hipercard: /^606282|^637095|^637599|^637568/,
                 hiper: /^(637599|637612|637609|637568|637095)+[0-9]{10}$/,
                 amex: /^3[47][0-9]{12,13}$/,
                 aura: /^5078[0-9]{12,15}$/,
                 //mastercard: /^5[1-5][0-9]{14}$/,
-                mastercard: /^(5[1-5][0-9]{14})|(2[2-7][0-9]{14})|(5021[0-9]{12})|(5899[0-9]{12})$/,
+                mastercard: /^(5[1-5][0-9]{14})|(2[2-7][0-9]{14})|(5021[0-9]{12})|(5899[0-9]{12})|(5018|5020|5038|5893|6304|6036|6759|6761|6762|6763)[0-9]{8,15}$/,
                 visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
                 jcb: /^35(2+[8-9]|3+[0-9]|4+[0-9]|5+[0-9]|6+[0-9]|7+[0-9]|8+[0-9])+[0-9]{12,15}$/,
                 credz: /^(636760|637032)+[0-9]{10}$/
@@ -2000,21 +2000,21 @@ function pagamentocomDesconto() {
         method: "POST",
         url: "PagamentoComDesconto",
         success: function success(data) {
+
             if (data.pagamentoDesconto) {
-                $("#formas-pagamento").children().children().addClass("hideme");
-                $("#pagamento-desconto").removeClass("hideme");
+                $("#formas-pagamento [data-tab]").addClass("hideme");
+                $("[data-tab='paymentDescount']").removeClass("hideme").show();
                 $('#formas-pagamento').removeClass("disable_column");
                 if ($(".shopping-voucher").length > 0) {
                     let valueShoppingVoucher = Number.parseFloat($("#desconto_shopping_voucher").text().replace('R$', '').replace('.', '').replace(',', '.'));
                     let totalCheckout = Number.parseFloat($("#total_checkout").text().replace('R$', '').replace('.', '').replace(',', '.'));
-
                     if (valueShoppingVoucher == 0 || totalCheckout > 0) {
                         $(".shopping-voucher").addClass("hideme");
                     }
                 }
             } else {
-                $("#formas-pagamento").children().children().removeClass("hideme");
-                $("#pagamento-desconto").addClass("hideme");
+                $("#formas-pagamento [data-tab]").removeClass("hideme");
+                $("[data-tab='paymentDescount']").addClass("hideme").hide();
                 if ($(".shopping-voucher").length > 0) {
                     $(".shopping-voucher").removeClass("hideme");
                 }
@@ -3149,12 +3149,25 @@ $(document).ready(function () {
         if (win) {
             win.focus();
         } else {
-            alert('Por favor, permita exibir popups para esse site.');
+            $("body").append('<a id="linkPaymentBank" href="'+url+'" target="_blank"></a>');
+            swal({
+                title: 'Ops!',
+                html: "Seu navegador bloqueou a abertura do boleto. <br/>O boleto será aberto em uma nova página",
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            }).then(function () {
+                document.getElementById("linkPaymentBank").click();
+            });
+
         }
     }
 
     function PrintBankSlipSecurity() {
         let PaymentJson = readCookie("Payment").replace("Payment=", "")
+        
         $.ajax({
             method: "POST",
             url: "/Checkout/PrintBankSlipSecurity",

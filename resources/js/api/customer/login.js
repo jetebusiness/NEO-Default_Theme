@@ -104,7 +104,7 @@ function Login() {
 			}
 			
 		},
-		error: function () {
+		error: function (response) {
 			if (response.success == false) {
 				
 				$(".ui.message.form-message p").text(response.message);
@@ -166,7 +166,7 @@ function LoginB2B() {
 				}
 			}
 		},
-		error: function () {
+		error: function (response) {
 			if (response.success == false) {
 				
 				$(".ui.message.form-message p").text(response.message);

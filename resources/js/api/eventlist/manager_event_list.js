@@ -44,7 +44,6 @@ $(document).on("change", "div[id^='referencefromproduct_']", function(e){
             }
         });
         if (keep) {
-            isLoading(".produtoList#Product_"+productId);
             $.ajax({
                 method: "GET",
                 url: "/Product/GetQtdFromEventListProduct?idEventList="+idEventListFilter+"&idVariation="+variationSelected+"&productID="+productId,
@@ -53,16 +52,15 @@ $(document).on("change", "div[id^='referencefromproduct_']", function(e){
                         var idProduct = response.idProduct;
                         var quantityPurchased = response.quantityPurchased;
                         var quantityRequest = response.quantityRequest;
-                        if(quantityPurchased != ""){
+                        if(quantityPurchased !== ""){
+                            $("[data-qtd-buyed='"+idProduct+"']").removeClass("hideme")
                             $("#quantityPurchased_"+idProduct).html("<span>Quantidade Solicitada: "+quantityRequest+"</span>");
                             $("#quantityBuyed_"+idProduct).html("<span>Quantidade Comprada: "+quantityPurchased+"</span>");
                         }
-                        isLoading(".produtoList#Product_"+productId);
                     }
                 },
                 onFailure: function (response) {
-                    isLoading(".produtoList#Product_"+productId);
-                    swal({                       
+                    swal({
                         text: response.message,
                         type: "error",
                         showCancelButton: false,
@@ -225,7 +223,7 @@ $(document).on("click", "#btnSendInvitation", function (e) {
         url: "/EventList/SendInvitation",
         success: function (response) {
             if (response.success === true) {
-                swal({                   
+                swal({
                     text: response.message,
                     type: "success",
                     showCancelButton: false,
@@ -234,7 +232,7 @@ $(document).on("click", "#btnSendInvitation", function (e) {
                     confirmButtonText: 'OK'
                 });
             }else {
-                swal({                 
+                swal({
                     text: response.message,
                     type: "error",
                     showCancelButton: false,
@@ -245,7 +243,7 @@ $(document).on("click", "#btnSendInvitation", function (e) {
             }
         },
         onFailure: function (response) {
-            swal({             
+            swal({
                 text: response.message,
                 type: "error",
                 showCancelButton: false,
@@ -306,7 +304,6 @@ $(document).on("click", "#adicionarMaisProd", function(e){
 })
 
 function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
-    isLoading("#product_manager");
     $.ajax({
         method: "POST",
         url: "/EventList/UpdateProductList",
@@ -318,7 +315,7 @@ function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
         },
         success: function(data){
             if(data.success === false){
-                swal({          
+                swal({
                     text: data.msg,
                     type: 'warning',
                     showCancelButton: false,
@@ -327,10 +324,10 @@ function UpdateProductEventList(idCurrent, skuCurrent, valorInput){
                     confirmButtonText: 'OK'
                 });
             }
-            isLoading("#product_manager");
+            //isLoading("#product_manager");
         },
         onFailure: function(data){
-            isLoading("#product_manager");
+            //isLoading("#product_manager");
             //console.log('Erro ao atualizar lista de evento');
         }
     });
@@ -367,6 +364,7 @@ function DeleteProductEventList(eventListIDCurrent){
 }
 
 function addGuest(nameGuest, emailGuest) {
+
     $.ajax({
         method: "POST",
         url: "/EventList/AddGuest",
@@ -374,15 +372,12 @@ function addGuest(nameGuest, emailGuest) {
             nameGuest: nameGuest,
             emailGuest: emailGuest
         },
-        onBegin: function(){
-            isLoading("#divEventList");
-        },
         success: function (response) {
             $("#guestsList").html(response);
             $("#NameGuest").val("");
             $("#EmailGuest").val("");
 
-            swal({            
+            swal({
                 text: "Convidado adicionado com sucesso!",
                 type: "success",
                 showCancelButton: false,
@@ -392,7 +387,7 @@ function addGuest(nameGuest, emailGuest) {
             });
         },
         error: function (response) {
-            swal({        
+            swal({
                 text: "Não foi possível adicionar o convidado!",
                 type: "error",
                 showCancelButton: false,
@@ -402,7 +397,7 @@ function addGuest(nameGuest, emailGuest) {
             });
         },
         onFailure: function (response) {
-            swal({        
+            swal({
                 text: "Não foi possível adicionar o convidado!",
                 type: "error",
                 showCancelButton: false,
@@ -410,9 +405,6 @@ function addGuest(nameGuest, emailGuest) {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'OK'
             });
-        },
-        onComplete: function(response) {
-            isLoading("#divEventList");
         }
     });
 }
@@ -427,7 +419,7 @@ function deleteGuest(idGuest) {
         success: function (response) {
             $("#guestsList").html(response);
 
-            swal({            
+            swal({
                 text: "Convidado excluído com sucesso!",
                 type: "success",
                 showCancelButton: false,
@@ -438,7 +430,7 @@ function deleteGuest(idGuest) {
 
         },
         onFailure: function (response) {
-            swal({           
+            swal({
                 text: "Não foi possível excluir este convidado!",
                 type: "error",
                 showCancelButton: false,
@@ -458,7 +450,7 @@ function shareEventList(listId) {
             listId: listId
         },
         success: function (response) {
-            swal({       
+            swal({
                 text: response.message,
                 type: "success",
                 showCancelButton: false,
@@ -471,7 +463,7 @@ function shareEventList(listId) {
             })
         },
         onFailure: function (response) {
-            swal({ 
+            swal({
                 text: response.message,
                 type: "error",
                 showCancelButton: false,
@@ -496,7 +488,7 @@ function sendToMyAddress(lisId) {
             $("#divDeliveryAddressGuest").addClass("hideme");
         },
         onFailure: function (response) {
-            swal({       
+            swal({
                 text: response.message,
                 type: "error",
                 showCancelButton: false,
@@ -521,7 +513,7 @@ function sendToGuestAddress(listId) {
             $("#divDeliveryAddressGuest").removeClass("hideme");
         },
         onFailure: function (response) {
-            swal({      
+            swal({
                 text: response.message,
                 type: "error",
                 showCancelButton: false,

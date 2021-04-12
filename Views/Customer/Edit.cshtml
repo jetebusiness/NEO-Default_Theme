@@ -197,18 +197,20 @@
                                             <label>Telefone</label>
                                             <div class="ui left icon input">
                                                 <i class="phone icon"></i>
-                                                <input type="text" name="Phone.Phone1"
+                                                <input type="tel" name="Phone.Phone1"
                                                        placeholder="(00) 00000-0000" class="masked mask_phone"
-                                                       value="@Model.Phone.Phone1">
+                                                       value="@Model.Phone.Phone1"                                                       
+                                                       data-validate="phone">
                                             </div>
                                         </div>
                                         <div class="field">
                                             <label>Celuar</label>
                                             <div class="ui left icon input">
                                                 <i class="mobile icon"></i>
-                                                <input type="text" name="Phone.Phone2"
+                                                <input type="tel" name="Phone.Phone2"
                                                        placeholder="(00) 00000-0000" class="masked mask_phone"
-                                                       value="@Model.Phone.Phone2">
+                                                       value="@Model.Phone.Phone2"
+                                                       data-validate="mobile">
                                             </div>
                                         </div>
                                     </div>

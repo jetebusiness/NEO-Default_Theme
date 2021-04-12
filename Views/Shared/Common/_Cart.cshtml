@@ -1,6 +1,7 @@
 ﻿@model DomainCheckout.Entities.Cart
 @{
-  bool permiteVenda = true;
+    bool permiteVenda = true;
+    var currentClient = (DomainCustomer.Entities.Customer) Session["UserAuthenticated"];
 }
 @if (Model != null)
 {
@@ -17,51 +18,49 @@
                         </div>
                     </div>
 
-                    @if (Session["UserAuthenticated"] != null && Session["Seller"] != null)
+                    @if (currentClient != null && currentClient.User != null && currentClient.User.UserName != null && Session["Seller"] != null)
                     {
-                        if (((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).User.UserName != null)
-                        {
-                            <!-- Comeco Venda Assistida (Com Cliente) -->
-                            <div class="row two column stackable venda-assistida">
-                                <div class="column">
-                                    <div class="info">
-                                        <div class="ui items">
-                                            <div class="item">
-                                                <div class="cliente-vinculado">
-                                                    <i class="user circle outline icon"></i> <span>Cliente</span>
-                                                </div>
-                                                <div class="content align-self-center">
-                                                    <div class="header">@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name.ToString())</div>
-                                                    <div class="description">
-                                                        <p>@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Email.ToString())</p>
-                                                        <p>
-                                                            CPF: 
-                                                            @{
-                                                            string CpfCnpj = ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Cpf_cnpj;
+                        <!-- Comeco Venda Assistida (Com Cliente) -->
+                        <div class="row two column stackable venda-assistida">
+                            <div class="column">
+                                <div class="info">
+                                    <div class="ui items">
+                                        <div class="item">
+                                            <div class="cliente-vinculado">
+                                                <i class="user circle outline icon"></i> <span>Cliente</span>
+                                            </div>
+                                            <div class="content align-self-center">
+                                                <div class="header">@Html.Raw(currentClient.Name.ToString())</div>
+                                                <div class="description">
+                                                    <p>@Html.Raw(currentClient.Email.ToString())</p>
+                                                    <p>
+                                                        CPF: 
+                                                        @{
+                                                        string CpfCnpj = currentClient.Cpf_cnpj;
 
-                                                            if (!CpfCnpj.Contains("*"))
-                                                            {
-                                                                    CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
-                                                                }
+                                                        if (!CpfCnpj.Contains("*"))
+                                                        {
+                                                                CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
                                                             }
-                                                            @CpfCnpj
-                                                        </p>
-                                                    </div>
+                                                        }
+                                                        @CpfCnpj
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column middle aligned">
-                                    <a href="/assistedsale/index" class="ui black button position-button">
-                                        Alterar o cliente
-                                    </a>
-                                </div>
                             </div>
-                            <!-- Fim Venda Assistida -->
-                        }
+                            <div class="column middle aligned">
+                                <a href="/assistedsale/index" class="ui black button position-button">
+                                    Alterar o cliente
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Fim Venda Assistida -->
                     }
-                    @if (Session["Seller"] != null && ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name == null)
+                    
+                    @if (Session["Seller"] != null && (currentClient == null || currentClient.User == null || currentClient.User.UserName == null))
                     {
                         permiteVenda = false;
                         <!-- Comeco Venda Assistida (Sem Cliente) -->

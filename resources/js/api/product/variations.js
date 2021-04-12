@@ -11,6 +11,7 @@ variations = {
         selectedReferences: '#principal-referencias-selecionadas',
         showStockOut: '#hdnShowProductOutOfStock', //exibe ou nao variacoes sem estoque,
         productSKU: '#produto-sku', //hidden que contem o id do SKU para adicionar ao carrinho
+        loadedClass: 'loaded', //classe adicionado ao terminar a renderizacao 
         itensDisable: { //itens que receberao a classe 'disabled' quando o stock for 0
             btnBuy: '.btn-comprar',
             btnSignature: '.btn-comprar-assinar',
@@ -262,7 +263,7 @@ variations = {
             })
         }
 
-        container.addClass("loaded")
+        container.addClass(this.config.loadedClass)
 
         if(!this.isDevice()) {
             $(".easyzoom").easyZoom().init();
@@ -272,6 +273,8 @@ variations = {
     },
     //funcao para criar as acoes do click de cada variacao
     clickBtn: function(container) {
+        
+        var classLoaded = this.config.loadedClass;
 
         $('.variacao', container).click(function() {
 
@@ -341,7 +344,7 @@ variations = {
             }
 
             //buscando as imagens da variacao
-            if(container.hasClass("loaded"))
+            if(container.hasClass(classLoaded))
                 variations.getImageThumbnail();
         })
     },
@@ -351,7 +354,7 @@ variations = {
             //setando as variacoes selecionadas para carregar as imagens de multifotos
             var variationSelect = new Array();
 
-            $('.references .variacao.select').each(function () {
+            $('.' + this.config.loadedClass + ':eq(0) .references .variacao.select').each(function () {
 
                 variationSelect.push($(this).closest('.references').data('reference') + '-' + $(this).data('variation'))
             });

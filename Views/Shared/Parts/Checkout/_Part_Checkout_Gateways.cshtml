@@ -57,10 +57,10 @@
                                 @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao_Debito.cshtml", itemM)
                                 break;
                             case 19:
+                                <a class="item itemTabPayment hideme" data-tab="paymentDescount"><div class="text"><i class="icon money bill alternate outline"></i><span>Pagamento com Desconto</span></div></a>
                                 <!-- Pagamento com Desconto -->
                                 @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Desconto.cshtml", itemM.PaymentBrands)
-
-                                break;
+                                break;                              
                             case 21:
                                 <a class="item itemTabPayment" data-tab="paypalCheckout"><div class="text"><i class="paypal icon"></i><span>PayPal</span></div></a>
                                 <!-- PayPal Checkout -->

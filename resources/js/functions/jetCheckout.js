@@ -207,11 +207,7 @@ import { isMobile } from "./mobile";
                     $input.val($input.val().replace(/\s+/g, ' '))});
 
                 if(keyCode === 10 || keyCode === 13) {
-
-                    if (!jet.validateField($this)) {
-                        e.preventDefault();
-                        $input.focus();
-                    } else {
+                    if ($this.hasClass('success')) {                      
                         $('.field.required:visible:not(.success)').first().find("input:not(.search)").focus()
                         return false;
                     }
