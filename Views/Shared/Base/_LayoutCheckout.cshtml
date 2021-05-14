@@ -56,21 +56,15 @@
         <!-- End Google Tag Manager (noscript) -->
     }
 
-    
-    
     <div class="pusher wsmenucontainer jetBg">
-    
         <div class="ui container fluid bg-white header-checkout">
             <div class="ui container">
                 <div class="ui middle aligned three column centered grid stackable">
                     <div class="row">
                         <div class="column">
-                            <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
-                                <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
-                            </a>
+                            @RenderSection("logo", required: false)
                         </div>
                         <div class="ui center aligned column">
-                        
                             @RenderSection("steps", required: false)
                         </div>
     

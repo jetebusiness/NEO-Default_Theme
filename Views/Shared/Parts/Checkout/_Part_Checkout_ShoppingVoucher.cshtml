@@ -1,8 +1,17 @@
 ﻿@model DomainCheckout.Entities.ShoppingVoucher.BalanceCheckout
 
+@{
+    string _disabled = "";
+
+    if (Session["PaymentLinkChangeBrand"] != null && (bool)Session["PaymentLinkChangeBrand"] == true)
+    {
+        _disabled = "disable_column";
+    }
+}
+
 @if (Model != null && Model.balanceAmount > 0)
 {
-    
+
     <div class="ui tiny scrolling modal shopping-voucher" id="modal-shopping-voucher">
         @Html.Action("ValeCompraLogin", "Checkout")
     </div>
@@ -14,26 +23,25 @@
                     Utilizar <strong>Vale Compras</strong>
                     <i class="ui icon dropdown floated right"></i>
                 </div>
-                <div class="content">
+                <div class="content @_disabled">
                     <label>Utilizar saldo:</label>
                     <div class="field required margin top small">
                         <div class="ui left icon input">
                             <i class="tag icon"></i>
-                            <input 
-                                type="text" 
-                                name="ShoppingVoucherValue" 
-                                id="ShoppingVoucherValue" 
-                                value="" 
-                                data-symbol="R$ " 
-                                data-thousands="." 
-                                data-decimal="," 
-                                data-balance="@Model.balanceAmount"
-                                data-base="@Model.calculationBase"
-                                placeholder="R$" 
-                                autocomplete="off">
+                            <input type="text"
+                                   name="ShoppingVoucherValue"
+                                   id="ShoppingVoucherValue"
+                                   value=""
+                                   data-symbol="R$ "
+                                   data-thousands="."
+                                   data-decimal=","
+                                   data-balance="@Model.balanceAmount"
+                                   data-base="@Model.calculationBase"
+                                   placeholder="R$"
+                                   autocomplete="off">
                             <button class="ui button basic primary margin none tiny" id="ApplyVoucher">APLICAR</button>
                         </div>
-                    
+
                     </div>
                     <div class="field">
                         <div class="ui basic red pointing prompt label">Valor Sugerido: <span id="ValeCompra_suggestedAmount">@Model.suggestedAmount.ToString("C")</span></div>

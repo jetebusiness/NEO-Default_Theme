@@ -4,7 +4,11 @@
 
     var _paypalCheckoutInCart = Session["PreOrderPayPalCheckoutInCart"] != null ? "true" : "false";
 }
-
+@section logo {
+    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+        <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
+    </a>
+}
 @section steps{
     <div class="jet checkout jBreadCrumb ">
         <div class="jCrumb">
@@ -46,9 +50,9 @@
             <div class="twelve wide computer sixteen wide tablet sixteen wide mobile column">
                 <form action="" method="POST" id="identificationForm" class="ui large form jet checkout">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="email" id="email" value=""/>
-                    <input type="hidden" name="cpfCnpj" id="cpfCnpj" value=""/>
-                    <input type="hidden" name="payPalCheckoutInCart" id="payPalCheckoutInCart" value="@_paypalCheckoutInCart"/>
+                    <input type="hidden" name="email" id="email" value="" />
+                    <input type="hidden" name="cpfCnpj" id="cpfCnpj" value="" />
+                    <input type="hidden" name="payPalCheckoutInCart" id="payPalCheckoutInCart" value="@_paypalCheckoutInCart" />
                     <div class="ui segment">
                         <div class="ui grid very relaxed stackable">
                             <div class="row one column left aligned">
@@ -68,7 +72,7 @@
                                         </div>
                                     </button>
                                 </div>
-                                @Html.Action("GetRecaptchaV3", "Company", new {Module = "FirstAccess"})
+                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "FirstAccess" })
                             </div>
                         </div>
                     </div>
@@ -113,6 +117,6 @@
             </div>
         </div>
     </div>
-    
-    
+
+
 }

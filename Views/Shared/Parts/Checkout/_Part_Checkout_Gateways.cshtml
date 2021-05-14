@@ -9,6 +9,18 @@
     {
         lstPaymentMethods = lstPaymentMethods.Where(p => p.IdPaymentMethod == 22).ToList();
     }
+
+    bool paymentLink = false;
+    DomainCheckout.Entities.PaymentMethod paymentMethodLink = null;
+    if (Session["Seller"] != null && (Session["PaymentLinkChangeBrand"] == null || (bool)Session["PaymentLinkChangeBrand"] == false))
+    {
+        paymentMethodLink = lstPaymentMethods.Where(i => i.IdPaymentMethod == 25).FirstOrDefault();
+
+        if (paymentMethodLink != null)
+        {
+            paymentLink = true;
+        }
+    }
 }
 
 @if (Model != null)
@@ -23,67 +35,77 @@
                 <div class="sixteen wide mobile sixteen wide tablet six wide computer column" id="formas-pagamento">
 
                     <div class="ui secondary menu stackable" id="tabPayment"></div>
-                    @foreach (var itemM in lstPaymentMethods)
+                    @if (paymentLink)
                     {
-                        switch (itemM.IdPaymentMethod)
+                        <a class="item itemTabPayment" data-tab="paymentLink"><div class="text"><i class="icon money bill alternate outline"></i><span>Link de Pagamento</span></div></a>
+                        <!-- Pagamento com Link -->
+                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Link.cshtml", paymentMethodLink.PaymentBrands)
+
+                    }
+                    else
+                    {
+                        foreach (var itemM in lstPaymentMethods)
                         {
-                            case 1:
-                                <a class="item active itemTabPayment" data-tab="cardCredit"><div class="text"><i class="credit card outline icon"></i><span>Cartão de Crédito</span></div></a>
-                                <!-- Cartão de Crédito -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao.cshtml", itemM)
+                            switch (itemM.IdPaymentMethod)
+                            {
+                                case 1:
+                                    <a class="item active itemTabPayment" data-tab="cardCredit"><div class="text"><i class="credit card outline icon"></i><span>Cartão de Crédito</span></div></a>
+                                    <!-- Cartão de Crédito -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao.cshtml", itemM)
 
-                                break;
-                            case 2:
-                                <a class="item itemTabPayment" data-tab="paymentOff"><div class="text"><i class="icon money bill alternate outline"></i><span>Pagamento Offline</span></div></a>
-                                <!-- Pagamento Offline -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Offline.cshtml", itemM.PaymentBrands)
+                                    break;
+                                case 2:
+                                    <a class="item itemTabPayment" data-tab="paymentOff"><div class="text"><i class="icon money bill alternate outline"></i><span>Pagamento Offline</span></div></a>
+                                    <!-- Pagamento Offline -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Offline.cshtml", itemM.PaymentBrands)
 
-                                break;
-                            case 3:
-                                <a class="item itemTabPayment" data-tab="boleto"><div class="text"><i class="barcode icon"></i><span>Boleto Bancário</span></div></a>
-                                <!-- Boleto Bancário -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Boleto.cshtml", itemM.PaymentBrands)
+                                    break;
+                                case 3:
+                                    <a class="item itemTabPayment" data-tab="boleto"><div class="text"><i class="barcode icon"></i><span>Boleto Bancário</span></div></a>
+                                    <!-- Boleto Bancário -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Boleto.cshtml", itemM.PaymentBrands)
 
-                                break;
-                            case 9:
-                                <a class="item itemTabPayment" data-tab="debOnline"><div class="text"><i class="icon lock"></i><span>Débito Online</span></div></a>
-                                <!-- Débito Redirect -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Debito_Redirect.cshtml", itemM.PaymentBrands)
+                                    break;
+                                case 9:
+                                    <a class="item itemTabPayment" data-tab="debOnline"><div class="text"><i class="icon lock"></i><span>Débito Online</span></div></a>
+                                    <!-- Débito Redirect -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Debito_Redirect.cshtml", itemM.PaymentBrands)
 
-                                break;
-                            case 14:
-                                <a class="item itemTabPayment" data-tab="cardDebit"><div class="text"><i class="credit card outline icon"></i><span>Cartão de Débito</span></div></a>
-                                <!-- Cartão de Débito -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao_Debito.cshtml", itemM)
-                                break;
-                            case 19:
-                                <a class="item itemTabPayment hideme" data-tab="paymentDescount"><div class="text"><i class="icon money bill alternate outline"></i><span>Pagamento com Desconto</span></div></a>
-                                <!-- Pagamento com Desconto -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Desconto.cshtml", itemM.PaymentBrands)
-                                break;                              
-                            case 21:
-                                <a class="item itemTabPayment" data-tab="paypalCheckout"><div class="text"><i class="paypal icon"></i><span>PayPal</span></div></a>
-                                <!-- PayPal Checkout -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckout.cshtml", itemM.PaymentBrands)
-                                break;
-                            case 22:
-                                if (_orderPayPalCheckoutInCart != null)
-                                {
-                                    <a class="item itemTabPayment" data-tab="paypalCheckoutInCart"><div class="text"><i class="barcode icon"></i><span>PayPal</span></div></a>
-                                    <!-- PayPal Checkout In Cart -->
-                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckoutInCart.cshtml", itemM.PaymentBrands)
-                                }
-                                break;
-                            case 23:
-                                <a class="item itemTabPayment" data-tab="paypalCheckoutTransparent"><div class="text"><i class="credit card alternative icon"></i><span>Cartão de Crédito</span></div></a>
-                                <!-- PayPal Checkout Transparente -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckoutTransparent.cshtml", itemM.PaymentBrands)
-                                break;
-                            case 24:
-                                <a class="item itemTabPayment" data-tab="paypalCheckoutReference"><div class="text"><i class="paypal icon"></i><span>PayPal</span></div></a>
-                                <!-- PayPal Reference -->
-                                @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckoutReference.cshtml", itemM.PaymentBrands)
-                                break;
+                                    break;
+                                case 14:
+                                    <a class="item itemTabPayment" data-tab="cardDebit"><div class="text"><i class="credit card outline icon"></i><span>Cartão de Débito</span></div></a>
+                                    <!-- Cartão de Débito -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Cartao_Debito.cshtml", itemM)
+                                    break;
+                                case 19:
+                                    <a class="item itemTabPayment hideme" data-tab="paymentDescount"><div class="text"><i class="icon money bill alternate outline"></i><span>Pagamento com Desconto</span></div></a>
+                                    <!-- Pagamento com Desconto -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Desconto.cshtml", itemM.PaymentBrands)
+                                    break;
+                                case 21:
+                                    <a class="item itemTabPayment" data-tab="paypalCheckout"><div class="text"><i class="paypal icon"></i><span>PayPal</span></div></a>
+                                    <!-- PayPal Checkout -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckout.cshtml", itemM.PaymentBrands)
+                                    break;
+                                case 22:
+                                    if (_orderPayPalCheckoutInCart != null)
+                                    {
+                                        <a class="item itemTabPayment" data-tab="paypalCheckoutInCart"><div class="text"><i class="barcode icon"></i><span>PayPal</span></div></a>
+                                        <!-- PayPal Checkout In Cart -->
+                                        @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckoutInCart.cshtml", itemM.PaymentBrands)
+                                    }
+                                    break;
+                                case 23:
+                                    <a class="item itemTabPayment" data-tab="paypalCheckoutTransparent"><div class="text"><i class="credit card alternative icon"></i><span>Cartão de Crédito</span></div></a>
+                                    <!-- PayPal Checkout Transparente -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckoutTransparent.cshtml", itemM.PaymentBrands)
+                                    break;
+                                case 24:
+                                    <a class="item itemTabPayment" data-tab="paypalCheckoutReference"><div class="text"><i class="paypal icon"></i><span>PayPal</span></div></a>
+                                    <!-- PayPal Reference -->
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PayPalCheckoutReference.cshtml", itemM.PaymentBrands)
+                                    break;
+                            }
                         }
                     }
                     <input type="hidden" name="hasPagSeguro" id="hasPagSeguro" value="@Session["PagSeguro"]" />

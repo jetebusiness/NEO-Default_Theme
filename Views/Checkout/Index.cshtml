@@ -26,7 +26,11 @@
         }
     }
 }
-
+@section logo {
+    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+        <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
+    </a>
+}
 <div class="ui container">
 
     <div class="ui two column grid stackable middle aligned">
@@ -191,10 +195,10 @@
                             </div>
                         </div>
                         <div class="ui divider"></div>
-                        
-                         @* Compra Recorrente: Frequencia *@
-                         @Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_DeliveryFrequency.cshtml", Model)
-                         
+
+                        @* Compra Recorrente: Frequencia *@
+                        @Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_DeliveryFrequency.cshtml", Model)
+
                         <div class="ui grid">
                             <div class="row one column">
                                 <div class="column">
@@ -212,11 +216,11 @@
                                         <input type="hidden" name="ButtonFormatPayPalCheckoutInCart" id="ButtonFormatPayPalCheckoutInCart" value="@ButtonFormat" />
 
                                         <script src="https://www.paypal.com/sdk/js?client-id=@ClientId&currency=BRL&commit=false"></script>
-                                        
+
                                         <div class="ui horizontal divider">
                                             <span class="text medium">ou</span>
                                         </div>
-                                        
+
                                         <div id="paypal-button-container-incart" class="buttonsMiniCart paypalBtn" data-container="checkout_products_list_cart"></div>
                                     }
                                 </div>
@@ -228,10 +232,10 @@
                         id="ClearCart" tabindex="0">
                     Limpar Carrinho
                 </button>
-                
-                 @* Compra Recorrente: Termo de Aceite *@
+
+                @* Compra Recorrente: Termo de Aceite *@
                 @Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_Terms.cshtml")
-                
+
                 @section remarketing {
                     <!-- Google Remarketing -->
                     @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })

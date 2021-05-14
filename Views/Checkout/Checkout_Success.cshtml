@@ -20,8 +20,8 @@
     {
         tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Assinatura Confirmada" : "Assinatura não Confirmada");
         msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
-        
-        if(String.IsNullOrEmpty(Model.RecurrentCodePlan))
+
+        if (String.IsNullOrEmpty(Model.RecurrentCodePlan))
         {
             tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido não Confirmado");
         }
@@ -29,7 +29,7 @@
     }
     else
     {
-        
+
         if (Request.QueryString["s"] == "true")
         {
             tituloSucesso = "Assinatura Confirmada";
@@ -40,9 +40,9 @@
             tituloSucesso = "Assinatura não Confirmada";
             msgSucesso = string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
         }
-        
-        
-        if(String.IsNullOrEmpty(Model.RecurrentCodePlan))
+
+
+        if (String.IsNullOrEmpty(Model.RecurrentCodePlan))
         {
             if (Request.QueryString["s"] == "true")
             {
@@ -56,7 +56,11 @@
 
     }
 }
-
+@section logo {
+    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+        <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
+    </a>
+}
 @section steps{
     <div class="jet checkout jBreadCrumb ">
         <div class="jCrumb completed">
@@ -109,7 +113,7 @@
                         <h2>Assinatura #@Model.RecurrentCodePlan</h2>
                         <p>Frequencia de Entrega: @Model.RecurrentSelectedTime</p>
                     </div>
-                }  
+                }
                 @if (!String.IsNullOrEmpty(Request.QueryString["d"]))
                 {
                     <div class="column">
@@ -122,6 +126,12 @@
             </div>
             <div class="row text center">
                 @{
+                    if (!string.IsNullOrEmpty(ViewBag.PaymentLink))
+                    {
+                        <div class="column">
+                            <a href="@ViewBag.PaymentLink" class="ui large action button margin none" id="PaymentLinkCopy">Copiar link de pagamento</a>
+                        </div>
+                    }
                     if (!string.IsNullOrEmpty(ViewBag.DigitableLine))
                     {
                         <div class="column">

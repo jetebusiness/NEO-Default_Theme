@@ -1,14 +1,55 @@
 ﻿@model List<DomainCheckout.Entities.Shipping>
-<div class="ui three cards doubling card-checkout margin top bottom small" id="GetShippping">
+
+@{ 
+    int IdShippingModeCart = Convert.ToInt32(TempData["IdShippingModeCart"]);
+
+    string _disabled = "";
+    if (Session["PaymentLinkChangeBrand"] != null && (bool)Session["PaymentLinkChangeBrand"] == true)
+    {
+        _disabled = "disable_column";
+        int _idShippingHub = 0;
+        int.TryParse(Session["PaymentLinkIdShippingHub"].ToString(), out _idShippingHub);
+        if (Model != null && Model.Count > 0 && _idShippingHub > 2 && IdShippingModeCart > 0)
+        {
+            DomainCheckout.Entities.ShippingMode.Hub? _hub = null;
+
+            switch (_idShippingHub)
+            {
+                case 3:
+                    _hub = DomainCheckout.Entities.ShippingMode.Hub.LogControl;
+                    break;
+                case 4:
+                    _hub = DomainCheckout.Entities.ShippingMode.Hub.Intelipost;
+                    break;
+                case 5:
+                    _hub = DomainCheckout.Entities.ShippingMode.Hub.Frenet;
+                    break;
+            }
+            string _carrier = Session["PaymentLinkShippingCarrier"].ToString();
+            string _mode = Session["PaymentLinkShippingMode"].ToString();
+            decimal _value = 0;
+            decimal.TryParse(Session["PaymentLinkShippingValue"].ToString(), out _value);
+
+            if (_hub.HasValue) {
+                var _shipping = Model.Where(f => f.ShippingMode.hub == _hub && f.ShippingMode.carrier == _carrier && f.ShippingMode.mode == _mode && f.ValueShipping == _value).FirstOrDefault();
+                if (_shipping != null)
+                {
+                    IdShippingModeCart = _shipping.ShippingMode.IdShippingMode;
+                }
+            }
+        }
+    }
+}
+<div class="ui three cards doubling card-checkout margin top bottom small @_disabled" id="GetShippping">
     @if (Model != null)
     {
         int _contador = 0;
         string _checkFrete = "";
         string _classCheckFrete = "";
+
         foreach (var item in Model)
         {
             _contador++;
-            int IdShippingModeCart = Convert.ToInt32(TempData["IdShippingModeCart"]);
             if (IdShippingModeCart == item.ShippingMode.IdShippingMode && IdShippingModeCart != 0)
             {
                 _classCheckFrete = "checked";
@@ -20,7 +61,7 @@
                 _checkFrete = "";
             }
 
-            <div class="card @_classCheckFrete">
+            <div class="card @_classCheckFrete @_disabled">
                 <div class="content">
                     <div class="header">
                         <div class="ui radio checkbox @_classCheckFrete">
@@ -73,14 +114,37 @@
                         @{
                             if (item.ShippingMode.ScheduledDelivery)
                             {
+                                var _deliveryDate = string.Empty;
+                                var _IdScheduledDeliveryPeriod = string.Empty;
+                                var _IdScheduledDelivery = string.Empty;
+                                var _period = string.Empty;
+                                var _startTime = string.Empty;
+                                var _endTime = string.Empty;
+                                if (Session["PaymentLinkDeliveryDate"] != null)
+                                {
+                                    _deliveryDate = Session["PaymentLinkDeliveryDate"].ToString();
+
+                                    _IdScheduledDeliveryPeriod = Session["PaymentLinkIdScheduledDeliveryPeriod"].ToString();
+                                    _IdScheduledDelivery = Session["PaymentLinkIdScheduledDelivery"].ToString();
+                                    _period = Session["PaymentLinkPeriod"].ToString();
+                                    _startTime = Session["PaymentLinkStartTime"].ToString();
+                                    _endTime = Session["PaymentLinkEndTime"].ToString();
+                                }
+
                                 <div class="ui input input-datepicker">
-                                    <input type="text" class="date agendar" id="dateAgendada_@item.ShippingMode.IdShippingMode" data-id-frete="@item.ShippingMode.IdShippingMode" readonly="readonly" style="display: none;" />
+                                    <input type="text" class="date agendar" id="dateAgendada_@item.ShippingMode.IdShippingMode" data-id-frete="@item.ShippingMode.IdShippingMode" value="@_deliveryDate" readonly="readonly" style="display: none;" />
 
                                     <select id="combo_dataperiodoagendada_@item.ShippingMode.IdShippingMode" class="field agendar select-datepicker" data-id-frete="@item.ShippingMode.IdShippingMode" style="display: none;">
                                         <option value="">Selecione</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="json_dataagendada_@item.ShippingMode.IdShippingMode" />
+
+                                <input type="hidden" id="PaymentLinkIdScheduledDeliveryPeriod" value="@_IdScheduledDeliveryPeriod" />
+                                <input type="hidden" id="PaymentLinkIdScheduledDelivery" value="@_IdScheduledDelivery" />
+                                <input type="hidden" id="PaymentLinkPeriod" value="@_period" />
+                                <input type="hidden" id="PaymentLinkStartTime" value="@_startTime" />
+                                <input type="hidden" id="PaymentLinkEndTime" value="@_endTime" />
                             }
                         }
                     </div>

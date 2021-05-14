@@ -189,15 +189,34 @@
                                 @Html.Raw("</div> <div class='ui fluid steps'>")
                                 count = 0;
                             }
-                            <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
-                                <i class="@status.Icon icon"></i>
-                                <div class="content">
-                                    <div class="title">@status.StatusName</div>
-                                    <div class="description">
-                                        @status.Message
+
+                            if (Model.IdPaymentBrand == 324 && status.StatusCode == "02")
+                            {
+                                var _paymentLink = $"{LojaCorp.Control.Company._Company.UrlStore}Checkout/PaymentLink?link={Model.OrderPayment.LinkPayment}";
+                                <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
+                                    <i class="linkify icon"></i>
+                                    <div class="content">
+                                        <div class="title">Aguardando Pagamento</div>
+                                        <div class="description">
+                                            <a href="@_paymentLink" id="PaymentLinkCopyCentral">
+                                                <i class="linkify icon"></i> Copiar link de pagamento
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
+                            else
+                            {
+                                <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
+                                    <i class="@status.Icon icon"></i>
+                                    <div class="content">
+                                        <div class="title">@status.StatusName</div>
+                                        <div class="description">
+                                            @status.Message
+                                        </div>
+                                    </div>
+                                </div>
+                            }
 
                             if (@status.DateRegisterStatus == null)
                             {

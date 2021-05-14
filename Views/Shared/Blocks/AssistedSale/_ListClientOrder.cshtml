@@ -39,6 +39,47 @@ else
                                         <td>@order.NamePaymentMethodGateway</td>
                                         <td>@order.NameStatus</td>
                                         <td class="right aligned">
+                                            @if (!string.IsNullOrEmpty(order.PaymentLink))
+                                            {
+                                                var _tooltipPaymentLink = "Copiar Link de Pagamento";
+                                                var _disabledPaymentLink = "";
+                                                var _colorPaymentLink = "green";
+                                                var _paymentLink = $"{LojaCorp.Control.Company._Company.UrlStore}Checkout/PaymentLink?link={order.PaymentLink}";
+                                                switch (order.NameStatus)
+                                                {
+                                                    case "Aguardando Pagamento":
+                                                        break;
+                                                    case "Cancelado":
+                                                        if (order.NamePaymentMethodGateway == "Link de Pagamento")
+                                                        {
+                                                            _tooltipPaymentLink = "Link de pagamento expirado!";
+                                                        }
+                                                        else
+                                                        {
+                                                            _tooltipPaymentLink = "Link de pagamento indisponível. Pedido Cancelado!";
+                                                        }
+                                                        _disabledPaymentLink = "disabled=\"disabled\"";
+                                                        _colorPaymentLink = "gray";
+                                                        break;
+                                                    default:
+                                                        _tooltipPaymentLink = "Link de pagamento concluído pelo cliente!";
+                                                        _disabledPaymentLink = "disabled=\"disabled\"";
+                                                        _colorPaymentLink = "gray";
+                                                        break;
+                                                }
+
+                                                if (!string.IsNullOrEmpty(ViewBag.CelularCliente))
+                                                {
+                                                    var _mensagemWhatsApp = ViewBag.MensagemWhatsApp.Replace("[link-pagamento]", _paymentLink);
+                                                    <a class="ui icon button @_colorPaymentLink" href="https://api.whatsapp.com/send?phone=@ViewBag.CelularCliente&text=@_mensagemWhatsApp" data-tooltip="Enviar Link de Pagamento pelo WhatsApp" id="PaymentLinkWhatsApp" @_disabledPaymentLink>
+                                                        <i class="whatsapp icon"></i>
+                                                    </a>
+                                                }
+
+                                                <a class="ui icon button @_colorPaymentLink" href="@_paymentLink" data-tooltip="@_tooltipPaymentLink" id="PaymentLinkCopyCentral" @_disabledPaymentLink>
+                                                    <i class="linkify icon"></i>
+                                                </a>
+                                            }
                                             <a class="ui icon teal button" href="/assistedsale/OrderDetails?id=@order.IdOrder" data-tooltip="Visualizar Pedido">
                                                 <i class="unhide icon"></i>
                                             </a>
@@ -55,7 +96,7 @@ else
 }
 
 @if (Model.Settings.PageCount > 1)
-{
+                                            {
     <div class="ui center aligned grid ">
         <div class="center aligned row">
             <div class="column">

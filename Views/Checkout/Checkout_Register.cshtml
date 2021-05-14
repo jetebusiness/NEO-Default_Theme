@@ -4,14 +4,19 @@
 
     ViewBag.Title = "Identificação";
     Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
-    
-    
+
+
     string termo = string.Empty;
 
     if (ViewBag.Termo != null)
     {
         termo = WebUtility.HtmlDecode(ViewBag.Termo);
     }
+}
+@section logo {
+    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+        <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
+    </a>
 }
 @section steps{
     <div class="jet checkout jBreadCrumb ">
@@ -311,7 +316,7 @@
                                     }
                                     @if (ViewBag.PolicyPrivacy)
                                     {
-                                       
+
                                         <div class="@(!Request.Browser.IsMobileDevice ? "inline" : "") field required">
                                             <div class="ui checkbox politica-privacidade">
                                                 <input type="checkbox" id="PolicyPrivacyAccepted" name="PolicyPrivacyAccepted" data-jet-validate="checkedPolicy" value="true" tabindex="17">
@@ -392,20 +397,20 @@
                 Fechar
             </div>
         </div>
-    </div> 
+    </div>
 }
 
 
 @section custom_js {
-    
-    <script type="text/javascript">   
+
+    <script type="text/javascript">
 
         function OnSuccess(response) {
-          
+
             if (response.success == true) {
                 window.location.href = "/checkout/Payment";
             } else {
-                $("#email").attr("disabled", false);               
+                $("#email").attr("disabled", false);
 
                 swal({
                     title: 'Mensagem',
@@ -420,8 +425,8 @@
         }
 
         function OnFailure(response) {
-            
-            if (response.success == false) {     
+
+            if (response.success == false) {
                 swal({
                     title: '',
                     text: response.msg,
@@ -431,7 +436,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 });
-                
+
             }
         }
 
