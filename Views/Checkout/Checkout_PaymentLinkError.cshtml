@@ -1,0 +1,36 @@
+﻿@model DomainOrder.Entities.OrderPaymentLink
+
+@{
+    ViewBag.Title = "Link de Pagamento";
+    Layout = "~/Views/Shared/Base/_LayoutErrors.cshtml";
+}
+
+<div class="customError margin top bottom large">
+    <div class="ui container text center">
+        <div class="row">
+            <div class="customImg">
+                @*<img src="~/assets/image/error/400.png" />*@
+                <img src="~/assets/image/error/oops.png" />
+            </div>
+            <div class="text-1">
+                @if (Model == null)
+                {
+                    <span>Link de Pagamento não encontrado</span>
+                }
+                else
+                {
+                    <span>@Model.Status</span>
+                }
+            </div>
+            <div class="text-2">
+                <span>&nbsp;</span>
+            </div>
+            <a href="/home" class="ui button basic primary black margin none">
+                Retornar para página principal
+            </a>
+            <div class="customImgLogo">
+                <img src="~/assets/image/error/logo-jet.png" />
+            </div>
+        </div>
+    </div>
+</div>

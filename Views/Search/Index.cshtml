@@ -6,6 +6,17 @@
   var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
 
+@section CustomSeo {
+    @{
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="@Html.Raw(Request.Url)">
+        <meta name="twitter:url" content="@Html.Raw(Request.Url)">
+        <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
+        <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
+        <meta property="og:image" content="/assets/image/logo/logo.png">
+    }
+}
+
 @section breadcrumbs {
     <div class="ui two column centered grid stackable middle aligned margin top bottom no breadcrumbs">
         <div class="row">

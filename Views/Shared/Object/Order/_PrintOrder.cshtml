@@ -100,58 +100,72 @@
                                 }
                             </div>
                         }
-                        <div class="item">
-                            @{
-                                if (Model.IdPaymentBrand == 207 || Model.IdPaymentBrand == 238 || !string.IsNullOrEmpty(Model.PaymentLink))
-                                {
-                                    @* Forma de pagamento com boleto Itaú *@
-                                    if (Model.IdPaymentBrand == 207)
+                            <div class="item">
+                                @{
+                                    if (Model.IdPaymentBrand == 207 || Model.IdPaymentBrand == 238 || !string.IsNullOrEmpty(Model.PaymentLink) || (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64)))
                                     {
-                                        <input type="hidden" id="idOrder" value="@Model.IdOrder" />
-                                        <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button right floated">Reimprimir Boleto</a>
+                                        @* Forma de pagamento com boleto Itaú *@
+                                        if (Model.IdPaymentBrand == 207)
+                                        {
+                                            <input type="hidden" id="idOrder" value="@Model.IdOrder" />
+                                            <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button right floated">Reimprimir Boleto</a>
 
-                                        <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
-                                              method="post"
-                                              name="itauShopline"
-                                              id="itauShopline"
-                                              target="openShopline">
-                                            <input type="hidden" name="DC" id="tokenBankSlip" value="" />
-                                        </form>
+                                            <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
+                                                  method="post"
+                                                  name="itauShopline"
+                                                  id="itauShopline"
+                                                  target="openShopline">
+                                                <input type="hidden" name="DC" id="tokenBankSlip" value="" />
+                                            </form>
 
-                                        <div class="ui modal">
-                                            <i class="close icon"></i>
-                                            <div class="content">
-                                                <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                                            <div class="ui modal">
+                                                <i class="close icon"></i>
+                                                <div class="content">
+                                                    <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
+                                                </div>
                                             </div>
-                                        </div>
-                                    }
-                                    @* Forma de pagamento com boleto MaxiPago*@
-                                    else if (Model.IdPaymentBrand == 238)
-                                    {
-                                        <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
-                                        <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button right floated">Reimprimir Boleto</a>
+                                        }
+                                        @* Forma de pagamento com boleto MaxiPago*@
+                                        else if (Model.IdPaymentBrand == 238)
+                                        {
+                                            <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
+                                            <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button right floated">Reimprimir Boleto</a>
 
-                                        <div class="ui modal maxiPago">
-                                            <i class="close icon"></i>
-                                            <div class="content">
-                                                <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
+                                            <div class="ui modal maxiPago">
+                                                <i class="close icon"></i>
+                                                <div class="content">
+                                                    <iframe src="" name="openShopline" id="bankSlipMaxiPago" style="width: 100%; height: 50em; border: none;"></iframe>
+                                                </div>
                                             </div>
-                                        </div>
-                                    }
-                                    @* Forma de pagamento com boleto PagSeguro*@
-                                    else if (!string.IsNullOrEmpty(Model.PaymentLink))
-                                    {
-                                        <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button right floated">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
-                                        <div class="ui modal pagseguro">
-                                            <i class="close icon"></i>
-                                            <div class="content">
-                                                <iframe src="@Model.PaymentLink" name="openPaymentLink" id="openPaymentLink" style="width: 100%; height: 50em; border: none;"></iframe>
+                                        }
+                                        @* Forma de pagamento com boleto PagSeguro*@
+                                        else if (!string.IsNullOrEmpty(Model.PaymentLink))
+                                        {
+                                            <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button right floated">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
+                                            <div class="ui modal pagseguro">
+                                                <i class="close icon"></i>
+                                                <div class="content">
+                                                    <iframe src="@Model.PaymentLink" name="openPaymentLink" id="openPaymentLink" style="width: 100%; height: 50em; border: none;"></iframe>
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
+                                        else if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64))
+                                        {
+                                            <a href="javascript:void(0)" id="btnOpenMercadoPagoPix" class="ui action button right floated">PIX Copia e cola</a>
+                                            <div class="ui modal mercadopago-pix">
+                                                <i class="close icon"></i>
+                                                <div class="content" style="text-align: center;">
+                                                    <h3>Escanei ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
+                                                    <img src="data:image/jpeg;base64,@ViewBag.QrCodeBase64" width="250px" /><br />
+                                                    <div class="ui message compact margin top bottom small">@ViewBag.QrCode</div>
+                                                    <a href="@ViewBag.QrCode" class="ui large action button margin none" id="CopyQrCode">PIX Copia e cola</a>
+                                                </div>
+                                            </div>
+
+                                        }
                                     }
                                 }
-                            }
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>

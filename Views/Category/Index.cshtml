@@ -1,80 +1,89 @@
 ﻿@model DomainProduct.Entities.Category
 @{
-  ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
-  Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
-  var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
+    var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
 }
 
 @section CustomSeo {
-  @{
-    if (!String.IsNullOrEmpty(Model.MetaDescription))
-    {
-      <meta name="Description" content="@Model.MetaDescription">
+    @{
+        if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <meta name="Description" content="@Model.MetaDescription">
+            <meta property="og:description" content="@Model.MetaDescription">
+            <meta name="twitter:description" content="@Model.MetaDescription">
+        }
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="@Html.Raw(Request.Url)">
+        <meta name="twitter:url" content="@Html.Raw(Request.Url)">
+        <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
+        <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
+        <meta property="og:image" content="/assets/image/logo/logo.png">
     }
-  }
 }
 
 @section breadcrumbs {
-  <div class="ui two column centered grid stackable middle aligned margin top bottom no breadcrumbs">
-    <div class="row">
-      <div class="container">
-        <div class="column">
-          <h1>@(Model != null ? Model.Name : "")</h1>
-          <div class="ui breadcrumb text small">
-              <a class="section" href="/">Home</a>
-              @{
-                  var index = 0;
-                  foreach (var category in Model.RelatedCategories)
-                  {
-                      index++;
-                      <i class="right angle icon divider"></i>
-                      if (index == Model.RelatedCategories.Count)
-                      {
-                          <div class="active section">@(category != null ? category.Name : "")</div>
-                      }
-                      else
-                      {
-                          <div class="section">@(category != null ? category.Name : "")</div>
-                      }
-                  }
-              }
-          </div>
+    <div class="ui two column centered grid stackable middle aligned margin top bottom no breadcrumbs">
+        <div class="row">
+            <div class="container">
+                <div class="column">
+                    <h1>@(Model != null ? Model.Name : "")</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        @{
+                            var index = 0;
+                            foreach (var category in Model.RelatedCategories)
+                            {
+                                index++;
+                                <i class="right angle icon divider"></i>
+                                if (index == Model.RelatedCategories.Count)
+                                {
+                                    <div class="active section">@(category != null ? category.Name : "")</div>
+                                }
+                                else
+                                {
+                                    <div class="section">@(category != null ? category.Name : "")</div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 }
 
 @section banner {
-  @if (Model != null)
-  {
-    @Html.Action("BannerCategory", "Banner", new { id = Model.IdCategory, type = 'F' })
-  }
+    @if (Model != null)
+    {
+        @Html.Action("BannerCategory", "Banner", new {id = Model.IdCategory, type = 'F'})
+    }
 }
 
 @section footerHalfbanner {
-  @Html.Action("BannerCategory", "Banner", new { id = Model.IdCategory, type = 'R' })
+    @Html.Action("BannerCategory", "Banner", new {id = Model.IdCategory, type = 'R'})
 }
 
 @section filters {
-  <div class="four wide column filterColumn">
-    <div class="row one column filterBlock" id="filterBlock">
-      <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
-      @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
-      {
-        @Html.Action("FilterMenuNew", "Product", new { category = Model.IdCategory, brand = "", group = "", keyword = "" })
-      }
-      else
-      {
-        @Html.Action("FilterMenu", "Product")
-      }
+    <div class="four wide column filterColumn">
+        <div class="row one column filterBlock" id="filterBlock">
+            <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
+            @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
+            {
+                @Html.Action("FilterMenuNew", "Product", new {category = Model.IdCategory, brand = "", group = "", keyword = ""})
+            }
+            else
+            {
+                @Html.Action("FilterMenu", "Product")
+            }
+        </div>
+        <div class="row">
+            <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
+            @Html.Action("SideHalfBannerCategory", "Banner", new {categoryId = Model.IdCategory})
+        </div>
     </div>
-    <div class="row">
-      <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
-      @Html.Action("SideHalfBannerCategory", "Banner", new { categoryId = Model.IdCategory })
-    </div>
-  </div>
 }
+
 <div class="twelve wide column">
     <div class="ui grid">
         <div class="row one column">
@@ -147,7 +156,8 @@
         <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
         @if (Model != null)
         {
-            @Html.Action("GetProductsCategory", "Product", new {
+            @Html.Action("GetProductsCategory", "Product", new
+            {
                 category = Model.IdCategory,
                 viewList = Request.QueryString["viewList"] ?? "",
                 pageNumber = Request.QueryString["pageNumber"] ?? "",
@@ -164,8 +174,8 @@
         }
     </div>
 </div>
-<input type="hidden" name="CurrentPage" id="CurrentPage" value="category" />
-<input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdCategory" />
-<input type="hidden" name="infinityPage" id="infinityPage" value="@LojaCorp.Control.Company._Company.InfiniteScrolling.ToString()" />
-<input type="hidden" name="itensPage" id="itensPage" value="@LojaCorp.Control.Company._Company.QuantityItemsPage" />
-<input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
+<input type="hidden" name="CurrentPage" id="CurrentPage" value="category"/>
+<input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdCategory"/>
+<input type="hidden" name="infinityPage" id="infinityPage" value="@LojaCorp.Control.Company._Company.InfiniteScrolling.ToString()"/>
+<input type="hidden" name="itensPage" id="itensPage" value="@LojaCorp.Control.Company._Company.QuantityItemsPage"/>
+<input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()"/>

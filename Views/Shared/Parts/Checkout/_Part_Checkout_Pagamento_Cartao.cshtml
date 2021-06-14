@@ -259,35 +259,76 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="field hidden" id="documentField">
-                            <label class="labelCheckPayment">
-                                CPF
-                            </label>
-                            <div class="ui left icon input">
-                                <i class="user icon"></i>
-                                <input type="text" class="fieldCheckPayment" maxlength="100" name="Document" id="Document" placeholder="Documento de identificação" data-type="cpf">
+                        @if (Session["MercadoPago"] != null && Session["MercadoPago"].ToString() != "0")
+                        {
+                            <div class="field hidden" id="issuerField">
+                                <label class="labelCheckPayment">Banco emissor</label>
+                                <div class="ui left icon input">
+                                    <select name="issuer" id="issuer" class="fieldCheckPayment"></select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="two fields">
-                            <div class="field hidden" id="dateOfBirthField">
+                            <div class="field hidden" id="emailField">
                                 <label class="labelCheckPayment">
-                                    Data de Nascimento
+                                    E-mail
                                 </label>
                                 <div class="ui left icon input">
                                     <i class="user icon"></i>
-                                    <input type="text" class="fieldCheckPayment masked mask_date" maxlength="10" name="DateOfBirth" id="DateOfBirth" placeholder="00/00/0000" data-type="date">
+                                    <input type="text" class="fieldCheckPayment" maxlength="100" name="emailCard" id="emailCard" placeholder="E-mail" data-type="email">
                                 </div>
                             </div>
-                            <div class="field hidden" id="phoneField">
+                            <div class="two fields">
+                                <div class="field hidden" id="docTypeField">
+                                    <label class="labelCheckPayment">
+                                        Tipo de Documento
+                                    </label>
+                                    <div class="ui left icon input">
+                                        <select class="fieldCheckPayment" name="docType" id="docType" data-checkout="docType"></select>
+                                    </div>
+                                </div>
+                                <div class="field hidden" id="docNumberField">
+                                    <label class="labelCheckPayment">
+                                        Número do documento
+                                    </label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" class="fieldCheckPayment" maxlength="100" name="docNumber" id="docNumber" placeholder="Número do documento" data-type="cpfCnpj">
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="paymentMethodId" id="paymentMethodId" value="" />
+                        }
+                        else
+                        {
+                            <div class="field hidden" id="documentField">
                                 <label class="labelCheckPayment">
-                                    Telefone
+                                    CPF
                                 </label>
                                 <div class="ui left icon input">
                                     <i class="user icon"></i>
-                                    <input type="text" class="fieldCheckPayment masked mask_phone" maxlength="25" name="Phone" id="Phone" placeholder="(00) 00000-0000" data-type="tel">
+                                    <input type="text" class="fieldCheckPayment" maxlength="100" name="Document" id="Document" placeholder="Documento de identificação" data-type="cpf">
                                 </div>
                             </div>
-                        </div>
+                            <div class="two fields">
+                                <div class="field hidden" id="dateOfBirthField">
+                                    <label class="labelCheckPayment">
+                                        Data de Nascimento
+                                    </label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" class="fieldCheckPayment masked mask_date" maxlength="10" name="DateOfBirth" id="DateOfBirth" placeholder="00/00/0000" data-type="date">
+                                    </div>
+                                </div>
+                                <div class="field hidden" id="phoneField">
+                                    <label class="labelCheckPayment">
+                                        Telefone
+                                    </label>
+                                    <div class="ui left icon input">
+                                        <i class="user icon"></i>
+                                        <input type="text" class="fieldCheckPayment masked mask_phone" maxlength="25" name="Phone" id="Phone" placeholder="(00) 00000-0000" data-type="tel">
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         <div class="field required">
                             <label class="labelCheckPayment">Desejo Parcelar em:</label>
                             <div class="ui left icon input">
@@ -302,7 +343,7 @@
                                 <label>Deseja salvar este cartão para futuras compras?</label>
                             </div>
                         </div>
-                        <div class="field hidden hideme" id="labelField">   
+                        <div class="field hidden hideme" id="labelField">
                             <label class="labelCheckPayment hide">Salvar cartão com o nome:</label>
                             <div class="ui left icon input">
                                 <i class="icon folder open outline"></i>

@@ -42,7 +42,7 @@
                                             {
                                                 foreach (var variation in sku.Variations)
                                                 {
-                                                    if (variation.Color.Trim() != "" && !String.IsNullOrEmpty(variation.Color))
+                                                    if (!string.IsNullOrEmpty(variation.Color))
                                                     {
                                                         <button class="ui basic button variacao cor" style="background-color: @variation.Color.Trim() !important;" data-tooltip="@variation.Name" data-tipo="color"></button>
                                                     }

@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "MercadoPagoCallback";
+    Layout = "~/Views/Shared/Base/_LayoutCheckout.cshtml";
+
+    string cor = ViewBag.Cor;
+    string titulo = ViewBag.Titulo;
+    string descricao = ViewBag.Descricao;
+    string link = ViewBag.Link;
+}
+
+@section logo {
+    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+        <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
+    </a>
+}
+@section steps{
+    <div class="jet checkout jBreadCrumb ">
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Identificação</h4>
+        </div>
+        <div class="jCrumb completed">
+            <div class="jBullet">
+                <div class="jButton">
+                    <span><i class="icon check"></i></span>
+                </div>
+            </div>
+            <h4>Pagamento</h4>
+        </div>
+        <div class="jCrumb active">
+            <div class="jBullet ">
+                <div class="jButton">
+                    <span>3</span>
+                </div>
+            </div>
+            <h4>Confirmação</h4>
+        </div>
+    </div>
+}
+    <div class="ui container fluid @cor">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="ui divider small hidden"></div>
+                <div class="row two column">
+                    <div class="column">
+                        <h1 class="floated left">@titulo</h1>
+                    </div>
+                    <div class="column text right">
+                        <h2 class="">Mercado Pago - Checkout VPRO</h2>
+                    </div>
+                </div>
+                <div class="row two column stackable">
+                    <div class="column">
+                        <div class="ui horizontal list">
+                            <div class="item">
+                                <div class="content">
+                                    <p>@descricao</p>@Html.Raw(link)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui divider small hidden"></div>
+            </div>
+        </div>
+    </div>

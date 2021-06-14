@@ -1,5 +1,13 @@
 ﻿@using DomainCheckout.Entities
 @model DomainCheckout.Entities.Cart
+
+@{ 
+    var _paymentLink = false;
+    if (Session["PaymentLinkChangeBrand"] != null && (bool)Session["PaymentLinkChangeBrand"] == true)
+    {
+        _paymentLink = true;
+    }
+}
 <div class="ui segment">
     
     
@@ -20,7 +28,7 @@
                     {
                         foreach (var product in Model.CartItems)
                         {
-                            <div class="item @(product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")"
+                            <div class="item @(product.Stock == 0 || product.Stock < product.Quantity || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")"
                                  data-id-cart="@product.IdCartItem" data-recurrent="@product.IsRecurrent" id="itemCartProduct_@product.IdCartItem">
                                 <div class="image">
                                     <img src="@product.ProductImage.ImageDefault" onerror="imgError(this)" />
@@ -30,7 +38,7 @@
                                     <div class="description">Quantidade: @product.Quantity @(product.Quantity > 1 ? "Unidades" : "Unidade")</div>
                                     <div class="extra text color black left">@string.Format("{0:c}", product.PriceTotalProduct)</div>
 
-                                    @if (product.Stock == 0 || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
+                                    @if ((product.Stock == 0 || product.Stock < product.Quantity || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes) && _paymentLink == false)
                                     {
                                         <span class="ui label basic primary margin top small exhausted">PRODUTO ESGOTADO</span>
                                         <button class="removeCartItem payment-cart" data-id="@product.IdCartItem">

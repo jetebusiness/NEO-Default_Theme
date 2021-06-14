@@ -152,17 +152,25 @@
 
 @section CustomSeo {
     @{
-                        /**/
-
+        /**/
         if (!String.IsNullOrEmpty(Model.MetaDescription))
         {
             <meta name="Description" content="@Model.MetaDescription">
+            <meta property="og:description" content="@Model.MetaDescription">
+            <meta name="twitter:description" content="@Model.MetaDescription">
         }
 
         if (!String.IsNullOrEmpty(Model.MetaKeyWords))
         {
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
+        
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="@Html.Raw(Request.Url)">
+        <meta name="twitter:url" content="@Html.Raw(Request.Url)">
+        <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
+        <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
+        <meta property="og:image" content="@productImages.FirstOrDefault().ImageDefault">
     }
 }
 
@@ -238,6 +246,9 @@
 <input type="hidden" id="variacoesSelecionadas" value="" />
 <input type="hidden" id="has-open-sku" value="@((hasOpenSku == true) ? "true" : "false")" />
 <input type="hidden" id="b2b" value="false" />
+
+
+
 
 <!-- FIM - Váriaveis Produto Principal-->
 <!-- COMEÇO - Váriaveis Produto Unitário-->

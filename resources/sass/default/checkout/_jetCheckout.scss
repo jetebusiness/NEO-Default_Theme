@@ -252,3 +252,39 @@
         margin-right: 4px;
     }
 }
+
+.ui.form {
+    .field.hidden {
+        display: none;
+    }
+
+    .tree.fields {
+
+        > .field {
+            width: 33%;
+        }
+    }
+}
+
+.userDifferent {
+    margin: 1rem 0
+}
+
+.divQrCode {
+    width: 70%;
+    height: 36px;
+    overflow: hidden;
+    line-height: 36px;
+    display: inline-block;
+    border: 1px solid #bcbdbd;
+    border-radius: 5px 0 0 5px;
+    background-color: #F8F8F7;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#CopyQrCode {
+    vertical-align: top;
+    border-radius: 0 5px 5px 0;
+    margin: 0 0 0 -4px;
+}

@@ -1,7 +1,7 @@
 ﻿@using DomainCheckout.Entities
 @model DomainCheckout.Entities.CartItem
 
-<div class="item @(Model.Stock == 0 || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-signature="@Model.IsRecurrent" data-id-cart="@Model.IdCartItem" data-id-produto="@Model.IdProduct" id="itemCartProduct_@Model.IdCartItem">
+<div class="item @(Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-signature="@Model.IsRecurrent" data-id-cart="@Model.IdCartItem" data-id-produto="@Model.IdProduct" id="itemCartProduct_@Model.IdCartItem">
     <div class="ui image small">
         <img src="@Model.ProductImage.ImageDefault"  onerror="imgError(this)">
     </div>
@@ -23,7 +23,7 @@
         }
 
         <div class="description">
-            @if (Model.Stock == 0 || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
+            @if (Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
             {
                 <table class="ui very basic unstackable table margin top medium exhausted">
                     <thead>

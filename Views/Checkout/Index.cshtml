@@ -58,7 +58,18 @@
                                                     <div class="header">@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Name.ToString())</div>
                                                     <div class="description">
                                                         <p>@Html.Raw(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Email.ToString())</p>
-                                                        <p>CPF: @(Convert.ToUInt64(((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Cpf_cnpj).ToString(@"000\.000\.000\-00"))</p>
+                                                        <p>
+                                                            CPF:
+                                                            @{
+                                                                string CpfCnpj = ((DomainCustomer.Entities.Customer)Session["UserAuthenticated"]).Cpf_cnpj;
+
+                                                                if (!CpfCnpj.Contains("*"))
+                                                                {
+                                                                    CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
+                                                                }
+                                                            }
+                                                            @CpfCnpj
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

@@ -21,7 +21,7 @@
   }
 }
 
-<div class="item item-cart-product @(Model.Stock == 0 || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
+<div class="item item-cart-product @(Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
 
     <div class="image">
         <a href="/Product/Details/@Model.IdProduct" class="product image" id="name_@Model.IdCartItem">
@@ -57,7 +57,7 @@
         <div class="priceProduct" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
         
         <div class="description">
-             @if (Model.Stock == 0 || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
+             @if (Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
              {
                  <span class="ui label basic primary exhausted">PRODUTO ESGOTADO</span>
              }

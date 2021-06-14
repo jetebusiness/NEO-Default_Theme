@@ -197,12 +197,14 @@ var useAntiFraudMaxiPago = false;
 function GerarPedidoCompleto(
     idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
-    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick
+    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument
 ) {
-    var stop = false;
-    stop = ValidCart(stop);
+    if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
+        var stop = false;
+        stop = ValidCart(stop);
 
-    if (stop) return;
+        if (stop) return;
+    }
 
     $.ajax({
         method: "POST",
@@ -238,10 +240,10 @@ function GerarPedidoCompleto(
             deliveryTime: deliveryTime,
             usefulDay: usefulDay,
             SelectedRecurrentTime: SelectedRecurrentTime,
-            labelOneClick: labelOneClick
+            labelOneClick: labelOneClick,
+            typeDocument: typeDocument
         },
         success: function (response) {
-            _logoutPaymentLink = false;
             if (response.success === true) {
                 if (response.errorMsg != "") {
                     _alert("", response.errorMsg, "warning");
@@ -802,7 +804,6 @@ function OrderCreateTwoCards(obj) {
                 installmentTotal2: installmentTotal2,
             },
             success: function (response) {
-                _logoutPaymentLink = false;
                 if (response.success === true) {
                     if (response.errorMsg != "") {
                         _alert("", response.errorMsg, "warning");
@@ -894,19 +895,21 @@ function OrderCreate() {
                 url: "/Checkout/LoadProductsMiniCart",
                 cache: false,
                 success: function (loadProduct) {
-                    if(loadProduct) {
-                        var retornoAjax = loadProduct.split("|$|");
-                        var listaProdutos = retornoAjax[0];
-                        $("#checkout_products_list").html(listaProdutos);
-                        $(".item:not(.exhausted) .removeCartItem, " +
-                            ".item:not(.exhausted) .description, " +
-                            ".item.exhausted .avaibility", "#checkout_products_list").remove()
+                    if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
+                        if (loadProduct) {
+                            var retornoAjax = loadProduct.split("|$|");
+                            var listaProdutos = retornoAjax[0];
+                            $("#checkout_products_list").html(listaProdutos);
+                            $(".item:not(.exhausted) .removeCartItem, " +
+                                ".item:not(.exhausted) .description, " +
+                                ".item.exhausted .avaibility", "#checkout_products_list").remove()
 
-                        if($(".exhausted", "#checkout_products_list").length > 0) {
+                            if ($(".exhausted", "#checkout_products_list").length > 0) {
 
-                            createModelExhausted("#checkout_products_list");
+                                createModelExhausted("#checkout_products_list");
 
-                            exhausted = true;
+                                exhausted = true;
+                            }
                         }
                     }
                 }
@@ -939,7 +942,7 @@ function OrderCreate() {
                 var dt = new Date();
                 var century = dt.getFullYear().toString().substring(0, 2);
                 var expDateCard = "";
-                if ($("#DebitExpDate").val() !== null || $("#ExpDate").val() !== null) {
+                if ($("#DebitExpDate").val() !== undefined || $("#ExpDate").val() !== undefined) {
                     var DebitExpDate = "";
                     if ($("#DebitExpDate").val() !== undefined) {
                         DebitExpDate = $("#DebitExpDate").val();
@@ -953,8 +956,10 @@ function OrderCreate() {
                     expDateCard = $this.prop("id") === "btnCardDebit" ? DebitExpDate.toString().replace("/", "/" + century) : ExpDate.toString().replace("/", "/" + century);
                     expDateCard = expDateCard.replace(/\s/g, "");
                 }
+
                 var validaMes = expDateCard !== "" && expDateCard !== undefined ? new Number(expDateCard.split("/")[0]) : "";
                 var validaAno = expDateCard !== "" && expDateCard !== undefined ? new Number(((expDateCard.split("/")[1].trim().length <= 2) ? century + expDateCard.split("/")[1].trim() : expDateCard.split("/")[1].trim())) : "";
+
                 var cvvCard = $("#CVV").val();
                 var brandCard = $this.prop("id") === "btnCardDebit" ? $("#debitBrandCard").val() : $("#brandCard").val();
                 var document = $("#Document").val();
@@ -985,6 +990,9 @@ function OrderCreate() {
                     usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1") ? true : false);
                 }
                 var selectedRecurrentTime = $("#compraRecorrenteFrequencia").data('value');
+                var emailCard = $('#emailCard').val();
+                var typeDocument = "";
+                var issuer = "";
 
                 var validaFrete = "";
 
@@ -999,6 +1007,9 @@ function OrderCreate() {
                         break;
                     case "btnDebitRedirect":
                         kind = "debit";
+                        break;
+                    case "btnPix":
+                        kind = "pix";
                         break;
                     default:
                         if ($this.data("card") == "N") {
@@ -1134,7 +1145,7 @@ function OrderCreate() {
                         if (useAntiFraudMaxiPago && kind !== "oneclick") {
                             LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
                             //Gerar pedido completo com atraso de 5 segundos
-                            setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick); }, 5000);
+                            setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument); }, 5000);
                         }
                         else if (tipoVerificacao === "S" && ($this.attr("data-gateway") === "pagseguro" || $this.attr("data-gateway") === "pagseguroapp")) {
 
@@ -1165,9 +1176,41 @@ function OrderCreate() {
                                 }
                             });
                         }
+                        else if (tipoVerificacao === "S" && $this.attr("data-gateway") === "mercadopago") {
+
+                            Mercadopago.clearSession();
+
+                            brandCard = $("#paymentMethodId").val();
+                            document = $("#docNumber").val();
+                            typeDocument = $("#docType").val();
+                            issuer = $("#issuer").val();
+
+                            var $form = GenerateFormMercadoPago(emailCard, card, cvvCard, validaMes, validaAno, nameCard, typeDocument, document, issuer, installmentNumber, installmentTotal, brandCard, "");
+
+                            window.Mercadopago.createToken($form, function (status, response) {
+                                if (status == 200) {
+                                    cardToken = response.id;
+
+                                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument);
+                                } else {
+                                    swal({
+                                        //title: 'Ops! Encontramos um problema ..',
+                                        html: "Não foi possível gerar o token do cartão no Mercado Pago.",
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    });
+
+                                    $(".GerarPedido").removeClass("loading");
+                                    $(".GerarPedido").removeClass("disabled");
+                                }
+                            });
+                        }
                         else//Caso não utilize, segue o fluxo de gerar pedido normalmente sem iframe e sem atraso   
                         {
-                            GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick);
+                            GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument);
                         }
 
                     }
@@ -1180,6 +1223,30 @@ function OrderCreate() {
             }
         });
     });
+}
+
+function GenerateFormMercadoPago(
+    txtEmail, txtCardNumber, txtSecurityCode, txtCardExpirationMonth, txtCardExpirationYear, txtCardholderName, txtDocType, txtDocNumber, txtIssuer,
+    txtInstallments, txtTransactionAmount, txtPaymentMethodId, txtDescription) {
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+
+    $(form).append('<input id="email" name="email" type="text" value="' + txtEmail + '"/>');
+    $(form).append('<select id="docType" name="docType" data-checkout="docType" type="text"><option value="' + txtDocType + '" selected="selected">' + txtDocType + '</option></select>');
+    $(form).append('<input id="docNumber" name="docNumber" data-checkout="docNumber" type="text" value="' + txtDocNumber + '"/>');
+    $(form).append('<input id="cardholderName" data-checkout="cardholderName" type="text" value="' + txtCardholderName + '"/>');
+    $(form).append('<input type="text" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth" value="' + txtCardExpirationMonth + '"/>');
+    $(form).append('<input type="text" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear" value="' + txtCardExpirationYear + '"/>');
+    $(form).append('<input type="text" id="cardNumber" data-checkout="cardNumber" value="' + txtCardNumber + '"/>');
+    $(form).append('<input id="securityCode" data-checkout="securityCode" type="text" value="' + txtSecurityCode + '"/>');
+    $(form).append('<select id="issuer" name="issuer" data-checkout="issuer"><option value="' + txtIssuer + '" selected="selected">' + txtIssuer + '</option></select>');
+    $(form).append('<select type="text" id="installments" name="installments"><option value="' + txtInstallments + '" selected="selected">' + txtInstallments + '</option></select>');
+    $(form).append('<input type="hidden" name="transactionAmount" id="transactionAmount" value="' + txtTransactionAmount + '" />');
+    $(form).append('<input type="hidden" name="paymentMethodId" id="paymentMethodId" value="' + txtPaymentMethodId + '" />');
+    $(form).append('<input type="hidden" name="description" id="description" value="' + txtDescription + '" />');
+    $(form).append('<button type="submit">Pagar</button>');
+
+    return form;
 }
 
 function onChangeCheckBox() {
@@ -1497,6 +1564,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                 var objPagSeguro = response.PagSeguro;
                 var objPagSeguroV4 = response.PagSeguroV4;
                 var objPagSeguroApp = response.PagSeguroApp;
+                var objMercadoPago = response.MercadoPago;
                 var objParcelamento = 0;
                 if (response.ListInstallment != null && response.ListInstallment != "")
                     objParcelamento = response.ListInstallment;
@@ -1686,6 +1754,98 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                             }
                         });
                     }
+                    else if (typeof (objMercadoPago) !== "undefined" && objMercadoPago === true) {
+                        $("#btnCardCredit").attr("data-gateway", "mercadopago");
+                        if (objAdditionalFields.length > 0) {
+                            if (ContainsInArray("email", objAdditionalFields) == true) {
+                                $("#emailField").show();
+                                $("#emailField").addClass("required");
+                            } else {
+                                $("#documentField").hide();
+                                $("#documentField").removeClass("required");
+                            }
+                            if (ContainsInArray("docType", objAdditionalFields) == true) {
+                                $("#docTypeField").show();
+                                $("#docTypeField").addClass("required");
+                            } else {
+                                $("#docTypeField").hide();
+                                $("#docTypeField").removeClass("required");
+                            }
+                            if (ContainsInArray("docNumber", objAdditionalFields) == true) {
+                                $("#docNumberField").show();
+                                $("#docNumberField").addClass("required");
+                            } else {
+                                $("#docNumberField").hide();
+                                $("#docNumberField").removeClass("required");
+                            }
+                            if (ContainsInArray("issuer", objAdditionalFields) == true) {
+                                //$("#issuerField").show();
+                                //$("#issuerField").addClass("required");
+                            } else {
+                                $("#issuerField").hide();
+                                $("#issuerField").removeClass("required");
+                            }
+                        }
+
+                        window.Mercadopago.getIdentificationTypes();
+
+                        var _totalCheckout = parseFloat($('#total_checkout').text().replace("R$", "").replace(".", "").replace(",", ".").replace("&nbsp;", "").trim());
+
+                        if (objParcelamento.length > 0) {
+                            _totalCheckout = objParcelamento[0].Total;
+                        }
+
+                        let bin = $(idOnBlur).val().replace(/\s/g, '').substring(0, 6);
+                        window.Mercadopago.getPaymentMethod({
+                            "bin": bin
+                        }, function (status, response) {
+                            if (status == 200) {
+                                let paymentMethod = response[0];
+                                $("#paymentMethodId").val(paymentMethod.id);
+                                let payment_type_id = paymentMethod.payment_type_id;
+
+                                window.Mercadopago.getIssuers(
+                                    paymentMethod.id,
+                                    function (status_, response_) {
+                                        if (status_ == 200) {
+                                            $("#issuer option").remove();
+                                            var _issuerCount = 0;
+                                            response_.forEach(issuer => {
+                                                $("#issuer").append('<option value="' + issuer.id + '">' + issuer.name + '</option>');
+                                                _issuerCount++;
+                                            });
+
+                                            if (_issuerCount > 1 && payment_type_id != "credit_card") {
+                                                $("#issuerField").show();
+                                                $("#issuerField").addClass("required");
+                                            }
+
+                                            window.Mercadopago.getInstallments({
+                                                "payment_method_id": $("#paymentMethodId").val(),
+                                                "amount": _totalCheckout,
+                                                "issuer_id": parseInt($("#issuer").val())
+                                            }, function (status__, response__) {
+                                                if (status__ == 200) {
+                                                    $("#parcCard option").remove();
+                                                    response__[0].payer_costs.forEach(payerCost => {
+                                                        $("#parcCard").append('<option value="000" data-InstallmentValue="' + payerCost.installment_amount + '" data-InstallmentNumber="' + payerCost.installments + '" data-InstallmentTotal="' + payerCost.total_amount + '">' + payerCost.recommended_message + '</option>');
+                                                    });
+                                                    $("#emailCard").val($("#MercadoPagoEmail").val());
+                                                    
+                                                } else {
+                                                    alert(`installments method info error: ${response__}`);
+                                                }
+                                            });
+                                        } else {
+                                            alert(`issuers method info error: ${response_}`);
+                                        }
+                                    }
+                                );
+                            } else {
+                                alert(`payment method info error: ${response}`);
+                            }
+                        });
+                    }
                     else {
                         onChangeParcelamento();
                         $("#documentField").hide();
@@ -1697,7 +1857,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                         $("#checkOneClickField").hide();
                     }
 
-                    if (!objPagSeguro && !objPagSeguroApp) {
+                    if (!objPagSeguro && !objPagSeguroApp && !objMercadoPago) {
                         if (!oneclick) {
                             for (var i = 0; i < objParcelamento.length; i++) {
                                 var IdInstallment = objParcelamento[i].IdInstallment;
@@ -1843,7 +2003,7 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
 
     } else {
         var obj_parcelamento;
-        if (($('#hasPagSeguro').val() !== "0" && $('#hasPagSeguro').val() !== undefined) || ($('#hasPagSeguroApp').val() !== "0" && $('#hasPagSeguroApp').val() !== undefined)) {
+        if (($('#hasPagSeguro').val() !== "0" && $('#hasPagSeguro').val() !== undefined) || ($('#hasPagSeguroApp').val() !== "0" && $('#hasPagSeguroApp').val() !== undefined) || ($('#hasMercadoPago').val() !== "0" && $('#hasMercadoPago').val() !== undefined)) {
             obj_parcelamento = buscaTotalParcelamentoValor(codigoBandeira, codigoPaymentMethod, 1);
             var valor = $('#parcCard > option:selected').data('installmenttotal');
             obj_parcelamento.result = valor;
@@ -2447,7 +2607,18 @@ function TestaCPF(strCPF) {
     var Soma;
     var Resto;
     Soma = 0;
-    if (strCPF == "00000000000") return false;
+    if (strCPF.length != 11 ||
+        strCPF == "00000000000" ||
+        strCPF == "11111111111" ||
+        strCPF == "22222222222" ||
+        strCPF == "33333333333" ||
+        strCPF == "44444444444" ||
+        strCPF == "55555555555" ||
+        strCPF == "66666666666" ||
+        strCPF == "77777777777" ||
+        strCPF == "88888888888" ||
+        strCPF == "99999999999")
+        return false;
 
     for (var i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
     Resto = (Soma * 10) % 11;
@@ -2462,6 +2633,60 @@ function TestaCPF(strCPF) {
     if ((Resto == 10) || (Resto == 11)) Resto = 0;
     if (Resto != parseInt(strCPF.substring(10, 11))) return false;
     return true;
+}
+
+function TestaCNPJ(strCnpj) {
+
+    strCnpj = strCnpj.replace(/[^\d]+/g, '');
+
+    if (strCnpj == '') return false;
+
+    if (strCnpj.length != 14)
+        return false;
+
+    // Elimina CNPJs invalidos conhecidos
+    if (strCnpj == "00000000000000" ||
+        strCnpj == "11111111111111" ||
+        strCnpj == "22222222222222" ||
+        strCnpj == "33333333333333" ||
+        strCnpj == "44444444444444" ||
+        strCnpj == "55555555555555" ||
+        strCnpj == "66666666666666" ||
+        strCnpj == "77777777777777" ||
+        strCnpj == "88888888888888" ||
+        strCnpj == "99999999999999")
+        return false;
+
+    // Valida DVs
+    tamanho = strCnpj.length - 2
+    numeros = strCnpj.substring(0, tamanho);
+    digitos = strCnpj.substring(tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+            pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado != digitos.charAt(0))
+        return false;
+
+    tamanho = tamanho + 1;
+    numeros = strCnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+            pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado != digitos.charAt(1))
+        return false;
+
+    return true;
+
 }
 
 function onlyNumbers(evt) {
@@ -2826,6 +3051,8 @@ function UpdateValueTwoDebitCards(obj) {
 
 
 var availableDates = [];
+//var mp;
+//var cardForm;
 
 $(document).ready(function () {
     $("#formas-pagamento .itemTabPayment").appendTo($("#formas-pagamento #tabPayment"));
@@ -3038,6 +3265,14 @@ $(document).ready(function () {
         GetStatusAntiFraudMaxiPago();
 
 
+    if ($('#hasMercadoPago').val() !== undefined && $('#hasMercadoPago').val() !== "0") {
+        $.getScript("https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js", function () {
+            window.Mercadopago.setPublishableKey($('#MercadoPagoPublicKey').val());
+            GerarPedidoMercadoPagoCheckoutPRO();
+        });
+    }
+
+
     $('#Document').keyup(function (event) {
         return onlyNumbers(event);
     });
@@ -3048,6 +3283,25 @@ $(document).ready(function () {
         if (!TestaCPF($(this).val())) {
             _alert("", "Número de CPF inválido.", "warning");
             $(this).val('');
+        }
+        return false;
+    });
+
+    $('#docNumber').keyup(function (event) {
+        return onlyNumbers(event);
+    });
+
+    $('#docNumber').blur(function () {
+        if ($('#docType').val() == "CPF") {
+            if (!TestaCPF($(this).val())) {
+                _alert("", "Número de CPF inválido.", "warning");
+                $(this).val('');
+            }
+        } else {
+            if (!TestaCNPJ($(this).val())) {
+                _alert("", "Número de CNPJ inválido.", "warning");
+                $(this).val('');
+            }
         }
         return false;
     });
@@ -3119,6 +3373,59 @@ $(document).ready(function () {
             onOpening: function () {
                 $('.contentcartao .segment').removeClass('visible').removeAttr('style');
             }
+        });
+    }
+
+    function GerarPedidoMercadoPagoCheckoutPRO() {
+        $('.GerarPedidoMercadoPagoCheckoutVPRO').unbind().on('click', function () {
+            let _idPaymentBrand = $(this).attr("data-idbrand");
+
+            $(".GerarPedidoMercadoPagoCheckoutVPRO").addClass("loading");
+            $(".GerarPedidoMercadoPagoCheckoutVPRO").addClass("disabled");
+
+            $.ajax({
+                url: "/Checkout/MercadoPagoGenereatePreference",
+                method: "POST",
+                data: {
+                    idCustomer: $("#idCustomer").val(),
+                    idPaymentBrand: new Number(_idPaymentBrand),
+                    idAddress: $("#idAddress").val(),
+                    _msgPedido: $("#mensagem").val()
+                },
+                success: function (response) {
+                    if (response.Success == true) {
+                        let _preferenceId = response.PreferenceId;
+
+                        $.getScript("https://sdk.mercadopago.com/js/v2", function () {
+                            const mp = new MercadoPago($('#MercadoPagoPublicKey').val(), {
+                                locale: 'pt-BR'
+                            });
+
+                            mp.checkout({
+                                preference: {
+                                    id: _preferenceId
+                                },
+                                autoOpen: true
+                            });
+                        });
+                    }
+                    else {
+                        swal({
+                            title: '',
+                            html: response.Message,
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                complete: function () {
+                    $(".GerarPedidoMercadoPagoCheckoutVPRO").removeClass("loading");
+                    $(".GerarPedidoMercadoPagoCheckoutVPRO").removeClass("disabled");
+                }
+            });
         });
     }
 
@@ -3249,6 +3556,34 @@ $(document).ready(function () {
             }
         })
     }
+
+    
+
+    $(document).on('click', '#CopyQrCode', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $(this).html("PIX Copia e cola");
+
+        if ($(this).attr("disabled") != "disabled") {
+            let value = $('.divQrCode').text();
+
+            let inputTest = document.createElement("input");
+            inputTest.value = value;
+            //Anexa o elemento ao body
+            document.body.appendChild(inputTest);
+            //seleciona todo o texto do elemento
+            inputTest.select();
+            //executa o comando copy
+            //aqui é feito o ato de copiar para a area de trabalho com base na seleção
+            document.execCommand('copy');
+            //remove o elemento
+            document.body.removeChild(inputTest);
+
+            $(this).html($(this).text() + ' <i class="check icon"></i>');
+        }
+    });
+
 
     $(document).on('click', '#PaymentLinkCopy', function (e) {
         e.preventDefault();
@@ -3665,43 +4000,14 @@ $(document).ready(function () {
                         idPeridoescolhido = $("#combo_dataperiodoagendada_" + idFrete).val();
                         dataperiodoentregaescolhida = $("#combo_dataperiodoagendada_" + idFrete).val();
                         dataentregaescolhida = $("#dateAgendada_" + idFrete).val();
-                        //HabilitaBlocoPagamento(true);
                     }
-                    //else
-                        //HabilitaBlocoPagamento(false);
                 }
-                //else
-                    //HabilitaBlocoPagamento(true);
 
                 disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete);
             }
             $('.ui.toggle.checkbox.box-card').trigger('click');
         }
     }
-});
-
-var _logoutPaymentLink = true;
-function LimpaSessaoLinkPagamento() {
-    if (window.location.pathname.toLowerCase().trim() == "/checkout/payment") {
-        if ($('#PaymentLinkChangeBrand').length > 0) {
-            if ($('#PaymentLinkChangeBrand').val() == "1") {
-                if (_logoutPaymentLink == true) {
-                    $.ajax({
-                        method: "GET",
-                        url: "PaymentLinkLogout"
-                    });
-                    _logoutPaymentLink = false;
-                }
-            }
-        }
-    }
-}
-
-window.addEventListener('beforeunload', function (event) {
-    LimpaSessaoLinkPagamento();
-});
-window.addEventListener('unload', function (event) {
-    LimpaSessaoLinkPagamento();
 });
 
 window.onload = function () {
