@@ -350,7 +350,7 @@ variations = {
     },
     getImageThumbnail: function() {
 
-        if(this.config.callAjaxImage && $(this.config.container).length > 0) {
+        if(this.config.callAjaxImage && $(this.config.container).length > 0 && $('.' + this.config.loadedClass + ':eq(0) .variacao.select').length > 0) {
             //setando as variacoes selecionadas para carregar as imagens de multifotos
             var variationSelect = new Array();
 
@@ -376,7 +376,6 @@ variations = {
                     if ($("#buy-together .image.medium").length > 0) {
                         $("#buy-together .image.medium")[0].children[0].src = $("#imagem-padrao").attr("data-src")
                     }
-
 
                     //aplicando scroll e ativando o zoom
                     variations.slickZoom()

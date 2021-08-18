@@ -2,6 +2,8 @@
 
 @foreach (var item in Model)
 {
+    <a class="item itemTabPayment" data-tab="paymentOff"><div class="text"><i class="icon money bill alternate outline"></i><span>@item.NamePayment</span></div></a>
+    <!-- Pagamento Offline -->
     <div class="ui tab segment" data-tab="paymentOff">   
         <div class="content">
             <p class="transition hidden"></p>

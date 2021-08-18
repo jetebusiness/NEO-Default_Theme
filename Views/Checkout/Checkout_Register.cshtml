@@ -201,12 +201,21 @@
                                             <label>CEP</label>
                                             <div class="ui left icon input">
                                                 <i class="icon marker"></i>
+                                                @{ 
+                                                    string cep = null;
+                                                    if(Session["MultiCD"] != null && ((LojaCorp.Control.MultiCd)Session["MultiCD"]).CEP.Length > 0)
+                                                    {
+                                                        cep = ((LojaCorp.Control.MultiCd)Session["MultiCD"]).CEP;
+                                                    }
+                                                }
                                                 <input type="text" name="Address[0].ZipCode"
                                                        placeholder="00000-000"
                                                        class="masked mask_zipcode"
                                                        data-jet-validate="zipcode"
                                                        data-jet-type="clearAllNext"
-                                                       tabindex="9">
+                                                       tabindex="9",
+                                                       id="zipcode_checkout",
+                                                       value='@(cep != null ? @cep : "")'>
                                             </div>
                                         </div>
                                         <div class="field" data-jet-revel="true">
@@ -224,7 +233,7 @@
                                             <i class="icon home"></i>
                                             <input type="text" name="Address[0].StreetAddress"
                                                    placeholder="Endereço" data-jet-validate="empty"
-                                                   tabindex="10">
+                                                   tabindex="10", id="address_checkout">
                                         </div>
                                     </div>
                                     <div class="three fields">

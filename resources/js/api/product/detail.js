@@ -7,12 +7,13 @@ import { openModalQuickView, openLongModal } from "../../functions/modal";
 import { LoadCarrinho } from "../../functions/mini_cart_generic";
 import { SomenteNumerosPositivos } from "../../functions/form-control";
 import { LoadCarrinhoEventList } from "../../functions/mini_cart_generic";
-import { CarregarParcelamento, CarregaParcelamentoPagSeguro, CarregaParcelamentoPagSeguroApp } from "../../api/product/detail_b2b.js";
+import { CarregarParcelamento, CarregaParcelamentoPagSeguro, CarregaParcelamentoPagSeguroApp, CarregaParcelamentoMercadoPago } from "../../api/product/detail_b2b.js";
 import { CompraRecorrenteCart, CompraRecorrenteStorage } from '../../functions/recurringPurchase';
 
 import { VariacaoDropDown, VariacaoCor, VariacaoImagem, VariacaoRadio, AtualizarCompreJunto } from "./variations-floating";
 
-import { generateRecaptcha }  from "../../ui/modules/recaptcha";
+import { generateRecaptcha } from "../../ui/modules/recaptcha";
+import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 
 $(document).ready(function () {
     "use strict";
@@ -23,10 +24,20 @@ $(document).ready(function () {
         $('.recurrentperiods').popup();
 
         $("#quantidade").keyup(function (e) {
-            var valor_final = SomenteNumerosPositivos($(this).val());
-            $(this).val(valor_final);
-            AtualizarQuantidade();
-            e.stopPropagation();
+            if ($(this).val().length > 0){
+                var valor_final = SomenteNumerosPositivos($(this).val());
+                $(this).val(valor_final);
+                AtualizarQuantidade();
+                e.stopPropagation();
+            }
+        });
+
+        $("#quantidade").blur(function (e) {
+            if ($(this).val().length == 0) {
+                $(this).val(1);
+                AtualizarQuantidade();
+                e.stopPropagation();
+            }
         });
 
         $(".variacao[data-idSku]").click(function () {
@@ -169,12 +180,22 @@ $(document).ready(function () {
         //parcelamento PAGSEGURO
         CarregaParcelamentoPagSeguro();
         CarregaParcelamentoPagSeguroApp();
+        CarregaParcelamentoMercadoPago();
 
         //funcao AVISE-ME
         alertSendStock()
 
         //calculo de frete
         calcShipping()
+
+        if ($("#zipcode") != null && $("#zipcode").val().length > 0) {
+            $('#simular-frete-cep').val($("#zipcode").val());
+            if (getUrlVars()["calcShipping"] == 'true') {
+                $("#simular-frete-submit").click();
+                if ($("#simular-frete-cep").length > 0)
+                    $('html, body').animate({ scrollTop: $("#simular-frete-cep").offset().top - 200 }, 1000);
+            }
+        }
 
         //floating-bar
 
@@ -633,6 +654,11 @@ function calcShipping() {
         if ($("#b2b").val() != undefined) {
             B2b = $("#b2b").val();
         }
+        let CompraRecorrente = "false";
+        if ($(this).data("purchaserecurring") !== undefined && $(this).data("purchaserecurring") == true) {
+            CompraRecorrente = "true";
+        }
+
 
         if (ZipCode != "") {
             $('#listSimulateFreight').empty().append('<tr><td colspan="3" class="center aligned">Carregando...</td></tr>');
@@ -686,7 +712,8 @@ function calcShipping() {
                 data: {
                     ProductShippings: LstProductsFreight,
                     ZipCode: ZipCode,
-                    B2b: B2b
+                    B2b: B2b,
+                    CompraRecorrente: CompraRecorrente
                 },
                 success: function (response) {
                     $('#listSimulateFreight').empty();
@@ -714,16 +741,28 @@ function calcShipping() {
                             $('#listSimulateFreight').append(strTr);
                         });
                     } else {
-                        swal({
-                            title: '',
-                            text: response.message,
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        });
-                        $('#simular-frete-cep').val('').focus();
+                        if (response.message == "CD:1") {
+                            $("#zipcode").val(ZipCode)
+                            buscaCepCD(ZipCode).then(function () {
+                                changeCd(true, true, "#simular-frete-submit", true);
+                            })
+                        } else if (response.message == "CD:2") {
+                            $("#zipcode").val(ZipCode)
+                            buscaCepCD(ZipCode).then(function () {
+                                changeCd(true, true, "#simular-frete-submit", true);
+                            })
+                        } else {
+                            swal({
+                                title: '',
+                                text: response.message,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                            $('#simular-frete-cep').val('').focus();
+                        }
                     }
                 }
             });
@@ -774,4 +813,15 @@ function alertSendStock() {
             //console.log(errorMessage);
         }
     });
+}
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
 }

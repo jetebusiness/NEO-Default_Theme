@@ -6,6 +6,7 @@ import { montaListaProdutos } from "../../ui/modules/mini_cart";
 import { SomenteNumerosPositivos } from "../../functions/form-control";
 import { CompraRecorrenteCart, CompraRecorrenteStorage } from '../../functions/recurringPurchase';
 import { atualizaResumoCarrinho } from './payment'
+import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 
 $(document).ready(function () {
 
@@ -52,14 +53,38 @@ $(document).ready(function () {
                 url: "/Checkout/GetShippingValues",
                 data: { zipCode: zipCode },
                 success: function (data) {
-                    $("#CallServiceShippingMiniCart").removeClass("loading");
-                    $(".description.frete").hide();
-                    //Coloca as infoamções no Bloco HMTL com os valores corretos
-                    $(".description.resultado .valor").html(data);
-                    //$(".tabela.frete").dropdown('refresh');
-                    $(".description.resultado").show();
+                    if (data.indexOf("|@|&RR0RM&SS@G&|@|CD:") > -1)
+                    {
+                        $("#CallServiceShippingMiniCart").removeClass("loading");
+                        $("#zipcode").val(zipCode);
+                        buscaCepCD(zipCode).then(function () {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                                LoadCarrinho();
+                            });
+                        });
+                    }
+                    else
+                    {
+                        $("#CallServiceShippingMiniCart").removeClass("loading");
+                        $(".description.frete").hide();
+                        //Coloca as infoamções no Bloco HMTL com os valores corretos
+                        $(".description.resultado .valor").html(data);
+                        //$(".tabela.frete").dropdown('refresh');
+                        $(".description.resultado").show();
 
-                    ChangeFrete();
+                        ChangeFrete();
+                    }
+                },
+                error: function (error) {
+                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    if (error.responseText.indexOf("CD:1") > -1 || error.responseText.indexOf("CD:2") > -1) {
+                        $("#zipcode").val(zipCode)
+                        buscaCepCD(zipCode).then(function () {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                                LoadCarrinho()
+                            });
+                        })
+                    }
                 }
             });
         } else {
@@ -101,7 +126,9 @@ $(document).ready(function () {
             window.location.href = "/Checkout";
         }
         else {
-
+            if ($("#zipcode") != null && $("#zipcode").val().length > 0) {
+                $('#shipping').val($("#zipcode").val());
+            }
 
             LoadCarrinho();
             $(".carrinho").sidebar('toggle');
@@ -146,27 +173,51 @@ $(document).ready(function () {
 
 
     $(document).on("keyup", "#miniCarrinho input[id^='qtd_']", function (e) {
-        var valor_final = SomenteNumerosPositivos($(this).val());
-        $(this).val(valor_final);
+        if ($(this).val().length > 0) {
+            var valor_final = SomenteNumerosPositivos($(this).val());
+            $(this).val(valor_final);
 
-        limparFrete();
+            limparFrete();
 
-        var action = $(this).attr("data-action");
-        var idCurrent = $(this).attr("data-id");
-        var valorInput = new Number($("#qtd_" + idCurrent).val());
-        var valorStock = new Number($("#stock_" + idCurrent).val());
+            var action = $(this).attr("data-action");
+            var idCurrent = $(this).attr("data-id");
+            var valorInput = new Number($("#qtd_" + idCurrent).val());
+            var valorStock = new Number($("#stock_" + idCurrent).val());
 
-        if (valorInput <= valorStock && valorInput < 1000) {
-            disparaAjaxUpdate(idCurrent, valorInput, action, true);
+            if (valorInput <= valorStock && valorInput < 1000) {
+                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+            }
+            else {
+                _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
+                valorInput -= 1;
+                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+            }
+            e.stopPropagation();
         }
-        else {
-            _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
-            valorInput -= 1;
-            disparaAjaxUpdate(idCurrent, valorInput, action, true);
-        }
-        e.stopPropagation();
     });
 
+    $(document).on("blur", "#miniCarrinho input[id^='qtd_']", function (e) {
+        if ($(this).val().length == 0) {
+            $(this).val(1);
+
+            limparFrete();
+
+            var action = $(this).attr("data-action");
+            var idCurrent = $(this).attr("data-id");
+            var valorInput = new Number($("#qtd_" + idCurrent).val());
+            var valorStock = new Number($("#stock_" + idCurrent).val());
+
+            if (valorInput <= valorStock && valorInput < 1000) {
+                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+            }
+            else {
+                _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
+                valorInput -= 1;
+                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+            }
+            e.stopPropagation();
+        }
+    });
 
     $(document).on("click", ".qtdActionMiniCart", function (event) {
         // CancelarCalculoFreteCart(1);
@@ -392,14 +443,45 @@ export function RecalcularFrete(zipCode) {
             url: "/Checkout/GetShippingValues",
             data: { zipCode: zipCode },
             success: function (data) {
-                $("#CallServiceShippingMiniCart").removeClass("loading");
-                $(".description.frete").hide();
-                //Coloca as infoam��es no Bloco HMTL com os valores corretos
-                $(".description.resultado .valor").html(data);
-                //$(".tabela.frete").dropdown('refresh');
-                $(".description.resultado").show();
+                if (data.indexOf("|@|&RR0RM&SS@G&|@|CD:") > -1)
+                {
+                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $("#zipcode").val(zipCode);
+                    buscaCepCD(zipCode).then(function () {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                            LoadCarrinho();
+                        });
+                    });
+                }
+                else
+                {
+                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $(".description.frete").hide();
+                    //Coloca as infoam��es no Bloco HMTL com os valores corretos
+                    $(".description.resultado .valor").html(data);
+                    //$(".tabela.frete").dropdown('refresh');
+                    $(".description.resultado").show();
 
-                ChangeFrete();
+                    ChangeFrete();
+                }
+            },
+            error: function (error) {
+                $("#CallServiceShippingMiniCart").removeClass("loading");
+                if (error.responseText.indexOf("Mudanca de CD.") > -1) {
+                    $("#zipcode").val(zipCode)
+                    buscaCepCD(zipCode).then(function () {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                            LoadCarrinho()
+                        });
+                    })
+                } else if (error.responseText.indexOf("Nenhum CD configurado.") > -1) {
+                    $("#zipcode").val(zipCode)
+                    buscaCepCD(zipCode).then(function () {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                            LoadCarrinho()
+                        });
+                    })
+                }
             }
         });
     }

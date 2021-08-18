@@ -53,6 +53,20 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#zipcode_checkout").focusin(function () {
+        verifyZipcode()
+    })
+
+    $("#address_checkout").focusin(function () {
+        verifyZipcode()
+    })
+
+    function verifyZipcode(){
+        if ($("#zipcode_checkout") && $("#zipcode_checkout").val().length >= 8) {
+            $("#zipcode_checkout").keyup();
+        }
+    }
 });
 
 

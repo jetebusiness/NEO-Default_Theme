@@ -5,6 +5,7 @@ import { generateRecaptcha } from "../../ui/modules/recaptcha";
 import { CompraRecorrenteStorage } from "../../functions/recurringPurchase";
 import { PayPalCheckoutTransparent, PayPalCheckoutInCart, PayPalCheckoutReference } from "../../ui/modules/paypal";
 import { createModelExhausted } from './mini_cart'
+import { buscaCepCD, changeCdCheckout } from "../../ui/modules/multiCd";
 
 import { isMobile } from "../../functions/mobile";
 import swal from 'sweetalert2';
@@ -36,7 +37,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
         success: function (response) {
             if (response.success) {
 
-                if (valorFrete === "0,0") {
+                if (valorFrete === "0,0" || valorFrete === "0") {
                     $.ajax({
                         method: "GET",
                         url: "/Checkout/UpdateValueCart",
@@ -53,7 +54,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
 
                     /*** Verificar se habilita forma de pagamento vale compra ***/
                     var subTotal = Number($('.subtotal').html().replace('R$', '').replace(".", "").replace(",", "."));
-                    var discount = Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", "."));
+                    var discount = Number($('#desconto_checkout').html().replace('R$', '').replace(".", "").replace(",", ".").replace("&nbsp;", ""));
                     var shipping = Number(valorFrete.toString().replace('R$', '').replace(".", "").replace(",", "."));
 
                     var valorCompare = (subTotal - discount + shipping).toFixed(2);
@@ -67,6 +68,18 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                     }
                 }
 
+                var _codigoBandeira = $("#idBrandCard").val();
+                if (_codigoBandeira !== undefined) {
+                    var _parcela = $("#parcCard").find(':selected').attr("data-InstallmentNumber");
+                    var _parcela_selecionada = _parcela != undefined ? _parcela : "1";
+                    if (_codigoBandeira != "" && _parcela_selecionada != "") {
+                        if ($('#hasPagSeguro').val() == "1" || $('#hasPagSeguroApp').val() == "1" || $('#hasMercadoPago').val() == "1") {
+                            $('#parcCard').empty().append("<option value='0'>Informe o numero do cartão primeiro</option>");
+                            $('#CreditCard,#DebitCard').val('');
+                            $("#idBrandCard").val('');
+                        }
+                    }
+                }
 
                 atualizaResumoCarrinho();
                 //------------------------------------
@@ -153,7 +166,6 @@ function DataPickerEntregaAgendada(msg, idFrete) {
 
 function initComponent(availableDates, idFrete) {
     //availableDates = ['01-25-2018','01-27-2018','01-22-2018'];
-
     $('.date').datepicker("destroy");
     $("#dateAgendada_" + idFrete).datepicker({
         dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
@@ -879,8 +891,12 @@ function OrderCreate() {
     $(".GerarPedido").click(function (event) {
         event.preventDefault();
 
+
         var $this = $(this);
         var tipoVerificacao = $this.attr("data-Card");
+
+        $this.addClass("disabled");
+        $this.addClass("loading");
 
         if ((tipoVerificacao == "S" && $('#UseTwoCreditCards').is(':checked')) || (tipoVerificacao == "D" && $('#UseTwoDebitCards').is(':checked'))) {
             OrderCreateTwoCards($(this));
@@ -912,12 +928,18 @@ function OrderCreate() {
                             }
                         }
                     }
+                },
+                complete: function () {
+                    if (exhausted) {
+                        $this.removeClass("disabled");
+                        $this.removeClass("loading");
+                    }
                 }
             })
         ).then(function () {
-            if(!exhausted) {
-                $this.addClass("disabled");
-                $this.addClass("loading");
+            if (!exhausted) {
+                if (!$this.hasClass("disabled")) $this.addClass("disabled");
+                if (!$this.hasClass("loading")) $this.addClass("loading");
 
                 var idCustomer = $("#idCustomer").val();
                 var idAddress = $("#idAddress").val();
@@ -1292,8 +1314,11 @@ function onChangeParcelamento() {
 
             var total_parcela_selecionada = Number($("#parcCard").find(':selected').attr("data-installmenttotal"));
             var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
-            var totalDiscount = Number($('#desconto_checkout').text().replace("R$", "").replace("&nbsp;", "").replace(".", "").replace(",", "."))
-            var juros = total_parcela_selecionada - (totalCheckout - totalDiscount);
+            //var totalDiscount = Number($('#desconto_checkout').text().replace("R$", "").replace("&nbsp;", "").replace(".", "").replace(",", "."))
+            //var juros = total_parcela_selecionada - (totalCheckout - totalDiscount);
+            //if ($('#hasPagSeguro').val() == "1" || $('#hasPagSeguroApp').val() == "1" || $('#hasMercadoPago').val() == "1") {
+            var juros = total_parcela_selecionada - totalCheckout;
+            //}
             $('#interest_checkout').html(juros.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
         });
     }
@@ -1586,7 +1611,8 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                                     }
                                 });
                         }
-                    } else if (typeof (objMaxiPago) != "undefined" && objMaxiPago == true) {
+                    }
+                    else if (typeof (objMaxiPago) != "undefined" && objMaxiPago == true) {
                         $("#btnCardCredit").attr("data-gateway", "maxipago");
                         if (objOneClick != "" && typeof (objOneClick) != "undefined") {
                             $("#checkOneClickField").show();
@@ -2001,14 +2027,21 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
             $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(TotalDiscount));
         }
 
-    } else {
+    }
+    else {
         var obj_parcelamento;
         if (($('#hasPagSeguro').val() !== "0" && $('#hasPagSeguro').val() !== undefined) || ($('#hasPagSeguroApp').val() !== "0" && $('#hasPagSeguroApp').val() !== undefined) || ($('#hasMercadoPago').val() !== "0" && $('#hasMercadoPago').val() !== undefined)) {
             obj_parcelamento = buscaTotalParcelamentoValor(codigoBandeira, codigoPaymentMethod, 1);
             var valor = $('#parcCard > option:selected').data('installmenttotal');
+            obj_parcelamento.juros = valor - obj_parcelamento.result;
+            if (obj_parcelamento.juros < 0) obj_parcelamento.juros = 0;
             obj_parcelamento.result = valor;
         } else {
             obj_parcelamento = buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
+            var valor = $('#parcCard > option:selected').data('installmenttotal');
+            obj_parcelamento.juros = valor - obj_parcelamento.result;
+            if (obj_parcelamento.juros < 0) obj_parcelamento.juros = 0;
+            obj_parcelamento.result = valor;
         }
         //var obj_carrinho = buscaValorFinalCarrinho();
         if (Object.keys(obj_parcelamento).length > 0) {
@@ -2022,6 +2055,7 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
 
             $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.discount + desconto_inicial));
             $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.result));
+            $("#interest_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.juros));
         }
     }
 }
@@ -2035,7 +2069,29 @@ function listAddressPayment() {
         $("#registerAddressPayment").hide();
         viewAddressLogged(".lista-endereco-cliente");
         RecoverPasswordByEmail(".lista-endereco-cliente");
-        $('.ui.modal.lista-endereco-cliente').modal('show');
+        if (localStorage.getItem('multiCdAddress') != undefined) {
+            var response = localStorage.getItem('multiCdAddress');
+            localStorage.removeItem('multiCdAddress');
+            $('.ui.modal.lista-endereco-cliente')
+                .modal({
+                    onHidden: function () {
+                        if (response.indexOf('redirecionado') == -1) {
+                            changeCd(false, true, undefined, false)
+                        } else {
+                            $.ajax({
+                                method: "POST",
+                                url: "/Checkout/ClearCart",
+                                success: function (data) {
+                                    window.location.href = "/home";
+                                }
+                            });
+                        }
+                    }
+                })
+                .modal('show');
+        } else {
+            $('.ui.modal.lista-endereco-cliente').modal('show');
+        }
     });
 }
 
@@ -2099,9 +2155,12 @@ function changeAddressPayment() {
                     },
                     success: function (responseChange) {
                         if (responseChange.success) {
-                            atualizaEnderecos(responseChange);
-                        }
-                        else {
+                            if ($("#multiCDActive").val().toLowerCase() == "true") {
+                                document.location.reload()
+                            } else {
+                                atualizaEnderecos(responseChange);
+                            }
+                        }else {
                             _alert("", responseChange.msg, "warning");
                             _el.removeClass("loading")
                         }
@@ -2214,7 +2273,7 @@ function pagamentocomDesconto() {
     });
 }
 
-function atualizaEnderecos(responseChange) {
+export function atualizaEnderecos(responseChange) {
     if (responseChange != undefined) {
         updateAddress();
 
@@ -2227,18 +2286,33 @@ function atualizaEnderecos(responseChange) {
         $("#stateClient").text(responseChange.stateClient);
         $("#zipCodeClient").text(responseChange.zipCodeClient);
         $("#zipcode").val(responseChange.zipCodeClient);
+
+        var zipCode = responseChange.zipCodeClient;
+        $("#zipcode").val(zipCode)
     }
 
     $.ajax({
         method: "POST",
         url: "ListaFretePagamento",
         success: function success(data) {
-            $("#updateShippingPayment").html(data);
-            clickShipping();
-            HabilitaBlocoPagamento(false);
-            CampoEntregaAgendada();
-            $('.ui.modal').modal('hide');
-            //isLoading(".ui.accordion.frete");
+            if (data.indexOf("|@|&RR0RM&SS@G&|@|CD") > -1) {
+                $("#updateShippingPayment").html("");
+                HabilitaBlocoPagamento(false);
+                $('.ui.modal').modal('hide');
+            } else {
+                $("#updateShippingPayment").html(data);
+                clickShipping();
+                HabilitaBlocoPagamento(false);
+                CampoEntregaAgendada();
+                $('.ui.modal').modal('hide');
+            }
+        },
+        error: function (error) {
+            if (error.responseText.indexOf("CD") > -1) {
+                $("#updateShippingPayment").html("");
+                HabilitaBlocoPagamento(false);
+                $('.ui.modal').modal('hide');
+            }
         }
     });
 }
@@ -3067,7 +3141,20 @@ $(document).ready(function () {
 
     // $("#formas-pagamento #tabPayment .itemTabPayment").tab();
     $("#formas-pagamento #tabPayment .itemTabPayment").tab({
-        onVisible: function() {
+        onVisible: function (tabPath) {
+            if (tabPath != "cardCredit" && $('#CreditCard').val() != "") {
+                $('#parcCard').empty().append("<option value='0'>Informe o numero do cartão primeiro</option>");
+                $('#CreditCard').val('');
+                $("#idBrandCard").val('');
+                atualizaResumoCarrinho();
+            }
+            else if (tabPath != "cardDebit" && $('#DebitCard').val() != "")
+            {
+                $('#DebitCard').val('');
+                $("#idBrandCard").val('');
+                atualizaResumoCarrinho();
+            }
+
             $(">iframe", "#paypal-cc-form").css("width", "100%");
         }
     });
@@ -3261,8 +3348,16 @@ $(document).ready(function () {
             }
         });
     }
-    if (document.location.pathname.toLowerCase() == "/checkout/payment")
+    if (document.location.pathname.toLowerCase() == "/checkout/payment") {
         GetStatusAntiFraudMaxiPago();
+        var zipCode = $("#dadosClienteUpdate #zipcode").val();
+        $("#zipcode").val(zipCode)
+        isLoading(".ui.accordion.frete");
+        buscaCepCD(zipCode).then(function () {
+            changeCdCheckout();
+        })
+        isLoading(".ui.accordion.frete");
+    }
 
 
     if ($('#hasMercadoPago').val() !== undefined && $('#hasMercadoPago').val() !== "0") {

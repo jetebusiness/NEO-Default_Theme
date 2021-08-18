@@ -1,0 +1,76 @@
+﻿@{
+    LojaCorp.Control.MultiCd MultiCd = (LojaCorp.Control.MultiCd)Session["MultiCd"];
+    string zipcode = (MultiCd != null ? MultiCd.CEP : "");
+    if (LojaCorp.Control.Company._Company.ActiveModalMultiCD)
+    {
+        <div class="multi-cd-modal" style="display: none">
+            <div class="content">
+                <i class="icon close" id="closeMultiCD"></i>
+                <div class="all ui column left aligned">
+                    <span class="ui header title">Localização</span>
+                    <span class="description">Favor informar seu CEP para ter acesso aos produtos de sua região.</span>
+                    <div class="form-modal">
+                        <form class="form ui form">
+                            <div class="ui grid">
+                                <div class="row two column">
+                                    <div class="ui column nine wide computer sixteen wide tablet sixteen wide mobile">
+                                        <div class="field">
+                                            <label>CEP</label>
+                                            <input id="zipcode" type="text" placeholder="Informe o CEP" class="masked mask_zipcode" data-validate="zipcode" value="@zipcode">
+                                            <span id="error-zipcode-multiCd">*Informe um CEP</span>
+                                        </div>
+                                    </div>
+                                    <div class="ui column seven wide computer sixteen wide tablet sixteen wide mobile">
+                                        <div class="busca cep">
+                                            <p>
+                                                Não sabe o seu CEP? <b><a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank">Consulte Aqui</a>.</b>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row two column stackable">
+                                    <div class="column">
+                                        <div class="field">
+                                            <label class="form-placeholder">Estado*</label>
+                                            @{
+                                                string estado = (MultiCd != null ? MultiCd.Localizacao.Replace("-", "").Split('/')[1].Trim() : "");
+                                            }
+                                            <input id="uf" placeholder="Estado" type="text" value="@estado" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="ui column">
+                                        <div class="field stackable">
+                                            <label class="form-placeholder">Município*</label>
+                                            @{
+                                                string cidade = (MultiCd != null ? MultiCd.Localizacao.Replace("-", "").Split('/')[0].Trim() : "");
+                                            }
+                                            <input id="localidade" placeholder="Município" type="text" value="@cidade" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="ui column">
+                                        <button class="select-locale ui button primary fluid large" id="selecionar">SELECIONAR</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <input id="zipcode" type="hidden" value="@zipcode">
+    }
+
+    string localizacao = (MultiCd != null ? MultiCd.Localizacao : "");
+    <input type="hidden" id="localizacao" value="@localizacao" />
+    <input type="hidden" id="localizacao_old" value="@localizacao" />
+
+    bool showModal = ViewBag.ShowMultiCDModal && LojaCorp.Control.Company._Company.ActiveModalMultiCD;
+    <input id="showMultiCdModal" type="hidden" data-show-multicd-modal="@showModal" />
+
+    <input id="multiCDActive" type="hidden" value="@LojaCorp.Control.Company._Company.ActiveMultiCD.ToString()" />
+}

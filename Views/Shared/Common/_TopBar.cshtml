@@ -1,9 +1,41 @@
-﻿<div class="ui container fluid topbar" id="top_bar">
+﻿@{ 
+    LojaCorp.Control.MultiCd MultiCd = (LojaCorp.Control.MultiCd)Session["MultiCd"];
+}
+<div class="ui container fluid topbar" id="top_bar">
     <div class="ui container">
-        <div class="ui grid middle aligned inverted">
-            <div class="two column row">
-                @Html.Action("SocialBar", "SocialNetwork")
-                <div class="ui right floated right aligned column margin none eleven wide computer sixteen wide tablet sixteen wide tablet">                    
+        <div class="ui grid middle aligned equal width">
+            <div class="row">
+                @{
+                    if (LojaCorp.Control.Company._Company.ActiveMultiCD && LojaCorp.Control.Company._Company.ActiveModalMultiCD)
+                    {
+                        <div class="column">
+                            <div class="location">
+                                <i class="icon map marker alternate large"></i>
+                                <div class="info">
+                                    @{
+                                        if (MultiCd != null)
+                                        {
+                                            <span id="headLocation">@MultiCd.Localizacao</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Localização</span>
+                                        }
+
+
+                                    }
+                                    <button id="changeLocation"><b>Alterar</b></button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.Action("SocialBar", "SocialNetwork")
+                    }
+                }
+
+                <div class="column right aligned">
                     <div class="ui horizontal list relaxed divided">
 
 
@@ -65,7 +97,8 @@
                                 </a>
                             </div>
                         }
-                        @if((Session["Seller"] == null)) {
+                        @if ((Session["Seller"] == null))
+                        {
                             @Html.Action("B2BIsActived", "Company", null)
                         }
                     </div>

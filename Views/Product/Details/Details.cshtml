@@ -134,6 +134,8 @@
             productImages = Model.ProductImages;
         }
     }
+
+    ViewBag.PurchaseRecurring = "false";
 }
 
 <script>
@@ -166,11 +168,11 @@
         }
         
         <meta property="og:type" content="website">
-        <meta property="og:url" content="@Html.Raw(Request.Url)">
-        <meta name="twitter:url" content="@Html.Raw(Request.Url)">
+        <meta property="og:url" content="@HttpUtility.HtmlEncode(Request.Url)">
+        <meta name="twitter:url" content="@HttpUtility.HtmlEncode(Request.Url)">
         <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
         <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
-        <meta property="og:image" content="@productImages.FirstOrDefault().ImageDefault">
+        <meta property="og:image" content="@productImages.FirstOrDefault()?.ImageDefault">
     }
 }
 
@@ -359,11 +361,11 @@
                         </div>
                     </div>
                     <!--COMEÇO DICA DE COMPRA-->
-                    
+
                     @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
                     <!--FIM DICA DE COMPRA-->
 
-                   @Html.Partial("~/Views/Product/Details/_FlagDiscount.cshtml", Model)
+                    @Html.Partial("~/Views/Product/Details/_FlagDiscount.cshtml", Model)
 
 
                     <div class="row product-grid">
@@ -376,7 +378,7 @@
                                 }
                                 else
                                 {
-                                   
+
                                     <input type="hidden" id="hdnShowProductOutOfStock" value="@(!LojaCorp.Control.Company._Company.ShowProductOutOfStock ? 0 : 1)" />
                                     if (Model.AvailableReferences != null)
                                     {
@@ -403,7 +405,7 @@
                                     }
 
                                     @*@Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })*@
-                                    
+
                                     <!--FIM VARIAÇÔES-->
 
                                     if (Model.IsKit)
@@ -421,7 +423,7 @@
                                                             <i class="minus icon"></i>
                                                         </button>
                                                         <input type="number" min="1" step="1" size="3" value="1"
-                                                                name="quantidade" id="quantidade" class="text center" />
+                                                               name="quantidade" id="quantidade" class="text center" />
                                                         <button class="ui grey icon button qtdplus" id="qtdplus-detalhes">
                                                             <i class="add icon"></i>
                                                         </button>
@@ -564,6 +566,7 @@
                                                     }
                                                     @if (Model.PurchaseRecurring && Model.Stock > 0 && !Model.FlagExhausted)
                                                     {
+                                                        ViewBag.PurchaseRecurring = "true";
                                                         <a class="ui animated button recurring btn-comprar-assinar detalhes">
                                                             <div class="visible content">ASSINAR PRODUTO</div>
                                                             <div class="hidden content">
@@ -660,7 +663,7 @@
                                             </div>
                                         </div>
                                         <div class="column">
-                                            <button name="simular-frete-submit" id="simular-frete-submit" class="ui button primary">OK</button>
+                                            <button name="simular-frete-submit" id="simular-frete-submit" data-purchaserecurring="@ViewBag.PurchaseRecurring" class="ui button primary">OK</button>
                                         </div>
                                     </div>
                                 </div>
@@ -684,12 +687,12 @@
                             <div class="one column row">
                                 <div class="column">
                                     @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
-                                            <div class="addthis_inline_share_toolbox"></div>
-                                        <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
-                                        <div class="g-plus" data-action="share"></div>
-                                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
-                                        <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
-                                        <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
+                                        <div class="addthis_inline_share_toolbox"></div>
+                                    <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
+                                    <div class="g-plus" data-action="share"></div>
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
+                                    <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
+                                    <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
                                     <!-- Go to www.addthis.com/dashboard to customize your tools -->
                                     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
                                     <!-- Go to www.addthis.com/dashboard to customize your tools -->

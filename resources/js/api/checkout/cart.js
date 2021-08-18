@@ -5,31 +5,60 @@ import { UpdateCarrinho } from "../../functions/mini_cart_generic";
 import { SomenteNumerosPositivos } from "../../functions/form-control";
 import { CompraRecorrenteStorage, CompraRecorrenteCart } from '../../functions/recurringPurchase';
 import { atualizaResumoCarrinho } from './payment'
+import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 
 function InserirQuantidadeManual() {
     $(document).on("keyup", "#ListProductsCheckoutCompleto input[id^='qtd_']", function (e) {
-        CancelarCalculoFreteCart(1);
-        var valor_final = SomenteNumerosPositivos($(this).val());
-        $(this).val(valor_final);
-        $("#id_frete_selecionado").val("");
-        $("#cep_selecionado").val("");
-        // $("#btn_recalcular_frete").click();
+        if ($(this).val().length > 0) {
+            CancelarCalculoFreteCart(1);
+            var valor_final = SomenteNumerosPositivos($(this).val());
+            $(this).val(valor_final);
+            $("#id_frete_selecionado").val("");
+            $("#cep_selecionado").val("");
+            // $("#btn_recalcular_frete").click();
 
-        var action = $(this).attr("data-action");
-        var idCurrent = $(this).attr("data-id");
-        var valorInput = new Number($("#qtd_" + idCurrent).val());
-        var valorStock = new Number($("#stock_" + idCurrent).val());
+            var action = $(this).attr("data-action");
+            var idCurrent = $(this).attr("data-id");
+            var valorInput = new Number($("#qtd_" + idCurrent).val());
+            var valorStock = new Number($("#stock_" + idCurrent).val());
 
-        if (valorInput <= valorStock) {
-            disparaAjaxUpdate(idCurrent, valorInput, action);
+            if (valorInput <= valorStock) {
+                disparaAjaxUpdate(idCurrent, valorInput, action);
+            }
+            else {
+                _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
+                valorInput -= 1
+            }
+
+            $("#qtd_" + idCurrent).val(valorInput);
+            e.stopPropagation();
         }
-        else {
-            _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
-            valorInput -= 1
-        }
+    });
 
-        $("#qtd_" + idCurrent).val(valorInput);
-        e.stopPropagation();
+    $(document).on("blur", "#ListProductsCheckoutCompleto input[id^='qtd_']", function (e) {
+        if ($(this).val().length == 0) {
+            CancelarCalculoFreteCart(1);
+            $(this).val(1);
+            $("#id_frete_selecionado").val("");
+            $("#cep_selecionado").val("");
+            // $("#btn_recalcular_frete").click();
+
+            var action = $(this).attr("data-action");
+            var idCurrent = $(this).attr("data-id");
+            var valorInput = new Number($("#qtd_" + idCurrent).val());
+            var valorStock = new Number($("#stock_" + idCurrent).val());
+
+            if (valorInput <= valorStock) {
+                disparaAjaxUpdate(idCurrent, valorInput, action);
+            }
+            else {
+                _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
+                valorInput -= 1
+            }
+
+            $("#qtd_" + idCurrent).val(valorInput);
+            e.stopPropagation();
+        }
     });
 }
 
@@ -154,14 +183,34 @@ function LoadServiceShipping() {
             url: "/Checkout/GetShippingValues",
             data: { zipCode: zipCode },
             success: function (data) {
-                $("#CallServiceShipping").removeClass("loading");
-                $(".description.frete").hide();
-                //Coloca as infoam��es no Bloco HMTL com os valores corretos
-                $(".description.resultado .valor").html(data);
-                //$(".tabela.frete").dropdown('refresh');
-                $(".description.resultado").show();
+                if (data.indexOf("|@|&RR0RM&SS@G&|@|CD:") > -1) {
+                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $("#zipcode").val(zipCode);
+                    buscaCepCD(zipCode).then(function () {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                            LoadCarrinho();
+                        });
+                    });
+                }
+                else
+                {
+                    $("#CallServiceShipping").removeClass("loading");
+                    $(".description.frete").hide();
+                    //Coloca as infoam��es no Bloco HMTL com os valores corretos
+                    $(".description.resultado .valor").html(data);
+                    //$(".tabela.frete").dropdown('refresh');
+                    $(".description.resultado").show();
 
-                ChangeFrete();
+                    ChangeFrete();
+                }
+            },
+            error: function (error) {
+                if (error.responseText.indexOf("CD:1") > -1 || error.responseText.indexOf("CD:2") > -1) {
+                    $("#zipcode").val(zipCode)
+                    buscaCepCD(zipCode).then(function () {
+                        changeCd(true, false, "#CallServiceShipping", true);
+                    })
+                }
             }
         });
         event.stopPropagation();
@@ -350,6 +399,10 @@ $(document).ready(function () {
     InserirQuantidadeManual();
     CancelarCalculoFreteClk();
     loadCompraRecorrente();
+
+    if ($("#zipcode") != null && $("#zipcode").val().length > 0) {
+        $('#shipping').val($("#zipcode").val());
+    }
 });
 
 $(document).on("click", "#finalizePurchase", function (e) {

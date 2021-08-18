@@ -18,14 +18,14 @@ function printDiv(divID) {
 
 function openShopline(clearShopline = false) {
     if (clearShopline) {
-        $(".ui.modal").modal({
+        $(".ui.modal.itau-shopline").modal({
             onHidden: function () {
                 $("#itauShopline").remove();
                 $(this).remove();
             }
         }).modal('show');
     } else {
-        $(".ui.modal").modal('show')
+        $(".ui.modal.itau-shopline").modal('show')
     }
 }
 

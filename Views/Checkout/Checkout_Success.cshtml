@@ -159,6 +159,15 @@
                             <button class="ui large action button margin none" id="ProcessBankSlip">Imprimir</button>
                         </div>
                     }
+                    if (Model.IdPaymentBrand == 240 && !string.IsNullOrEmpty(Model.DescricaoDetalhada))
+                    {
+                        <div class="column">
+                            <div class="ui segment attached aligned center">
+                                @Html.Raw(Model.DescricaoDetalhada)
+                            </div>
+                        </div>
+
+                    }
                 }
             </div>
             <div class="ui divider small"></div>

@@ -43,6 +43,9 @@ require('../functions/lazy_load');
 //--------------------[ Policy ]--------------------//
 require('./modules/policy');
 
+//--------------------[ MultiCD ]--------------------//
+require('./modules/multiCd');
+
 //--------------------[ Start Document ]--------------------//
 $(document).ready(function(){
     "use strict";    

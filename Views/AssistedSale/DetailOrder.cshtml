@@ -87,7 +87,7 @@
                                     if (Model.IdPaymentBrand == 207)
                                     {
                                         <input type="hidden" id="idOrder" value="@Model.IdOrder" />
-                                        <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button right floated">Reimprimir Boleto</a>
+                                        <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button">Reimprimir Boleto</a>
 
                                         <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
                                               method="post"
@@ -97,7 +97,7 @@
                                             <input type="hidden" name="DC" id="tokenBankSlip" value="" />
                                         </form>
 
-                                        <div class="ui modal">
+                                        <div class="ui modal itau-shopline">
                                             <i class="close icon"></i>
                                             <div class="content">
                                                 <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
@@ -108,7 +108,7 @@
                                     else if (Model.IdPaymentBrand == 238)
                                     {
                                         <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
-                                        <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button right floated">Reimprimir Boleto</a>
+                                        <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button">Reimprimir Boleto</a>
 
                                         <div class="ui modal maxiPago">
                                             <i class="close icon"></i>
@@ -120,7 +120,7 @@
                                     @* Forma de pagamento com boleto PagSeguro*@
                                     else if (!string.IsNullOrEmpty(Model.PaymentLink))
                                     {
-                                        <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button right floated">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
+                                        <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
                                         <div class="ui modal pagseguro">
                                             <i class="close icon"></i>
                                             <div class="content">

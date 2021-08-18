@@ -86,7 +86,7 @@
                                 {
                                     string content = Regex.Replace(redesSociais.Find(f => f.Identifier.ToUpper() == "WHATSAPP").Content, "[^0-9]", "");
                                     string urlWhasapp = string.Format("{0}{1}", "https://api.whatsapp.com/send?phone=55", content);
-                                    
+
                                     <a class="text color white" href="@urlWhasapp" target="_blank" title="WHATSAPP">
                                         <i class="whatsapp icon"></i>
                                     </a>
@@ -95,6 +95,18 @@
                                 {
                                     <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "bloger").Content" target="_blank" title="Blogger">
                                         <i class="wpforms icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier == "pinterest") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "pinterest").Content" target="_blank" title="Printerest">
+                                        <i class="pinterest icon"></i>
+                                    </a>
+                                }
+                                @if (redesSociais.Find(f => f.Identifier == "vimeo") != null)
+                                {
+                                    <a class="text color white" href="@redesSociais.Find(f => f.Identifier == "vimeo").Content" target="_blank" title="Vimeo">
+                                        <i class="vimeo icon"></i>
                                     </a>
                                 }
                             </socialbar>

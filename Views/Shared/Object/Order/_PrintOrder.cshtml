@@ -100,15 +100,15 @@
                                 }
                             </div>
                         }
-                            <div class="item">
+                            <div class="item margin top medium">
                                 @{
-                                    if (Model.IdPaymentBrand == 207 || Model.IdPaymentBrand == 238 || !string.IsNullOrEmpty(Model.PaymentLink) || (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64)))
+                                    if (Model.IdPaymentBrand == 207 || Model.IdPaymentBrand == 238 || !string.IsNullOrEmpty(Model.PaymentLink) || (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64)) || (Model.IdPaymentBrand == 240 && !string.IsNullOrEmpty(Model.DescricaoDetalhada)))
                                     {
                                         @* Forma de pagamento com boleto Itaú *@
                                         if (Model.IdPaymentBrand == 207)
                                         {
                                             <input type="hidden" id="idOrder" value="@Model.IdOrder" />
-                                            <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button right floated">Reimprimir Boleto</a>
+                                            <a href="javascript:void(0)" id="reprintBankSlip" class="ui action button">Reimprimir Boleto</a>
 
                                             <form action="https://shopline.itau.com.br/shopline/shopline.aspx"
                                                   method="post"
@@ -118,7 +118,7 @@
                                                 <input type="hidden" name="DC" id="tokenBankSlip" value="" />
                                             </form>
 
-                                            <div class="ui modal">
+                                            <div class="ui modal itau-shopline">
                                                 <i class="close icon"></i>
                                                 <div class="content">
                                                     <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
@@ -129,7 +129,7 @@
                                         else if (Model.IdPaymentBrand == 238)
                                         {
                                             <input type="hidden" id="idOrderMaxiPago" value="@Model.IdOrder" />
-                                            <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button right floated">Reimprimir Boleto</a>
+                                            <a href="javascript:void(0)" id="reprintBankSlipMaxiPago" class="ui action button">Reimprimir Boleto</a>
 
                                             <div class="ui modal maxiPago">
                                                 <i class="close icon"></i>
@@ -141,7 +141,7 @@
                                         @* Forma de pagamento com boleto PagSeguro*@
                                         else if (!string.IsNullOrEmpty(Model.PaymentLink))
                                         {
-                                            <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button right floated">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
+                                            <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button">@((Model.NamePaymentMethodGateway.ToLower().Contains("boleto")) ? "Reimprimir boleto" : "Recuperar link de pagamento")</a>
                                             <div class="ui modal pagseguro">
                                                 <i class="close icon"></i>
                                                 <div class="content">
@@ -151,7 +151,7 @@
                                         }
                                         else if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64))
                                         {
-                                            <a href="javascript:void(0)" id="btnOpenMercadoPagoPix" class="ui action button right floated">PIX Copia e cola</a>
+                                            <a href="javascript:void(0)" id="btnOpenMercadoPagoPix" class="ui action button">PIX Copia e cola</a>
                                             <div class="ui modal mercadopago-pix">
                                                 <i class="close icon"></i>
                                                 <div class="content" style="text-align: center;">
@@ -162,6 +162,16 @@
                                                 </div>
                                             </div>
 
+                                        }@* Pagamento offline*@
+                                        else if (Model.IdPaymentBrand == 240 && !String.IsNullOrEmpty(Model.DescricaoDetalhada))
+                                        {
+                                            <a href="javascript:void(0)" id="btnOpenPaymentLink" class="ui action button">Informações Adicionais do pagamento</a>
+                                            <div class="ui modal small pagseguro text center">
+                                                <i class="close icon"></i>
+                                                <div class="content">
+                                                    @Html.Raw(Model.DescricaoDetalhada)
+                                                </div>
+                                            </div>
                                         }
                                     }
                                 }
@@ -205,12 +215,12 @@
                                 @(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping)<br>
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item margin top medium">
                             @{
                                 if (!string.IsNullOrEmpty(Model.HistoryListOrderStatus.LastOrDefault().TrackingLink))
                                 {
 
-                                    <a href="@Model.HistoryListOrderStatus.LastOrDefault().TrackingLink" class="ui button positive right floated">Rastrear Pedido</a>
+                                    <a href="@Model.HistoryListOrderStatus.LastOrDefault().TrackingLink" class="ui button positive">Rastrear Pedido</a>
                                 }
 
                                 foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus.Where(o => o.DateRegisterStatus != null).OrderByDescending(o => o.DateRegisterStatus).ToList())
@@ -220,10 +230,10 @@
                                         if (ViewBag.Yami != null && ViewBag.Yami.Trim() != "")
                                         {
                                             string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
-                                            <a href="@urlYami" class="ui button orange right floated btn-yami">Solicitar troca/devolução</a>
+                                            <a href="@urlYami" class="ui button orange btn-yami">Solicitar troca/devolução</a>
 
                                             string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
-                                            <a href="@urlYamiAcompanha" class="ui button basic orange right floated btn-yami-acompanha">Acompanhar Troca/Devolução</a>
+                                            <a href="@urlYamiAcompanha" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>
                                         }
                                     }
                                     break;
@@ -240,7 +250,7 @@
                     @if (Model.HistoryListOrderStatus != null && Model.HistoryListOrderStatus.Count() > 0)
                     {
                         var count = 0;
-                        foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus)
+                        foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus.Where(o => o.DateRegisterStatus != null).OrderBy(o => o.DateRegisterStatus).ToList())
                         {
                             count++;
                             if (count > 3)
