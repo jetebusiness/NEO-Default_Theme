@@ -9,11 +9,18 @@
         if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaDescription))
         {
             <meta name="Description" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaDescription)">
+            <meta property="og:description" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaDescription)">
+            <meta name="twitter:description" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaDescription)">
         }
         if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.MetaKey))
         {
             <meta name="Keywords" content="@Html.Raw(LojaCorp.Control.Company._Company.MetaKey)">
         }
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="@HttpUtility.HtmlEncode(Request.Url)">
+        <meta name="twitter:url" content="@HttpUtility.HtmlEncode(Request.Url)">
+        <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
+        <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
     }
 
     if (!String.IsNullOrEmpty(@LojaCorp.Control.Company._Company.Robots))

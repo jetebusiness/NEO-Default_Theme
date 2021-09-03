@@ -2,6 +2,35 @@
 import {_alert} from '../../functions/message';
 
 $(document).ready(function () {
+    $("#_cpf, #_cnpj").focusout(function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        let cpf_cnpj = $(this).val();
+        let cpf_cnpj_valid = "#valid_cpf";
+        if (cpf_cnpj.length > 15) {
+            cpf_cnpj_valid = "#valid_cnpj";
+        }
+        $.ajax({
+            method: "GET",
+            url: "/Customer/ValideClientByCpf?cpf_cnpj=" + cpf_cnpj,
+            dataType: "json",
+            success: function (data) {
+                if (data.success == false) {
+                    $(cpf_cnpj_valid).removeClass("success").addClass("error");
+                    if ($(cpf_cnpj_valid + "_existente").length == 0) {
+                        $(cpf_cnpj_valid).append("<div id='" + cpf_cnpj_valid + "_existente' class='ui basic red pointing prompt label'>" + data.message + "</div>");
+                    }
+                }
+                else {
+                    $(cpf_cnpj_valid + "_existente").remove();
+                }
+            },
+            error: function (data) {
+                _alert("", data.message, "warning");
+            }
+        });
+    });
 
     $('#categories_news .ui.checkbox').checkbox({
         onChecked: function () {

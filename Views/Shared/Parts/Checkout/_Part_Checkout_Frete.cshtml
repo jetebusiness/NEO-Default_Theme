@@ -31,7 +31,7 @@
             decimal.TryParse(Session["PaymentLinkShippingValue"].ToString(), out _value);
 
             if (_hub.HasValue) {
-                var _shipping = Model.Where(f => f.ShippingMode.hub == _hub && f.ShippingMode.carrier == _carrier && f.ShippingMode.mode == _mode && f.ValueShipping == _value).FirstOrDefault();
+                var _shipping = Model.FirstOrDefault(f => f.ShippingMode.hub == _hub && f.ShippingMode.carrier == _carrier && f.ShippingMode.mode == _mode);
                 if (_shipping != null)
                 {
                     IdShippingModeCart = _shipping.ShippingMode.IdShippingMode;

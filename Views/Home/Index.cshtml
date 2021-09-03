@@ -3,6 +3,12 @@
     Layout = "~/Views/Shared/Base/_Layout.cshtml";
 }
 
+@section CustomSeo {
+    @{
+        <meta property="og:image" content="/assets/image/logo/logo.png">
+    }
+}
+
 <!-- ~/Views/Shared/Blocks/Banner/_FullBanner.cshtml -->
 @Html.Action("FullBanner", "Banner")
 
@@ -25,6 +31,9 @@
 
 <!-- ~/Views/Shared/Blocks/Banner/_FooterHalfBanner.cshtml -->
 @Html.Action("FooterHalfBanner", "Banner")
+
+<!-- ~/Views/Shared/Blocks/Instagram/_InstagramMedia.cshtml -->
+@Html.Action("InstagramMedia", "Company")
 
 <!-- ~/Views/Shared/Blocks/Brand/_Brands.cshtml -->
 @Html.Action("Brand", "Product")

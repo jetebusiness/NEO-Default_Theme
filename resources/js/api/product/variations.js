@@ -30,6 +30,7 @@ variations = {
             oldPrice: '#preco-antigo', //preco antigo
             newPrice: '#preco', //preco promocional e/ou atual
             priceCA: '.signature-value', //preco promocional e/ou atual
+            priceBuyTogether: '#price-buy-together',
             installment: {
                 containerInstallment: '.infoPreco', //div que recebe o valor do parcelamento
                 number: '#max-p', //numero de parcelas
@@ -504,8 +505,10 @@ variations = {
                 ? $(this.config.htmlPrice.containerValues).prepend("<span id='"+ this.config.htmlPrice.oldPrice.replace("#", "") +"'></span>")
                 : $(this.config.htmlPrice.oldPrice).show())
 
-                $(this.config.htmlPrice.oldPrice).html(this.moneyBR(Price)) //'#preco-antigo', //preco antigo
+            $(this.config.htmlPrice.oldPrice).html(this.moneyBR(Price)) //'#preco-antigo', //preco antigo
             $(this.config.htmlPrice.newPrice).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
+            $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
+            
 
             if(Discount > 0) {
                 $(this.config.htmlPrice.billet_price).html(
@@ -519,6 +522,7 @@ variations = {
         } else {
             $(this.config.htmlPrice.oldPrice).hide()
             $(this.config.htmlPrice.newPrice).html(this.moneyBR(Price)) //'#preco', //preco promocional e/ou atual
+            $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(Price)) //'#preco', //preco promocional e/ou atual
 
             if(Discount > 0) {
                 $(this.config.htmlPrice.billet_price).html(

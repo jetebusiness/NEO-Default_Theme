@@ -9,248 +9,265 @@ var ppp;
 
 function PayPalCheckout() {
     if ($('#paypal-button-container').length > 0) {
-        paypal.Buttons({
-            env: $('#EnvPayPal').val(),
-            style: {
-                layout: 'horizontal',
-                color: $('#ButtonColorPayPal').val(), // blue / silver
-                shape: $('#ButtonFormatPayPal').val(), // pill
-                label: 'pay', // no checkout: pay // no shortcut: buynow
-                height: 45,
-                size: 'responsive',
-                fundingicons: false,
-                tagline: false
-            },
-            locale: {
-                country: 'BR',
-                lang: 'pt_BR'
-            },
-            createOrder: function (data, actions) {
-                let token = "";
+        if (window.paypal != undefined) {
+            paypal.Buttons({
+                env: $('#EnvPayPal').val(),
+                style: {
+                    layout: 'horizontal',
+                    color: $('#ButtonColorPayPal').val(), // blue / silver
+                    shape: $('#ButtonFormatPayPal').val(), // pill
+                    label: 'pay', // no checkout: pay // no shortcut: buynow
+                    height: 45,
+                    size: 'responsive',
+                    fundingicons: false,
+                    tagline: false
+                },
+                locale: {
+                    country: 'BR',
+                    lang: 'pt_BR'
+                },
+                createOrder: function (data, actions) {
+                    let token = "";
 
-                $.ajax({
-                    method: 'POST',
-                    url: '/Checkout/PayPalCreateOrder',
-                    async: false,
-                    data: {
-                        IdAddress: $("#idAddress").val()
-                    },
-                    success: function (response) {
-                        if (response.links.length > 0) {
-                            for (var key in response.links) {
-                                if (response.links[key].rel == "approval_url") {
-                                    token = response.links[key].href.match(/EC-\w+/)[0];
+                    $.ajax({
+                        method: 'POST',
+                        url: '/Checkout/PayPalCreateOrder',
+                        async: false,
+                        data: {
+                            IdAddress: $("#idAddress").val()
+                        },
+                        success: function (response) {
+                            if (response.links.length > 0) {
+                                for (var key in response.links) {
+                                    if (response.links[key].rel == "approval_url") {
+                                        token = response.links[key].href.match(/EC-\w+/)[0];
+                                    }
                                 }
                             }
                         }
+                    });
+
+                    return token;
+                },
+                onApprove: function (data, actions) {
+
+                    var idCustomer = $("#idCustomer").val();
+                    var idAddress = $("#idAddress").val();
+                    var presente = $("#presente").val();
+                    var mensagem = $("#mensagem").val();
+                    var idPaymentBrand = $("#IdPaymentBrandPayPal").val();
+                    var shippingMode = "";
+                    if ($('.shippingGet:checked').length > 0) shippingMode = $('.shippingGet:checked').data("mode");
+                    var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
+                    var deliveryTime = null;
+                    var usefulDay = null;
+                    if ($('input[name=radio]:checked').length > 0) {
+                        deliveryTime = $('input[name=radio]:checked').data('deliverytime');
+                        usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1") ? true : false);
                     }
-                });
 
-                return token;
-            },
-            onApprove: function (data, actions) {
+                    var payPalPaymentId = data.paymentID;
+                    var payPalPayerId = data.payerID;
+                    var payPalOrderId = data.orderID;
 
-                var idCustomer = $("#idCustomer").val();
-                var idAddress = $("#idAddress").val();
-                var presente = $("#presente").val();
-                var mensagem = $("#mensagem").val();
-                var idPaymentBrand = $("#IdPaymentBrandPayPal").val();
-                var shippingMode = "";
-                if ($('.shippingGet:checked').length > 0) shippingMode = $('.shippingGet:checked').data("mode");
-                var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
-                var deliveryTime = null;
-                var usefulDay = null;
-                if ($('input[name=radio]:checked').length > 0) {
-                    deliveryTime = $('input[name=radio]:checked').data('deliverytime');
-                    usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1") ? true : false);
-                }
+                    $("body").prepend('<div class="ui active dimmer loadingCheckout" style="position: fixed;"><div class="ui text loader">Aguarde</div></div>');
 
-                var payPalPaymentId = data.paymentID;
-                var payPalPayerId = data.payerID;
-                var payPalOrderId = data.orderID;
-
-                $("body").prepend('<div class="ui active dimmer loadingCheckout" style="position: fixed;"><div class="ui text loader">Aguarde</div></div>');
-
-                $.ajax({
-                    method: 'POST',
-                    url: '/Checkout/GerarPedidoCompleto',
-                    data: {
-                        idCustomer: idCustomer,
-                        idAddress: idAddress,
-                        presente: presente,
-                        mensagem: mensagem,
-                        idPaymentBrand: idPaymentBrand,
-                        shippingMode: shippingMode,
-                        googleResponse: googleResponse,
-                        deliveryTime: deliveryTime,
-                        usefulDay: usefulDay,
-                        kind: "Checkout",
-                        payPalPaymentId: payPalPaymentId,
-                        payPalPayerId: payPalPayerId,
-                        payPalOrderId: payPalOrderId
-                    },
-                    success: function (response) {
-                        if (response.success === true) {
-                            if (response.errorMsg != "") {
-                                swal({
-                                    title: '',
-                                    html: response.errorMsg,
-                                    type: 'warning',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'OK'
-                                });
-                                $(".loadingCheckout").remove();
-                            }
-                            else {
-                                if (response.urlRedirect != "") {
-                                    if (response.typeRedirect == "1") {
-                                        window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
-                                    }
-                                    else {
-                                        window.location.href = response.urlRedirect;
-                                    }
+                    $.ajax({
+                        method: 'POST',
+                        url: '/Checkout/GerarPedidoCompleto',
+                        data: {
+                            idCustomer: idCustomer,
+                            idAddress: idAddress,
+                            presente: presente,
+                            mensagem: mensagem,
+                            idPaymentBrand: idPaymentBrand,
+                            shippingMode: shippingMode,
+                            googleResponse: googleResponse,
+                            deliveryTime: deliveryTime,
+                            usefulDay: usefulDay,
+                            kind: "Checkout",
+                            payPalPaymentId: payPalPaymentId,
+                            payPalPayerId: payPalPayerId,
+                            payPalOrderId: payPalOrderId
+                        },
+                        success: function (response) {
+                            if (response.success === true) {
+                                if (response.errorMsg != "") {
+                                    swal({
+                                        title: '',
+                                        html: response.errorMsg,
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    });
+                                    $(".loadingCheckout").remove();
                                 }
                                 else {
-                                    if (response.urlBoleto != "") {
-                                        window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                                        //window.location.href = "Success?orderId=" + response.idPedido;
-                                    }
-                                    else {
-                                        if (response.msg != "") {
-                                            window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                    if (response.urlRedirect != "") {
+                                        if (response.typeRedirect == "1") {
+                                            window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
                                         }
                                         else {
-                                            window.location.href = "Success?orderId=" + response.idPedido;
+                                            window.location.href = response.urlRedirect;
+                                        }
+                                    }
+                                    else {
+                                        if (response.urlBoleto != "") {
+                                            window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                            //window.location.href = "Success?orderId=" + response.idPedido;
+                                        }
+                                        else {
+                                            if (response.msg != "") {
+                                                window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                            }
+                                            else {
+                                                window.location.href = "Success?orderId=" + response.idPedido;
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        else {
-                            if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
-
-                                swal({
-                                    title: '',
-                                    html: response.errorMsg,
-                                    type: 'warning',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'OK'
-                                }).then(function () {
-                                    if (response.urlRedirect !== "")
-                                        window.location.href = response.urlRedirect;
-                                });
-
-                                $(".loadingCheckout").remove();
-                            }
                             else {
-                                window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
+
+                                    swal({
+                                        title: '',
+                                        html: response.errorMsg,
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    }).then(function () {
+                                        if (response.urlRedirect !== "")
+                                            window.location.href = response.urlRedirect;
+                                    });
+
+                                    $(".loadingCheckout").remove();
+                                }
+                                else {
+                                    window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                }
                             }
-                        }
-                    },
-                    complete: function () {
-                        if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
-                            if ($("[id^=googleVersion_]").eq(0).val() === "2") {
-                                grecaptcha.reset();
-                            } else {
-                                generateRecaptcha($("[id^=googleModule]").val(), "body");
+                        },
+                        complete: function () {
+                            if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                                if ($("[id^=googleVersion_]").eq(0).val() === "2") {
+                                    grecaptcha.reset();
+                                } else {
+                                    generateRecaptcha($("[id^=googleModule]").val(), "body");
+                                }
                             }
+                            $(".loadingCheckout").remove();
                         }
-                        $(".loadingCheckout").remove();
-                    }
-                });
-            },
-            onError: function (err) {
-                //console.log("Erro");
-                //console.log(err);
-                swal({
-                    title: '',
-                    html: 'Falha ao criar a pre-order no paypal',
-                    type: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                });
-            },
-            onCancel: function (err) {
-                //console.log("Cancelado");
-                //console.log(err);
-            }
-        }).render('#paypal-button-container');
+                    });
+                },
+                onError: function (err) {
+                    //console.log("Erro");
+                    //console.log(err);
+                    swal({
+                        title: '',
+                        html: 'Falha ao criar a pre-order no paypal',
+                        type: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                onCancel: function (err) {
+                    //console.log("Cancelado");
+                    //console.log(err);
+                }
+            }).render('#paypal-button-container');
+        }
     }
 
     return false;
 }
 function PayPalCheckoutInCart2() {
     if ($('#paypal-button-container-incart').length > 0) {
-        paypal.Buttons({
-            env: $('#EnvPayPallCheckoutInCart').val(),
-            style: {
-                layout: 'horizontal',
-                color: $('#ButtonColorPayPalCheckoutInCart').val(), // blue / silver
-                shape: $('#ButtonFormatPayPalCheckoutInCart').val(), // pill
-                label: 'pay', // no checkout: pay // no shortcut: buynow
-                height: 45,
-                size: 'responsive',
-                fundingicons: false,
-                tagline: false
-            },
-            locale: {
-                country: 'BR',
-                lang: 'pt_BR'
-            },
-            createOrder: function (data, actions) {
-                let token = "";
+        if (window.paypal != undefined) {
+            paypal.Buttons({
+                env: $('#EnvPayPallCheckoutInCart').val(),
+                style: {
+                    layout: 'horizontal',
+                    color: $('#ButtonColorPayPalCheckoutInCart').val(), // blue / silver
+                    shape: $('#ButtonFormatPayPalCheckoutInCart').val(), // pill
+                    label: 'pay', // no checkout: pay // no shortcut: buynow
+                    height: 45,
+                    size: 'responsive',
+                    fundingicons: false,
+                    tagline: false
+                },
+                locale: {
+                    country: 'BR',
+                    lang: 'pt_BR'
+                },
+                createOrder: function (data, actions) {
+                    let token = "";
 
-                $.ajax({
-                    method: 'POST',
-                    url: '/Checkout/PayPalCreateOrder',
-                    async: false,
-                    data: {
-                        IdAddress: ""
-                    },
-                    success: function (response) {
-                        if (response.links != null && response.links.length > 0) {
-                            for (var key in response.links) {
-                                if (response.links[key].rel == "approval_url") {
-                                    token = response.links[key].href.match(/EC-\w+/)[0];
+                    $.ajax({
+                        method: 'POST',
+                        url: '/Checkout/PayPalCreateOrder',
+                        async: false,
+                        data: {
+                            IdAddress: ""
+                        },
+                        success: function (response) {
+                            if (response.links != null && response.links.length > 0) {
+                                for (var key in response.links) {
+                                    if (response.links[key].rel == "approval_url") {
+                                        token = response.links[key].href.match(/EC-\w+/)[0];
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
 
-                return token;
-            },
-            onApprove: function (data, actions) {
-                $("body").prepend('<div class="ui active dimmer loadingCheckout" style="position: fixed;"><div class="ui text loader">Aguarde</div></div>');
+                    return token;
+                },
+                onApprove: function (data, actions) {
+                    $("body").prepend('<div class="ui active dimmer loadingCheckout" style="position: fixed;"><div class="ui text loader">Aguarde</div></div>');
 
-                $.ajax({
-                    method: 'post',
-                    url: '/Checkout/PayPalLoginOrder',
-                    async: true,
-                    data: {
-                        PaymentId: data.paymentID
-                    },
-                    success: function (response) {
-                        if (response.success === true) {
-                            if (response.message === "") {
-                                $(".loadingCheckout").remove();
-                                swal({
-                                    title: '',
-                                    html: 'A partir do seu login no Paypal identificamos que você já possui uma conta em nossa loja e lhe redirecionaremos para a página de pagamento. Por gentileza, revise seu pedido antes de concluí-lo!',
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'OK'
-                                }).then(function () {
-                                    window.location.href = response.redirect;
-                                });
+                    $.ajax({
+                        method: 'post',
+                        url: '/Checkout/PayPalLoginOrder',
+                        async: true,
+                        data: {
+                            PaymentId: data.paymentID
+                        },
+                        success: function (response) {
+                            if (response.success === true) {
+                                if (response.message === "") {
+                                    $(".loadingCheckout").remove();
+                                    swal({
+                                        title: '',
+                                        html: 'A partir do seu login no Paypal identificamos que você já possui uma conta em nossa loja e lhe redirecionaremos para a página de pagamento. Por gentileza, revise seu pedido antes de concluí-lo!',
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    }).then(function () {
+                                        window.location.href = response.redirect;
+                                    });
+                                } else {
+                                    $(".loadingCheckout").remove();
+                                    swal({
+                                        title: '',
+                                        html: response.message,
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    }).then(function () {
+                                        window.location.href = response.redirect;
+                                    });
+                                }
                             } else {
                                 $(".loadingCheckout").remove();
                                 swal({
@@ -262,56 +279,43 @@ function PayPalCheckoutInCart2() {
                                     cancelButtonColor: '#d33',
                                     confirmButtonText: 'OK'
                                 }).then(function () {
-                                    window.location.href = response.redirect;
+                                    if (response.redirect === "/checkout/Register") {
+                                        let _html = '';
+                                        _html += '<form id="frmRedirectRegister" action="' + response.redirect + '" method="post">';
+                                        _html += '    <input type="hidden" name="login" value="' + response.order.payer.payer_info.email + '">';
+                                        _html += '    <input type="hidden" name="email" value="' + response.order.payer.payer_info.email + '">';
+                                        _html += '    <input type="hidden" name="cpfCnpj" value="' + response.order.payer.payer_info.tax_id + '">';
+                                        _html += '</form>';
+                                        $('body').append(_html);
+                                        $('#frmRedirectRegister').submit();
+                                    } else if (response.redirect !== "") {
+                                        window.location.href = response.redirect;
+                                    }
                                 });
                             }
-                        } else {
-                            $(".loadingCheckout").remove();
-                            swal({
-                                title: '',
-                                html: response.message,
-                                type: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
-                            }).then(function () {
-                                if (response.redirect === "/checkout/Register") {
-                                    let _html = '';
-                                    _html += '<form id="frmRedirectRegister" action="' + response.redirect + '" method="post">';
-                                    _html += '    <input type="hidden" name="login" value="' + response.order.payer.payer_info.email + '">';
-                                    _html += '    <input type="hidden" name="email" value="' + response.order.payer.payer_info.email + '">';
-                                    _html += '    <input type="hidden" name="cpfCnpj" value="' + response.order.payer.payer_info.tax_id + '">';
-                                    _html += '</form>';
-                                    $('body').append(_html);
-                                    $('#frmRedirectRegister').submit();
-                                } else if (response.redirect !== "") {
-                                    window.location.href = response.redirect;
-                                }
-                            });
                         }
-                    }
-                });
-            },
-            onError: function (err) {
-                //console.log("Erro");
-                //console.log(err);
+                    });
+                },
+                onError: function (err) {
+                    //console.log("Erro");
+                    //console.log(err);
 
-                swal({
-                    title: '',
-                    html: "Não foi possivel realizar a integração com PayPal.",
-                    type: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                })
-            },
-            onCancel: function (err) {
-                //console.log("Cancelado");
-                //console.log(err);
-            }
-        }).render('#paypal-button-container-incart');
+                    swal({
+                        title: '',
+                        html: "Não foi possivel realizar a integração com PayPal.",
+                        type: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    })
+                },
+                onCancel: function (err) {
+                    //console.log("Cancelado");
+                    //console.log(err);
+                }
+            }).render('#paypal-button-container-incart');
+        }
     }
 }
 
