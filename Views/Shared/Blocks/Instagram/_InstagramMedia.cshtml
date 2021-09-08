@@ -1,0 +1,29 @@
+﻿@model IList<DomainCompany.Entities.InstagramMedia>
+
+@if (Model != null && Model.Count() > 0)
+{
+    var userName = @Model.FirstOrDefault().username;
+
+    <div class="ui container">
+        <div class="ui horizontal divider">
+            <a href="https://www.instagram.com/@userName/?hl=pt-br" title="@userName" target="_blank">@Html.Raw("@"+userName)</a>
+        </div>
+        <div class="ui grid">
+            <div class="row one column">
+                <div class="column">
+                    <div class="ui equal width grid margin none images middle aligned center aligned stackable slideshow insta_feed" data-qtd="6">
+                        @foreach (var media in Model.Where(c => c.media_type.ToLower() == "image").Take(10))
+                        {
+                            <div class="column slideshow-item">
+                                <a href="@media.permalink" target="_blank">
+                                    <img class="ui image centered fluid " src="@media.media_url" alt="" title="" onerror="imgError(this)">
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui divider hidden"></div>
+    </div>
+} 
