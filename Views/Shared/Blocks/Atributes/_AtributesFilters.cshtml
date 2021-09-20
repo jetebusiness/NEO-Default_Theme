@@ -1,7 +1,9 @@
-﻿@model IList<DomainProduct.Entities.Attribute>
+@model IList<DomainProduct.Entities.Attribute>
 
 @if (Model != null)
 {
+    string color;
+
     foreach (var atribute in Model)
     {
         <div class="active title">@atribute.name<i class="dropdown icon"></i></div>
@@ -14,8 +16,27 @@
                         {
                             <div class="field">
                                 <div class="ui checkbox checkAtribute" data-type="idAttribute" id="@atribute.idAttribute:@valor.idAttributeValue" name="@valor.Value" data-reference="@atribute.name.ToLower()">
-                                    <input type="checkbox" name="@valor.Value" id="checkAtribute_@valor.idAttributeValue" value="@valor.idAttributeValue">
-                                    <label class="text capitalize">@valor.Value.ToLower()</label>
+                                    <input type="checkbox" name="@valor.Value" id="checkAtribute_@valor.idAttributeValue" value="@valor.idAttributeValue" class="hideme">
+                                    <label>
+                                        @{
+                                            if (!string.IsNullOrEmpty(valor.image))
+                                            {
+                                                <div class="ui button circular imageAtribute">
+                                                    <img src="@valor.image" class="ui image margin none " />
+                                                </div>
+                                            } 
+                                            else
+                                            {
+                                                if (!string.IsNullOrEmpty(valor.Description))
+                                                {
+                                                    color = valor.Description.Contains("#") ? valor.Description : "#" + valor.Description;
+
+                                                    <div class="ui button circular colorAtribute" style="background-color: @(color)"></div>
+                                                }
+                                            }
+                                        }
+                                        @valor.Value
+                                    </label>
                                 </div>
                             </div>
                         }
