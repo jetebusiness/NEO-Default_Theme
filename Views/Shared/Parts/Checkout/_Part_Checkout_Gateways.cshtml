@@ -141,6 +141,9 @@
                     <input type="hidden" name="hasPagSeguroApp" id="hasPagSeguroApp" value="@Session["PagSeguroApp"]" />
                     <input type="hidden" name="SessionPayment" id="PaymentSession" value="" />
                     <input type="hidden" name="HashPayment" id="PaymentHash" value="" />
+                    <input type="hidden" name="hasBraspag3DS20" id="hasBraspag3DS20" value="@Session["Braspag3DS20Active"]" />
+                    <input type="hidden" name="envBraspag3DS20" id="envBraspag3DS20" value="@Session["Braspag3DS20Production"]" />
+
                     @{
                         if (Convert.ToInt32(Session["PagSeguro"].ToString()) > 0 || Convert.ToInt32(Session["PagSeguroApp"].ToString()) > 0)
                         {

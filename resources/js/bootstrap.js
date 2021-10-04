@@ -23,6 +23,7 @@ try {
 
     //Jet Route Manager
     require("./routes");
+
 } catch (e) {}
 
 
@@ -39,4 +40,5 @@ require('./vendors/semantic-ui');
  */
 require('./plugins');
 
-
+//require('./vendors/braspag-3ds20-config');
+require('./vendors/braspag-3ds20');

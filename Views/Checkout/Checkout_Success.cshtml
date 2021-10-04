@@ -182,6 +182,7 @@
     var individualQTD = "";
     var individualName = "";
     var individualSKU = "";
+    var paymentTypeEbit = "";
 
     if (Model != null && Model.OrderItems != null)
     {
@@ -202,7 +203,52 @@
         }
     }
 
-    <param id="ebitParam" value="email=@Model.Email&zipCode=@Model.Address.ZipCode&parcels=@Model.NumberOfInstallments&deliveryTax=@Model.TotalShipping.ToString().Replace(",", ".")&totalSpent=@Model.Total.ToString().Replace(",", ".")&value=@individualPrice&quantity=@individualQTD&productName=@individualName&transactionId=@Model.IdOrder&sku=@individualSKU&storeId=@ViewBag.ActiveEbit" />
+    switch (@Model.IdTypePayment)
+    {
+        case 1:
+        case 23:
+            paymentTypeEbit = "05";
+            break;
+        case 3:
+            paymentTypeEbit = "08";
+            break;
+        case 2:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 10:
+        case 11:
+        case 12:
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 24:
+        case 25:
+        case 26:
+            paymentTypeEbit = "14";
+            break;
+        case 4:
+        case 9:
+        case 14:
+            paymentTypeEbit = "28";
+            break;
+        case 27:
+            paymentTypeEbit = "90";
+            break;
+        default:
+            break;
+    }
+    
+    
+    
+    <param id="ebitParam" value="email=email=@Model.Email&zipCode=@Model.Address.ZipCode&parcels=@(Model.NumberOfInstallments == 0 || Model.NumberOfInstallments == null ? 1 : Model.NumberOfInstallments)&deliveryTax=@Model.TotalShipping.ToString().Replace(",", ".")&totalSpent=@Model.Total.ToString().Replace(",", ".")&value=@individualPrice&quantity=@individualQTD&productName=@individualName&transactionId=@Model.IdOrder&sku=@individualSKU&storeId=@ViewBag.ActiveEbit&platform=@(Request.Browser.IsMobileDevice ? 1 : 0)&deliveryTime=@Model.DeliveryTime&paymentType=@paymentTypeEbit&productCondition=0&mktSaleId=@(!string.IsNullOrEmpty(Model.MarketPlaceStore) ? Model.MarketPlaceStore : "")&gender=N" />
+
 
     <a id="bannerEbit" class="ui grid centered"></a>
     <script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?@ViewBag.ActiveEbit&lightbox=true"></script>

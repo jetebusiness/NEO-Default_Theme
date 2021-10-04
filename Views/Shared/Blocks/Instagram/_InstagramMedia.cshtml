@@ -3,6 +3,7 @@
 @if (Model != null && Model.Count() > 0)
 {
     var userName = @Model.FirstOrDefault().username;
+
     <div class="ui container">
         <div class="ui horizontal divider">
             <a href="https://www.instagram.com/@userName/?hl=pt-br" title="@userName" target="_blank">@Html.Raw("@"+userName)</a>

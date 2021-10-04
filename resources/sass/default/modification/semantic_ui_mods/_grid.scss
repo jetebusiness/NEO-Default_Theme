@@ -1,7 +1,12 @@
 .ui.grid {
     margin-top: 0px;
     margin-bottom: 0;
+
+    .button-inline {
+        display: inline-block;
+    }
 }
+
 
 .divider-column {
     padding: 0 !important;

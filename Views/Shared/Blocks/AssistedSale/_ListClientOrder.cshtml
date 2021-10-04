@@ -42,27 +42,34 @@ else
                                             @if (!string.IsNullOrEmpty(order.PaymentLink))
                                             {
                                                 var _tooltipPaymentLink = "Copiar Link de Pagamento";
+                                                var _tooltipPaymentLinkWhatsApp = "Enviar Link de Pagamento pelo WhatsApp";
                                                 var _disabledPaymentLink = "";
+                                                var _href = "";
                                                 var _colorPaymentLink = "green";
                                                 var _paymentLink = $"{LojaCorp.Control.Company._Company.UrlStore}Checkout/PaymentLink?link={order.PaymentLink}";
                                                 switch (order.NameStatus)
                                                 {
                                                     case "Aguardando Pagamento":
                                                         break;
+                                                    case "Em aprovação":
+                                                        break;
                                                     case "Cancelado":
                                                         if (order.NamePaymentMethodGateway == "Link de Pagamento")
                                                         {
                                                             _tooltipPaymentLink = "Link de pagamento expirado!";
+                                                            _tooltipPaymentLinkWhatsApp = "Link de pagamento expirado!";
                                                         }
                                                         else
                                                         {
                                                             _tooltipPaymentLink = "Link de pagamento indisponível. Pedido Cancelado!";
+                                                            _tooltipPaymentLinkWhatsApp = "Link de pagamento indisponível. Pedido Cancelado!";
                                                         }
                                                         _disabledPaymentLink = "disabled=\"disabled\"";
                                                         _colorPaymentLink = "gray";
                                                         break;
                                                     default:
                                                         _tooltipPaymentLink = "Link de pagamento concluído pelo cliente!";
+                                                        _tooltipPaymentLinkWhatsApp = "Link de pagamento concluído pelo cliente!";
                                                         _disabledPaymentLink = "disabled=\"disabled\"";
                                                         _colorPaymentLink = "gray";
                                                         break;
@@ -71,7 +78,12 @@ else
                                                 if (!string.IsNullOrEmpty(ViewBag.CelularCliente))
                                                 {
                                                     var _mensagemWhatsApp = ViewBag.MensagemWhatsApp.Replace("[link-pagamento]", _paymentLink);
-                                                    <a class="ui icon button @_colorPaymentLink" href="https://api.whatsapp.com/send?phone=@ViewBag.CelularCliente&text=@_mensagemWhatsApp" data-tooltip="Enviar Link de Pagamento pelo WhatsApp" id="PaymentLinkWhatsApp" @_disabledPaymentLink>
+
+                                                    if (order.NameStatus == "Em aprovação")
+                                                    {
+                                                        _href = "https://api.whatsapp.com/send?phone=" + ViewBag.CelularCliente + "&text=" + _mensagemWhatsApp;
+                                                    }
+                                                    <a class="ui icon button @_colorPaymentLink" href="@_href" data-tooltip="@_tooltipPaymentLinkWhatsApp" id="PaymentLinkWhatsApp" @_disabledPaymentLink>
                                                         <i class="whatsapp icon"></i>
                                                     </a>
                                                 }

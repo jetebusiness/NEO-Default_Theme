@@ -6,6 +6,7 @@ import { CompraRecorrenteStorage } from "../../functions/recurringPurchase";
 import { PayPalCheckoutTransparent, PayPalCheckoutInCart, PayPalCheckoutReference } from "../../ui/modules/paypal";
 import { createModelExhausted } from './mini_cart'
 import { buscaCepCD, changeCdCheckout } from "../../ui/modules/multiCd";
+import { bpmpi_load, bpmpi_environment } from "../../vendors/braspag-3ds20";
 
 import { isMobile } from "../../functions/mobile";
 import swal from 'sweetalert2';
@@ -209,7 +210,7 @@ var useAntiFraudMaxiPago = false;
 function GerarPedidoCompleto(
     idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
-    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument
+    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument, has3DS20, cavv3DS20, xid3DS20, eci3DS20, version3DS20, referenceId3DS20
 ) {
     if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
         var stop = false;
@@ -253,7 +254,13 @@ function GerarPedidoCompleto(
             usefulDay: usefulDay,
             SelectedRecurrentTime: SelectedRecurrentTime,
             labelOneClick: labelOneClick,
-            typeDocument: typeDocument
+            typeDocument: typeDocument,
+            has3DS20: has3DS20,
+            cavv3DS20: cavv3DS20,
+            xid3DS20: xid3DS20,
+            eci3DS20: eci3DS20,
+            version3DS20: version3DS20,
+            referenceId3DS20: referenceId3DS20
         },
         success: function (response) {
             if (response.success === true) {
@@ -1017,6 +1024,7 @@ function OrderCreate() {
                 var issuer = "";
 
                 var validaFrete = "";
+                var hasBraspag3DS20 = $('#hasBraspag3DS20').val();
 
                 switch ($this.prop("id")) {
                     case "btnCardDebit":
@@ -1227,6 +1235,62 @@ function OrderCreate() {
 
                                     $(".GerarPedido").removeClass("loading");
                                     $(".GerarPedido").removeClass("disabled");
+                                }
+                            });
+                        }
+                        else if (hasBraspag3DS20 == "true" && (tipoVerificacao === "S" || tipoVerificacao === "D")) {
+                            $.ajax({
+                                method: "POST",
+                                url: "/Checkout/LoadBrasPag3DS20",
+                                data: {
+                                    idCustomer: idCustomer,
+                                    idInstallment: idInstallment,
+                                    idPaymentBrand: idPaymentBrand,
+                                    idAddress: idAddress,
+                                    msgPedido: mensagem,
+                                    card: card,
+                                    cardExpirationMonth: validaMes,
+                                    cardExpirationYear: validaAno,
+                                    installmentNumber: installmentNumber
+                                },
+                                async: false,
+                                success: function (response) {
+                                    var count3DS20BraspagClick = 0;
+
+                                    if ($('.divBraspag3DS20').length > 0) {
+                                        $('.divBraspag3DS20').remove();
+                                    }
+                                    $("body").append(response);
+
+                                    bpmpi_load();
+
+
+                                    $(window).unbind("jetCheckoutBraspag3DS20");
+                                    //window.removeEventListener("jetCheckoutBraspag3DS20", function (e) { });
+
+                                    $(window).bind("jetCheckoutBraspag3DS20", function (e) {
+
+                                        if (e['detail'] != null && e['detail'] != undefined) {
+                                            if (e.detail.status == "success") {
+                                                if (count3DS20BraspagClick == 0) {
+                                                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument, hasBraspag3DS20, e.detail.cavv, e.detail.xid, e.detail.eci, e.detail.version, e.detail.referenceId);
+                                                    count3DS20BraspagClick++;
+                                                }
+                                            } else {
+                                                //_alert("", e.detail.message, "warning");
+                                                _alert("", "Falha ao realizar autorização. [" + e.detail.status + "]", "warning");
+                                                $(".GerarPedido").removeClass("disabled");
+                                                $(".GerarPedido").removeClass("loading");
+                                            }
+                                        }
+
+                                    });
+                                    
+                                },
+                                error: function (response) {
+                                    _alert("", "Falha ao realizar autorização no 3DS.", "warning");
+                                    $(".GerarPedido").removeClass("disabled");
+                                    $(".GerarPedido").removeClass("loading");
                                 }
                             });
                         }
@@ -2291,16 +2355,16 @@ export function atualizaEnderecos(responseChange) {
         $("#zipcode").val(zipCode)
     }
 
+    $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
     $.ajax({
         method: "POST",
         url: "ListaFretePagamento",
         success: function success(data) {
-            if (data.indexOf("|@|&RR0RM&SS@G&|@|CD") > -1) {
-                $("#updateShippingPayment").html("");
-                HabilitaBlocoPagamento(false);
-                $('.ui.modal').modal('hide');
-            } else {
-                $("#updateShippingPayment").empty().append(data);
+            $("#updateShippingPayment").html("");
+            HabilitaBlocoPagamento(false);
+            $('.ui.modal').modal('hide');
+            if (data.indexOf("|@|&RR0RM&SS@G&|@|CD") == -1) {                
+                $("#updateShippingPayment").append(data);
                 clickShipping();
                 HabilitaBlocoPagamento(false);
                 CampoEntregaAgendada();
@@ -2361,12 +2425,10 @@ export function atualizaEnderecos(responseChange) {
                 }
             }
         },
-        error: function (error) {
-            if (error.responseText.indexOf("CD") > -1) {
-                $("#updateShippingPayment").html("");
-                HabilitaBlocoPagamento(false);
-                $('.ui.modal').modal('hide');
-            }
+        error: function (error) {            
+            $("#updateShippingPayment").html("");
+            HabilitaBlocoPagamento(false);
+            $('.ui.modal').modal('hide');           
         }
     });
 }
@@ -2401,8 +2463,9 @@ function applyDiscount() {
                                 }
                             });
                         }
-                        atualizaEnderecos();
+                        
                         if (response.couponfreeshipping) {
+                            atualizaEnderecos();
                             _alert("Cupom aplicado com sucesso!", response.msg, "success");
                         } else {
                             _alert("Cupom de Desconto!", response.msg, "success");
@@ -2844,6 +2907,8 @@ function ValeCompraAplicar(_valor) {
                 //Atualiza dados do Frete
 
                 if ($('#freteGratisValeCompra').length > 0 && $('#freteGratisValeCompra').val() == "1") {
+                    $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
+
                     $.ajax({
                         method: "POST",
                         url: "ListaFretePagamento",
@@ -3183,6 +3248,11 @@ var availableDates = [];
 //var cardForm;
 
 $(document).ready(function () {
+
+    if ($("#hasBraspag3DS20").val() == "true") {
+        bpmpi_environment($('#envBraspag3DS20').val());
+    }
+
     $("#formas-pagamento .itemTabPayment").appendTo($("#formas-pagamento #tabPayment"));
 
     var valueRecurrency = $("#checkout_products_list .item[data-recurrent='True']").length,
@@ -3402,6 +3472,7 @@ $(document).ready(function () {
             }
         });
     }
+
     if (document.location.pathname.toLowerCase() == "/checkout/payment") {
         GetStatusAntiFraudMaxiPago();
         var zipCode = $("#dadosClienteUpdate #zipcode").val();

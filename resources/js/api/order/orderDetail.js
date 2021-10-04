@@ -190,6 +190,21 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on("keypress", ".prompt_pedidos_vendedor", function (event) {
+        var val = event.target.value;
+        var filtered = val.replace(/[^0-9]/g, '');
+
+        if (filtered !== val) {
+            event.target.value = filtered;
+        }
+
+        if (filtered != "") {
+            if (event.which === 13) {
+                location.href = `/assistedsale/consultarPedidos?n=${$(".prompt_pedidos_vendedor").val()}`;
+            }
+        }
+    });
+
 
     $(document).on("keypress", ".prompt_pedidos_recurrent", function (event) {
         if (event.which === 13) {

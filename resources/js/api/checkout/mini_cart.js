@@ -256,6 +256,8 @@ $(document).ready(function () {
         UpdateCarrinho();
     });
 
+    //Limpar os Fretes que consta no carrinho a cada refresh
+    CancelarCalculoFreteCart(1);
 
 });
 
