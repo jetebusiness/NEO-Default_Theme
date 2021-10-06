@@ -1,0 +1,170 @@
+﻿@model DomainOrder.ResultSeller
+
+@{
+    ViewBag.Title = "Histórico de Pedidos";
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbContent.cshtml";
+}
+
+@section breadcrumbs {
+    <div class="ui container">
+        <div class="ui one column grid stackable middle aligned">
+            <div class="row">
+                <div class="column">
+                    <h1>@ViewBag.Title</h1>
+                    <div class="ui breadcrumb text small">
+                        <a class="section" href="/">Home</a>
+                        <i class="right angle icon divider"></i>
+                        <a class="section" href="/assistedsale">Lista de Clientes</a>
+                        <i class="right angle icon divider"></i>
+                        <span class="section active">Histórico de Pedidos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="ui grid middle aligned left aligned">
+    <div class="row two column stackable">
+        <div class="column">
+            <h4>Histórico de Pedidos</h4>
+        </div>
+        <div class="column right aligned">
+            <div class="ui category searchOrder">
+                <div class="ui icon input">
+                    <input class="prompt_pedidos_vendedor" type="text" placeholder="Buscar por pedido">
+                    <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+        </div>
+    </div>
+    @if (Model == null || Model.OrderSimplePerSeller.Count() == 0)
+    {
+        <div class="row two column">
+            Não foram encontrados pedidos
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="column">
+                <table class="ui padded table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Forma de Pagamento</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var orderSeller in Model.OrderSimplePerSeller)
+                            {
+                                <tr>
+                                    <td>@orderSeller.IdOrder</td>
+                                    <td>@orderSeller.DateOrder</td>
+                                    <td>@orderSeller.NameCustomer</td>
+                                    <td>@string.Format("{0:c}", orderSeller.Total)</td>
+                                    <td>
+                                        @if (orderSeller.NamePaymentMethodGateway.ToLower().Trim() == "salvar carteira digital")
+                                        {
+                                            <span>Carteira Digital</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@orderSeller.NamePaymentMethodGateway</span>
+                                        }
+                                    </td>
+                                    <td>@orderSeller.NameStatus</td>
+                                    <td class="right aligned">
+                                        <a class="ui icon grey small button margin top bottom tdCustomer" id="reOrderSeller" data-tooltip="Refazer pedido" data-idorder="@orderSeller.IdOrder">
+                                            <i class="cart icon"></i>
+                                        </a>
+
+                                        @if (!string.IsNullOrEmpty(orderSeller.PaymentLink))
+                                        {
+                                            var _tooltipPaymentLink = "Copiar Link de Pagamento";
+                                            var _tooltipPaymentLinkWhatsApp = "Enviar Link de Pagamento pelo WhatsApp";
+                                            var _disabledPaymentLink = "";
+                                            var _href = "";
+                                            var _colorPaymentLink = "green";
+                                            var _paymentLink = $"{LojaCorp.Control.Company._Company.UrlStore}Checkout/PaymentLink?link={orderSeller.PaymentLink}";
+                                            switch (orderSeller.NameStatus)
+                                            {
+                                                case "Aguardando Pagamento":
+                                                    break;
+                                                case "Em aprovação":
+                                                    break;
+                                                case "Cancelado":
+                                                    if (orderSeller.NamePaymentMethodGateway == "Link de Pagamento")
+                                                    {
+                                                        _tooltipPaymentLink = "Link de pagamento expirado!";
+                                                        _tooltipPaymentLinkWhatsApp = "Link de pagamento expirado!";
+                                                    }
+                                                    else
+                                                    {
+                                                        _tooltipPaymentLink = "Link de pagamento indisponível. Pedido Cancelado!";
+                                                        _tooltipPaymentLinkWhatsApp = "Link de pagamento indisponível. Pedido Cancelado!";
+                                                    }
+                                                    _disabledPaymentLink = "disabled=\"disabled\"";
+                                                    _colorPaymentLink = "gray";
+                                                    break;
+                                                default:
+                                                    _tooltipPaymentLink = "Link de pagamento concluído pelo cliente!";
+                                                    _tooltipPaymentLinkWhatsApp = "Link de pagamento concluído pelo cliente!";
+                                                    _disabledPaymentLink = "disabled=\"disabled\"";
+                                                    _colorPaymentLink = "gray";
+                                                    break;
+                                            }
+
+                                            if (!string.IsNullOrEmpty(orderSeller.NameCustomer))
+                                            {
+                                                var _nameCustomer = ViewBag.MensagemWhatsApp.Replace("[nameCustomer]", orderSeller.NameCustomer);
+                                                var _mensagemWhatsApp = _nameCustomer.Replace("[link-pagamento]", _paymentLink);
+                                                var _phoneCustomer = orderSeller.PhoneCustomer.Replace("(", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
+
+                                                if (orderSeller.NameStatus == "Em aprovação")
+                                                {
+                                                    _href = "https://api.whatsapp.com/send?phone=" + _phoneCustomer + "&text=" + _mensagemWhatsApp;
+                                                }
+                                                <a class="ui icon button @_colorPaymentLink" href="@_href" data-tooltip="@_tooltipPaymentLinkWhatsApp" id="PaymentLinkWhatsApp" @_disabledPaymentLink>
+                                                    <i class="whatsapp icon"></i>
+                                                </a>
+                                            }
+
+                                            <a class="ui icon button @_colorPaymentLink" href="@_paymentLink" data-tooltip="@_tooltipPaymentLink" id="PaymentLinkCopyCentral" @_disabledPaymentLink>
+                                                <i class="linkify icon"></i>
+                                            </a>
+                                        }
+                                        <a class="ui icon teal small button" href="~/assistedsale/OrderDetails?id=@orderSeller.IdOrder" data-tooltip="Visualizar Pedido">
+                                            <i class="unhide icon"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Model.Settings.PageCount > 1)
+{
+    <div class="ui center aligned grid ">
+        <div class="center aligned row">
+            <div class="column">
+                @Html.Partial("~/Views/Shared/Parts/_PaginationOrder.cshtml", Model.Settings)
+            </div>
+        </div>
+    </div>
+}
+
+<div id="htmlOrderPrint" class="hideme"></div>
