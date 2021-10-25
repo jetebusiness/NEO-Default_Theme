@@ -43,7 +43,7 @@ function createHtmlItau(el) {
                       target="openShopline">
                   <input type="hidden" name="DC" id="tokenBankSlip" value="" />
                 </form>
-                <div class="ui modal">
+                <div class="ui modal itau-shopline">
                   <i class="close icon"></i>
                   <div class="content">
                     <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>

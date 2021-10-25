@@ -19,6 +19,7 @@ $(document).ready(function () {
     "use strict";
     //nova estrutura de variacao do produto
     variations.init();
+    personalization.init();
 
     window.onload = function () {
         $('.recurrentperiods').popup();
@@ -106,7 +107,19 @@ $(document).ready(function () {
 
 
 
-        $("body").delegate(".btnComprar .detalhes, .flutuante .detalhes", "click", function () {
+        $("body").delegate(".btnComprar .detalhes, .flutuante .detalhes", "click", function (e) {
+
+            if($(personalization.config.container).length > 0) {
+                
+                var valid = personalization.validFields()
+                
+                if (valid === undefined || valid === false) {                   
+
+                    e.preventDefault();
+                    return;
+                }
+            }
+            
             var resultado = ValidarSkuProdutoPrincipal();
             let productSKU = $("#produto-sku").val(),
                 productID = $("#produto-id").val(),
@@ -468,13 +481,20 @@ function AdicionarProdutosCompreJuntoAjx() {
 
 function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signature = false) {
 
-    var Cart = [];
-    var product = new Object();
+    var Cart = [],
+        product = new Object(),
+        personaliza = personalization.renderArray();
 
     product.IdProduct = productID;
     product.IdSku = productSKU;
     product.Quantity = quantity;
     product.isRecurrent = signature;
+    
+    if (personaliza.length > 0) {
+        product.personalizations = personalization.renderArray();
+        product.personalizationString = $("#json-personalizations").val()
+    }
+   
     Cart.push(product);
 
     $.ajax({

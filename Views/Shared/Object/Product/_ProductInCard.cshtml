@@ -109,7 +109,7 @@
 
             <div class="sku-options mobile-hide tablet-hide @(Model.AvailableReferences != null ? "mask" : "") @(Session["segment"] != null && Session["segment"].ToString() == "b2b" ? "hideme" : string.Empty)">
 
-                <span id="produto-esgotado_@Model.IdProduct" class="text center produto-esgotado-label hideme @(Model.FlagExhausted ? " " : "hideme" )">Produto Esgotado</span>
+                <span id="produto-esgotado_@Model.IdProduct" class="text center produto-esgotado-label hideme">Produto Esgotado</span>
 
                 @if (Model.AvailableReferences != null)
                 {
@@ -124,6 +124,7 @@
                                 <div class="header">
                                     @reference.Name
                                 </div>
+                                
                                 <div class="scrolling menu">
                                     @foreach (var variation in reference.Variations)
                                     {
@@ -163,10 +164,10 @@
                     }
                 }
                 <!-- Verificar se o produto é conjunto -->
-                @if (Model.HasConjunct)
+                @if (Model.HasConjunct || Model.HasPersonalizations)
                 {
                     <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="Comprar" class="ui labeled icon button action fluid btn-comprar text uppercase" data-idproduct="@Model.IdProduct" data-name="Model.Name">
-                        <i id="btn-icon-card-Model.IdProduct" class="icon announcement"></i>
+                        <i id="btn-icon-card-@Model.IdProduct" class="@(Model.HasPersonalizations ? "icon add to cart" : "icon announcement")"></i>
                         Comprar
                     </a>
                 }
@@ -258,10 +259,10 @@
             </div>
             <div class="botoes centered">
                 <!-- Verificar se o produto é conjunto -->
-                @if (Model.HasConjunct)
+                @if (Model.HasConjunct || Model.HasPersonalizations)
                 {
                     <a href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="Comprar" class="ui labeled icon button action fluid text uppercase btnComprar" data-idproduct="@Model.IdProduct" data-name="Model.Name">
-                        <i id="btn-icon-card-Model.IdProduct" class="icon announcement"></i>
+                        <i id="btn-icon-card-@Model.IdProduct" class="@(Model.HasPersonalizations ? "icon add to cart" : "icon announcement")"></i>
                         Comprar
                     </a>
                 }

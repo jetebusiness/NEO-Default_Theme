@@ -145,16 +145,28 @@
                 </div>
             </div>
         }
+        
+       @if (!Model.FlagExhausted)
+       {
+           if (Model.Personalizations != null)
+           {
+              <div class="row margin top medium">
+                   <div class="column">
+                       @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
+                   </div>
+               </div>
+           }
 
-        <div id="pagamento-calculado">
-            @{
-                var _valor = Model.PricePromotion != null ? Model.PricePromotion : 0;
-                var _flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true;
-                var _isB2b = isB2B;
+           <div id="pagamento-calculado">
+               @{
+                   var _valor = Model.PricePromotion != null ? Model.PricePromotion : 0;
+                   var _flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true;
+                   var _isB2b = isB2B;
 
-                Html.Action("Payment", "Product", new { valor = _valor, flagExibir = _flagExibir, isB2b = _isB2b });
-            }
-        </div>
+                   Html.Action("Payment", "Product", new {valor = _valor, flagExibir = _flagExibir, isB2b = _isB2b});
+               }
+           </div>
+       }
     </div>
 </div>
 

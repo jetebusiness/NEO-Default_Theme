@@ -54,7 +54,7 @@
             }
         </div>
         
-        <div class="priceProduct" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
+        <div class="priceProduct" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
         
         <div class="description">
              @if (Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
@@ -64,21 +64,21 @@
              else
              {
                  <div class="ui qtd action mini input">
-                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
                          <i class="icon minus"></i>
                      </button>
                      <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity"/>
                      <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem"/>
-                     <input type="number" class="text center quantidade" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt"/>
+                     <input type="number" class="text center quantidade" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt"  data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)"/>
 
-                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
                          <i class="icon plus"></i>
                      </button>
                  </div>
              }
         </div>
         
-        <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku">
+        <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
             <i class="trash alternate outline icon"></i>
         </button>
     </div>

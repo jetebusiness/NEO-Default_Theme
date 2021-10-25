@@ -1,0 +1,11 @@
+﻿@model DomainProduct.Entities.ProductPersonalizationsOption
+
+@if (Model != null)
+{
+    <div class="field">
+        @foreach (var item in Model.Data)
+        {
+            <div class="description">@Html.Raw(item.Text)</div>
+        }
+    </div>
+}

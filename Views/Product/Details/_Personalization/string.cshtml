@@ -1,0 +1,22 @@
+﻿@model DomainProduct.Entities.ProductPersonalizationsOption
+
+@if (Model != null)
+{
+    
+    <div class="grouped fields option-group">
+        @foreach (var item in Model.Data)
+            {
+                <div class="field">
+                    <label>@item.Title</label>
+                    <div class="ui input fluid">
+                        <input type="text" name="option-@item.IdOption" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" maxlength="@item.Limit" data-pattern="@item.InputType" @(Model.Required ? "required" : "")>
+                        <span class="limit-field">0/@item.Limit</span>
+                    </div>
+                    @if (item.Value > 0)
+                    {
+                        <span class="ui label black small basic">+@string.Format("R$ {0:0.00}", item.Value)</span> 
+                    }
+                </div>
+            }
+    </div>
+}

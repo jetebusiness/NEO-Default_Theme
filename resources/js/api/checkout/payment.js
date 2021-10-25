@@ -905,6 +905,10 @@ function OrderCreate() {
         $this.addClass("disabled");
         $this.addClass("loading");
 
+
+        checkValidatePersonalization()
+
+
         if ((tipoVerificacao == "S" && $('#UseTwoCreditCards').is(':checked')) || (tipoVerificacao == "D" && $('#UseTwoDebitCards').is(':checked'))) {
             OrderCreateTwoCards($(this));
             return false;
@@ -1921,7 +1925,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                                                         $("#parcCard").append('<option value="000" data-InstallmentValue="' + payerCost.installment_amount + '" data-InstallmentNumber="' + payerCost.installments + '" data-InstallmentTotal="' + payerCost.total_amount + '">' + payerCost.recommended_message + '</option>');
                                                     });
                                                     $("#emailCard").val($("#MercadoPagoEmail").val());
-                                                    
+
                                                 } else {
                                                     alert(`installments method info error: ${response__}`);
                                                 }
@@ -2360,15 +2364,16 @@ export function atualizaEnderecos(responseChange) {
         method: "POST",
         url: "ListaFretePagamento",
         success: function success(data) {
-            $("#updateShippingPayment").html("");
-            HabilitaBlocoPagamento(false);
-            $('.ui.modal').modal('hide');
-            if (data.indexOf("|@|&RR0RM&SS@G&|@|CD") == -1) {                
-                $("#updateShippingPayment").append(data);
+            if (data.indexOf("|@|&RR0RM&SS@G&|@|CD") > -1) {
+                $("#updateShippingPayment").html("");
+                HabilitaBlocoPagamento(false);
+                $('.ui.modal').modal('hide');
+            } else {
+                $("#updateShippingPayment").html(data);
                 clickShipping();
                 HabilitaBlocoPagamento(false);
                 CampoEntregaAgendada();
-                $('.ui.modal').modal('hide');
+                $('.ui.modal.lista-endereco-cliente').modal('hide');
 
                 if ($('#PaymentLinkChangeBrand').length > 0) {
                     if ($('#PaymentLinkChangeBrand').val() == "1") {
@@ -2425,10 +2430,12 @@ export function atualizaEnderecos(responseChange) {
                 }
             }
         },
-        error: function (error) {            
-            $("#updateShippingPayment").html("");
-            HabilitaBlocoPagamento(false);
-            $('.ui.modal').modal('hide');           
+        error: function (error) {
+            if (error.responseText.indexOf("CD") > -1) {
+                $("#updateShippingPayment").html("");
+                HabilitaBlocoPagamento(false);
+                $('.ui.modal.lista-endereco-cliente').modal('hide');
+            }
         }
     });
 }
@@ -3087,7 +3094,7 @@ function CampoEntregaAgendada() {
             .end()
             .append('<option value="">Selecione</option>')
             .val('')
-            ;
+        ;
 
         $("#combo_dataperiodoagendada_" + idFrete).append(optionPeriodo);
         $("#combo_dataperiodoagendada_" + idFrete).trigger("chosen:updated");
@@ -3248,6 +3255,10 @@ var availableDates = [];
 //var cardForm;
 
 $(document).ready(function () {
+    
+    if($("#formas-pagamento").length > 0)
+        checkValidatePersonalization();
+    
 
     if ($("#hasBraspag3DS20").val() == "true") {
         bpmpi_environment($('#envBraspag3DS20').val());
@@ -3732,7 +3743,7 @@ $(document).ready(function () {
 
     function PrintBankSlipSecurity() {
         let PaymentJson = readCookie("Payment").replace("Payment=", "")
-        
+
         $.ajax({
             method: "POST",
             url: "/Checkout/PrintBankSlipSecurity",
@@ -3779,7 +3790,7 @@ $(document).ready(function () {
         })
     }
 
-    
+
 
     $(document).on('click', '#CopyQrCode', function (e) {
         e.preventDefault();
@@ -4177,6 +4188,71 @@ $(document).ready(function () {
         });
     }
 });
+
+
+function checkValidatePersonalization() {
+
+    if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
+        //PersonalizationsValidation
+        $.ajax({
+            url: "/Checkout/PersonalizationsValidation",
+            method: "GET",
+            success: function (response) {
+                if (response.indexOf('modal-personalization-validate') > -1) {
+
+
+                    $("body").append(response);
+
+                    var modalPersonalizate = $(".modal-personalization-validate");
+
+                    if (modalPersonalizate.length > 0) {
+
+                        modalPersonalizate.modal({
+                            onHidden: function () {
+
+                                $.when(
+                                    $.ajax({
+                                        method: "GET",
+                                        url: "/Checkout/LoadProductsMiniCart",
+                                        cache: false,
+                                        success: function (loadProduct) {
+                                            if (loadProduct) {
+                                                if (loadProduct.indexOf("itemCartProduct_") === -1) {
+                                                    swal({
+                                                        title: 'Ops ... Seu carrinho agora está vazio!',
+                                                        html: 'Estamos te direcionando para a Home!',
+                                                        type: 'warning',
+                                                        showCancelButton: false,
+                                                        confirmButtonColor: '#3085d6',
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: 'OK'
+                                                    }).then(function () {
+                                                        window.location.href = "/Home";
+                                                    });
+                                                } else {
+                                                    var retornoAjax = loadProduct.split("|$|");
+                                                    var listaProdutos = retornoAjax[0];
+                                                    $("#checkout_products_list").html(listaProdutos);
+                                                    $(".item:not(.exhausted) .removeCartItem, " +
+                                                        ".item:not(.exhausted) .description, " +
+                                                        ".item.exhausted .avaibility", "#checkout_products_list").remove()
+                                                }
+                                            }
+                                        }
+                                    })
+                                );
+                            },
+                        }).modal('show')
+                    }
+                }
+            },
+            complete: function () {
+                $(".GerarPedidoMercadoPagoCheckoutVPRO").removeClass("loading");
+                $(".GerarPedidoMercadoPagoCheckoutVPRO").removeClass("disabled");
+            }
+        });
+    }
+}
 
 window.onload = function () {
 

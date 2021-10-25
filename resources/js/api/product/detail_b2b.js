@@ -10,6 +10,9 @@ var detalhes_maiorParc = 0, detalhes_valorParc = 0, detalhes_descricao = "";
 var carregar_resumo_parcelamento = true;
 
 $(document).ready(function () {
+
+    personalization.init();
+    
     $(".b2b_minus.detalhes, .b2b_plus.detalhes").click(function () {
         let skuID = $(this).parents(".sku_b2b").attr("data-sku-id");
         let quantidade_selecionada = parseInt($("#quantidade_b2b_"+skuID).val());
@@ -33,19 +36,37 @@ $(document).ready(function () {
         });
     });
 
-    $("#btn_comprar_b2b, #btn_comprar_continuar, #btn_comprar_oneclick_b2b").click(function () {
+    $("#btn_comprar_b2b, #btn_comprar_continuar, #btn_comprar_oneclick_b2b").click(function (e) {
         var exibeMiniCarrinho = $(this)[0].id === "btn_comprar_b2b" ? true : false;
 
+        if($(personalization.config.container).length > 0) {
+
+            var valid = personalization.validFields()
+
+            if (valid === undefined || valid === false) {
+
+                e.preventDefault();
+                return;
+            }
+        }
+        
         $(this).addClass(".loading");
         let Cart = [];
         let _contProducts = 0;
         let _msgErrors = "";
         $("#grade_sku .sku_b2b").each(function(posicao) {
-            let CartItem = new Object();
+            
+            let CartItem = new Object(),
+                personaliza = personalization.renderArray();
             CartItem.IdProduct = $(this).data("produto-id");
             CartItem.IdSku = $(this).data("sku-id");
             CartItem.Quantity = $(this).find(".quantidade_b2b").val();
             CartItem.Stock = $(this).find(".quantidade_b2b").data("qtd-max") !== undefined ? $(this).find(".quantidade_b2b").data("qtd-max") :0;
+
+            if (personaliza.length > 0) {
+                CartItem.personalizations = personalization.renderArray();
+                CartItem.personalizationString = $("#json-personalizations").val()
+            }
 
             if (CartItem.Quantity > 0 && CartItem.Quantity <= CartItem.Stock) {
                 Cart.push(CartItem);

@@ -1,0 +1,46 @@
+﻿@model DomainProduct.Entities.ProductPersonalizations
+
+
+
+@if (Model != null && Model.Options.Any())
+{
+    <div class="ui segment" id="personalizations">
+        <div class="ui accordion fluid">
+            <div class="title active">
+                <i class="dropdown icon"></i>
+                <strong>Personalizar Produto</strong>
+            </div>
+            <div class="content active">
+                <div class="accordion">
+                    <div class="ui form">
+                        @foreach (var option in Model.Options)
+                        {
+                            switch (option.Type)
+                            {
+                                case 1:
+                                    @Html.Partial("~/Views/Product/Details/_Personalization/title.cshtml", option);
+                                    break;
+                                case 2:
+                                    @Html.Partial("~/Views/Product/Details/_Personalization/radio.cshtml", option)
+                                    break;
+                                case 3:
+                                    @Html.Partial("~/Views/Product/Details/_Personalization/checkbox.cshtml", option)
+                                    break;
+                                case 4:
+                                    @Html.Partial("~/Views/Product/Details/_Personalization/dropdown.cshtml", option)
+                                    break;
+                                case 5:
+                                    @Html.Partial("~/Views/Product/Details/_Personalization/string.cshtml", option)
+                                    break;
+                                case 6:
+                                    @Html.Partial("~/Views/Product/Details/_Personalization/textarea.cshtml", option)
+                                    break;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

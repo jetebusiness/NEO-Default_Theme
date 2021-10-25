@@ -264,6 +264,7 @@
 }
 <input type="hidden" value="@AvailableReferences" id="principal-produto-referecias" name="principal-produto-referecias" />
 <input type="hidden" value="@JsonDetail" id="json-detail" name="json-detail" />
+<input type="hidden" value="@Json.Encode(Model.Personalizations)" id="json-personalizations" name="json-personalizations" />
 <input type="hidden" value="@ViewBag.DescontoBoleto" id="desconto_boleto" name="desconto_boleto" />
 <!-- FIM - Váriaveis Produto Unitário-->
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
@@ -611,6 +612,11 @@
 
                             @if (!Model.FlagExhausted)
                             {
+                                if (Model.Personalizations != null)
+                                {
+                                    @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
+                                }
+
                                 <div id="pagamento-calculado">
                                     @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                                     {
@@ -687,15 +693,15 @@
                             <div class="one column row">
                                 <div class="column">
                                     @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
-                                        <div class="addthis_inline_share_toolbox"></div>
-                                    <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
-                                    <div class="g-plus" data-action="share"></div>
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
-                                    <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
-                                    <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
-                                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                    <div class="addthis_inline_share_toolbox"></div>
+                <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
+                <div class="g-plus" data-action="share"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
+                <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
+                <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
+                                    <!-- Go to www.addthis.com/dashboard to customize your tools 
                                     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
-                                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                                    Go to www.addthis.com/dashboard to customize your tools -->
                                     <div class="addthis_inline_share_toolbox"></div>
                                 </div>
                             </div>

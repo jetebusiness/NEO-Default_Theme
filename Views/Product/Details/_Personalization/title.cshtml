@@ -1,0 +1,11 @@
+@model DomainProduct.Entities.ProductPersonalizationsOption
+
+@if (Model != null)
+{
+    foreach (var item in Model.Data)
+    {
+        <div class="field">
+            <label>@item.Title</label>
+        </div>
+    }
+}

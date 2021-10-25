@@ -167,7 +167,8 @@ $(document).ready(function () {
 
     $(document).on("click", "#miniCarrinho .removeCartItem", function (e) {
         var idCurrent = new Number($(this).attr("data-id"));
-        excluirProdutoCarrinho(idCurrent);
+        var idCartPersonalization = new Number($(this).attr("data-id-personalization-cart"));
+        excluirProdutoCarrinho(idCurrent, idCartPersonalization);
         e.stopPropagation();
     });
 
@@ -181,16 +182,17 @@ $(document).ready(function () {
 
             var action = $(this).attr("data-action");
             var idCurrent = $(this).attr("data-id");
-            var valorInput = new Number($("#qtd_" + idCurrent).val());
-            var valorStock = new Number($("#stock_" + idCurrent).val());
+            var idCartPersonalization = $(this).attr("data-id-personalization-cart");
+            var valorInput = valor_final;            
+            var valorStock = new Number($("#stock_" + idCurrent).val());            
 
             if (valorInput <= valorStock && valorInput < 1000) {
-                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization, true);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
                 valorInput -= 1;
-                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization, true);
             }
             e.stopPropagation();
         }
@@ -204,16 +206,19 @@ $(document).ready(function () {
 
             var action = $(this).attr("data-action");
             var idCurrent = $(this).attr("data-id");
-            var valorInput = new Number($("#qtd_" + idCurrent).val());
+            var valorInput = new Number($(this).val());
             var valorStock = new Number($("#stock_" + idCurrent).val());
+            var idCartPersonalization = $(this).attr("data-id-personalization-cart");
 
             if (valorInput <= valorStock && valorInput < 1000) {
-                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+                isLoading("#miniCarrinho");
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization, true);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
                 valorInput -= 1;
-                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+                isLoading("#miniCarrinho");
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization, true);
             }
             e.stopPropagation();
         }
@@ -224,13 +229,20 @@ $(document).ready(function () {
         $(".qtdActionMiniCart").off("click");
         var action = $(this).attr("data-action");
         var idCurrent = $(this).attr("data-id");
-        var valorInput = new Number($("#qtd_" + idCurrent).val());
-        var valorStock = new Number($("#stock_" + idCurrent).val());
+        var idCartPersonalization = $(this).attr("data-id-personalization-cart");
+        
+        if(idCartPersonalization && idCartPersonalization > 0)
+            var valorInput = new Number($("[id^=qtd_" + idCurrent + "][data-id-personalization-cart='"+idCartPersonalization+"']").val());
+        else
+            var valorInput = new Number($("#qtd_" + idCurrent).val());
+       
+        var valorStock = new Number($("#stock_" + idCurrent).val());        
 
         if (action == "plus") {
             valorInput += 1;
             if (valorInput <= valorStock && valorInput < 1000) {
-                disparaAjaxUpdate(idCurrent, valorInput, action);
+                isLoading("#miniCarrinho");
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
@@ -244,7 +256,7 @@ $(document).ready(function () {
             }
             else {
                 isLoading("#miniCarrinho");
-                disparaAjaxUpdate(idCurrent, valorInput, action, true);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization, true);
             }
         }
         $("#qtd_" + idCurrent).val(valorInput);
@@ -262,7 +274,7 @@ $(document).ready(function () {
 });
 
 
-function excluirProdutoCarrinho(idCurrent) {
+function excluirProdutoCarrinho(idCurrent, idCartPersonalization) {
     _confirm({
         title: "Deseja realmente remover esse produto do carrinho?",
         text: "",
@@ -280,7 +292,8 @@ function excluirProdutoCarrinho(idCurrent) {
                 url: "/Checkout/DeleteProduct",
                 async: false,
                 data: {
-                    idCartItem: idCurrent
+                    idCartItem: idCurrent,
+                    idCartPersonalization
                 },
                 success: function (data) {
                     if (data.success === false) {
@@ -329,7 +342,7 @@ export function CancelarCalculoFreteCart(flagUpdate) {
 }
 
 
-export function disparaAjaxUpdate(idCurrent, valorInput, action, loading = false) {
+export function disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization = 0, loading = false) {
     CancelarCalculoFreteCart(0);
 
     var qtdInicial = $("#qtdInicial_" + idCurrent).val();
@@ -347,7 +360,8 @@ export function disparaAjaxUpdate(idCurrent, valorInput, action, loading = false
         data: {
             idCartItem: idCurrent,
             Quantity: valorInput,
-            idCompraAutomaticaTipoEntrega
+            idCompraAutomaticaTipoEntrega,
+            idCartPersonalization
         },
         success: function (data) {
             if (data.success === true) {
@@ -564,14 +578,16 @@ export function createModelExhausted(element) {
         $(">.item.exhausted", element).each(function() {
             
             var $this = $(this),
-                $idCart = $this.data("id-cart");
+                $idCart = $this.data("id-cart"),
+                idCartPersonalization = $this.data('id-personalization-cart');
 
             $.ajax({
                 method: "POST",
                 url: "/Checkout/DeleteProduct",
                 async: false,
                 data: {
-                    idCartItem: $idCart
+                    idCartItem: $idCart,
+                    idCartPersonalization
                 },
                 success: function (data) {
 

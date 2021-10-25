@@ -41,7 +41,7 @@
                                     @if ((product.Stock == 0 || product.Stock < product.Quantity || product.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes) && _paymentLink == false)
                                     {
                                         <span class="ui label basic primary margin top small exhausted">PRODUTO ESGOTADO</span>
-                                        <button class="removeCartItem payment-cart" data-id="@product.IdCartItem">
+                                        <button class="removeCartItem payment-cart" data-id="@product.IdCartItem" data-id-personalization-cart="@(product.IdCartPersonalization != null ? product.IdCartPersonalization : 0)">
                                             <i class="trash alternate outline icon"></i>
                                         </button>
                                     }

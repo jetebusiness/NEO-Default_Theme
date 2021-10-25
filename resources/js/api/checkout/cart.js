@@ -21,9 +21,10 @@ function InserirQuantidadeManual() {
             var idCurrent = $(this).attr("data-id");
             var valorInput = new Number($("#qtd_" + idCurrent).val());
             var valorStock = new Number($("#stock_" + idCurrent).val());
+            var idCartPersonalization = $(this).attr("data-id-personalization-cart");
 
             if (valorInput <= valorStock) {
-                disparaAjaxUpdate(idCurrent, valorInput, action);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
@@ -45,11 +46,13 @@ function InserirQuantidadeManual() {
 
             var action = $(this).attr("data-action");
             var idCurrent = $(this).attr("data-id");
-            var valorInput = new Number($("#qtd_" + idCurrent).val());
+            var idCartPersonalization = $(this).attr("data-id-personalization-cart");
+            var valorInput = new Number($(this).val());
             var valorStock = new Number($("#stock_" + idCurrent).val());
+            
 
             if (valorInput <= valorStock) {
-                disparaAjaxUpdate(idCurrent, valorInput, action);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
@@ -65,15 +68,23 @@ function InserirQuantidadeManual() {
 function AddMinusProductCart() {
     $(".qtdAction").on("click", function (event) {
         CancelarCalculoFreteCart(1);
+        
         var action = $(this).attr("data-action");
         var idCurrent = $(this).attr("data-id");
-        var valorInput = new Number($("#qtd_" + idCurrent).val());
+        var idCartPersonalization = $(this).attr("data-id-personalization-cart");
+
+        if(idCartPersonalization && idCartPersonalization > 0)
+            var valorInput = new Number($("[id^=qtd_" + idCurrent + "][data-id-personalization-cart='"+idCartPersonalization+"']").val());
+        else
+            var valorInput = new Number($("#qtd_" + idCurrent).val());
+        
         var valorStock = new Number($("#stock_" + idCurrent).val());
+        
 
         if (action == "plus") {
             valorInput += 1;
             if (valorInput <= valorStock) {
-                disparaAjaxUpdate(idCurrent, valorInput, action);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
@@ -86,7 +97,7 @@ function AddMinusProductCart() {
                 valorInput = 1;
             }
             else {
-                disparaAjaxUpdate(idCurrent, valorInput, action);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization);
             }
         }
         $("#qtd_" + idCurrent).val(valorInput);
@@ -102,7 +113,9 @@ function AddMinusProductCart() {
 function RemoveProductCart() {
     $(".removeCartItem").click(function (event) {
         var idCurrent = $(this).attr("data-id"),
+            idCartPersonalization = $(this).data('id-personalization-cart'),
             $this = $(this);
+        
         _confirm({
             title: "Deseja realmente remover esse produto do carrinho?",
             text: "",
@@ -118,13 +131,14 @@ function RemoveProductCart() {
                     method: "POST",
                     url: "/Checkout/DeleteProduct",
                     data: {
-                        idCartItem: new Number(idCurrent)
+                        idCartItem: new Number(idCurrent),
+                        idCartPersonalization
                     },
                     success: function (data) {
                         if (data.success === true) {
 
                             if($('#formas-pagamento').length > 0) {
-                                $("#itemCartProduct_" + idCurrent).remove();                                
+                                $this.closest('[id^=itemCartProduct_]').remove();                              
                                 
                                 if($("[id^=itemCartProduct_]", "#checkout_products_list").length === 0){
                                     
@@ -145,7 +159,7 @@ function RemoveProductCart() {
                                 }                                
                                 
                             } else {
-                                $("#itemCartProduct_" + idCurrent).remove();
+                                $this.closest('[id^=itemCartProduct_]').remove();
                                 CancelarCalculoFreteCart(1, 1);
                             }
                            
@@ -160,7 +174,7 @@ function RemoveProductCart() {
                                 confirmButtonText: 'OK'
                             });
 
-                            $("#itemCartProduct_" + idCurrent).remove();
+                            $this.closest('[id^=itemCartProduct_]').remove();
                             
                             if($this.hasClass("payment-cart"))
                                 atualizaResumoCarrinho(false);

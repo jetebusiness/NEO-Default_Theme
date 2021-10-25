@@ -1,0 +1,39 @@
+﻿@model List<DomainCheckout.Entities.CartPersonalizationsValidation>
+
+@if (Model != null && Model.Any())
+{
+    <div class="ui tiny modal modal-personalization-validate">
+        <i class="close icon"></i>
+        <div class="header">
+           @(Model.Count > 1 ? "Produtos removidos" : "Produto removido") do carrinho
+          </div>
+        <div class="scrolling content">
+            @if (Model.Count > 1)
+            {
+                <div class="message margin bottom medium">Esses produtos sofreram modificações nas personalizações e por isso foram removidos do seu carrinho.</div>
+            }
+            else
+            {
+                <div class="message margin bottom medium">Esse produto sofreu modificações nas personalizações e por isso foi removido do seu carrinho.</div>
+            }
+            
+            <div class="ui divided very relaxed list middle aligned">
+                @foreach (var item in Model)
+                {
+                    <div class="item">
+                        <div class="ui tiny image">
+                            <img src="@item.Image"/>
+                        </div>
+                        <div class="content">@item.Name</div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui action cancel button">
+                Fechar
+            </div>
+        </div>
+    </div>
+    
+}

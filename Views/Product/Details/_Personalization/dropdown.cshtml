@@ -1,0 +1,40 @@
+﻿@model DomainProduct.Entities.ProductPersonalizationsOption
+
+@if (Model != null)
+{
+    <div class="grouped fields option-group">
+
+        @foreach (var item in Model.Data)
+        {
+            <div class="@(item.Value > 0 ? "inline" : "") field">
+                <label>@item.Title</label>
+                <select class="ui select dropdown" name="option-@item.IdOption" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" @(Model.Required ? "required" : "")>
+                    <option value="">Selecione</option>
+
+                    @if (!string.IsNullOrEmpty(item.Options.Trim()))
+                    {
+                        if (item.Options.Contains(";"))
+                        {
+                            Char delimiter = ';';
+                            string[] list = item.Options.Trim().Split(delimiter);
+
+                            foreach (var child in list)
+                            {
+                                <option value="@child">@child</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">@item.Options</option>
+                        }
+                    }
+                </select>
+                @if (item.Value > 0)
+                {
+                    <span class="ui label black small basic">+@string.Format("R$ {0:0.00}", item.Value)</span> 
+                }
+            </div>
+        }
+        
+    </div>
+}

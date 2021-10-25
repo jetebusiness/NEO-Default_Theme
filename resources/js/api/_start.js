@@ -3,6 +3,7 @@
  */
 require("./product/detail");
 require("./product/variations");
+require("./product/personalization");
 require("./product/detail_b2b");
 require("./product/card");
 
