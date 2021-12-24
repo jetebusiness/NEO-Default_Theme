@@ -198,12 +198,9 @@ function LoadServiceShipping() {
             data: { zipCode: zipCode },
             success: function (data) {
                 if (data.indexOf("|@|&RR0RM&SS@G&|@|CD:") > -1) {
-                    $("#CallServiceShippingMiniCart").removeClass("loading");
                     $("#zipcode").val(zipCode);
                     buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
-                            LoadCarrinho();
-                        });
+                        changeCd(false, true, undefined, true, true);
                     });
                 }
                 else
@@ -219,10 +216,11 @@ function LoadServiceShipping() {
                 }
             },
             error: function (error) {
+                $("#CallServiceShipping").removeClass("loading");
                 if (error.responseText.indexOf("CD:1") > -1 || error.responseText.indexOf("CD:2") > -1) {
                     $("#zipcode").val(zipCode)
                     buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShipping", true);
+                        changeCd(true, false, undefined, true, true);
                     })
                 }
             }

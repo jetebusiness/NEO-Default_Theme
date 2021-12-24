@@ -663,6 +663,29 @@ h6.codProduto {
             color: $grey;
         }
     }
+    
+    
+    .total-personalization {
+        color: $black;
+        border-top: 1px solid #ddd;
+        margin: 15px 0 0;
+        
+        .product-value,
+        .personalization-value,
+        .total-value {
+            font-weight: 600;
+        }
+        
+    }
+
+    .clear-personalization {
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+        text-decoration: underline;
+        padding: .5rem 0;
+        cursor: pointer;
+    }
 
 
 

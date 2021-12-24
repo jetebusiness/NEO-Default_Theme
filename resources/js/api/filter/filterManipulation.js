@@ -344,9 +344,7 @@ var newFilter = {
 
                         element = $("[data-type='"+key+"'][id='"+itens[i]+"']");
 
-                        text = (element.text().trim().indexOf(" (") > -1 ?
-                            element.text().trim().replace(/[(0-9)]/g, "") :
-                            element.text().trim())
+                        text = element.text().trim()
 
                         if(text.trim() === "") {
                             if(element.attr("style"))
@@ -368,10 +366,8 @@ var newFilter = {
 
                     element = $("[data-type='"+key+"'][id='"+filters[key]+"']");
 
-                    text = (element.text().trim().indexOf(" (") > -1 ?
-                        element.text().trim().replace(/[(0-9)]/g, "") :
-                        element.text().trim())
-
+                    text =  element.text().trim();
+                    
                     if(text.trim() === "") {
                         if(element.attr("style"))
                             text = '<button class="ui button circular icon mini" style="'+element.attr("style")+'"></button>';

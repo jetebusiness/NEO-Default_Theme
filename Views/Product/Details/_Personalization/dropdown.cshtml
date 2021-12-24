@@ -8,7 +8,7 @@
         {
             <div class="@(item.Value > 0 ? "inline" : "") field">
                 <label>@item.Title</label>
-                <select class="ui select dropdown" name="option-@item.IdOption" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" @(Model.Required ? "required" : "")>
+                <select class="ui select dropdown" name="option-@item.IdOption" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" @(Model.Required ? "required" : "") data-price="@item.Value">
                     <option value="">Selecione</option>
 
                     @if (!string.IsNullOrEmpty(item.Options.Trim()))

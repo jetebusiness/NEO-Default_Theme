@@ -1,0 +1,97 @@
+﻿<div id="miniCarrinho" class="ui right sidebar carrinho ui grid">
+    <div class="row padding none">
+        <div class="column">
+            <div class="ui grid top aligned elementos">
+                <div class="row two column head middle aligned">
+                    <div class="column ten wide mobile">
+                        <span id="MiniCartTitle" data-segment="b2c" class="text center left floated">Meu Carrinho</span>
+                    </div>
+                    <div class="column right aligned six wide mobile">
+                        <a class="ui button icon fecharCarrinho"><i class="remove icon black"></i></a>
+                    </div>
+                </div>
+                <div class="row green info text center uppercase">
+                    <div class="column">
+                        <i class="lock icon"></i>Compra 100% Segura
+                    </div>
+                </div>
+                <div class="row elemento">
+                    <div class="column">
+                        <div class="ui items relaxed listaItems unstackable" id="ListProductsCheckout">
+                            
+                        </div>
+
+                        <div class="ui divided items right aligned dados-carrinho hideme">
+                            <div class="item detalhes text right">
+                                <div class="content">
+                                    <div class="description">
+                                        <span>Desconto: <span id="descontoCarrinho"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes text right">
+                                <div class="content">
+                                    <div class="description">
+                                        <span>Subtotal: <span id="subTotalCarrinho"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description frete">
+                                        <div class="ui form">
+                                            <div class="inline field">
+                                                <label>Calcular Frete</label>
+                                                <div class="ui action input">
+                                                    <input type="text" placeholder="00000-000"
+                                                           class="masked mask_zipcode" size="9" name="cep" id="shipping">
+                                                    <button class="ui right labeled icon button frete calcular buttonsMiniCart" id="CallServiceShippingMiniCart">
+                                                        <i class="shipping icon"></i>
+                                                        Calcular
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="description resultado">
+                                        <div class="ui form">
+                                            <div class="field">
+                                                <label class="frete valor"></label>
+                                                <div class="ui">
+                                                    <button class="ui right labeled icon mini button frete recalcular margin none" id="btn_recalcular_frete">
+                                                        <i class="refresh icon"></i>
+                                                        Recalcular
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes hideme" id="dica_frete">
+                                <div class="content">
+                                    <span id="descricao_dica"></span>
+                                </div>
+                            </div>
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <span class="subtotal">Total a pagar: <span id="totalCarrinho"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                   
+                @Html.Partial("~/Views/Shared/Common/_Cart_Butons_MiniCart.cshtml", 0)
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
+    <input type="hidden" id="id_frete_selecionado" />
+    <input type="hidden" id="cep_selecionado" />
+    <input type="hidden" id="permiteVenda" value="true" />
+</div>
+@* Compra Recorrente: Termo de Aceite *@
+@Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_Terms.cshtml")
+

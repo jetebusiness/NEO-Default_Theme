@@ -381,28 +381,27 @@
                                 {
 
                                     <input type="hidden" id="hdnShowProductOutOfStock" value="@(!LojaCorp.Control.Company._Company.ShowProductOutOfStock ? 0 : 1)" />
-                                    if (Model.AvailableReferences != null)
+                                    if (Model.AvailableReferences != null && !string.IsNullOrEmpty(JsonDetail))
                                     {
-                                        <div class="one column ui attached segment">
-                                            @if (Model.ProductGrouping != null)
-                                            {
-                                                @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
-                                            }
+                                        <div class="one column ui segment">
                                             <div class="column">
                                                 <div id="variations-container" class="grid-variations"></div>
                                             </div>
                                         </div>
                                     }
-                                    else
+
+                                    if (Model.ProductGrouping != null && Model.ProductGrouping.Products != null)
                                     {
-                                        if (Model.ProductGrouping != null)
-                                        {
-                                            <div class="one column ui attached segment">
-                                                <div class="column">
-                                                    @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
-                                                </div>
+                                        <div class="one column ui attached segment">
+                                            <div class="column">
+                                                @Html.Partial("~/Views/Product/Details/_ProductsGrouping.cshtml", Model.ProductGrouping)
                                             </div>
-                                        }
+                                        </div>
+                                    }
+                                    
+                                    if (Model.Personalizations != null)
+                                    {
+                                        @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
                                     }
 
                                     @*@Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })*@
@@ -612,11 +611,6 @@
 
                             @if (!Model.FlagExhausted)
                             {
-                                if (Model.Personalizations != null)
-                                {
-                                    @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
-                                }
-
                                 <div id="pagamento-calculado">
                                     @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                                     {
@@ -699,9 +693,9 @@
                 <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
                 <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
                 <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
-                                    <!-- Go to www.addthis.com/dashboard to customize your tools 
-                                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
-                                    Go to www.addthis.com/dashboard to customize your tools -->
+                                    <!-- Go to www.addthis.com/dashboard to customize your tools
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
+            Go to www.addthis.com/dashboard to customize your tools -->
                                     <div class="addthis_inline_share_toolbox"></div>
                                 </div>
                             </div>
@@ -897,7 +891,7 @@
             </div>
         </div>
         <!--FIM DESCRIÇÃO-->
-        @if (!Model.FlagExhausted && !hasOpenSku)
+        @if (!Model.FlagExhausted && !hasOpenSku && Model.Personalizations == null)
         {
             <div class="row" id="buy-together">
                 @if (Model.BuyTogether != null && Model.BuyTogether.Count > 0 && Session["EventList"] == null)
@@ -906,18 +900,22 @@
                 }
             </div>
         }
-        <div class="row" id="AlsoProducts">
-            @if (Model.AlsoProductsPurchased != null && Model.AlsoProductsPurchased.Count > 0)
-            {
+        
+        @if (Model.AlsoProductsPurchased != null && Model.AlsoProductsPurchased.Count > 0)
+        {
+            <div class="row" id="AlsoProducts">
                 @Html.Partial("~/Views/Product/Details/_AlsoPurchased.cshtml", Model.AlsoProductsPurchased)
-            }
-        </div>
-        <div class="row" id="RelatedProducts">
-            @if (Model.RelatedProducts != null && Model.RelatedProducts.Count > 0)
-            {
+            </div>
+        }
+        
+        
+        @if (Model.RelatedProducts != null && Model.RelatedProducts.Count > 0)
+        {
+            <div class="row" id="RelatedProducts">
                 @Html.Partial("~/Views/Product/Details/_RelatedProducts.cshtml", Model.RelatedProducts)
-            }
-        </div>
+            </div>
+        }
+        
 
         @if (!Model.FlagExhausted || Session["EventList"] != null)
         {

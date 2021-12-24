@@ -41,6 +41,15 @@ variations = {
             billet_price: "#preco_boleto", //div que recebe valor do desconto,
             quantity: "#quantidade"
         },
+        personalization: {
+            total: {
+                container: '.total-personalization',
+                productValue: '.product-value',
+                personalizationValue: '.personalization-value',
+                totalValue: '.total-value',
+                price: '#preco'
+            },  
+        },
         getSession: '.modal.login'
     },
     init: function() {
@@ -68,7 +77,7 @@ variations = {
                 this.error('Input"#hdnShowProductOutOfStock" não encontrado')
 
             else
-            //se os itens estiverem ok, siguimos com a criacao das variacoes
+                //se os itens estiverem ok, siguimos com a criacao das variacoes
                 this.createVariations();
         }
 
@@ -221,8 +230,8 @@ variations = {
 
         //caso nao exista uma grade default, setamos a primeira opcao
         if($('.references .variacao.select', container).length == 0) {
-            
-            
+
+
 
             if($('.references', container).length > 1)
                 $(".references[data-active] .variacao:eq(0)", container).click();
@@ -274,7 +283,7 @@ variations = {
     },
     //funcao para criar as acoes do click de cada variacao
     clickBtn: function(container) {
-        
+
         var classLoaded = this.config.loadedClass;
 
         $('.variacao', container).click(function() {
@@ -483,7 +492,17 @@ variations = {
         var Value = values.data("value");
         var Description = values.data("description");
         var Discount = parseFloat($(this.config.htmlPrice.discountBillet).val().replace(',', '.'));
+        var personalization = $(this.config.personalization.total.container).length > 0;
+        if(personalization) {
 
+            if(PricePromotion > 0) {
+                $(this.config.personalization.total.productValue).html(this.moneyBR(parseFloat(PricePromotion)))
+                $(this.config.personalization.total.totalValue).html(this.moneyBR(parseFloat($(this.config.personalization.total.personalizationValue).text().replace(/[R$\s]/g, '').replace(',', '.')) + parseFloat(PricePromotion)))                
+            } else {
+                $(this.config.personalization.total.productValue).html(this.moneyBR(parseFloat(Price)))
+                $(this.config.personalization.total.totalValue).html(this.moneyBR(parseFloat($(this.config.personalization.total.personalizationValue).text().replace(/[R$\s]/g, '').replace(',', '.')) + parseFloat(Price)))
+            }
+        }
 
         //atribuindo os valores para utilizacao em compre-junto
         $("#produto-stock").val(Stock);
@@ -492,8 +511,6 @@ variations = {
         $("#parcela-maxima-unidade").val(Value);
         $("#qtd-parcela-maxima-unidade").val(Parc);
         $("#pagamento-descricao").val(Description);
-
-
 
         //setando o sku selecionado para adicionar ao carrinho
         $(this.config.productSKU).val(IdSku)
@@ -505,10 +522,10 @@ variations = {
                 ? $(this.config.htmlPrice.containerValues).prepend("<span id='"+ this.config.htmlPrice.oldPrice.replace("#", "") +"'></span>")
                 : $(this.config.htmlPrice.oldPrice).show())
 
-            $(this.config.htmlPrice.oldPrice).html(this.moneyBR(Price)) //'#preco-antigo', //preco antigo
+                $(this.config.htmlPrice.oldPrice).html(this.moneyBR(Price)) //'#preco-antigo', //preco antigo
             $(this.config.htmlPrice.newPrice).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
             $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
-            
+
 
             if(Discount > 0) {
                 $(this.config.htmlPrice.billet_price).html(

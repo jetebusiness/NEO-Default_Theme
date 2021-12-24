@@ -149,5 +149,13 @@
             </div>
         </div>
         <input name="Country" type="hidden" id="Country" value="Brasil" />
+        <div class="row">
+            <div class="column text right">
+                @{
+                    Tuple<string, DomainCompany.Entities.Recaptcha> _tuple = Tuple.Create<string, DomainCompany.Entities.Recaptcha>("Register", ViewBag.recaptchaData);
+                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_GoogleRecaptcha.cshtml", _tuple)
+                }
+            </div>
+        </div>
     </form>
 </div>

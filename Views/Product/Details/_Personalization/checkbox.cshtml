@@ -8,7 +8,7 @@
         {
             <div class="field">
                 <div class="ui checkbox @(!String.IsNullOrEmpty(item.Image) ? "checkbox-image" : "")">
-                    <input type="checkbox" name="option-@item.IdOption" value="" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" @(Model.Required ? "required" : "") />
+                    <input type="checkbox" name="option-@item.IdOption" value="" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" @(Model.Required ? "required" : "") data-price="@item.Value"/>
                     <label>
                         @if (!String.IsNullOrEmpty(item.Image))
                         {

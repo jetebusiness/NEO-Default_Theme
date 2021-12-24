@@ -73,7 +73,7 @@
 
                     <input type="hidden" value="" name="buy-together-skus" id="buy-together-skus" />
 
-                    @foreach (var item in Model.BuyTogether)
+                    @foreach (var item in Model.BuyTogether.Where(c => !c.HasPersonalizations))
                     {
                         string variacaoSelecionada = string.Empty;
 
@@ -173,7 +173,7 @@
                             <!-- FIM VARIÁVEIS PRODUTO - COMPRE JUNTO-->
 
                         </div>
-                                }
+                    }
 
 
                 </div>

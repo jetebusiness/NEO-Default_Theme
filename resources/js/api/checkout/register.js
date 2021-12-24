@@ -63,6 +63,9 @@ $(document).ready(function () {
     })
 
     function verifyZipcode(){
+        
+        if($("#address_checkout").val().trim() !== "") return;
+        
         if ($("#zipcode_checkout") && $("#zipcode_checkout").val().length >= 8) {
             $("#zipcode_checkout").keyup();
         }

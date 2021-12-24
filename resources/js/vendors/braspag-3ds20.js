@@ -133,6 +133,10 @@ export function bpmpi_load() {
 	BP.Mpi.load();
 }
 
+export function bpmpi_unload() {
+	BP.Mpi.unload();
+}
+
 var BP = (function () {
 	var _configuration = loadConfiguration();
 	var _fieldNames = [
@@ -245,6 +249,10 @@ var BP = (function () {
 		}
 	};
 	var _loaded = false;
+
+	function unload() {
+		_loaded = false;
+    }
 
 	function canReadField(fieldName) {
 		return document.getElementsByClassName(fieldName).length > 0;
@@ -528,6 +536,7 @@ var BP = (function () {
 		log("[MPI]", "Enviroment =", getEnvironment());
 
 		if (!isAuthEnabled()) return;
+
 
 		if (_loaded) {
 			log("[MPI]", "Resources already loaded...");

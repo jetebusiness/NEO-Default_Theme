@@ -5,8 +5,8 @@ import { generateRecaptcha } from "../../ui/modules/recaptcha";
 import { CompraRecorrenteStorage } from "../../functions/recurringPurchase";
 import { PayPalCheckoutTransparent, PayPalCheckoutInCart, PayPalCheckoutReference } from "../../ui/modules/paypal";
 import { createModelExhausted } from './mini_cart'
-import { buscaCepCD, changeCdCheckout } from "../../ui/modules/multiCd";
-import { bpmpi_load, bpmpi_environment } from "../../vendors/braspag-3ds20";
+import { buscaCepCD, changeCdCheckout, changeCd } from "../../ui/modules/multiCd";
+import { bpmpi_load, bpmpi_environment, bpmpi_unload } from "../../vendors/braspag-3ds20";
 
 import { isMobile } from "../../functions/mobile";
 import swal from 'sweetalert2';
@@ -16,7 +16,7 @@ function gettoken() {
     return token;
 }
 
-function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub, valorFrete) {
+function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSomaFrete, data_periodo_selecionada, data_selecionada, idEntrega, idPeriodoEntrega, carrier, mode, hub, valorFrete, correiosEntregaNome) {
     $.ajax({
         method: "POST",
         url: "SaveFrete",
@@ -33,7 +33,8 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
             carrier: carrier,
             mode: mode,
             hub: hub,
-            valueShipping: valorFrete
+            valueShipping: valorFrete,
+            correiosEntregaNome: correiosEntregaNome
         },
         success: function (response) {
             if (response.success) {
@@ -307,6 +308,10 @@ function GerarPedidoCompleto(
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
                     }).then(function () {
+                        if (has3DS20 == "true") {
+                            bpmpi_unload();
+                        }
+
                         if (response.urlRedirect !== "")
                             window.location.href = response.urlRedirect;
                     });
@@ -368,6 +373,7 @@ function LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, 
 }
 
 function clickShipping() {
+
     var zipcode = $("#zipcode").val();
     var valorFrete = "";
     var valorAdicional = "";
@@ -378,6 +384,7 @@ function clickShipping() {
     var hub = "";
     var entregaAgendada = "";
     var exclusivaEntregaAgendada = "";
+    var correiosEntregaNome = "";
 
     $("#GetShippping .card").click(function () {
 
@@ -408,6 +415,7 @@ function clickShipping() {
         valorAdicional = $(ponteiroCurrent).data("addvalue");
         idFrete = $(ponteiroCurrent).attr("data-id");
         correiosEntrega = $(ponteiroCurrent).attr("data-correios");
+        correiosEntregaNome = $(ponteiroCurrent).attr("data-correios-name");
         carrier = $(ponteiroCurrent).data("carrier");
         mode = $(ponteiroCurrent).data("mode");
         hub = $(ponteiroCurrent).data("hub");
@@ -435,12 +443,12 @@ function clickShipping() {
             else
                 HabilitaBlocoPagamento(true);
 
-            disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete);
+            disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete, correiosEntregaNome);
         }
     });
 }
 
-function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete) {
+function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete, correiosEntregaNome) {
 
     isLoading("#resumoCheckout")
 
@@ -449,7 +457,7 @@ function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada,
         BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAgendada);
     }
     else
-        SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idFrete, idPeridoescolhido, carrier, mode, hub, valorFrete);
+        SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idFrete, idPeridoescolhido, carrier, mode, hub, valorFrete, correiosEntregaNome);
 }
 
 function OrderCreateTwoCards(obj) {
@@ -1379,7 +1387,7 @@ function onChangeParcelamento() {
             if (codigoBandeira != "" && parcela_selecionada != "") {
                 AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
             }
-
+            
             var total_parcela_selecionada = Number($("#parcCard").find(':selected').attr("data-installmenttotal"));
             var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
             //var totalDiscount = Number($('#desconto_checkout').text().replace("R$", "").replace("&nbsp;", "").replace(".", "").replace(",", "."))
@@ -1729,7 +1737,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                         }
                         $("#checkOneClickField").hide();
 
-                        var totalCheckout = $('#total_checkout').html().replace("R$", "").replace(".", "").replace(",", ".");
+                        var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
 
                         var ccNumber = $(idOnBlur).val().replace(/[ .-]/g, '').slice(0, 6);
                         var maximumInstallmentWithoutInterest = $('#MaximumInstallmentWithoutInterest').val();
@@ -1802,7 +1810,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                         }
                         $("#checkOneClickField").hide();
 
-                        var totalCheckoutApp = $('#total_checkout').html().replace("R$", "").replace(".", "").replace(",", ".").replace('&nbsp;', '');
+                        var totalCheckoutApp = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
 
                         var ccNumberApp = $(idOnBlur).val().replace(/[ .-]/g, '').slice(0, 6);
                         var maximumInstallmentWithoutInterestApp = $('#MaximumInstallmentWithoutInterest').val();
@@ -1883,7 +1891,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
 
                         window.Mercadopago.getIdentificationTypes();
 
-                        var _totalCheckout = parseFloat($('#total_checkout').text().replace("R$", "").replace(".", "").replace(",", ".").replace("&nbsp;", "").trim());
+                        var _totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
 
                         if (objParcelamento.length > 0) {
                             _totalCheckout = objParcelamento[0].Total;
@@ -2100,34 +2108,33 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
         var obj_parcelamento;
         if (($('#hasPagSeguro').val() !== "0" && $('#hasPagSeguro').val() !== undefined) || ($('#hasPagSeguroApp').val() !== "0" && $('#hasPagSeguroApp').val() !== undefined) || ($('#hasMercadoPago').val() !== "0" && $('#hasMercadoPago').val() !== undefined)) {
             obj_parcelamento = buscaTotalParcelamentoValor(codigoBandeira, codigoPaymentMethod, 1);
-            var valor = $('#parcCard > option:selected').data('installmenttotal');
-            obj_parcelamento.juros = valor - obj_parcelamento.result;
-            if (obj_parcelamento.juros < 0) obj_parcelamento.juros = 0;
-            obj_parcelamento.result = valor;
         } else {
             obj_parcelamento = buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
+        }
+        setTimeout(function() {
             var valor = $('#parcCard > option:selected').data('installmenttotal');
             obj_parcelamento.juros = valor - obj_parcelamento.result;
             if (obj_parcelamento.juros < 0) obj_parcelamento.juros = 0;
             obj_parcelamento.result = valor;
-        }
-        //var obj_carrinho = buscaValorFinalCarrinho();
-        if (Object.keys(obj_parcelamento).length > 0) {
-            var desconto_inicial = $("#desconto_checkout").attr("data-discount-initial");
 
-            if (desconto_inicial.indexOf(',') != -1) {
-                desconto_inicial = desconto_inicial.substring(0, desconto_inicial.indexOf(','));
+
+            //var obj_carrinho = buscaValorFinalCarrinho();
+            if (Object.keys(obj_parcelamento).length > 0) {
+                var desconto_inicial = $("#desconto_checkout").attr("data-discount-initial");
+
+                if (desconto_inicial.indexOf(',') != -1) {
+                    desconto_inicial = desconto_inicial.substring(0, desconto_inicial.indexOf(','));
+                }
+                desconto_inicial = desconto_inicial.replace(/[^0-9\.-]+/g, "");
+                desconto_inicial = parseFloat(desconto_inicial);
+
+                $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.discount + desconto_inicial));
+                $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.result));
+                $("#interest_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.juros));
             }
-            desconto_inicial = desconto_inicial.replace(/[^0-9\.-]+/g, "");
-            desconto_inicial = parseFloat(desconto_inicial);
-
-            $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.discount + desconto_inicial));
-            $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.result));
-            $("#interest_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.juros));
-        }
+        }, 1000)        
     }
 }
-
 
 function listAddressPayment() {
     $("#listAddressPayment").click(function () {
@@ -2141,10 +2148,11 @@ function listAddressPayment() {
             var response = localStorage.getItem('multiCdAddress');
             localStorage.removeItem('multiCdAddress');
             $('.ui.modal.lista-endereco-cliente')
+                .modal({closable: false})
                 .modal({
                     onHidden: function () {
                         if (response.indexOf('redirecionado') == -1) {
-                            changeCd(false, true, undefined, false)
+                            changeCd(false, true, undefined, false, true)
                         } else {
                             $.ajax({
                                 method: "POST",
@@ -2158,7 +2166,7 @@ function listAddressPayment() {
                 })
                 .modal('show');
         } else {
-            $('.ui.modal.lista-endereco-cliente').modal('show');
+            $('.ui.modal.lista-endereco-cliente').modal({closable: false}).modal('show');
         }
     });
 }
@@ -2168,6 +2176,8 @@ function showAddressPayment() {
         if ($(".addAddress").length > 0) {
             var jsonArray = [];
             var splittedFormData = $("#disparaForm").serialize().split('&');
+            if($("[id^=googleResponse]", "body").length > 0)
+                jsonArray['googleResponse'] = $("[id^=googleResponse]", "body").val();
 
             $.each(splittedFormData, function (key, value) {
                 var item = {};
@@ -2181,12 +2191,26 @@ function showAddressPayment() {
                 method: "POST",
                 url: "CreateAddress",
                 data: jsonArray,
+                dataType: "json",
                 success: function (responseDefault) {
                     if (responseDefault.success) {
-                        atualizaEnderecos(responseDefault);
+                        if ($("#multiCDActive").val().toLowerCase() == "true") {
+                            document.location.reload()
+                        } else {
+                            atualizaEnderecos(responseDefault);
+                        }
                     }
                     else {
                         _alert("", responseDefault.msg, "warning");
+                    }
+                },
+                complete: function() {
+                    if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                        if ($("[id^=googleVersion_]").eq(0).val() === "2") {
+                            grecaptcha.reset()
+                        } else {
+                            generateRecaptcha($("[id^=googleModule]").val(), "body");
+                        }
                     }
                 }
             });
@@ -2519,7 +2543,7 @@ function viewAddressLogged(form) {
         var userName = $(form + " .UserName").val();
         var password = $(form + " .password").val();
 
-        var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
+        var googleResponse = $("[id^=googleResponse]", form).length > 0 ? $("[id^=googleResponse]", form).val() : "";
 
         if (googleResponse) {
 
@@ -3586,9 +3610,7 @@ $(document).ready(function () {
 
         listAddressPayment();
         changeAddressPayment();
-        if (!$("#multiCDActive").val().toLowerCase() == "true") {
-            showAddressPayment();
-        }
+        showAddressPayment();
         applyDiscount();
         CheckAccessKey("#ListaEnderecosCliente");
         ReEnviarCodigoEmail();

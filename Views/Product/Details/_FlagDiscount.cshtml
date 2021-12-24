@@ -1,14 +1,17 @@
-﻿<div class="row one column" id="discount-detail">
+﻿
     
-        @if (Model.ProgressiveDiscount != null)
-        {
-            
+@if (Model.ProgressiveDiscount != null)
+{
+    <div class="row one column" id="discount-detail">
+    
+        @{
+
             string msg = "";
 
             // Definindo a mensagem que será exibida
             if (Model.ProgressiveDiscount.PromotionType.ToString().Equals("QuantidadeIndividual") || Model.ProgressiveDiscount.PromotionType.ToString().Equals("QuantidadeCampanha")) // Promoção tipo Qtde
             {
-                if (Model.ProgressiveDiscount.DiscountType.ToString().Equals("Porcentagem")) //  desconto tipo porcentagem
+                if (Model.ProgressiveDiscount.DiscountType.ToString().Equals("Porcentagem")) // desconto tipo porcentagem
                 {
                     foreach (var regra in Model.ProgressiveDiscount.Rules)
                     {
@@ -19,7 +22,7 @@
                 }
                 else
                 {
-                    foreach (var regra in Model.ProgressiveDiscount.Rules) //  desconto tipo valor
+                    foreach (var regra in Model.ProgressiveDiscount.Rules) // desconto tipo valor
                     {
                         var valorFormatadoDesconto = regra.Discount.ToString().Replace(".", ",");
                         msg += $"Comprando acima de {(int) regra.Quantity} unidades você recebe um desconto de R${valorFormatadoDesconto} <br>";
@@ -29,7 +32,7 @@
             }
             else if (Model.ProgressiveDiscount.PromotionType.ToString().Equals("ValorIndividual") || Model.ProgressiveDiscount.PromotionType.ToString().Equals("ValorCampanha")) // Promoção tipo valor
             {
-                if (Model.ProgressiveDiscount.DiscountType.ToString().Equals("Porcentagem")) //  desconto tipo porcentagem
+                if (Model.ProgressiveDiscount.DiscountType.ToString().Equals("Porcentagem")) // desconto tipo porcentagem
                 {
                     foreach (var regra in Model.ProgressiveDiscount.Rules)
                     {
@@ -41,7 +44,7 @@
                 }
                 else
                 {
-                    foreach (var regra in Model.ProgressiveDiscount.Rules) //  desconto tipo valor
+                    foreach (var regra in Model.ProgressiveDiscount.Rules) // desconto tipo valor
                     {
                         var valorFormatadoQuantidade = regra.Quantity.ToString().Replace(".", ",");
                         var valorFormatadoDesconto = regra.Discount.ToString().Replace(".", ",");
@@ -67,7 +70,7 @@
                     }
                     <div class="discount-rules">Compre mais e pague menos, <span class="discount-rules">clique e saiba mais</span></div>
                 </div>
-                
+
                 <div class="ui modal modal-discount-rules">
                     <i class="icon close"></i>
                     <div class="content">
@@ -76,9 +79,9 @@
                         @Html.Raw(msg)
                     </div>
                 </div>
-                
             }
-
         }
+
+    </div>
+}
         
-</div>

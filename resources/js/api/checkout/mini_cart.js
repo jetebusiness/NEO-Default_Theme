@@ -58,7 +58,7 @@ $(document).ready(function () {
                         $("#CallServiceShippingMiniCart").removeClass("loading");
                         $("#zipcode").val(zipCode);
                         buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
                                 LoadCarrinho();
                             });
                         });
@@ -80,7 +80,7 @@ $(document).ready(function () {
                     if (error.responseText.indexOf("CD:1") > -1 || error.responseText.indexOf("CD:2") > -1) {
                         $("#zipcode").val(zipCode)
                         buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
                                 LoadCarrinho()
                             });
                         })
@@ -269,7 +269,10 @@ $(document).ready(function () {
     });
 
     //Limpar os Fretes que consta no carrinho a cada refresh
-    CancelarCalculoFreteCart(1);
+    if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0")
+    {
+        CancelarCalculoFreteCart(0);
+    }
 
 });
 
@@ -464,7 +467,7 @@ export function RecalcularFrete(zipCode) {
                     $("#CallServiceShippingMiniCart").removeClass("loading");
                     $("#zipcode").val(zipCode);
                     buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
                             LoadCarrinho();
                         });
                     });
@@ -486,14 +489,14 @@ export function RecalcularFrete(zipCode) {
                 if (error.responseText.indexOf("Mudanca de CD.") > -1) {
                     $("#zipcode").val(zipCode)
                     buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
                             LoadCarrinho()
                         });
                     })
                 } else if (error.responseText.indexOf("Nenhum CD configurado.") > -1) {
                     $("#zipcode").val(zipCode)
                     buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false).then(function (response) {
+                        changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
                             LoadCarrinho()
                         });
                     })

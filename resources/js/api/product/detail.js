@@ -42,7 +42,7 @@ $(document).ready(function () {
         });
 
         $(".variacao[data-idSku]").click(function () {
-            
+
             if(parseInt($("#quantidade").val()) > 1)
                 CarregarParcelamento(false);
         });
@@ -110,16 +110,16 @@ $(document).ready(function () {
         $("body").delegate(".btnComprar .detalhes, .flutuante .detalhes", "click", function (e) {
 
             if($(personalization.config.container).length > 0) {
-                
+
                 var valid = personalization.validFields()
-                
-                if (valid === undefined || valid === false) {                   
+
+                if (valid === undefined || valid === false) {
 
                     e.preventDefault();
                     return;
                 }
             }
-            
+
             var resultado = ValidarSkuProdutoPrincipal();
             let productSKU = $("#produto-sku").val(),
                 productID = $("#produto-id").val(),
@@ -212,6 +212,8 @@ $(document).ready(function () {
 
         //floating-bar
 
+        ($(".item.buy-together", "#buy-together").length === 0 ? $("#buy-together").remove() : "")
+
         if ($("#buy-together").length > 0) {
 
             var defaults = {
@@ -242,8 +244,8 @@ $(document).ready(function () {
 
             variations.init()
         }
-        
-        
+
+
         $(".discount-rules").on("click", function() {
             $(".modal-discount-rules").modal("show")
         })
@@ -368,23 +370,38 @@ export function AtualizarQuantidade() {
         preco_final = 0;
 
 
-
     $("#max-value").text(moneyPtBR(quantidade * preco_max));
     $("#max-p").text(max_p + "X de ");
     $("#description").text("(" + description + ")");
 
-
     if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) === false) {
         preco_final = quantidade * preco_promocao;
-        $("#preco").text(moneyPtBR(quantidade * preco_promocao));
-        $("#preco").data("preco-inicial", quantidade * preco_promocao);
-        $("#preco-antigo").text(moneyPtBR(quantidade * preco));
+        $("#preco-antigo").text(moneyPtBR(preco_final));
     } else {
         preco_final = quantidade * preco;
-        $("#preco").text(moneyPtBR(quantidade * preco));
-        $("#preco").data("preco-inicial", quantidade * preco);
         $("#preco-antigo").text("");
     }
+
+    $("#preco").text(moneyPtBR(preco_final));
+    $("#preco").data("preco-inicial", preco_final);
+
+
+    if($(".total-personalization").length > 0) {
+        var personalizationValue = 0;
+
+        $("input, select", "#personalizations").each(function () {
+            if ($(this).is(":checked") || ($(this).prop('nodeName').toLowerCase() === 'select' && $(this).val() !== "")) {
+                personalizationValue += parseFloat($(this).data('price'))
+            }
+        });
+
+        personalizationValue = personalizationValue * quantidade;
+
+        $('.product-value', '.total-personalization').html(moneyPtBR(parseFloat(preco_final)))
+        $('.personalization-value', '.total-personalization').html(moneyPtBR(personalizationValue))
+        $('.total-value', '.total-personalization').html(moneyPtBR(personalizationValue + parseFloat(preco_final)))
+    }
+
 
     if (desconto_boleto !== "0,00") {
         var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * parseFloat(desconto_boleto)));
@@ -489,12 +506,12 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
     product.IdSku = productSKU;
     product.Quantity = quantity;
     product.isRecurrent = signature;
-    
+
     if (personaliza.length > 0) {
         product.personalizations = personalization.renderArray();
         product.personalizationString = $("#json-personalizations").val()
     }
-   
+
     Cart.push(product);
 
     $.ajax({
@@ -536,6 +553,7 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
                     $(".carrinho").sidebar('toggle');
                 }
                 //window.location.href = "/Checkout/Index";
+                
             }
             else {
                 swal({
@@ -761,15 +779,10 @@ function calcShipping() {
                             $('#listSimulateFreight').append(strTr);
                         });
                     } else {
-                        if (response.message == "CD:1") {
+                        if (response.message == "CD:1" || response.message == "CD:2") {
                             $("#zipcode").val(ZipCode)
                             buscaCepCD(ZipCode).then(function () {
-                                changeCd(true, true, "#simular-frete-submit", true);
-                            })
-                        } else if (response.message == "CD:2") {
-                            $("#zipcode").val(ZipCode)
-                            buscaCepCD(ZipCode).then(function () {
-                                changeCd(true, true, "#simular-frete-submit", true);
+                                changeCd(true, true, "#simular-frete-submit", true, true);
                             })
                         } else {
                             swal({

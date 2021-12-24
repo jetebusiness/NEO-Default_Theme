@@ -9,7 +9,7 @@
         {
             <div class="field">
                 <div class="ui radio checkbox @(!String.IsNullOrEmpty(item.Image) ? "checkbox-image" : "")">
-                    <input type="radio" name="option-@Model.IdOption" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" value="" @(Model.Required ? "required" : "")>
+                    <input type="radio" name="option-@Model.IdOption" id="@item.IdOption" data-title="@item.Title" data-valid="@Model.IdOption" value="" @(Model.Required ? "required" : "") data-price="@item.Value">
                     <label>
                         @if (!String.IsNullOrEmpty(item.Image))
                         {

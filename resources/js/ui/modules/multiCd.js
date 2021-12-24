@@ -58,7 +58,7 @@ export function hideModal() {
     }, 500)
 }
 
-export async function changeCd(calcShipping = false, redirect = false, shippingButton = "", redirectOnError = false) {
+export async function changeCd(calcShipping = false, redirect = false, shippingButton = "", redirectOnError = false, showMessage = true) {
     if ($("#localizacao").val().length > 0 && ($("#localizacao").val() != $("#localizacao_old").val() || calcShipping) && $("#multiCDActive").val().toLowerCase() == "true") {
         var cep = $("#zipcode").val()
         cep = cep.replace("-", "").replace(" ", "").trim();
@@ -73,7 +73,7 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                 success: function success(response) {
                     if (response.success == false) {
                         swal({
-                            title: 'Ops... Região não disponível!',
+                            title: 'Indisponível para sua Região!',
                             html: response.message.replaceAll('\"', ""),
                             type: 'warning',
                             showCancelButton: false,
@@ -103,19 +103,23 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                         })
                     } else {
                         if (response.sameCD == false) {
-                            swal({
-                                title: 'Preço alterado!',
-                                html: response.message.replaceAll('\"', ""),
-                                type: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#16ab39',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
-                            }).then(function () {
-                                notSameCD(redirect, calcShipping, shippingButton);
-                            }).catch(function () {
-                                notSameCD(redirect, calcShipping, shippingButton);
-                            });
+                            if (showMessage) {
+                                swal({
+                                    title: 'Região atualizada!',
+                                    html: response.message.replaceAll('\"', ""),
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#16ab39',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                }).then(function () {
+                                    notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
+                                }).catch(function () {
+                                    notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
+                                });
+                            } else {
+                                notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
+                            }
                         } else {
                             $("#headLocation").val($("#localizacao").val())
                             $("#headLocation").text($("#localizacao").val())
@@ -127,7 +131,7 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                 },
                 error: function () {
                     swal({
-                        title: 'Ops... Região não disponível!',
+                        title: 'Indisponível para sua Região!',
                         html: response.message.replaceAll('\"', ""),
                         type: 'warning',
                         showCancelButton: false,
@@ -166,7 +170,7 @@ export async function changeCdCheckout() {
                     } else if (response.replaceAll('\"', "").length != 0){
                         changeAddress(response);
                     } else {
-                        changeCd(false, true, undefined, false);
+                        changeCd(false, true, undefined, false, true);
                     }
                     
                 },
@@ -182,7 +186,7 @@ export async function changeCdCheckout() {
 
 function changeAddress(response) {
     swal({
-        title: 'Ops... Localização diferente!',
+        title: 'Indisponível para sua Região!',
         html: response,
         type: 'warning',
         showCancelButton: true,
@@ -195,7 +199,7 @@ function changeAddress(response) {
         $("#listAddressPayment").click()
     }).catch(function () {
         if (response.indexOf('redirecionado') == -1) {
-            changeCd(false, true, undefined, false)
+            changeCd(false, true, undefined, false, false)
         } else {
             $.ajax({
                 method: "POST",
@@ -208,9 +212,12 @@ function changeAddress(response) {
     });
 }
 
-function notSameCD(redirect, calcShipping, shippingButton) {
+function notSameCD(redirect, calcShipping, shippingButton, response) {
     if (redirect) {
-        document.location.href = window.location.protocol + "//" + window.location.host + document.location.pathname + (calcShipping ? "?calcShipping=true" : "");
+        if (document.location.pathname == '/checkout' && response.indexOf('redirecionado') > -1)
+            document.location.href = '/';
+        else 
+            document.location.href = window.location.protocol + "//" + window.location.host + document.location.pathname + (calcShipping ? "?calcShipping=true" : "");
     } else {
         $("#headLocation").val($("#localizacao").val())
         $("#headLocation").text($("#localizacao").val())
@@ -246,7 +253,7 @@ $(function () {
         var cep = $("#zipcode").val().replace("-", "");
         if (cep.length == 8) {
             buscaCepCD(cep).then(function () {
-                changeCd(false, true, undefined, true);;
+                changeCd(false, true, undefined, true, true);
             })
         }
     })
