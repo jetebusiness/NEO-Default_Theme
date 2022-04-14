@@ -40,7 +40,7 @@ require('./modules/jquery-ui.min');
 //--------------------[ LazyLoad ]--------------------//
 require('../functions/lazy_load');
 //--------------------[ copiaform ]--------------------//
-require('../functions/fron_prova.js');
+require('../functions/fron_prova');
 
 //--------------------[ Policy ]--------------------//
 require('./modules/policy');
