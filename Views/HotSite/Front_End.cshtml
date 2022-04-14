@@ -1,0 +1,24 @@
+@{
+    ViewBag.Title = Front End;
+    Layout = "~/Views/Shared/Base/_Layout.cshtml";
+}
+
+@section CustomSeo {
+    @{
+        <meta property="og:image" content="/assets/image/logo/logo.png">
+    }
+}
+<div class="col-50">
+    <form>
+        <input type="text" name="nome" placeholder="seu nome" required>
+        <input type="email" name="email" placeholder="melhor email" required>
+        <input type="text" name="telefone" placeholder="seu Telefone" id="telefone" required>
+        <input type="text" name="assunto" placeholder="Assunto" required>
+        <textarea id="mensagem" name="mensagem" rows="5" placeholder="Sua mensagem" required></textarea>
+        <input type="submit" value="Enviar">
+    </form>
+</div>
+
+<div class="col-50">
+
+</div>
