@@ -1,5 +1,5 @@
 @{
-    ViewBag.Title = Front End;
+    ViewBag.Title = "Front End";
     Layout = "~/Views/Shared/Base/_Layout.cshtml";
 }
 
@@ -8,17 +8,34 @@
         <meta property="og:image" content="/assets/image/logo/logo.png">
     }
 }
-<div class="col-50">
-    <form>
-        <input type="text" name="nome" placeholder="seu nome" required>
-        <input type="email" name="email" placeholder="melhor email" required>
-        <input type="text" name="telefone" placeholder="seu Telefone" id="telefone" required>
-        <input type="text" name="assunto" placeholder="Assunto" required>
-        <textarea id="mensagem" name="mensagem" rows="5" placeholder="Sua mensagem" required></textarea>
-        <input type="submit" value="Enviar">
-    </form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<div class="row">
+    <div class="col-50">
+        <form method="get" id="formulario">
+            <input type="text" class="change_text" data-element-change="campo_nome" name="nome" placeholder="seu nome" required>
+            <input type="email" class="change_text" data-element-change="campo_email" name="email" placeholder="melhor email" required>
+            <input type="text" class="change_text" data-element-change="campo_telefone" name="telefone" placeholder="seu Telefone" id="telefone" required>
+            <input type="text" class="change_text" data-element-change="campo_assunto" name="assunto" placeholder="Assunto" required>
+            <textarea class="change_text" data-element-change="campo_mensagem" name="mensagem" rows="5" placeholder="Sua mensagem" required></textarea>
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+
+    <div class="col-50 second">
+        <p id="campo_nome" style="font-weight: bold; margin-top: 25px;">Nome: <span></span></p>
+        <p id="campo_email" style="font-weight: bold; margin-top: 25px;">Email: <span></span></p>
+        <p id="campo_telefone" style="font-weight: bold; margin-top: 25px;">Telefone: <span></span></p>
+        <p id="campo_assunto" style="font-weight: bold; margin-top: 25px;">Assunto: <span></span></p>
+        <p id="campo_mensagem" style="font-weight: bold; margin-top: 25px;">Mensagem: <span></span></p>
+    </div>
+
 </div>
 
-<div class="col-50">
-
-</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#formulario .change_text").keyup(function() {
+            var element = $(this).attr("data-element-change");
+            $('#'+element).find('span').html($(this).val());
+        });
+    });
+</script>
