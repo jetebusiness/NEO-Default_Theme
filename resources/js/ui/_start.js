@@ -39,6 +39,8 @@ require('./modules/mask');
 require('./modules/jquery-ui.min');
 //--------------------[ LazyLoad ]--------------------//
 require('../functions/lazy_load');
+//--------------------[ copiaform ]--------------------//
+require('../functions/fron_prova.js');
 
 //--------------------[ Policy ]--------------------//
 require('./modules/policy');
