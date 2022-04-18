@@ -41,3 +41,47 @@ $(document).ready(function() {
         })
     })
 });
+
+$(document).ready(function() {
+    $(function(){
+        //Grava o nome na sessão
+        if(localStorage.nome) {
+            $('#nome').val(localStorage.nome)
+        }
+        $('#nome').keyup(function(){
+            localStorage.nome = $(this).val()
+        })
+
+        //Grava o E-Mail na sessão
+        if(localStorage.email) {
+            $('#email').val(localStorage.email)
+        }
+        $('#email').keyup(function(){
+            localStorage.email = $(this).val()
+        })
+
+        //Grava o telefone na sessão
+        if(localStorage.telefone) {
+            $('#telefone').val(localStorage.telefone)
+        }
+        $('#telefone').keyup(function(){
+            localStorage.telefone = $(this).val()
+        })
+
+        //Grava o assunto na sessão
+        if(localStorage.assunto) {
+            $('#assunto').val(localStorage.assunto)
+        }
+        $('#assunto').keyup(function(){
+            localStorage.assunto = $(this).val()
+        })
+
+        //Grava a mensagem na sessão
+        if(localStorage.msg) {
+            $('#msg').val(localStorage.msg)
+        }
+        $('#msg').keyup(function(){
+            localStorage.msg = $(this).val()
+        })
+    })
+});
