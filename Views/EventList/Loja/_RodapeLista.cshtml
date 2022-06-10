@@ -7,8 +7,7 @@
             @if(Model != null) { 
                 foreach (var item in Model)
                 {
-                    <a href="/EventList/SearchList/?type=@item.IdType" class="item">@Html.Raw(@item.Title)</a>
-                }
+                    <a href="/EventList/SearchList/?type=@item.IdType&companyType=@item.IdTypeCompany" class="item">@Html.Raw(@item.Title)</a>                }
             }
         </div>
     </div>

@@ -24,6 +24,7 @@ $(document).ready(function () {
                 localidade: "input[name='Address[" + id + "].City']",
                 numero: "input[name='Address[" + id + "].Number']",
                 complemento: "input[name='Address[" + id + "].Complement']",
+                zipCode: "input[name='Address[" + id + "].ZipCode']",
                 uf: {
                     input: `#estado_${id}`,
                     isDropDown: true,

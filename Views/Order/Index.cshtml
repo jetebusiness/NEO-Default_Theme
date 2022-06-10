@@ -101,7 +101,7 @@
                                         @{
                                             if (order.NameStatus.ToLower().Contains("novo") || order.NameStatus.ToLower().Contains("aprovação"))
                                             {
-                                                @* Forma de pagamento com boleto Itaú *@
+                                                 @* Forma de pagamento com boleto Itaú *@
                                                 if (order.NamePaymentMethodGateway.ToLower().Contains("itaú"))
                                                 {
                                                     <input type="hidden" class="__idOrder" value="@order.IdOrder" />
@@ -116,6 +116,7 @@
                                                     <a href="javascript:void(0)" class="__reprintBankSlipMaxiPago ui icon gray small button margin top bottom" data-tooltip="Imprimir Boleto" data-id-order="@order.IdOrder">
                                                         <i class="print icon"></i>
                                                     </a>
+                                                    
                                                 }
                                             }
                                         }

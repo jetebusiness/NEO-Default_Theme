@@ -67,7 +67,6 @@ function InserirQuantidadeManual() {
 
 function AddMinusProductCart() {
     $(".qtdAction").on("click", function (event) {
-        CancelarCalculoFreteCart(1);
         
         var action = $(this).attr("data-action");
         var idCurrent = $(this).attr("data-id");
@@ -102,11 +101,6 @@ function AddMinusProductCart() {
         }
         $("#qtd_" + idCurrent).val(valorInput);
 
-        var id_frete = $("#id_frete_selecionado").val();
-        var cep_selecionado = $("#cep_selecionado").val();
-        ExibirDicadeFrete(id_frete, cep_selecionado);
-        //$('.qtdAction').off('click');
-
     });
 }
 
@@ -114,6 +108,8 @@ function RemoveProductCart() {
     $(".removeCartItem").click(function (event) {
         var idCurrent = $(this).attr("data-id"),
             idCartPersonalization = $(this).data('id-personalization-cart'),
+            restrictedDeliveryProduct = $(this).data('restricted-delivery'),
+            recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val(),
             $this = $(this);
         
         _confirm({
@@ -160,7 +156,9 @@ function RemoveProductCart() {
                                 
                             } else {
                                 $this.closest('[id^=itemCartProduct_]').remove();
-                                CancelarCalculoFreteCart(1, 1);
+                                if (restrictedDeliveryProduct.toLowerCase() == 'false' && recalculatedRestrictedProducts.toLowerCase() == 'false') {
+                                    CancelarCalculoFreteCart(1, 1);
+                                }
                             }
                            
                         }
@@ -211,6 +209,13 @@ function LoadServiceShipping() {
                     $(".description.resultado .valor").html(data);
                     //$(".tabela.frete").dropdown('refresh');
                     $(".description.resultado").show();
+
+                    if ($("#recalculatedRestrictedProducts").length) {
+                        var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+                        if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
+                            $(".productRestrictedMessage").show();
+                        }
+                    }
 
                     ChangeFrete();
                 }
@@ -324,16 +329,24 @@ function ChangeFrete() {
         $(".ShippingValue").prop("checked", false).removeAttr("checked");
         ponteiroCurrent.prop("checked", true);
 
-
         var idCurrent = $(ponteiroCurrent).val();
         var zipCode = $("#shipping").cleanVal();
         var idShippingMode = idCurrent;
-
+        var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
 
         var deliveredByTheCorreiosService = $("#ship_" + idCurrent).attr("data-correios");
         var carrier = $("#ship_" + idCurrent).data("carrier");
         var mode = $("#ship_" + idCurrent).data("mode");
         var hub = $("#ship_" + idCurrent).data("hub");
+        var pickUpStore = $("#ship_" + idCurrent).data("pickupstore");
+
+        if ($("#recalculatedRestrictedProducts").length) {
+            if (pickUpStore.toLowerCase() === 'false' && recalculatedRestrictedProducts && $(".productRestrictedMessage").is(":visible")) {
+                _alert("Aviso!", "Não é possível selecionar o frete, pois existem produtos que não podem ser entregues para este endereço.", "warning", true);
+                ponteiroCurrent.prop("checked", false).removeAttr("checked");
+                return;
+            }
+        }
 
         isLoading("#ListProductsCheckoutCompleto");
 
@@ -440,7 +453,7 @@ $(document).on("click", "#finalizePurchase", function (e) {
                 if (CompraRecorrenteCart.modalConfig.hasModal())
                     CompraRecorrenteCart.modalConfig.showModal(data.redirect);
                 else
-                    window.location = data.redirect;
+                    window.location.href = "/" + data.redirect
 
             } else {
                 _alert("Mensagem", data.message, "error")

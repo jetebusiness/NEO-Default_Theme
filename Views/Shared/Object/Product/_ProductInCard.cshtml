@@ -59,19 +59,38 @@
                 <img itemprop="image" id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                 <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
 
+                @if (Model.BuyXGetYSeal != null)
+                {
+                    <div class="ui top left attached label imagetag">
+                        <img src="@Model.BuyXGetYSeal" class="ui image tiny" onerror="imgError(this)">
+                    </div>
+                }
+
                 @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
-                    <div class="ui top right attached label imagetag">
+                    <div class="ui top right attached label imagetag seals">
+                        @foreach (var _sealStatus in Model.SealsStatus)
+                        {
+                            if (_sealStatus.Name != "Normal")
+                            {
+                                <img src="@_sealStatus.Image" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+                            }
+                        }
+                    </div>
+                }
+                else if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
+                {
+                    <div class="ui top right attached label imagetag seals">
                         <img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
                     </div>
                 }
-                
+
                 @if (Model.ProgressiveDiscount != null && (Session["segment"] == null || Session["segment"].ToString() != "b2b"))
                 {
-                    if (!String.IsNullOrEmpty(Model.ProgressiveDiscount.Image)) 
+                    if (!String.IsNullOrEmpty(Model.ProgressiveDiscount.Image))
                     {
-                        <div class="ui bottom attached label imageDiscount">        
-                            <img src="@Model.ProgressiveDiscount.Image" id="imgProgressiveDiscount" class="ui image"  alt="" title="">
+                        <div class="ui bottom attached label imageDiscount">
+                            <img src="@Model.ProgressiveDiscount.Image" id="imgProgressiveDiscount" class="ui image" alt="" title="">
                         </div>
                     }
                 }
@@ -81,10 +100,23 @@
         {
             <a class="ui image fluid attached" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
                 <img id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
-                @if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
+                @if (Model.BuyXGetYSeal != null)
                 {
-                    <div class="ui top right attached label imagetag">
-                        <img src="@Model.SealStatus.Image" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+                    <div class="ui top left attached label imagetag">
+                        <img src="@Model.BuyXGetYSeal" class="ui image tiny" onerror="imgError(this)">
+                    </div>
+                }
+
+                 @if (Model.SealsStatus != null && Model.SealsStatus.Count > 0)
+                {
+                    <div class="ui top right attached label imagetag seals">
+                        @foreach (var _sealStatus in Model.SealsStatus)
+                        {
+                            if (_sealStatus.Name != "Normal")
+                            {
+                                <img src="@_sealStatus.Image" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+                            }
+                        }
                     </div>
                 }
 
@@ -100,7 +132,7 @@
             </a>
         }
 
-       
+
         <div class="ui horizontal divider avaliacao">
             <div class="ui tiny star rating" data-rating="@Model.Rate.Value.ToString().Replace(",", ".")"></div>
         </div>
@@ -124,7 +156,7 @@
                                 <div class="header">
                                     @reference.Name
                                 </div>
-                                
+
                                 <div class="scrolling menu">
                                     @foreach (var variation in reference.Variations)
                                     {

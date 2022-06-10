@@ -385,6 +385,8 @@ function clickShipping() {
     var entregaAgendada = "";
     var exclusivaEntregaAgendada = "";
     var correiosEntregaNome = "";
+    var pickUpStore = false;
+    var recalculatedRestrictedProducts = false;
 
     $("#GetShippping .card").click(function () {
 
@@ -419,11 +421,23 @@ function clickShipping() {
         carrier = $(ponteiroCurrent).data("carrier");
         mode = $(ponteiroCurrent).data("mode");
         hub = $(ponteiroCurrent).data("hub");
+        pickUpStore = $(ponteiroCurrent).data("pickupstore");
+        recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
 
         entregaAgendada = $(ponteiroCurrent).attr("data-entregaagendada");
         exclusivaEntregaAgendada = $(ponteiroCurrent).attr("data-exclusiva-entregaagendada");
         $("#checkoutColumn2").addClass("disable_column");
 
+        if ($("#recalculatedRestrictedProducts").length) {
+            if (pickUpStore.toLowerCase() === 'false' && recalculatedRestrictedProducts && $(".productRestrictedMessage").is(":visible")) {
+                var ponteiroCurrent = $(".shippingGet", this);
+                $(".shippingGet").attr("checked", false);
+                $(ponteiroCurrent).attr("checked", false);
+                $("#GetShippping .card, #GetShippping .card .checkbox").removeClass("checked")
+                _alert("Aviso!", "Não é possível selecionar o frete, pois existem produtos que não podem ser entregues para este endereço.", "warning", true);
+                return (false);
+            }
+        }
 
         if ((valorFrete != "") && (idFrete != "") && (correiosEntrega != "") && (zipcode != "")) {
             var dataperiodoentregaescolhida = null;
@@ -611,7 +625,7 @@ function OrderCreateTwoCards(obj) {
             var labelCurrent = $(".labelCheckPayment", this).text();
             var valorCurrent = $(".fieldCheckPayment", this).val();
 
-            if ((valorCurrent == "") || (valorCurrent.length < 3)) {
+            if (valorCurrent == "" || valorCurrent.length <= 0) {
                 msgErrorCard1 += "<br />O campo " + labelCurrent + " está inválido!";
             }
         });
@@ -656,7 +670,7 @@ function OrderCreateTwoCards(obj) {
             var labelCurrent = $(".labelCheckPayment", this).text();
             var valorCurrent = $(".fieldCheckPayment", this).val();
 
-            if ((valorCurrent == "") || (valorCurrent.length < 3)) {
+            if (valorCurrent == "" || valorCurrent.length <= 0) {
                 msgErrorCard2 += "<br />O campo " + labelCurrent + " está inválido!";
             }
         });
@@ -707,7 +721,7 @@ function OrderCreateTwoCards(obj) {
             var labelCurrent = $(".labelCheckPayment", this).text();
             var valorCurrent = $(".fieldCheckPayment", this).val();
 
-            if ((valorCurrent == "") || (valorCurrent.length < 3)) {
+            if (valorCurrent == "" || valorCurrent.length <= 0) {
                 msgErrorCard1 += "<br />O campo " + labelCurrent + " está inválido!";
             }
         });
@@ -747,7 +761,7 @@ function OrderCreateTwoCards(obj) {
             var labelCurrent = $(".labelCheckPayment", this).text();
             var valorCurrent = $(".fieldCheckPayment", this).val();
 
-            if ((valorCurrent == "") || (valorCurrent.length < 3)) {
+            if (valorCurrent == "" || valorCurrent.length <= 0) {
                 msgErrorCard2 += "<br />O campo " + labelCurrent + " está inválido!";
             }
         });
@@ -1111,7 +1125,7 @@ function OrderCreate() {
                         var labelCurrent = $(".labelCheckPayment", this).text();
                         var valorCurrent = $(".fieldCheckPayment", this).val();
 
-                        if ((valorCurrent == "") || (valorCurrent.length < 3)) {
+                        if (valorCurrent == "" || valorCurrent.length <= 0) {
                             msgErrors += "<br />O campo " + labelCurrent + " está inválido!";
                         }
                     });
@@ -1158,7 +1172,7 @@ function OrderCreate() {
                         var labelCurrent = $(".labelCheckPayment", this).text();
                         var valorCurrent = $(".fieldCheckPayment", this).val();
 
-                        if ((valorCurrent == "") || (valorCurrent.length < 3)) {
+                        if (valorCurrent == "" || valorCurrent.length <= 0) {
                             msgErrors += "<br />O campo " + labelCurrent + " está inválido!";
                         }
                     });
@@ -2397,7 +2411,20 @@ export function atualizaEnderecos(responseChange) {
                 clickShipping();
                 HabilitaBlocoPagamento(false);
                 CampoEntregaAgendada();
+                // Para não ficar alternando entre 0 e o valor do frete em link de pagamento -- existe uma outra chamada posteriormente
+                if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") { 
+                    atualizaResumoCarrinho();
+                }
+
                 $('.ui.modal.lista-endereco-cliente').modal('hide');
+
+                if ($("#recalculatedRestrictedProducts").length) {
+                    var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+                    if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
+                        $(".productRestrictedMessage").show();
+                        $(".ui.accordion.productSummary").accordion('open', 0);
+                    }
+                }
 
                 if ($('#PaymentLinkChangeBrand').length > 0) {
                     if ($('#PaymentLinkChangeBrand').val() == "1") {
@@ -2481,6 +2508,7 @@ function applyDiscount() {
                 success: function success(response) {
                     if (response.success) {
                         atualizaResumoCarrinho();
+                        atualizaEnderecos();
                         if ($('.ui.accordion.shopping-voucher').length > 0) {
                             $.ajax({
                                 async: false,
@@ -2496,7 +2524,6 @@ function applyDiscount() {
                         }
                         
                         if (response.couponfreeshipping) {
-                            atualizaEnderecos();
                             _alert("Cupom aplicado com sucesso!", response.msg, "success");
                         } else {
                             _alert("Cupom de Desconto!", response.msg, "success");
@@ -2508,8 +2535,18 @@ function applyDiscount() {
                         if ($('.ui.toggle.checkbox.box-debit').hasClass('checked')) {
                             $('.ui.toggle.checkbox.box-debit').trigger('click');
                         }
+
+                        //Alterando o botão para poder dar a escolha de excluir o desconto
+                        var apply = document.getElementById('applyDiscount')
+                        var del = document.getElementById('deleteDiscount')
+                        apply.style.display = 'none'
+                        del.style.display = 'block'
+
+                        var key = document.getElementById('key')
+                        key.disabled = true
                     }
                     else {
+                        atualizaResumoCarrinho();
                         $("#key").val("");
                         _alert("", response.msg, "warning");
                     }
@@ -2519,6 +2556,34 @@ function applyDiscount() {
         else {
             _alert("", "Você não informou uma chave de desconto!", "warning");
         }
+    });
+}
+
+function deleteDiscount() {
+    $("#deleteDiscount").click(function () {
+        $.ajax({
+            url: "RemoveDescontoCheckout",
+            success: function success(response) {
+                if (response.success) {
+                    atualizaResumoCarrinho();
+                    atualizaEnderecos();
+                    _alert("Cupom de Desconto!", response.msg, "success");
+                    //Voltando a opção de adicionar o desconto
+                    var apply = document.getElementById('applyDiscount')
+                    var del = document.getElementById('deleteDiscount')
+                    apply.style.display = 'block'
+                    del.style.display = 'none'
+
+                    $("#key").val("")
+                    var key = document.getElementById('key')
+                    key.disabled = false
+                } else {
+                    atualizaResumoCarrinho();
+                        $("#key").val("");
+                        _alert("", response.msg, "warning");
+                }
+            }
+        })
     });
 }
 
@@ -2543,7 +2608,7 @@ function viewAddressLogged(form) {
         var userName = $(form + " .UserName").val();
         var password = $(form + " .password").val();
 
-        var googleResponse = $("[id^=googleResponse]", form).length > 0 ? $("[id^=googleResponse]", form).val() : "";
+        var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
 
         if (googleResponse) {
 
@@ -3278,8 +3343,8 @@ var availableDates = [];
 //var mp;
 //var cardForm;
 
-$(document).ready(function () {
-    
+$(document).ready(function () {    
+
     if($("#formas-pagamento").length > 0)
         checkValidatePersonalization();
     
@@ -3612,11 +3677,22 @@ $(document).ready(function () {
         changeAddressPayment();
         showAddressPayment();
         applyDiscount();
+        deleteDiscount();
         CheckAccessKey("#ListaEnderecosCliente");
         ReEnviarCodigoEmail();
         onChangeParcelamento();
 
         HabilitaBlocoPagamento(false);
+
+        if ($("#deleteDiscount").val() != undefined && $("#applyDiscount").val() != undefined) {
+            if ($("#key").val() != "") {
+                var del = document.getElementById('deleteDiscount')
+                del.style.display = 'block'
+            } else {
+                var apply = document.getElementById('applyDiscount')
+                apply.style.display = 'block'
+            }
+        }
     }
     else {
         _alert("", "Você não pode fechar um pedido sem um endereço de entrega!", "warning");

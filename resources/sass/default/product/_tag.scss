@@ -10,6 +10,19 @@
 
 .ui {
     &.label {
+        &.seals {
+            display: flex !important;
+            flex-direction: column !important;
+            align-content: space-between;
+            position: absolute !important;
+            top: 2em;
+            width: 8em;
+        }
+    }
+}
+
+.ui {
+    &.label {
         &.imageDiscount {
             text-align: center;
             z-index: 4;

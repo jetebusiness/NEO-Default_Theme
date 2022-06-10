@@ -39,6 +39,13 @@
 								<img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
 								<img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)">
 
+								@if (Model.BuyXGetYSeal != null)
+								{
+									<div class="ui top left attached label imagetag">
+										<img src="@Model.BuyXGetYSeal" class="ui image tiny" onerror="imgError(this)">
+									</div>
+								}
+
 								@if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
 								{
 									<div class="ui bottom right attached label massive imagetag">
@@ -51,6 +58,14 @@
 						{
 							<a class="ui image fluid" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)">
 								<img id="mainImageCard_@Model.IdProduct" src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)">
+								
+								@if (Model.BuyXGetYSeal != null)
+								{
+									<div class="ui top left attached label imagetag">
+										<img src="@Model.BuyXGetYSeal" class="ui image tiny" onerror="imgError(this)">
+									</div>
+								}
+
 								@if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
 								{
 									<div class="ui bottom right attached label massive imagetag">

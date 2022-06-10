@@ -123,7 +123,6 @@
 
     <div class="ui grid horizontal" id="ListProductsCheckoutCompleto">
         <div class="row">
-            <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
 
             @if (Model != null && Model.CartItems != null)
             {

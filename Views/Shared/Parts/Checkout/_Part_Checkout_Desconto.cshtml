@@ -1,9 +1,22 @@
-﻿<div class="ui form margin bottom small">
+﻿@{
+    string _valueKey = "";
+    string disabled = "";
+
+    if (Session["DiscountKey"] != null)
+    {
+        _valueKey = Session["DiscountKey"].ToString();
+        disabled = "disabled";
+    }
+}
+<div class="ui form margin bottom small">
     <div class="ui right labeled input blc-key">
         <label>Cupom: </label>
-        <input type="text" name="key" id="key" placeholder="Cupom de Desconto" autocomplete="off">
-        <a class="ui label" id="applyDiscount">
-            OK
-        </a>
+        <input type="text" name="key" id="key" placeholder="Cupom de Desconto" autocomplete="off" value="@_valueKey" @disabled>
+            <a class="ui label" id="applyDiscount">
+                OK
+            </a>
+            <a class="ui label" id="deleteDiscount">
+                X
+            </a>
     </div>
 </div>

@@ -2,23 +2,23 @@
 @model DomainCheckout.Entities.CartItem
 
 @{
-  string classe_qtd = "ui icon button ";
-  string classe_remove = "mini ui icon red button produto ";
-  string id_ipt_qtd = "qtd_";
-  string classe_stock = "stock_";
-  string classe_ipt_qtd = "";
-  bool data_signature = false;
+    string classe_qtd = "ui icon button ";
+    string classe_remove = "mini ui icon red button produto ";
+    string id_ipt_qtd = "qtd_";
+    string classe_stock = "stock_";
+    string classe_ipt_qtd = "";
+    bool data_signature = false;
 
-  if (Session["EventList"] != null)
-  {
-    classe_qtd += "qtdActionEventList";
-    classe_remove += "removeItemEventList";
-  }
-  else
-  {
-    classe_qtd += "qtdActionMiniCart";
-    classe_remove += "removeCartItem";
-  }
+    if (Session["EventList"] != null)
+    {
+        classe_qtd += "qtdActionEventList";
+        classe_remove += "removeItemEventList";
+    }
+    else
+    {
+        classe_qtd += "qtdActionMiniCart";
+        classe_remove += "removeCartItem";
+    }
 }
 
 <div class="item item-cart-product @(Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
@@ -53,37 +53,44 @@
                 @Model.AvailabilityStatus.DescriptionCart
             }
         </div>
-        
-        <div class="priceProduct" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
-        
-        <div class="description">
-             @if (Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
-             {
-                 <span class="ui label basic primary exhausted">PRODUTO ESGOTADO</span>
-             }
-             else
-             {
-                 <div class="ui qtd action mini input">
-                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
-                         <i class="icon minus"></i>
-                     </button>
-                     <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity"/>
-                     <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem"/>
-                     <input type="number" class="text center quantidade" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt"  data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)"/>
 
-                     <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
-                         <i class="icon plus"></i>
-                     </button>
-                 </div>
-             }
+        <div class="priceProduct" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
+
+        <div class="description">
+            @if (Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)
+            {
+                <span class="ui label basic primary exhausted">PRODUTO ESGOTADO</span>
+            }
+            else
+            {
+                <div class="ui qtd action mini input">
+                    <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
+                        <i class="icon minus"></i>
+                    </button>
+                    <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
+                    <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
+                    <input type="number" class="text center quantidade" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" />
+
+                    <button class="@classe_qtd mini" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
+                        <i class="icon plus"></i>
+                    </button>
+                </div>
+            }
         </div>
-        
-        <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
+        @if (Model.RestrictedDelivery)
+        {
+            <div class="ui tiny hidden warning message productRestrictedMessage">
+                <div class="header">
+                    Este produto não pode ser entregue para este endereço. Remova-o ou selecione uma opção de retirada na loja.
+                </div>
+            </div>
+        }
+
+        <button class="@classe_remove" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" data-restricted-delivery="@Model.RestrictedDelivery">
             <i class="trash alternate outline icon"></i>
         </button>
     </div>
-    
-    <div class="ui divider"></div>
-    
-</div>
 
+    <div class="ui divider"></div>
+
+</div>

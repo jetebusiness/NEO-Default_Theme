@@ -22,17 +22,17 @@
     }
 }
 
-
 @Html.Partial("Common/_SEO")
 
 @Html.Action("GetMultiCDModal", "Company")
 
 <script type="text/javascript">
     window.onload = function () {
-        var svr = document.createElement("div");
+        var svr = document.createElement("input");
         svr.setAttribute("type", "hidden");
         svr.setAttribute("id", "svr");
         svr.setAttribute("value", "@Context.Server.MachineName");
+        svr.setAttribute("data-pool", "@LojaCorp.Control.Company.Pool");
 
         document.body.appendChild(svr);
     }

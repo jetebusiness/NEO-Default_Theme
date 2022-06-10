@@ -45,6 +45,15 @@
                                             <i class="trash alternate outline icon"></i>
                                         </button>
                                     }
+
+                                    @if (product.RestrictedDelivery)
+                                    {
+                                        <div class="ui tiny hidden warning message productRestrictedMessage">
+                                            <div class="header">
+                                                Este produto não pode ser entregue para este endereço. Remova-o ou selecione uma opção de retirada na loja.
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         }

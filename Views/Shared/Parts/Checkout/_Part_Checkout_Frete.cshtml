@@ -31,7 +31,7 @@
             decimal.TryParse(Session["PaymentLinkShippingValue"].ToString(), out _value);
 
             if (_hub.HasValue) {
-                var _shipping = Model.FirstOrDefault(f => f.ShippingMode.hub == _hub && f.ShippingMode.carrier == _carrier && f.ShippingMode.mode == _mode);
+                var _shipping = Model.FirstOrDefault(f => f.ShippingMode.hub == _hub && f.ShippingMode.mode == _mode);
                 if (_shipping != null)
                 {
                     IdShippingModeCart = _shipping.ShippingMode.IdShippingMode;
@@ -65,23 +65,24 @@
                 <div class="content">
                     <div class="header">
                         <div class="ui radio checkbox @_classCheckFrete">
-                            <input type="radio" 
-                                   name="radio" 
-                                   id="radio_@item.ShippingMode.IdShippingMode" 
-                                   class="shippingGet" 
-                                   value="@item.ShippingMode.IdShippingMode" 
-                                   data-id="@item.ShippingMode.IdShippingMode" 
-                                   data-value="@string.Format("{0}", item.ValueShipping)" 
-                                   data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)" 
+                            <input type="radio"
+                                   name="radio"
+                                   id="radio_@item.ShippingMode.IdShippingMode"
+                                   class="shippingGet"
+                                   value="@item.ShippingMode.IdShippingMode"
+                                   data-id="@item.ShippingMode.IdShippingMode"
+                                   data-value="@string.Format("{0}", item.ValueShipping)"
+                                   data-correios="@string.Format("{0}", item.ShippingMode.DeliveredByTheCorreiosService)"
                                    data-correios-name="@item.ShippingMode.Name"
-                                   data-entregaagendada="@item.ShippingMode.ScheduledDelivery" 
-                                   data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery" 
-                                   data-carrier="@item.ShippingMode.carrier" 
-                                   data-mode="@item.ShippingMode.mode" 
-                                   data-hub="@item.ShippingMode.hub" 
-                                   data-deliverytime="@item.ShippingMode.DeliveryTime" 
-                                   data-usefullday="@((item.ShippingMode.UsefulDay == true) ? "1" : "0")" @_checkFrete>
-                            
+                                   data-entregaagendada="@item.ShippingMode.ScheduledDelivery"
+                                   data-exclusiva-entregaagendada="@item.ShippingMode.ExclusiveScheduledDelivery"
+                                   data-carrier="@item.ShippingMode.carrier"
+                                   data-mode="@item.ShippingMode.mode"
+                                   data-hub="@item.ShippingMode.hub"
+                                   data-deliverytime="@item.ShippingMode.DeliveryTime"
+                                   data-usefullday="@((item.ShippingMode.UsefulDay == true) ? "1" : "0")" @_checkFrete
+                                   data-pickupstore="@item.ShippingMode.PickUpInStore">
+
                             @if (item.ShippingMode.ScheduledDelivery)
                             {
                                 <label>@(item.ShippingMode.Name + " (*)") </label>
@@ -152,12 +153,14 @@
                 </div>
             </div>
         }
+        <input type="hidden" id="recalculatedRestrictedProducts" value="@Model.FirstOrDefault().RecalculatedRestrictedProducts.ToString()" />
     }
     else
     {
+        <input type="hidden" id="recalculatedRestrictedProducts" value="true" />
         <div class="row margin top left bottom small">
             @Html.Raw("Nenhum Frete foi encontrado")
         </div>
-        
+
     }
 </div>

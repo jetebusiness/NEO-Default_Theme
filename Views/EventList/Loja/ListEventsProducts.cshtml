@@ -151,9 +151,9 @@
                 @Html.Action("GetProductsListEvents", "Product", new
                 {
                     category = "",
-                    viewList = "l",
+                    viewList = Request.QueryString["viewList"] ?? "",
                     pageNumber = Request.QueryString["pageNumber"] ?? "",
-                    pageSize = 12,
+                    pageSize = LojaCorp.Control.Company._Company.QuantityItemsPage > 0 ? LojaCorp.Control.Company._Company.QuantityItemsPage : 12,
                     order = Request.QueryString["order"] ?? "",
                     brand = Request.QueryString["brand"] ?? "",
                     group = Request.QueryString["group"] ?? "",

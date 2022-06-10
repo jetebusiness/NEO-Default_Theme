@@ -27,6 +27,7 @@ export function buscaCep(cep) {
                 var obj = $.parseJSON(response.message);
                 atualizaCampos(obj);
             } else {
+                $("#zipCode").val("")
                 _alert("", response.message, "warning");
             }
         },

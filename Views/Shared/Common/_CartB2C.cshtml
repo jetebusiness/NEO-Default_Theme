@@ -4,7 +4,7 @@
             <div class="ui grid top aligned elementos">
                 <div class="row two column head middle aligned">
                     <div class="column ten wide mobile">
-                        <span id="MiniCartTitle" data-segment="b2c" class="text center left floated">Meu Carrinho</span>
+                        <span id="MiniCartTitle" data-segment="@(Session["idEventList"] == null && Session["EventList"] == null ? "b2c" : "b2b")" class="text center left floated">Meu Carrinho</span>
                     </div>
                     <div class="column right aligned six wide mobile">
                         <a class="ui button icon fecharCarrinho"><i class="remove icon black"></i></a>
@@ -82,12 +82,20 @@
                     </div>
                 </div>
                    
-                @Html.Partial("~/Views/Shared/Common/_Cart_Butons_MiniCart.cshtml", 0)
+                @{
+                    if (Session["EventList"] == null)
+                    {
+                        @Html.Partial("~/Views/Shared/Common/_Cart_Butons_MiniCart.cshtml", 0);
+                    }
+                    else
+                    {
+                        @Html.Partial("~/Views/Shared/Common/_Cart_Butons_EventList.cshtml")
+                    }
+                }
 
             </div>
         </div>
     </div>
-    <input type="hidden" name="sessionId" id="sessionId" value="@(Session["SessionId"] != null ? Session["SessionId"].ToString() : string.Empty)" />
     <input type="hidden" id="id_frete_selecionado" />
     <input type="hidden" id="cep_selecionado" />
     <input type="hidden" id="permiteVenda" value="true" />

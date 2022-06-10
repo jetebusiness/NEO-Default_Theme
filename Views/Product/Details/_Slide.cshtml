@@ -2,34 +2,39 @@
 
 @{
     DomainProduct.Entities.SealStatus tag = new DomainProduct.Entities.SealStatus();
+    List<DomainProduct.Entities.SealStatus> tags = new List<DomainProduct.Entities.SealStatus>();
 
-    if (Session["SealStatusV"] != null)
-    {
-        tag = (DomainProduct.Entities.SealStatus)Session["SealStatusV"];
-    }
-    else
-    {
-        tag.Image = "";
-        tag.Name = "";
-    }
+    tag = Session["SealStatusV"] != null ? (DomainProduct.Entities.SealStatus)Session["SealStatusV"] : null;
+    tags = Session["SealsStatusV"] != null ? (List<DomainProduct.Entities.SealStatus>)Session["SealsStatusV"] : null;
+
 }
 
 <div class="ui grid">
     <div class="row">
         <div class="column center aligned">
             <div class="ui image">
-                @if (!string.IsNullOrEmpty(tag.Name))
+                @if (tags != null && tags.Count > 0)
                 {
-                    <div class="ui top right attached label massive imagetag">
-                        <img src="@tag.Image" alt="@tag.Name" class="ui image tiny" onerror="imgError(this)">
+                    <div class="ui top right attached label imagetag seals">
+                        @foreach (var _sealStatus in tags)
+                        {
+                            if (_sealStatus.Name != "Normal")
+                            {
+                                <img src="@_sealStatus.Image" class="ui image tiny" onerror="imgError(this)">
+
+
+                            }
+                        }
                     </div>
                 }
+
+
                 <div class="produto easyzoom easyzoom--overlay easyzoom--with-thumbnails easyzoom--with-toggle">
                     @if (Model != null && Model.Count() > 0)
                     {
                         <a href="@(Model.FirstOrDefault().ImageHighResolution != null ? Model.FirstOrDefault().ImageHighResolution : "#" )">
                             @* Tem de Setar aqui a imagem de tamanho maior ZOOM!*@
-                            <img id="imagem-padrao" class="img" src="/assets/image/img_default.png" data-src="@Model.FirstOrDefault().ImageDefault"  onerror="imgError(this)" />
+                            <img id="imagem-padrao" class="img" src="/assets/image/img_default.png" data-src="@Model.FirstOrDefault().ImageDefault" onerror="imgError(this)" />
                         </a>
                     }
                 </div>

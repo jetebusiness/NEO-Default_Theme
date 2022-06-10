@@ -779,7 +779,12 @@ function calcShipping() {
                             $('#listSimulateFreight').append(strTr);
                         });
                     } else {
-                        if (response.message == "CD:1" || response.message == "CD:2") {
+                        if (response.message == "CD:1") {
+                            $("#zipcode").val(ZipCode)
+                            buscaCepCD(ZipCode).then(function () {
+                                changeCd(true, true, "#simular-frete-submit", true, true);
+                            })
+                        } else if (response.message == "CD:2") {
                             $("#zipcode").val(ZipCode)
                             buscaCepCD(ZipCode).then(function () {
                                 changeCd(true, true, "#simular-frete-submit", true, true);

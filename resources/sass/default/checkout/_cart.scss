@@ -921,7 +921,7 @@ $radiusBox: 0px;
     width: 100%;
     max-width: 300px;
 
-    
+
     label {
         line-height: 50px;
         color: #4c4c4c;
@@ -936,10 +936,11 @@ $radiusBox: 0px;
         width: auto;
     }
 
-    #applyDiscount {
+    #applyDiscount, #deleteDiscount {
         background: transparent;
         position: absolute;
         right: 0;
         line-height: 30px;
+        display: none;
     }
 }

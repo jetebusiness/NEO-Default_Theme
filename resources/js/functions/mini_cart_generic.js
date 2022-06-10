@@ -171,14 +171,24 @@ export function LoadCarrinhoEventList(showSidebar) {
         method: "GET",
         url: "/EventList/LoadProductsEventListMiniCart",
         success: function (loadProduct) {
+            
             var retornoAjax = loadProduct.split("|$|");
             var listaProdutos = retornoAjax[0];
-
             $("#ListProductsCheckout").html(listaProdutos);
             updateQuantidadeTopoCarrinho();
             $(".qtdActionEventList").on("click");
             if (showSidebar === true) {
                 $(".carrinho").sidebar('toggle');
+            }
+
+            if(listaProdutos.toString().indexOf('empty-cart') === -1) {
+                $(".buttonsMiniCart").each(function () {
+                    $(this).removeClass("hideme");
+                })
+            } else {
+                $(".buttonsMiniCart").each(function () {
+                    $(this).addClass("hideme")
+                })
             }
             isLoading("#miniCarrinho");
 

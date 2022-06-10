@@ -47,14 +47,14 @@
                                         <label>Identificação</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" required name="Identification" value="@Model.Identification" placeholder="Ex: Casa, Trabalho, etc...">
+                                            <input type="text" required name="Identification" pattern="[^\s][a-zA-Z\u00C0-\u00FF\s]{3,}" value="@Model.Identification" placeholder="Ex: Casa, Trabalho, etc...">
                                         </div>
                                     </div>
                                     <div class="field required">
                                         <label>Destinatário</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" required name="Receiver" value="@Model.Receiver" placeholder="Nome do Destinatário"
+                                            <input type="text" required name="Receiver" pattern="[^\s][a-zA-Z\u00C0-\u00FF\s]{3,}" value="@Model.Receiver" placeholder="Nome do Destinatário"
                                                    data-validate="name">
                                         </div>
                                     </div>

@@ -43,14 +43,14 @@
                                         <label>Identificação</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" maxlength="100" required name="Identification" placeholder="Ex: Casa, Trabalho, etc...">
+                                            <input type="text" maxlength="100" required pattern="[^\s][a-zA-Z\u00C0-\u00FF\s]{3,}" minlength="3" name="Identification" placeholder="Ex: Casa, Trabalho, etc...">
                                         </div>
                                     </div>
                                     <div class="field required">
                                         <label>Destinatário</label>
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" maxlength="100" required name="Receiver" placeholder="Nome do Destinatário"
+                                            <input type="text" maxlength="100" required pattern="[^\s][a-zA-Z\u00C0-\u00FF\s]{3,}" minlength="3" name="Receiver" placeholder="Nome do Destinatário"
                                                    data-validate="name">
                                         </div>
                                     </div>
@@ -68,8 +68,8 @@
                                             <label>Tipo do Endereço</label>
                                             <select name="CommercialResidentialAddress" required class="ui dropdown">
                                                 <option value="">Selecione</option>
-                                                <option value="1">Residencial</option>
-                                                <option value="0">Comercial</option>
+                                                <option value="0">Residencial</option>
+                                                <option value="1">Comercial</option>
                                             </select>
                                         </div>
 

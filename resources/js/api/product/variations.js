@@ -594,7 +594,7 @@ variations = {
                 $('.visible', this.config.itensDisable.btnSignature).text('ASSINAR PRODUTO')
         }
 
-
+        this.reloadInstallment(false, Price);
 
 
         //setando as variacoes selecionadas para utilizacao no aviseme
@@ -643,6 +643,111 @@ variations = {
             }
         });
         return data;
+    },
+    reloadInstallment(isB2b, Price) {
+        var json = "",
+            html = "",
+            json_string = "",
+            json_content = "";
+
+        json_string = this.searchInstallment(isB2b, Price);
+
+        if (json_string != "0") {
+            json = JSON.parse(json_string);
+            json_content = JSON.parse(json.Content);
+
+            var total_parcelas_exibidas = 0;
+            //GATEWAY
+            for (var i = 0; i < json_content.length; i++) {
+                //METHODS
+                for (var j = 0; j < json_content[i].paymentMethods.length; j++) {
+                    //BRANDS
+                    if (json_content[i].paymentMethods[j].status === true) {
+                        for (var k = 0; k < json_content[i].paymentMethods[j].paymentBrands.length; k++) {
+                            var total_parcelas = json_content[i].paymentMethods[j].paymentBrands[k].installments.length;
+
+                            if (total_parcelas > 0) {
+                                total_parcelas_exibidas++;
+
+                                if (json_content[i].idPaymentGateway == 6) {
+                                    html += `
+                                    <div class="title">
+                                          <i class="dropdown icon"></i>
+                                          ${json_content[i].paymentMethods[j].paymentBrands[k].name}
+                                    </div>
+                                     <div class="content">
+                                        <div class="ui list">`
+                                    html += `<div class="pagSeguroParcelamento" id="pagSeguroParcelamento" data-paymentbrand="${json_content[i].paymentMethods[j].paymentBrands[k].idPaymentBrand}" data-brand="${json_content[i].paymentMethods[j].paymentBrands[k].name.toLowerCase()}"> </div>`
+                                    html += `</div>
+                                     </div>`
+                                }
+                                else {
+                                    html += `
+                                        <div class="title">
+                                            <i class="dropdown icon"></i>
+                                            ${json_content[i].paymentMethods[j].paymentBrands[k].name}
+                                        </div>
+                                        <div class="content">
+                                            <div class="ui list">`
+
+                                    detalhes_valorParc = 0;
+                                    detalhes_descricao = "";
+                                    detalhes_maiorParc = 0;
+
+                                    for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+                                        html += `<span class="item parcelamentos">
+                                                              <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
+                                                              <span class="valor"> ${this.moneyBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
+                                                              <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
+                                                              <span class="total">Total Parcelado: ${this.moneyBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
+                                                          </span>`
+                                        var ret = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase()
+
+                                        detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
+                                        detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
+                                        detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
+
+                                        if (ret !== "sem juros")//maior parcela sem juros
+                                        {
+                                            return;
+                                        }
+                                    }
+                                    html += `</div>
+                                        </div>`
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (total_parcelas_exibidas === 0) {
+            html += `
+            <div class="title">
+               <span>Não existem parcelamento disponíveis</span>
+            </div>`;
+        }
+        $("#parcelamento_info").html(html);
+    },
+    searchInstallment(isB2b, Price){
+        $.ajax({
+            url: '/Product/BuscarParcelamento',
+            type: 'POST',
+            async: false,
+            data: {
+                Valor : Price,
+                isB2b : isB2b
+            },
+            dataType: 'json',
+            success: function (response) {
+                retorno = response;
+            },
+            error : function(request,error)
+            {
+                retorno = "";
+            }
+        });
+        return retorno;
     }
 };
 

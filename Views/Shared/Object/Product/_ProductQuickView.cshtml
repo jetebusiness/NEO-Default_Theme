@@ -14,6 +14,14 @@
                                 <div class="row">
                                     <div class="column">
                                         <div class="ui fluid image">
+
+                                            @if (Model.BuyXGetYSeal != null)
+                                            {
+                                                <div class="ui top left attached label imagetag">
+                                                    <img src="@Model.BuyXGetYSeal" class="ui image tiny" onerror="imgError(this)">
+                                                </div>
+                                            }
+
                                             @if (Model.SealStatus != null)
                                             {
                                                 <div class="ui bottom right attached label massive imagetag">
@@ -38,20 +46,20 @@
                                                 {
                                                     foreach (var productImage in Model.ProductImages)
                                                     {
-                                                        <img src="@productImage.ImageDefault"  onerror="imgError(this)"/>
+                                                        <img src="@productImage.ImageDefault" onerror="imgError(this)" />
                                                     }
                                                 }
                                             </div>
                                             @*<div class="ui tags product-tags">
-                                                    <a class="ui blue tag label">Frete Grátis</a>
-                                                    <a class="ui green tag label">Desconto</a>
-                                                    <a class="ui yellow tag label">Promoção</a>
-                                                </div>*@
+            <a class="ui blue tag label">Frete Grátis</a>
+            <a class="ui green tag label">Desconto</a>
+            <a class="ui yellow tag label">Promoção</a>
+        </div>*@
                                             <div class="product-button">
                                                 <!--     <a class="ui circular basic icon button heart">
-                                                         <i class="icon heart"></i>
-                                                     </a>
-                                                -->
+                 <i class="icon heart"></i>
+             </a>
+        -->
                                                 <a class="ui circular basic icon button default">
                                                     <i class="icon shuffle"></i>
                                                 </a>

@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Lista de Presentes";
     Layout = "~/Views/Shared/Base/_Layout.cshtml";
+    int tipoEmpresa = ViewBag.companyType;
 }
 <div class="ui container fluid lista casamento">
     <div class="ui container">
@@ -47,5 +48,5 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="tipo_lista" value="5" />
+    <input type="hidden" id="tipo_lista" value=@tipoEmpresa />
 </div>

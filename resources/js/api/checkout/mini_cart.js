@@ -72,12 +72,26 @@ $(document).ready(function () {
                         //$(".tabela.frete").dropdown('refresh');
                         $(".description.resultado").show();
 
+                        if ($("#recalculatedRestrictedProducts").length) {
+                            var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+                            if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
+                                $(".productRestrictedMessage").show();
+                            }
+                        }
+
                         ChangeFrete();
                     }
                 },
                 error: function (error) {
                     $("#CallServiceShippingMiniCart").removeClass("loading");
-                    if (error.responseText.indexOf("CD:1") > -1 || error.responseText.indexOf("CD:2") > -1) {
+                    if (error.responseText.indexOf("CD:1") > -1) {
+                        $("#zipcode").val(zipCode)
+                        buscaCepCD(zipCode).then(function () {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
+                                LoadCarrinho()
+                            });
+                        })
+                    } else if (error.responseText.indexOf("CD:2") > -1) {
                         $("#zipcode").val(zipCode)
                         buscaCepCD(zipCode).then(function () {
                             changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
@@ -168,7 +182,9 @@ $(document).ready(function () {
     $(document).on("click", "#miniCarrinho .removeCartItem", function (e) {
         var idCurrent = new Number($(this).attr("data-id"));
         var idCartPersonalization = new Number($(this).attr("data-id-personalization-cart"));
-        excluirProdutoCarrinho(idCurrent, idCartPersonalization);
+        var restrictedDeliveryProduct = $(this).data('restricted-delivery');
+        var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val();
+        excluirProdutoCarrinho(idCurrent, idCartPersonalization, restrictedDeliveryProduct, recalculatedRestrictedProducts);
         e.stopPropagation();
     });
 
@@ -277,7 +293,7 @@ $(document).ready(function () {
 });
 
 
-function excluirProdutoCarrinho(idCurrent, idCartPersonalization) {
+function excluirProdutoCarrinho(idCurrent, idCartPersonalization, restrictedDeliveryProduct, recalculatedRestrictedProducts) {
     _confirm({
         title: "Deseja realmente remover esse produto do carrinho?",
         text: "",
@@ -289,7 +305,6 @@ function excluirProdutoCarrinho(idCurrent, idCartPersonalization) {
             text: "Cancelar"
         },
         callback: function () {
-            CancelarCalculoFreteCart(0);
             $.ajax({
                 method: "POST",
                 url: "/Checkout/DeleteProduct",
@@ -310,7 +325,13 @@ function excluirProdutoCarrinho(idCurrent, idCartPersonalization) {
                         });
                         LoadCarrinho();
                     } else {
-                        LoadCarrinho();
+                        if (restrictedDeliveryProduct == false && recalculatedRestrictedProducts == false) {
+                            CancelarCalculoFreteCart(0);
+                            LoadCarrinho();
+                        } else {
+                            $('#itemCartProduct_' + idCurrent).remove();
+                            LoadCarrinho();
+                        }
                     }
                 }
             });
@@ -423,6 +444,16 @@ function ChangeFrete() {
         var carrier = $(ponteiroCurrent).data("carrier");
         var mode = $(ponteiroCurrent).data("mode");
         var hub = $(ponteiroCurrent).data("hub");
+        var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+        var pickUpStore = $(ponteiroCurrent).data("pickupstore");
+
+        if ($("#recalculatedRestrictedProducts").length) {
+            if (pickUpStore.toLowerCase() === 'false' && recalculatedRestrictedProducts && $(".productRestrictedMessage").is(":visible")) {
+                _alert("Aviso!", "Não é possível selecionar o frete, pois existem produtos que não podem ser entregues para este endereço.", "warning", true);
+                ponteiroCurrent.prop("checked", false).removeAttr("checked");
+                return;
+            }
+        }
 
         $("#id_frete_selecionado").val(idShippingMode);
         $("#cep_selecionado").val(zipCode);
