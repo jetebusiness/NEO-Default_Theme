@@ -2,6 +2,15 @@
 /**
  * Validadores de Formulários - Semantic UI
  */
+
+//funçoes para prova
+ require('../functions/fron_prova');
+
+ require('../functions/mascara');
+
+ require('../functions/salvadados');
+//fim - funçoes para prova
+
 require('../vendors/validators');
 //--------------------[ Correios ]--------------------//
 require('../functions/correios');
@@ -39,7 +48,6 @@ require('./modules/mask');
 require('./modules/jquery-ui.min');
 //--------------------[ LazyLoad ]--------------------//
 require('../functions/lazy_load');
-
 //--------------------[ Policy ]--------------------//
 require('./modules/policy');
 

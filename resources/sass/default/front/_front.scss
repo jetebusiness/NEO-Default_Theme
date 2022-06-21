@@ -1,0 +1,23 @@
+form input,
+form textarea {
+	width: 500px;
+	max-width: 80%;
+	padding: 8px 10px;
+	border: 1px solid #cecece;
+	margin: 8px 0;
+}
+
+.col-50 {
+	width: 50%;
+	display: inline-block;
+	padding: 50px;
+}
+
+.second {
+	min-height: 400px;
+	background-color: #e3e3e3;
+}
+
+.row {
+	display: inline-flex;
+}
