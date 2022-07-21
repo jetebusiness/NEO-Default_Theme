@@ -24,13 +24,13 @@
 <div class="item item-cart-product @(Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-id-produto="@Model.IdProduct" data-id-cart="@Model.IdCartItem" data-signature="@Model.IsRecurrent" id="itemCartProduct_@Model.IdCartItem">
 
     <div class="image">
-        <a href="/Product/Details/@Model.IdProduct" class="product image" id="name_@Model.IdCartItem">
+        <a href="/product/details/@Model.IdProduct" class="product image" id="name_@Model.IdCartItem">
             <img src="@Model.ProductImage.ImageDefault" onerror="imgError(this)">
         </a>
     </div>
     <div class="content">
         <div class="nameProduct">
-            <a href="/Product/Details/@Model.IdProduct" class="product title" id="name_@Model.IdCartItem">
+            <a href="/product/details/@Model.IdProduct" class="product title" id="name_@Model.IdCartItem">
                 @Html.Raw(Model.NameProduct)
             </a>
         </div>

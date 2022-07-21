@@ -107,23 +107,23 @@ function PayPalCheckout() {
                                 else {
                                     if (response.urlRedirect != "") {
                                         if (response.typeRedirect == "1") {
-                                            window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
+                                            window.location.href = "success?orderId=" + response.idPedido + "&d=" + response.urlRedirect.toLowerCase();
                                         }
                                         else {
-                                            window.location.href = response.urlRedirect;
+                                            window.location.href = response.urlRedirect.toLowerCase();
                                         }
                                     }
                                     else {
                                         if (response.urlBoleto != "") {
-                                            window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                                            //window.location.href = "Success?orderId=" + response.idPedido;
+                                            window.location.href = "success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                            //window.location.href = "success?orderId=" + response.idPedido;
                                         }
                                         else {
                                             if (response.msg != "") {
-                                                window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                                window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                             }
                                             else {
-                                                window.location.href = "Success?orderId=" + response.idPedido;
+                                                window.location.href = "success?orderId=" + response.idPedido;
                                             }
                                         }
                                     }
@@ -142,13 +142,13 @@ function PayPalCheckout() {
                                         confirmButtonText: 'OK'
                                     }).then(function () {
                                         if (response.urlRedirect !== "")
-                                            window.location.href = response.urlRedirect;
+                                            window.location.href = response.urlRedirect.toLowerCase();
                                     });
 
                                     $(".loadingCheckout").remove();
                                 }
                                 else {
-                                    window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                    window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                 }
                             }
                         },
@@ -252,7 +252,7 @@ function PayPalCheckoutInCart2() {
                                         cancelButtonColor: '#d33',
                                         confirmButtonText: 'OK'
                                     }).then(function () {
-                                        window.location.href = response.redirect;
+                                        window.location.href = response.redirect.toLowerCase();
                                     });
                                 } else {
                                     $(".loadingCheckout").remove();
@@ -265,7 +265,7 @@ function PayPalCheckoutInCart2() {
                                         cancelButtonColor: '#d33',
                                         confirmButtonText: 'OK'
                                     }).then(function () {
-                                        window.location.href = response.redirect;
+                                        window.location.href = response.redirect.toLowerCase();
                                     });
                                 }
                             } else {
@@ -279,7 +279,7 @@ function PayPalCheckoutInCart2() {
                                     cancelButtonColor: '#d33',
                                     confirmButtonText: 'OK'
                                 }).then(function () {
-                                    if (response.redirect === "/checkout/Register") {
+                                    if (response.redirect === "/checkout/register") {
                                         let _html = '';
                                         _html += '<form id="frmRedirectRegister" action="' + response.redirect + '" method="post">';
                                         _html += '    <input type="hidden" name="login" value="' + response.order.payer.payer_info.email + '">';
@@ -289,7 +289,7 @@ function PayPalCheckoutInCart2() {
                                         $('body').append(_html);
                                         $('#frmRedirectRegister').submit();
                                     } else if (response.redirect !== "") {
-                                        window.location.href = response.redirect;
+                                        window.location.href = response.redirect.toLowerCase();
                                     }
                                 });
                             }
@@ -539,23 +539,23 @@ export function PayPalCheckoutReference() {
                                                     else {
                                                         if (response.urlRedirect != "") {
                                                             if (response.typeRedirect == "1") {
-                                                                window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
+                                                                window.location.href = "success?orderId=" + response.idPedido + "&d=" + response.urlRedirect.toLowerCase();
                                                             }
                                                             else {
-                                                                window.location.href = response.urlRedirect;
+                                                                window.location.href = response.urlRedirect.toLowerCase();
                                                             }
                                                         }
                                                         else {
                                                             if (response.urlBoleto != "") {
-                                                                window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                                                                //window.location.href = "Success?orderId=" + response.idPedido;
+                                                                window.location.href = "success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                                                //window.location.href = "success?orderId=" + response.idPedido;
                                                             }
                                                             else {
                                                                 if (response.msg != "") {
-                                                                    window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                                                    window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                                                 }
                                                                 else {
-                                                                    window.location.href = "Success?orderId=" + response.idPedido;
+                                                                    window.location.href = "success?orderId=" + response.idPedido;
                                                                 }
                                                             }
                                                         }
@@ -574,11 +574,11 @@ export function PayPalCheckoutReference() {
                                                             confirmButtonText: 'OK'
                                                         }).then(function () {
                                                             if (response.urlRedirect !== "")
-                                                                window.location.href = response.urlRedirect;
+                                                                window.location.href = response.urlRedirect.toLowerCase();
                                                         });
                                                     }
                                                     else {
-                                                        window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                                        window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                                     }
                                                 }
                                             },
@@ -792,23 +792,23 @@ export function PayPalCheckoutInCart() {
                                         else {
                                             if (response.urlRedirect != "") {
                                                 if (response.typeRedirect == "1") {
-                                                    window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
+                                                    window.location.href = "success?orderId=" + response.idPedido + "&d=" + response.urlRedirect.toLowerCase();
                                                 }
                                                 else {
-                                                    window.location.href = response.urlRedirect;
+                                                    window.location.href = response.urlRedirect.toLowerCase();
                                                 }
                                             }
                                             else {
                                                 if (response.urlBoleto != "") {
-                                                    window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                                                    //window.location.href = "Success?orderId=" + response.idPedido;
+                                                    window.location.href = "success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                                    //window.location.href = "success?orderId=" + response.idPedido;
                                                 }
                                                 else {
                                                     if (response.msg != "") {
-                                                        window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                                        window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                                     }
                                                     else {
-                                                        window.location.href = "Success?orderId=" + response.idPedido;
+                                                        window.location.href = "success?orderId=" + response.idPedido;
                                                     }
                                                 }
                                             }
@@ -827,11 +827,11 @@ export function PayPalCheckoutInCart() {
                                                 confirmButtonText: 'OK'
                                             }).then(function () {
                                                 if (response.urlRedirect !== "")
-                                                    window.location.href = response.urlRedirect;
+                                                    window.location.href = response.urlRedirect.toLowerCase();
                                             });
                                         }
                                         else {
-                                            window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                            window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                         }
                                     }
                                 },
@@ -1394,23 +1394,23 @@ function messageListener(event) {
                             else {
                                 if (response.urlRedirect != "") {
                                     if (response.typeRedirect == "1") {
-                                        window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
+                                        window.location.href = "success?orderId=" + response.idPedido + "&d=" + response.urlRedirect.toLowerCase();
                                     }
                                     else {
-                                        window.location.href = response.urlRedirect;
+                                        window.location.href = response.urlRedirect.toLowerCase();
                                     }
                                 }
                                 else {
                                     if (response.urlBoleto != "") {
-                                        window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                                        //window.location.href = "Success?orderId=" + response.idPedido;
+                                        window.location.href = "success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                        //window.location.href = "success?orderId=" + response.idPedido;
                                     }
                                     else {
                                         if (response.msg != "") {
-                                            window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                            window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                         }
                                         else {
-                                            window.location.href = "Success?orderId=" + response.idPedido;
+                                            window.location.href = "success?orderId=" + response.idPedido;
                                         }
                                     }
                                 }
@@ -1429,11 +1429,11 @@ function messageListener(event) {
                                     confirmButtonText: 'OK'
                                 }).then(function () {
                                     if (response.urlRedirect !== "")
-                                        window.location.href = response.urlRedirect;
+                                        window.location.href = response.urlRedirect.toLowerCase();
                                 });
                             }
                             else {
-                                window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                             }
                         }
                     },

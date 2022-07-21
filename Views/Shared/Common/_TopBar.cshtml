@@ -31,7 +31,7 @@
                     }
                     else
                     {
-                        @Html.Action("SocialBar", "SocialNetwork")
+                        @Html.Action("socialBar", "socialNetwork")
                     }
                 }
 
@@ -99,7 +99,7 @@
                         }
                         @if ((Session["Seller"] == null))
                         {
-                            @Html.Action("B2BIsActived", "Company", null)
+                            @Html.Action("b2BIsActived", "company", null)
                         }
                     </div>
                 </div>

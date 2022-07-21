@@ -464,7 +464,7 @@ function AdicionarProdutosCompreJuntoAjx() {
             dataType: 'json',
             success: function (response) {
                 if (response.success === true) {
-                    //window.location.href = "/Checkout/Index";
+                    //window.location.href = "/checkout/index";
                     LoadCarrinho();
                     $(".carrinho").sidebar('toggle');
                 } else {
@@ -552,7 +552,7 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
                     LoadCarrinho();
                     $(".carrinho").sidebar('toggle');
                 }
-                //window.location.href = "/Checkout/Index";
+                //window.location.href = "/checkout/index";
                 
             }
             else {

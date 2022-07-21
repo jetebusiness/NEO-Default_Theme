@@ -7,7 +7,7 @@
         <div class="ui middle aligned four column centered grid">
             <div class="row">
                 <div class="ui five wide mobile five wide tablet four wide computer column">
-                    <a href="/Home" title="Página Inicial">
+                    <a href="/home" title="Página Inicial">
                         <img class="ui middle aligned image logo" src="/assets/image/logo/logo.png" alt="@LojaCorp.Control.Company._Company.FantasyName" title="@LojaCorp.Control.Company._Company.FantasyName">
                     </a>
                 </div>
@@ -29,18 +29,18 @@
                     {
                         <div class="ui center aligned two wide mobile two wide tablet two wide computer column">
                             <div>
-                                <a href="/Customer/WishList"><i class="icon heart large red" style="position: absolute;"></i></a>
+                                <a href="/customer/wishList"><i class="icon heart large red" style="position: absolute;"></i></a>
                                 @{
                                     if (Request.Cookies["WishList"] == null)
                                     {
-                                        @Html.Action("LoadWishListCookie", "Customer")
+                                        @Html.Action("loadWishListCookie", "customer")
                                     }
 
                                     List<DomainCustomer.Entities.Wishlist.WishlistItem>
                                         wishList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DomainCustomer.Entities.Wishlist.WishlistItem>>(Request.Cookies["WishList"] != null ? HttpUtility.UrlDecode(Request.Cookies["WishList"].Value) : string.Empty);
                                     int wishListItemsCount = wishList != null ? wishList.Count() : 0;
                                 }
-                                <a id="wishListCount" href="/Customer/WishList" class="ui circular label">@wishListItemsCount</a>
+                                <a id="wishListCount" href="/customer/wishList" class="ui circular label">@wishListItemsCount</a>
                             </div>
                         </div>
                     }

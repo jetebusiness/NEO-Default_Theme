@@ -58,11 +58,11 @@
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
             {
-                @Html.Action("FilterMenuNew", "Product", new { category = "", brand = "", group = "", keyword = Request.QueryString["n"] })
+                @Html.Action("filterMenuNew", "product", new { category = "", brand = "", group = "", keyword = Request.QueryString["n"] })
             }
             else
             {
-                @Html.Action("FilterMenu", "Product")
+                @Html.Action("filterMenu", "product")
             }
         </div>
     </div>
@@ -134,7 +134,7 @@
     </div>
     <div id="list">
         <div class="searchProducts">
-            @Html.Action("GetProducts", "Product", new {
+            @Html.Action("getProducts", "product", new {
                 keyWord = Request.QueryString["n"] != null ? Request.QueryString["n"] : "",
                 category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
                 viewList = Request.QueryString["viewList"] != null ? Request.QueryString["viewList"] : "",

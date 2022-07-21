@@ -26,7 +26,7 @@
         <div class="row two column">
             <div class="column">
                 <div class="ui items very relaxed divided menuclient customerMenu">
-                    <a class="item text-align center-t-d" href="/Order/LastOrderDetail">
+                    <a class="item text-align center-t-d" href="/order/lastOrderDetail">
                         <div class="ui small">
                             <i class="ui icon big asterisk orange "></i>
                         </div>
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                     </a>
-                    <a class="item text-align center-t-d" href="~/Order/Index">
+                    <a class="item text-align center-t-d" href="~/order/index">
                         <div class="ui small">
                             <i class="ui icon big shopping basket  blue "></i>
                         </div>
@@ -50,7 +50,7 @@
                     </a>
                     @if (Model.User.idTablePrice == 0)
                     {
-                        <a class="item text-align center-t-d" href="~/EventList/Index">
+                        <a class="item text-align center-t-d" href="~/eventList/index">
                             <div class="ui small">
                                 <i class="ui icon big calendar outline purple"></i>
                             </div>
@@ -62,7 +62,7 @@
                             </div>
                         </a>
                     }
-                    <a class="item text-align center-t-d" href="/Customer/ShoppingVoucherDetails">
+                    <a class="item text-align center-t-d" href="/customer/shoppingVoucherDetails">
                         <div class="ui small">
                             <i class="ui icon big tag teal "></i>
                         </div>
@@ -77,7 +77,7 @@
                         bool isb2b = Session["segment"] != null && Session["segment"].ToString() == "b2b" ? true : false;
                         if (!isb2b)
                         {
-                            <a class="item text-align center-t-d" href="/Customer/WishList">
+                            <a class="item text-align center-t-d" href="/customer/wishList">
                                 <div class="ui small">
                                     <i class="ui icon heart big red"></i>
                                 </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="column">
                 <div class="ui items very relaxed divided menuclient customerMenu">
-                    <a class="item text-align center-t-d" href="/Customer/Edit">
+                    <a class="item text-align center-t-d" href="/customer/edit">
                         <div class="ui small">
                             <i class="ui icon big user green  "></i>
                         </div>
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </a>
-                    <a class="item text-align center-t-d" href="/Customer/changeAddress">
+                    <a class="item text-align center-t-d" href="/customer/changeAddress">
                         <div class="ui small">
                             <i class="ui icon big marker brown  "></i>
                         </div>
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                     </a>
-                    <a class="item text-align center-t-d" href="/Customer/ChangeEmail">
+                    <a class="item text-align center-t-d" href="/customer/changeEmail">
                         <div class="ui small">
                             <i class="ui icon big mail olive  "></i>
                         </div>
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                     </a>
-                    <a class="item text-align center-t-d" href="~/Order/ListRecurrentPurchase">
+                    <a class="item text-align center-t-d" href="~/order/listRecurrentPurchase">
                         <div class="ui small">
                             <i class="ui icon big shopping basket blue "></i>
                         </div>

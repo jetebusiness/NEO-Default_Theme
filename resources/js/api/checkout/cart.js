@@ -147,7 +147,7 @@ function RemoveProductCart() {
                                         cancelButtonColor: '#d33',
                                         confirmButtonText: 'OK'
                                     }).then(function () {
-                                        window.location.href = "/Home";
+                                        window.location.href = "/home";
                                     });
                                     
                                 } else {
@@ -286,7 +286,7 @@ function LoadCarrinho() {
             }
             else {
                 _alert("Ops ... Seu carrinho agora está vazio!", "Estamos te direcionando para a Home!", "warning");
-                window.location.href = "/Home";
+                window.location.href = "/home";
             }
         }
     });
@@ -453,7 +453,7 @@ $(document).on("click", "#finalizePurchase", function (e) {
                 if (CompraRecorrenteCart.modalConfig.hasModal())
                     CompraRecorrenteCart.modalConfig.showModal(data.redirect);
                 else
-                    window.location.href = "/" + data.redirect
+                    window.location.href = "/" + data.redirect.toLowerCase()
 
             } else {
                 _alert("Mensagem", data.message, "error")

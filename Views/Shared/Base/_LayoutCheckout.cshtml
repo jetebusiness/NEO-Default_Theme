@@ -3,7 +3,7 @@
 <head>
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
-        @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
+        @Html.Action("googleTagManager", "common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
         <!-- End GoogleTagManager Common -->
     }
 

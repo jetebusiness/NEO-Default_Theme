@@ -23,7 +23,7 @@
 @foreach (var item in Model)
 {
     <div class="ui tiny scrolling modal paypal-reference" id="modal-paypal-reference">
-        @Html.Action("ValeCompraLogin", "Checkout")
+        @Html.Action("valeCompraLogin", "checkout")
     </div>
     <div class="ui tab segment" data-tab="paypalCheckoutReference" style="display: none !important;">
         <div class="content">

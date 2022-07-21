@@ -140,7 +140,7 @@
                                 <div class="description" data-id="@item.IdProduct" data-variacoes="@total_variacoes">
                                     @if (@item.AvailableReferences != null)
                                     {
-                                        @Html.Action("Variations", "Product", new { reference = @item.AvailableReferences, ListaSku = @item.SKUs })
+                                        @Html.Action("variations", "product", new { reference = @item.AvailableReferences, ListaSku = @item.SKUs })
                                     }
                                 </div>
                             </div>

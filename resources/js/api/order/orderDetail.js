@@ -6,7 +6,7 @@ function printDiv(divID) {
 
     document.body.innerHTML =
         "<html><head><title></title></head><body>" +
-        "<div class='ui eight wide tablet four wide computer column'><a href='/Home'><img class='ui middle aligned image' src='/assets/image/logo/logo.png' alt='' onerror=\"imgError(this)\"></a></div></br>" +
+        "<div class='ui eight wide tablet four wide computer column'><a href='/home'><img class='ui middle aligned image' src='/assets/image/logo/logo.png' alt='' onerror=\"imgError(this)\"></a></div></br>" +
         divElements + "</body>";
     window.print();
     document.body.innerHTML = oldPage;
@@ -185,7 +185,7 @@ $(document).ready(function () {
 
         if (filtered != "") {
             if (event.which === 13) {
-                location.href = `/Order/Index?n=${$(".prompt_pedidos").val()}`;
+                location.href = `/order/index?n=${$(".prompt_pedidos").val()}`;
             }
         }
     });
@@ -208,7 +208,7 @@ $(document).ready(function () {
 
     $(document).on("keypress", ".prompt_pedidos_recurrent", function (event) {
         if (event.which === 13) {
-            location.href = `/Order/ListRecurrentPurchase?n=${$(".prompt_pedidos_recurrent").val()}`;
+            location.href = `/order/listRecurrentPurchase?n=${$(".prompt_pedidos_recurrent").val()}`;
         }
     });
 

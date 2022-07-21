@@ -14,7 +14,7 @@
     }
 }
 @section logo {
-    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+    <a href="/home" title="@LojaCorp.Control.Company._Company.FantasyName">
         <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
     </a>
 }
@@ -62,7 +62,7 @@
                         <div class="ui grid">
                             <div class="row">
                                 <div class="column" data-jet-master="true">
-                                    <h4 class="ui dividing header">Informações Pessoais &ensp;&ensp;<a href="ChangeUserPayment" class="text small">Não é você? Sair</a></h4>
+                                    <h4 class="ui dividing header">Informações Pessoais &ensp;&ensp;<a href="changeUserPayment" class="text small">Não é você? Sair</a></h4>
                                     @{
                                         if (ViewBag.EmailUser != null && ViewBag.EmailUser != "")
                                         {
@@ -417,7 +417,7 @@
         function OnSuccess(response) {
 
             if (response.success == true) {
-                window.location.href = "/checkout/Payment";
+                window.location.href = "/checkout/payment";
             } else {
                 $("#email").attr("disabled", false);
 

@@ -56,7 +56,7 @@
                                                 <p>CEP @item.ZipCode</p>
                                             </div>
                                             <div class="extra">
-                                                <a href="@Url.Action("ManagerAddress", "EventList", new {addressSelectedId = @item.IdAddress})" class="ui right floated tiny primary button utilAddress" data-id="@item.IdAddress">
+                                                <a href="@Url.Action("managerAddress", "eventList", new {addressSelectedId = @item.IdAddress})" class="ui right floated tiny primary button utilAddress" data-id="@item.IdAddress">
                                                     <i class="check icon"></i>
                                                     Utilizar
                                                 </a>

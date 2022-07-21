@@ -3,7 +3,7 @@
 <head>
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
-        @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
+        @Html.Action("googleTagManager", "common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
         <!-- End GoogleTagManager Common -->
     }
 
@@ -58,7 +58,7 @@
         if (isb2b)
         {
             <!-- ~/Views/Shared/Common/_Cart.cshtml -->
-            @Html.Action("GetCartBySession", "Checkout")
+            @Html.Action("getCartBySession", "checkout")
         }
         else
         {
@@ -74,7 +74,7 @@
         @Html.Partial("Common/_Head")
 
         <!-- ~/Views/Shared/Common/_Menu.cshtml -->
-        @Html.Action("Menu", "Home")
+        @Html.Action("menu", "home")
 
         @RenderSection("breadcrumbs", required: true)
 

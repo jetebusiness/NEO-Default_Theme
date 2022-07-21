@@ -24,7 +24,7 @@
 @section logo {
     @if (_paymentLinkChangeBrand == "0")
     {
-        <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+        <a href="/home" title="@LojaCorp.Control.Company._Company.FantasyName">
             <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
         </a>
     }
@@ -67,7 +67,7 @@
 <input type="hidden" name="PaymentLinkChangeBrand" id="PaymentLinkChangeBrand" value="@_paymentLinkChangeBrand" />
 <input type="hidden" name="idShipping" id="idShipping" value="@Model.IdShippingMode" />
 <div class="ui tiny scrolling modal lista-endereco-cliente" id="ListaEnderecosCliente">
-    @Html.Action("ListaEnderecosCliente", "Checkout")
+    @Html.Action("listaEnderecosCliente", "checkout")
 </div>
 <div class="ui container" id="containerPayment">
     <div class="ui grid stackable centered">
@@ -78,7 +78,7 @@
                     <div class="column">
                         <!-- Dados do Cliente -->
                         <div class="ui segment" id="dadosClienteUpdate">
-                            @Html.Action("ListaDadosCliente", "Checkout", new { zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode })
+                            @Html.Action("listaDadosCliente", "checkout", new { zipCodeCart = Model.ZipCode, idShippingModeCart = Model.IdShippingMode })
                         </div>
                     </div>
                     <div class="column">
@@ -107,7 +107,7 @@
                     @if (!Model.CartItems.FirstOrDefault().IsRecurrent)
                     {
                         <!-- Vale Compras -->
-                        @Html.Action("ValeCompra", "Checkout")
+                        @Html.Action("valeCompra", "checkout")
 
                         <div class="column @_disabled">
                             <!-- Cupom Desconto -->
@@ -147,12 +147,12 @@
 
 
                 <!-- Formas de Pagamento -->
-                @Html.Action("ListaFormasPagamento", "Checkout")
+                @Html.Action("listaFormasPagamento", "checkout")
 
                 <div class="ui divider hidden medium"></div>
 
                 <div class="padding margin top">
-                    @Html.Action("GetRecaptchaV3", "Company", new { Module = "Payment" })
+                    @Html.Action("getRecaptchaV3", "company", new { Module = "Payment" })
                 </div>
             </div>
 
@@ -181,10 +181,10 @@
     }
 }
 @{
-    bool cyberSourceStatus = Convert.ToBoolean(@Html.Action("GetCyberSourceStatus", "Checkout", null).ToString());
+    bool cyberSourceStatus = Convert.ToBoolean(@Html.Action("getCyberSourceStatus", "checkout", null).ToString());
     if (cyberSourceStatus)
     {
-        Fingerprint fingerPrint = JsonConvert.DeserializeObject<Fingerprint>(@Html.Action("GetFingerPrint", "Checkout", null).ToString());
+        Fingerprint fingerPrint = JsonConvert.DeserializeObject<Fingerprint>(@Html.Action("getFingerPrint", "checkout", null).ToString());
         fingerPrint.ProviderIdentifier = Session["SessionId"].ToString();
 
         @section CyberSourceHead{

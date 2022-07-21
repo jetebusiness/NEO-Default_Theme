@@ -30,7 +30,7 @@
                     <h1>@Model.Name</h1>
                     <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ui breadcrumb">
                         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="/">
+                            <a itemscope itemtype="http://schema.org/Thing" itemid="/" itemprop="item" href="/home">
                                 <span itemprop="name">Home</span>
                                 <meta itemprop="url" content="/">
                             </a>
@@ -53,14 +53,14 @@
     @if (Model != null)
     {
         <div class="ui grid">
-            @Html.Action("BannerBrand", "Banner", new {brandID = Model.IdBrand, bannerType = 'F'})
+            @Html.Action("bannerBrand", "banner", new {brandID = Model.IdBrand, bannerType = 'F'})
         </div>
     }
 }
 
 
 @section footerHalfbanner {
-    @Html.Action("BannerBrand", "Banner", new {brandID = Model.IdBrand, bannerType = 'R'})
+    @Html.Action("bannerBrand", "banner", new {brandID = Model.IdBrand, bannerType = 'R'})
 }
 
 
@@ -70,16 +70,16 @@
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
             {
-                @Html.Action("FilterMenuNew", "Product", new {category = "", brand = Model.IdBrand, group = "", keyword = ""})
+                @Html.Action("filterMenuNew", "product", new {category = "", brand = Model.IdBrand, group = "", keyword = ""})
             }
             else
             {
-                @Html.Action("FilterMenu", "Product")
+                @Html.Action("filterMenu", "product")
             }
         </div>
         <div class="row">
             <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
-            @Html.Action("SideHalfBannerBrand", "Banner", new {brandId = Model.IdBrand})
+            @Html.Action("sideHalfBannerBrand", "banner", new {brandId = Model.IdBrand})
         </div>
     </div>
 }
@@ -155,7 +155,7 @@
         @if (Model != null)
         {
             <div class="brandProducts">
-                @Html.Action("GetProductsBrand", "Product", new
+                @Html.Action("getProductsBrand", "product", new
                 {
                     category = Request.QueryString["category"] ?? "",
                     viewList = Request.QueryString["viewList"] ?? "",

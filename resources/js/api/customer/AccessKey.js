@@ -82,9 +82,9 @@ $(document).ready(function () {
                     $("#UserName").val(strLogin);
                     $('.ui.modal.key-login').modal('show');
                 } else if (data.Success == true && data.Message == "CadastrarSenha") {
-                    window.location.href = "/Customer/CheckAccessKey?email=" + data.Email;
+                    window.location.href = "/customer/checkAccessKey?email=" + data.Email;
                 } else if (data.Success == true && data.Message == "Cadastro") {
-                    window.location.href = "/Customer/Register?email=" + (isValidEmail ? strLogin : "") + "&cpfCnpj=" + ((isValidCpf || isValidCnpj) ? strLogin : "");
+                    window.location.href = "/customer/register?email=" + (isValidEmail ? strLogin : "") + "&cpfCnpj=" + ((isValidCpf || isValidCnpj) ? strLogin : "");
                 } else {
                     swal({
                         text: data.Message,
@@ -134,7 +134,7 @@ function customerLogin(userName, password, returnUrl, tokenGoogleRecaptchaV3 = "
         },
         success: function (data) {
             if (data.success === true) {
-                window.location = data.redirectUrl
+                window.location = data.redirectUrl.toLowerCase()
             } else {
                 _alert("", data.message, "error")
             }

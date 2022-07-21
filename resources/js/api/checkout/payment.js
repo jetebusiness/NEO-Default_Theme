@@ -274,23 +274,23 @@ function GerarPedidoCompleto(
                     CompraRecorrenteStorage.cleanStorage();
                     if (response.urlRedirect != "") {
                         if (response.typeRedirect == "1") {
-                            window.location.href = "/Checkout/Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
+                            window.location.href = "/checkout/success?orderId=" + response.idPedido + "&d=" + response.urlRedirect.toLowerCase();
                         } else {
-                            window.location.href = response.urlRedirect;
+                            window.location.href = response.urlRedirect.toLowerCase();
                         }
                     } else {
                         if (response.urlBoleto != "") {
-                            window.location.href = "/Checkout/Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                            //window.location.href = "Success?orderId=" + response.idPedido;
+                            window.location.href = "/checkout/success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                            //window.location.href = "success?orderId=" + response.idPedido;
                         }
                         else if (response.paymentLink != "") {
-                            window.location.href = "/Checkout/Success?orderId=" + response.idPedido + "&l=" + response.paymentLink;
+                            window.location.href = "/checkout/success?orderId=" + response.idPedido + "&l=" + response.paymentLink;
                         } else {
                             if (response.msg != "") {
-                                window.location.href = "/Checkout/Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                window.location.href = "/checkout/success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                             }
                             else {
-                                window.location.href = "/Checkout/Success?orderId=" + response.idPedido;
+                                window.location.href = "/checkout/success?orderId=" + response.idPedido;
                             }
                         }
                     }
@@ -313,14 +313,14 @@ function GerarPedidoCompleto(
                         }
 
                         if (response.urlRedirect !== "")
-                            window.location.href = response.urlRedirect;
+                            window.location.href = response.urlRedirect.toLowerCase();
                     });
 
                     $(".GerarPedido").removeClass("loading");
                     $(".GerarPedido").removeClass("disabled");
                 }
                 else {
-                    window.location.href = "/Checkout/Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                    window.location.href = "/checkout/success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                 }
             }
         },
@@ -854,23 +854,23 @@ function OrderCreateTwoCards(obj) {
                     else {
                         if (response.urlRedirect != "") {
                             if (response.typeRedirect == "1") {
-                                window.location.href = "Success?orderId=" + response.idPedido + "&d=" + response.urlRedirect;
+                                window.location.href = "success?orderId=" + response.idPedido + "&d=" + response.urlRedirect.toLowerCase();
                             }
                             else {
-                                window.location.href = response.urlRedirect;
+                                window.location.href = response.urlRedirect.toLowerCase();
                             }
                         }
                         else {
                             if (response.urlBoleto != "") {
-                                window.location.href = "Success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                                //window.location.href = "Success?orderId=" + response.idPedido;
+                                window.location.href = "success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
+                                //window.location.href = "success?orderId=" + response.idPedido;
                             }
                             else {
                                 if (response.msg != "") {
-                                    window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                                    window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                                 }
                                 else {
-                                    window.location.href = "Success?orderId=" + response.idPedido;
+                                    window.location.href = "success?orderId=" + response.idPedido;
                                 }
                             }
                         }
@@ -891,7 +891,7 @@ function OrderCreateTwoCards(obj) {
                         }).then(function (result) {
 
                             if (response.urlRedirect !== "")
-                                window.location.href = response.urlRedirect;
+                                window.location.href = response.urlRedirect.toLowerCase();
                         });
 
 
@@ -899,7 +899,7 @@ function OrderCreateTwoCards(obj) {
                         $(".GerarPedido").removeClass("disabled");
                     }
                     else {
-                        window.location.href = "Success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
+                        window.location.href = "success?orderId=" + response.idPedido + "&s=" + response.success + "&m=" + response.msgEncrypt;
                     }
                 }
             },
@@ -2109,6 +2109,7 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
         }
 
         if (Total > 0) {
+            console.log("oi 1")
             $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Total));
         }
 
@@ -2187,6 +2188,7 @@ function listAddressPayment() {
 
 function showAddressPayment() {
     $("#addDataAddress").click(function () {
+        console.log("oi")
         if ($(".addAddress").length > 0) {
             var jsonArray = [];
             var splittedFormData = $("#disparaForm").serialize().split('&');
@@ -4325,7 +4327,7 @@ function checkValidatePersonalization() {
                                                         cancelButtonColor: '#d33',
                                                         confirmButtonText: 'OK'
                                                     }).then(function () {
-                                                        window.location.href = "/Home";
+                                                        window.location.href = "/home";
                                                     });
                                                 } else {
                                                     var retornoAjax = loadProduct.split("|$|");

@@ -117,7 +117,7 @@
 
                                             <!--COMEÇO VARIAÇÔES-->
                                             <div class="one column row">
-                                                @Html.Action("Variations", "Product", new { variacoes = @Model.AvailableReferences })
+                                                @Html.Action("variations", "product", new { variacoes = @Model.AvailableReferences })
                                             </div>
                                             <!--FIM VARIAÇÔES-->
 
@@ -203,7 +203,7 @@
                                         @Html.Partial("~/Views/Product/Details/_Shipping.cshtml")
 
                                         <div id="pagamento-calculado">
-                                            @Html.Action("Payment", "Product", new { valor = @Model.Price })
+                                            @Html.Action("payment", "product", new { valor = @Model.Price })
                                         </div>
 
                                     </div>

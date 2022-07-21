@@ -3,7 +3,7 @@
 <head>
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
-        @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
+        @Html.Action("googleTagManager", "common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
         <!-- End GoogleTagManager Common -->
     }
 
@@ -56,7 +56,7 @@
          if (isb2b)
          {
              <!-- ~/Views/Shared/Common/_Cart.cshtml -->
-             @Html.Action("GetCartBySession", "Checkout")
+             @Html.Action("getCartBySession", "checkout")
          }
          else
          {
@@ -72,7 +72,7 @@
           @Html.Partial("Common/_Head")
 
           <!-- ~/Views/Shared/Common/_Menu.cshtml -->
-          @Html.Action("Menu", "Home")
+          @Html.Action("menu", "home")
 
           @RenderSection("breadcrumbs", required: true)
           <div class="row one column">
@@ -92,7 +92,7 @@
             @RenderSection("footerHalfbanner", required: false)
           </div>
 
-          @Html.Action("Brand", "Product")
+          @Html.Action("brand", "product")
 
           @Html.Partial("Common/_Footer")
         </div>
@@ -115,7 +115,7 @@
                     urlRedirect = urlRedirect.Split('?')[0];
                 }
             }
-            @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = $"/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage={urlRedirect}" })
+            @Html.Action("loginPartial", "customer", new { _class = "modal-login", returnURL = $"/customer/autoAddProductInWishListBeforeLogin?redirectToPage={urlRedirect}" })
         </div>
     </div>
 }

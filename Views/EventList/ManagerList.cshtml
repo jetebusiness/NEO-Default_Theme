@@ -31,7 +31,7 @@
             @Html.Partial("~/Views/Shared/Parts/EventList/_EventListMenu.cshtml", new ViewDataDictionary() { { "option", "data" } })
 
             <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
-                @Html.Action("ShowEventListByType", "EventList", Model)
+                @Html.Action("showEventListByType", "eventList", Model)
             </div>
         </div>
     </div>

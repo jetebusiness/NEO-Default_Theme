@@ -51,7 +51,7 @@
     {
         <div class="ui grid">
             <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
-            @Html.Action("BannerGroup", "Banner", new {groupID = Model.IdGroup, bannerType = 'F'})
+            @Html.Action("bannerGroup", "banner", new {groupID = Model.IdGroup, bannerType = 'F'})
         </div>
     }
 }
@@ -62,15 +62,15 @@
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
             {
-                @Html.Action("FilterMenuNew", "Product", new {category = "", brand = "", group = Model.IdGroup, keyword = ""})
+                @Html.Action("filterMenuNew", "product", new {category = "", brand = "", group = Model.IdGroup, keyword = ""})
             }
             else
             {
-                @Html.Action("FilterMenu", "Product")
+                @Html.Action("filterMenu", "product")
             }
         </div>
         <div class="row">
-            @Html.Action("BannerGroup", "Banner", new {groupID = Model.IdGroup, bannerType = 'L'})
+            @Html.Action("bannerGroup", "banner", new {groupID = Model.IdGroup, bannerType = 'L'})
         </div>
     </div>
 }
@@ -149,7 +149,7 @@
         {
             <div class="groupProducts">
 
-                @Html.Action("GetProductsGroup", "Product",
+                @Html.Action("getProductsGroup", "product",
                     new
                     {
                         category = Request.QueryString["category"] != null ? Request.QueryString["category"] : "",
@@ -172,7 +172,7 @@
 </div>
 <div class="sixteen wide column">
     <!-- ~/Views/Shared/Blocks/Banner/_BannerCategory.cshtml -->
-    @Html.Action("BannerGroup", "Banner", new {groupID = Model.IdGroup, bannerType = 'R'})
+    @Html.Action("bannerGroup", "banner", new {groupID = Model.IdGroup, bannerType = 'R'})
 </div>
 <input type="hidden" name="CurrentPage" id="CurrentPage" value="group"/>
 <input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdGroup"/>

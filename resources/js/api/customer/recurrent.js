@@ -3,7 +3,7 @@
 $(document).ready(function (){
     $(".dropdown-signature").change(function () {
         let Filter = $(this).find(":selected").val();
-        location.href = `/Order/ListRecurrentPurchase?status=${Filter}`;
+        location.href = `/order/listRecurrentPurchase?status=${Filter}`;
     });
 });
 

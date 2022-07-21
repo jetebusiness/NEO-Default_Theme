@@ -95,7 +95,7 @@
     <div class="four wide column filterColumn">
         <div class="row one column filterBlock">
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
-            @Html.Action("FilterMenu", "Product")
+            @Html.Action("filterMenu", "product")
         </div>
     </div>
 }
@@ -148,7 +148,7 @@
         @if (Model != null)
         {
             <div class="categoryProducts">
-                @Html.Action("GetProductsListEvents", "Product", new
+                @Html.Action("getProductsListEvents", "product", new
                 {
                     category = "",
                     viewList = Request.QueryString["viewList"] ?? "",

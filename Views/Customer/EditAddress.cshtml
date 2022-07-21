@@ -14,9 +14,9 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <a class="section" href="/customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
+                        <a class="section" href="/customer/changeAddress">Gestão de endereços</a>
                         <i class="right angle icon divider"></i>
                         <a class="section">Adicionar</a>
                     </div>
@@ -199,7 +199,7 @@
 
                 <div class="row">
                     <div class="column">
-                        <a href="/Customer/ChangeAddress" class="ui animated button large basic left floated">
+                        <a href="/customer/changeAddress" class="ui animated button large basic left floated">
                             <div class="visible content">Cancelar</div>
                             <div class="hidden content">
                                 <i class="remove icon"></i>
@@ -233,7 +233,7 @@
                     confirmButtonText: 'OK'
                 });
                 window.setTimeout(function () {
-                    window.location = '@Url.Action("changeAddress", "Customer")';
+                    window.location = '@Url.Action("changeAddress", "customer")';
                 }, 2000)
             } else {
                 swal({               

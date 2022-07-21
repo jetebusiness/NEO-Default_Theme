@@ -8,7 +8,7 @@
             <div class="ui horizontal divider">
                 <a href="@group.UrlFriendly" title="@group.Name"><h3>@group.Name</h3></a>
             </div>
-            @Html.Action("ProductsByGroup", "Product", new { id = group.IdGroup })
+            @Html.Action("productsByGroup", "product", new { id = group.IdGroup })
         }
 </div>
 }

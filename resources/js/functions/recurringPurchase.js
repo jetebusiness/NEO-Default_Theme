@@ -185,7 +185,7 @@ export const CompraRecorrenteCart = {
             indexItems++;
             if (indexItems > totalItems) {
               isLoading("#miniCarrinho");
-              window.location = urlRedirect;
+                window.location = urlRedirect.toLowerCase();
             } else {
               CompraRecorrenteCart.itemsCart.updateSignatureItemsCart(items, idCompraAutomaticaTipoEntrega, totalItems, urlRedirect, indexItems);
             }

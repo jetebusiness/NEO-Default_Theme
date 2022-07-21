@@ -27,7 +27,7 @@
     }
 }
 @section logo {
-    <a href="/Home" title="@LojaCorp.Control.Company._Company.FantasyName">
+    <a href="/home" title="@LojaCorp.Control.Company._Company.FantasyName">
         <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
     </a>
 }
@@ -248,7 +248,7 @@
 
                 @section remarketing {
                     <!-- Google Remarketing -->
-                    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+                    @Html.Action("googleRemarketing", "common", new { origin = ViewContext.RouteData.Values["controller"] })
                     <!-- End Google Remarketing -->
                 }
             }

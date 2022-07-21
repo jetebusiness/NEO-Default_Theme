@@ -56,12 +56,12 @@
 @section banner {
     @if (Model != null)
     {
-        @Html.Action("BannerCategory", "Banner", new {id = Model.IdCategory, type = 'F'})
+        @Html.Action("bannerCategory", "banner", new {id = Model.IdCategory, type = 'F'})
     }
 }
 
 @section footerHalfbanner {
-    @Html.Action("BannerCategory", "Banner", new {id = Model.IdCategory, type = 'R'})
+    @Html.Action("bannerCategory", "banner", new {id = Model.IdCategory, type = 'R'})
 }
 
 @section filters {
@@ -70,16 +70,16 @@
             <!-- Page: ~/Views/Shared/Common/_FilterMenu.cshtml -->
             @if (LojaCorp.Control.Company._Company.ViewProductFiltersUrl)
             {
-                @Html.Action("FilterMenuNew", "Product", new {category = Model.IdCategory, brand = "", group = "", keyword = ""})
+                @Html.Action("filterMenuNew", "product", new {category = Model.IdCategory, brand = "", group = "", keyword = ""})
             }
             else
             {
-                @Html.Action("FilterMenu", "Product")
+                @Html.Action("filterMenu", "product")
             }
         </div>
         <div class="row">
             <!-- Page: ~/Views/Shared/Blocks/Banner/_SideHalfBanner.cshtml -->
-            @Html.Action("SideHalfBannerCategory", "Banner", new {categoryId = Model.IdCategory})
+            @Html.Action("sideHalfBannerCategory", "banner", new {categoryId = Model.IdCategory})
         </div>
     </div>
 }
@@ -156,7 +156,7 @@
         <!-- ~/Views/Shared/Blocks/Product/_ProductsCategoryGrid.cshtml -->
         @if (Model != null)
         {
-            @Html.Action("GetProductsCategory", "Product", new
+            @Html.Action("getProductsCategory", "product", new
             {
                 category = Model.IdCategory,
                 viewList = Request.QueryString["viewList"] ?? "",

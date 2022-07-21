@@ -139,12 +139,12 @@
                         </div>
                         <div class="row">
                             <div class="column text right">
-                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Contact" })
+                                @Html.Action("getRecaptchaV3", "company", new { Module = "Contact" })
                             </div>
                         </div>
                         <div class="row">
                             <div class="column">
-                                <a href="/Home" class="ui animated button large basic left floated form_refresh">
+                                <a href="/home" class="ui animated button large basic left floated form_refresh">
                                     <div class="visible content">Voltar</div>
                                     <div class="hidden content">
                                         <i class="arrow left icon"></i>
@@ -180,7 +180,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/Home";
+                    window.location.href = "/home";
                 });
             }
             else {
@@ -207,7 +207,7 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/Home";
+                    window.location.href = "/home";
                 });
             }
         }

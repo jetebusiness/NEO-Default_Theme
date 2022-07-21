@@ -76,13 +76,13 @@ $(document).on("keypress", ".prompt", function (e) {
 
 $(document).on("keypress", ".busca_lista", function (e) {
     if (e.which === 13) {
-        location.href = `/EventList/ManagerProducts?n=${$(".busca_lista").val()}`;
+        location.href = `/eventList/managerProducts?n=${$(".busca_lista").val()}`;
     }
 });
 
 
 $(document).on("click", ".busca_lista_btn", function (e) {
-    location.href = `/EventList/ManagerProducts?n=${$(".busca_lista").val()}`;
+    location.href = `/eventList/managerProducts?n=${$(".busca_lista").val()}`;
 });
 
 
@@ -100,13 +100,13 @@ $(document).on("click", ".searchMobile .search-results", function (e) {
 
 $(document).on("keypress", ".busca_convidado_lista", function (e) {
     if (e.which === 13) {
-        location.href = `/EventList/ManagerGuest?n=${$(".busca_convidado_lista").val()}`;
+        location.href = `/eventList/managerGuest?n=${$(".busca_convidado_lista").val()}`;
     }
 });
 
 
 $(document).on("click", ".btn_convidado_lista", function (e) {
-    location.href = `/EventList/ManagerGuest?n=${$(".busca_convidado_lista").val()}`;
+    location.href = `/eventList/managerGuest?n=${$(".busca_convidado_lista").val()}`;
 });
 
 

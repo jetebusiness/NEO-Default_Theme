@@ -3,7 +3,7 @@
 <head>   
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
-        @Html.Action("GoogleTagManager", "Common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
+        @Html.Action("googleTagManager", "common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
         <!-- End GoogleTagManager Common -->
     }
 
@@ -56,7 +56,7 @@
         if (isb2b)
         {
             <!-- ~/Views/Shared/Common/_Cart.cshtml -->
-            @Html.Action("GetCartBySession", "Checkout")
+            @Html.Action("getCartBySession", "checkout")
         }
         else
         {
@@ -72,7 +72,7 @@
         @Html.Partial("Common/_Head")
 
         <!-- ~/Views/Shared/Common/_Menu.cshtml -->
-        @Html.Action("Menu", "Home")
+        @Html.Action("menu", "home")
 
         @RenderBody()
 
@@ -89,7 +89,7 @@
         <i class="close icon"></i>
         <div class="header ui center aligned segment">Faça login ou cadastre-se para continuar</div>
         <div class="description">
-            @Html.Action("LoginPartial", "Customer", new { _class = "modal-login", returnURL = "/Customer/AutoAddProductInWishListBeforeLogin?redirectToPage=/Home/Index" })
+            @Html.Action("loginPartial", "customer", new { _class = "modal-login", returnURL = "/customer/autoAddProductInWishListBeforeLogin?redirectToPage=/home/index" })
         </div>
     </div>
 }

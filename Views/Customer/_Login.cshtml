@@ -36,7 +36,7 @@
                                             <input type="password" name="password" maxlength="100" id="password" placeholder="Senha">
                                         </div>
                                     </div>
-                                    @Html.Action("GetRecaptchaV3", "Company", new { Module = "Login" })
+                                    @Html.Action("getRecaptchaV3", "company", new { Module = "Login" })
                                     <br />
                                     <button type="button" class="ui fluid large submit primary button text uppercase" id="submitForm">
                                         Entrar
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="column">
-                                <a href="/Customer/AccessKey" class="ui primary button fluid large text uppercase">
+                                <a href="/customer/accessKey" class="ui primary button fluid large text uppercase">
                                     <i class="add user icon"></i>
                                     Primeiro acesso? <br />Cadastre-se
                                 </a>

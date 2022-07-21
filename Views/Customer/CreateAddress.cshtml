@@ -14,9 +14,9 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <a class="section" href="/customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer/changeAddress">Gestão de endereços</a>
+                        <a class="section" href="/customer/changeAddress">Gestão de endereços</a>
                         <i class="right angle icon divider"></i>
                         <a class="section">Adicionar</a>
                     </div>
@@ -181,7 +181,7 @@
                 </div>
                 <div class="row">
                     <div class="column text right">
-                        @Html.Action("GetRecaptchaV3", "Company", new {Module = "Register"})
+                        @Html.Action("getRecaptchaV3", "company", new {Module = "Register"})
                     </div>
                 </div>
                 <div class="row">
@@ -222,7 +222,7 @@
                     confirmButtonText: 'OK',
                     allowOutsideClick: false
                 }).then(function () {
-                    window.location.href = "/Customer/changeAddress";
+                    window.location.href = "/customer/changeAddress";
                 });
             } else {
                 swal({
@@ -235,7 +235,7 @@
                     confirmButtonText: 'OK',
                     allowOutsideClick: false
                 }).then(function () {
-                    window.location.href = "/Customer/changeAddress";
+                    window.location.href = "/customer/changeAddress";
                 });
             }
         }

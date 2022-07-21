@@ -40,7 +40,7 @@ $(document).ready(function () {
         if (CompraRecorrenteCart.modalConfig.hasModal())
             CompraRecorrenteCart.modalConfig.showModal(url);
         else
-            window.location = url;
+            window.location = url.toLowerCase();
         
     });
 
@@ -137,7 +137,7 @@ $(document).ready(function () {
         let segment = $(this).data("segment");
 
         if (segment === "b2b") {
-            window.location.href = "/Checkout";
+            window.location.href = "/checkout";
         }
         else {
             if ($("#zipcode") != null && $("#zipcode").val().length > 0) {
@@ -640,7 +640,7 @@ export function createModelExhausted(element) {
                                     cancelButtonColor: '#d33',
                                     confirmButtonText: 'OK'
                                 }).then(function () {
-                                    window.location.href = "/Home";
+                                    window.location.href = "/home";
                                 });
 
                             } else {

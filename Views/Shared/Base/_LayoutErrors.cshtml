@@ -16,7 +16,7 @@
 </head>
 <body>
     <!-- ~/Views/Shared/Common/_Cart.cshtml -->
-    @Html.Action("GetCartBySession", "Checkout")
+    @Html.Action("getCartBySession", "checkout")
     
     <div class="pusher">
                 
@@ -26,7 +26,7 @@
         @Html.Partial("Common/_Head")
         
         <!-- ~/Views/Shared/Common/_Menu.cshtml -->
-        @Html.Action("Menu", "Home")
+        @Html.Action("menu", "home")
         
         @RenderBody()
         

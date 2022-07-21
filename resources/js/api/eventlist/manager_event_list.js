@@ -291,7 +291,7 @@ $(document).on("change", "#filePicture", function(e){
 $(document).on("click", "#pesquisar_lista", function(event) {
     var tipo_lista = $("#tipo_lista").val();
     var parametro = $("#parametro").val();
-    window.location.href = "/EventList/SeachListByType?type="+tipo_lista+"&parametro=" + parametro;
+    window.location.href = "/eventList/seachListByType?type="+tipo_lista+"&parametro=" + parametro;
 });
 
 $(document).on("change", "#chkStatus", function(e) {
@@ -458,7 +458,7 @@ function shareEventList(listId) {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'OK'
             }).then(function () {
-                //window.location = "/EventList/ManagerGuest";
+                //window.location = "/eventList/managerGuest";
                 location.reload();
             })
         },

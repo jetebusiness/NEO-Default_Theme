@@ -3,7 +3,7 @@
     List<DomainSocialNetwork.Entities.SocialNetwork> redesSociais = Session["SocialNetworkLinks"] != null ? (List<DomainSocialNetwork.Entities.SocialNetwork>)Session["SocialNetworkLinks"] : new List<DomainSocialNetwork.Entities.SocialNetwork>();
 }
 
-@Html.Action("GetPrivacyPolicyAlertText", "Company")
+@Html.Action("getPrivacyPolicyAlertText", "company")
 
 <div class="ui container fluid newsletter-bar">
     <div class="ui container">
@@ -34,7 +34,7 @@
                                     Cadastrar
                                 </button>
                             </div>
-                            @Html.Action("GetRecaptchaV3", "Company", new { Module = "Newsletter" })
+                            @Html.Action("getRecaptchaV3", "company", new { Module = "Newsletter" })
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
             <div class="ten wide table six wide computer column">
                 <div class="ui grid stackable">
                     <div class="row two column no padding listMobile">
-                        @Html.Action("CustomPages", "Home")
+                        @Html.Action("customPages", "home")
                         <div class="column eight wide tablet sixteen wide computer margin top large mobile-hide">
                             <h4 class="ui inverted header">Siga nos</h4>
                             <socialbar>
@@ -119,7 +119,7 @@
             <div class="six wide tablet five wide computer column">
                 <div class="ui grid stackable">
                     <div class="row one column no padding listMobile">
-                        @Html.Action("GetList", "EventList")
+                        @Html.Action("getList", "eventList")
                         <div class="column">
                             <h4 class="ui inverted header">Central de Relacionamento <i class="ui icon chevron right mobile only"></i></h4>
                             <div class="ui inverted link list">
@@ -142,8 +142,8 @@
                         <div class="column seven wide tablet sixteen wide computer middle aligned">
                             <h4 class="ui inverted header">SEGURANÇA</h4>
                             <div class="ui horizontal list selos">
-                                @Html.Action("EBit", "Company")
-                                @Html.Action("GetCompanySeal", "Company")
+                                @Html.Action("eBit", "company")
+                                @Html.Action("getCompanySeal", "company")
                                 @*
                                     <div class="item">
                                         <img src="//assets.pagseguro.com.br/ps-integration-assets/banners/seguranca/seguranca_125x125.gif" alt="Banner PagSeguro" title="Compre com PagSeguro e fique sossegado">

@@ -18,7 +18,7 @@
 }
 @section remarketing{
     <!-- Google Remarketing -->
-    @Html.Action("GoogleRemarketing", "Common", new { origin = ViewContext.RouteData.Values["controller"] })
+    @Html.Action("googleRemarketing", "common", new { origin = ViewContext.RouteData.Values["controller"] })
     <!-- End Google Remarketing -->
 }
 
@@ -303,7 +303,7 @@
                     </div>
                     <!--COMEÇO DICA DE COMPRA-->
                     <div id="dica_compra_partial">
-                        @Html.Action("BuyingTips", "Product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
+                        @Html.Action("buyingTips", "product", new { productID = @Model.IdProduct, skuID = SKUPadrao != null ? SKUPadrao.IdSku : 0 })
                     </div>
                     <!--FIM DICA DE COMPRA-->
                     <div class="row product-grid">
@@ -313,7 +313,7 @@
 
                                 @if (!Model.FlagExhausted)
                                 {
-                                    @Html.Action("Variations", "Product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })
+                                    @Html.Action("variations", "product", new { reference = @Model.AvailableReferences, skuPadrao = @SKUPadrao, ListaSku = Model.SKUs })
                                 }
 
                                 <!--FIM VARIAÇÔES-->
@@ -477,11 +477,11 @@
                                 <div id="pagamento-calculado">
                                     @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                                     {
-                                        @Html.Action("Payment", "Product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
+                                        @Html.Action("payment", "product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
                                     }
                                     else
                                     {
-                                        @Html.Action("Payment", "Product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
+                                        @Html.Action("payment", "product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true })
                                     }
                                 </div>
                             }
@@ -704,7 +704,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="Rate" id="Rate" value="" />
-                                @Html.Action("GetRecaptchaV3", "Company", new { Module = "Evaluation" })
+                                @Html.Action("getRecaptchaV3", "company", new { Module = "Evaluation" })
                                 <br />
                                 <button class="ui button btn-avaliar" type="button" id="submitAval">Enviar</button>
                             </form>

@@ -99,8 +99,21 @@ function Login() {
                 }, 3000)
 			}
 			else {
-				$("#submitForm").removeClass("loading");
-				location.href = response.redirectUrl;
+                $("#submitForm").removeClass("loading");
+                if (response.recoveredCart) {
+                    _confirm({
+                        title: "Carrinho Recuperado!",
+                        text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                        type: "info",
+                        confirm: { text: "OK" },
+                        cancel: {},
+                        callback: function () {
+                            location.href = response.redirectUrl.toLowerCase();
+                        }
+                    }, false);
+                    return false;
+                }
+                location.href = response.redirectUrl.toLowerCase();
 			}
 			
 		},
@@ -162,7 +175,7 @@ function LoginB2B() {
 				}
 				else {
 					$("#loginB2B").removeClass("loading");
-					location.href = response.redirectUrl;
+                    location.href = response.redirectUrl.toLowerCase();
 				}
 			}
 		},
@@ -216,7 +229,7 @@ $(document).ready(function () {
 				dataType: "json",
 				success: function (response) {
 					if (response.success === true) {
-						window.location = response.redirectUrl
+                        window.location = response.redirectUrl.toLowerCase()
 					}
 					else {
 						$(".ui.message.form-message p").text(response.message);
@@ -283,6 +296,19 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.success === true) {
                         $("#Google").removeClass("loading");
+                        if (response.recoveredCart) {
+                            _confirm({
+                                title: "Carrinho Recuperado!",
+                                text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                type: "info",
+                                confirm: { text: "OK" },
+                                cancel: {},
+                                callback: function () {
+                                    window.location = response.redirectUrl
+                                }
+                            }, false);
+                            return false;
+                        }
                         window.location = response.redirectUrl
                     }
                 },
@@ -309,6 +335,19 @@ $(document).ready(function () {
                 dataType: "json",
                 success: function (response) {
                     if (response.success === true) {
+                        if (response.recoveredCart) {
+                            _confirm({
+                                title: "Carrinho Recuperado!",
+                                text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                type: "info",
+                                confirm: { text: "OK" },
+                                cancel: {},
+                                callback: function () {
+                                    window.location = response.redirectUrl
+                                }
+                            }, false);
+                            return false;
+                        }
                         window.location = response.redirectUrl
                     }
                 },
@@ -349,7 +388,20 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.success === true) {
                         $("#Facebook").removeClass("loading");
-                        window.location = response.redirectUrl
+                        if (response.recoveredCart) {
+                            _confirm({
+                                title: "Carrinho Recuperado!",
+                                text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                type: "info",
+                                confirm: { text: "OK" },
+                                cancel: {},
+                                callback: function () {
+                                    window.location = response.redirectUrl.toLowerCase()
+                                }
+                            }, false);
+                            return false;
+                        }
+                        window.location = response.redirectUrl.toLowerCase()
                     }
                 },
                 error: function (response) {
@@ -374,7 +426,20 @@ $(document).ready(function () {
                 dataType: "json",
                 success: function (response) {
                     if (response.success === true) {
-                        window.location = response.redirectUrl
+                        if (response.recoveredCart) {
+                            _confirm({
+                                title: "Carrinho Recuperado!",
+                                text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                type: "info",
+                                confirm: { text: "OK" },
+                                cancel: {},
+                                callback: function () {
+                                    window.location = response.redirectUrl.toLowerCase()
+                                }
+                            }, false);
+                            return false;
+                        }
+                        window.location = response.redirectUrl.toLowerCase()
                     }
                 },
                 error: function (response) {

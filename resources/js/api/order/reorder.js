@@ -76,7 +76,7 @@ function AttachClientSeller(name, email) {
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 }).then(function () {
-                    window.location.href = "/Home/index";
+                    window.location.href = "/home/index";
                 });
             }
             else if (response.SneezedSession) {

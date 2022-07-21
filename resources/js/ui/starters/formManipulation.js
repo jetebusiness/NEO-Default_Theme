@@ -351,7 +351,7 @@ $(document).ready(function () {
      * Semantic-Ui Rating Stars
      */
     $(".ui.rating").rating({
-        maxRating: 5,
+        //maxRating: 5,
         interactive: false
     });
     $(".ui.form .ui.rating").rating({

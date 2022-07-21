@@ -26,7 +26,7 @@
     <div class="ui grid middle aligned center aligned">
         @Html.Partial("~/Views/Shared/Parts/EventList/_Steps.cshtml", new ViewDataDictionary { { "step", "1" } } )
 
-        @Html.Action("ShowEventListByType", "EventList", Model)
+        @Html.Action("showEventListByType", "eventList", Model)
     </div>
 </div>
 

@@ -51,7 +51,20 @@ function checkLogin() {
                                         method: "POST",
                                         url: "/Customer/PrivacyPolicyAcceptUser",
                                         success: function () {
-                                            window.location.href = '/Checkout/' + response.action;
+                                            if (response.recoveredCart) {
+                                                _confirm({
+                                                    title: "Carrinho Recuperado!",
+                                                    text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                                    type: "info",
+                                                    confirm: { text: "OK"},
+                                                    cancel: {},
+                                                    callback: function () {
+                                                        window.location.href = '/checkout/' + response.action.toLowerCase();
+                                                    }
+                                                }, false);
+                                                return false;
+                                            }
+                                            window.location.href = '/checkout/' + response.action.toLowerCase();
                                         }
                                     });
                                 },
@@ -66,7 +79,8 @@ function checkLogin() {
                                     });
                                 }
                             }).modal('show')
-                        } else {
+                        }
+                        else {
                             if ($('#payPalCheckoutInCart').val() === "true") {
                                 swal({
                                     title: '',
@@ -77,10 +91,36 @@ function checkLogin() {
                                     cancelButtonColor: '#d33',
                                     confirmButtonText: 'OK'
                                 }).then(function () {
-                                    window.location.href = '/Checkout/' + response.action;
+                                    if (response.recoveredCart) {
+                                        _confirm({
+                                            title: "Carrinho Recuperado!",
+                                            text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                            type: "info",
+                                            confirm: { text: "OK" },
+                                            cancel: {},
+                                            callback: function () {
+                                                window.location.href = '/checkout/' + response.action.toLowerCase();
+                                            }
+                                        }, false);
+                                        return false;
+                                    }
+                                    window.location.href = '/checkout/' + response.action.toLowerCase();
                                 });
                             } else {
-                                window.location.href = '/Checkout/' + response.action;
+                                if (response.recoveredCart) {
+                                    _confirm({
+                                        title: "Carrinho Recuperado!",
+                                        text: "Alguns produtos que estavam em seu carrinho, foram recuperados no momento do login. Verifique já!",
+                                        type: "info",
+                                        confirm: { text: "OK" },
+                                        cancel: {},
+                                        callback: function () {
+                                            window.location.href = '/checkout/' + response.action.toLowerCase();
+                                        }
+                                    }, false);
+                                    return false;
+                                }
+                                window.location.href = '/checkout/' + response.action;
                             }
                         }
 

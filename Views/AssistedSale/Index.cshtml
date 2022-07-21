@@ -55,7 +55,7 @@
 
                     <!-- ~/Views/Shared/Blocks/Client/_ClientListVendor.cshtml -->
 
-                    @Html.Action("ListClients", "AssistedSale", new {
+                    @Html.Action("listClients", "assistedSale", new {
                        search = Request.QueryString["search"] != null ? Request.QueryString["search"] : "",
                        page = Request.QueryString["page"] != null ? Request.QueryString["page"] : "",
                        pageSize = 12

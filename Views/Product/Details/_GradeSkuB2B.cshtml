@@ -163,7 +163,7 @@
                    var _flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true;
                    var _isB2b = isB2B;
 
-                   Html.Action("Payment", "Product", new {valor = _valor, flagExibir = _flagExibir, isB2b = _isB2b});
+                   Html.Action("payment", "product", new {valor = _valor, flagExibir = _flagExibir, isB2b = _isB2b});
                }
            </div>
        }

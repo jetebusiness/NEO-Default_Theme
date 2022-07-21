@@ -84,7 +84,7 @@ $(document).ready(function () {
                     data: {},
                     success: function (data) {
                         if (data.success === true)
-                            window.location.href = "/" + data.redirect
+                            window.location.href = "/" + data.redirect.toLowerCase()
                         else
                             _alert("Mensagem", data.message, "error")
                     },
@@ -359,7 +359,7 @@ function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
                 toastr.success("Produto adicionado ao carrinho com sucesso!");
                 LoadCarrinho(exibeMiniCarrinho);
                 if(exibeMiniCarrinho === true){
-                    window.location.href = "/Checkout";
+                    window.location.href = "/checkout";
                 }
             } else {
                 swal({

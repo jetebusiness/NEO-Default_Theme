@@ -12,7 +12,7 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <a class="section" href="/customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
                         <div class="active section">Cadastrar na Loja</div>
                     </div>
@@ -58,7 +58,7 @@
                                 </button>
                             </div>
                         </div>
-                        @Html.Action("GetRecaptchaV3", "Company", new {Module = "FirstAccess"})
+                        @Html.Action("getRecaptchaV3", "company", new {Module = "FirstAccess"})
                     </div>
                 </div>
                 <div class="ui error message"></div>

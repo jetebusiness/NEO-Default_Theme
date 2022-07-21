@@ -145,11 +145,11 @@
             <div id="pagamento-calculado">
                 @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
                 {
-                    @Html.Action("Payment", "Product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
+                    @Html.Action("payment", "product", new { valor = @Model.PricePromotion, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
                 }
                 else
                 {
-                    @Html.Action("Payment", "Product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
+                    @Html.Action("payment", "product", new { valor = @Model.Price, flagExibir = Model.FlagExhausted == true || Model.Stock <= 0 ? false : true, isB2b = isB2B })
                 }
             </div>
         }

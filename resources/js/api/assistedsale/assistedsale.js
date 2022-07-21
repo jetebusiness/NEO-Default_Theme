@@ -46,7 +46,7 @@ function AttachClient() {
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'OK'
                     }).then(function () {
-                        window.location.href = "/Home/index";
+                        window.location.href = "/home/index";
                     });
                 }
                 else if (response.SneezedSession)
@@ -160,7 +160,7 @@ function LoginVendaAssistida() {
                 }
                 else {
                     $("#loginVendaAssistida").removeClass("loading");
-                    location.href = response.redirectUrl;
+                    location.href = response.redirectUrl.toLowerCase();
                 }
             }
         },

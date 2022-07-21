@@ -47,7 +47,7 @@
                         @if (Session["PaymentLinkChangeBrand"] == null || (bool)Session["PaymentLinkChangeBrand"] == false)
                         {
                         <div class="margin top bottom medium">
-                            <a href="ChangeUserPayment" class="ui small text compact floated left ui label" id="changeUserPayment">Não é você? Sair!</a>
+                            <a href="changeUserPayment" class="ui small text compact floated left ui label" id="changeUserPayment">Não é você? Sair!</a>
                             @if (Session["idEventList"] == null)
                             {
                                 <a class="ui primary basic mini compact floated right button" id="listAddressPayment">Alterar Endereço</a>

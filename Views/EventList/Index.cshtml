@@ -47,7 +47,7 @@
                     </div>
                     <div class="extra">
                         <span>
-                            <a href="/EventList/NewList" class="ui small compact icon primary basic button text uppercase">
+                            <a href="/eventList/newList" class="ui small compact icon primary basic button text uppercase">
                                 <i class="ui icon add circle primary"></i> Criar uma nova lista
                             </a>
                         </span>
@@ -105,7 +105,7 @@
                             @if (lista.EventDate >= DateTime.Now)
                             {
                                 <div class="ui two columns row stackable">
-                                    <a href="@Url.Action("ManagerList", "EventList", new {listId = lista.IdEventList})" class="ui small compact icon primary basic button text uppercase">
+                                    <a href="@Url.Action("managerList", "eventList", new {listId = lista.IdEventList})" class="ui small compact icon primary basic button text uppercase">
                                         <i class="check icon"></i>
                                         Alterar
                                     </a>

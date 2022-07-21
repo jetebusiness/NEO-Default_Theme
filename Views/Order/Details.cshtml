@@ -14,9 +14,9 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <a class="section" href="/customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Order">Histórico de Pedidos</a>
+                        <a class="section" href="/order">Histórico de Pedidos</a>
                         <i class="right angle icon divider"></i>
                         <a class="section">Informação do Pedido</a>
                     </div>
@@ -31,9 +31,9 @@
 
 @if (Model != null)
 {
-    @Html.Action("StatusOrder", "Order", new { orderId = Model.IdOrder })
+    @Html.Action("statusOrder", "order", new { orderId = Model.IdOrder })
 
-    @Html.Action("ListDetailsExchangeReturn", "Order", new { orderId = Model.IdOrder })
+    @Html.Action("listDetailsExchangeReturn", "order", new { orderId = Model.IdOrder })
 
     <br />
     <div class="row">

@@ -142,7 +142,7 @@ $(document).on("click", "#btn_compre_oneclick_conjunto_selecionado", function (e
             data: {},
             success: function (data) {
                 if (data.success === true) {
-                    window.location.href = "/" + data.redirect;
+                    window.location.href = "/" + data.redirect.toLowerCase();
                 }
                 else {
                     _alert("Mensagem", data.message, "error");

@@ -6,7 +6,7 @@
             @*<form action="/EventList/LinkAddressToEventList" method="post"></form>*@
             @using (Ajax.BeginForm("LinkAddressToEventList", "EventList", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "onSuccess", OnFailure = "onFailure" }, new { name = "formAddress", id = "formAddress" }))
             {
-                <input type="hidden" name="urlToRedirect" value="@(ViewData["returnUrl"] != null ? @ViewData["returnUrl"].ToString() : "/Home/Index")" />
+                <input type="hidden" name="urlToRedirect" value="@(ViewData["returnUrl"] != null ? @ViewData["returnUrl"].ToString() : "/home/index")" />
 
                 <div class="ui grid stackable top left aligned vertically divided grid">
                     <div class="row">
@@ -35,11 +35,11 @@
                                         <p>CEP: @Model.ZipCode</p>
                                     </div>
                                     <div class="field">
-                                        <a href="@Url.Action("ChangeAddress", "EventList")" class="ui small compact icon basic button">
+                                        <a href="@Url.Action("changeAddress", "eventList")" class="ui small compact icon basic button">
                                             <i class="check icon"></i>
                                             Alterar Endereço
                                         </a>
-                                        <a href="@Url.Action("CreateAddress", "Customer")" class="ui small compact icon basic button">
+                                        <a href="@Url.Action("createAddress", "customer")" class="ui small compact icon basic button">
                                             <i class="check icon"></i>
                                             Adicionar Endereço
                                         </a>

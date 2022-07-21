@@ -12,7 +12,7 @@ $.jetRoute.settings = {
         "checkout": "checkout",
         "produto": "produto",
         "category": "category",
-        "Home": "Home",
+        "home": "home",
         "brand": "brand",
         "group": "group",
         "customer": "customer",

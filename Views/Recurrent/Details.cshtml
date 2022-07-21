@@ -14,9 +14,9 @@
                     <div class="ui breadcrumb text small">
                         <a class="section" href="/">Home</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Customer">Área do Cliente</a>
+                        <a class="section" href="/customer">Área do Cliente</a>
                         <i class="right angle icon divider"></i>
-                        <a class="section" href="/Order/ListRecurrentPurchase">Histórico da Assinatura</a>
+                        <a class="section" href="/order/listRecurrentPurchase">Histórico da Assinatura</a>
                         <i class="right angle icon divider"></i>
                         <a class="section">Informação da Assinatura</a>
                     </div>
@@ -34,7 +34,7 @@
     <h3 class="ui header">
         Pedidos da Assinatura
     </h3>
-    @Html.Action("DetailsOrderRecurrent", "Order", new { idCompraAutomaticaCliente = Model.IdRecurrentClient })
+    @Html.Action("detailsOrderRecurrent", "order", new { idCompraAutomaticaCliente = Model.IdRecurrentClient })
 
     <br />
     <div class="row">
