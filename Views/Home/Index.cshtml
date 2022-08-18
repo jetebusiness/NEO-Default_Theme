@@ -1,11 +1,21 @@
-﻿@{
+﻿@{   
+
     ViewBag.Title = string.IsNullOrEmpty(LojaCorp.Control.Company._Company.Title) ? LojaCorp.Control.Company._Company.NameStore : LojaCorp.Control.Company._Company.Title;
     Layout = "~/Views/Shared/Base/_Layout.cshtml";
+
+    string PathLogo = "/assets/image/logo/logo.png";
+
+    Uri Url = System.Web.HttpContext.Current.Request.Url;
+
+    string UrlLogo = Url.Scheme + "://" + Url.Host + PathLogo;
+
 }
 
-@section CustomSeo {
+@section CustomSeo{
     @{
-        <meta property="og:image" content="/assets/image/logo/logo.png">
+
+        <meta property="og:title" content="@ViewBag.Title" />
+        <meta property="og:image" content="@UrlLogo" />
     }
 }
 

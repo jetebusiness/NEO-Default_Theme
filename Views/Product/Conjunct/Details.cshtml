@@ -6,6 +6,15 @@
         lista_avaliacoes_completa.AddRange(Model.ProductRatings);
         lista_avaliacoes_completa.RemoveRange(0, 5);
     }
+
+    string PathLogo = "/assets/image/logo/logo.png";
+
+    Uri Url = System.Web.HttpContext.Current.Request.Url;
+
+    string UrlLogo = Url.Scheme + "://" + Url.Host + PathLogo;
+
+    string ImageOpenGraph = Model.ProductImages.Count > 0 ? Url.Scheme + ":" + Model.ProductImages.FirstOrDefault().ImageDefault : UrlLogo;
+
 }
 @section CustomSeo {
     @{
@@ -18,6 +27,9 @@
         {
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
+
+        <meta property="og:image" content="@ImageOpenGraph" /> 
+
     }
 }
 <script>

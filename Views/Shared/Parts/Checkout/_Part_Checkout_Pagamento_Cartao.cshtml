@@ -3,7 +3,7 @@
 @{
     string JsonPaymentMethod = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
     var LstOneClick = (List<DomainPayment.Entities.MaxiPago.OneClickMaxiPago>)Session["LstOneClick"];
-    var temOneClickSalvo = LstOneClick.Count() > 0 ? true : false;
+    var temOneClickSalvo = LstOneClick.Count > 0 ? true : false;
     var UseTwoCards = (bool)Session["UseTwoCards"];
     decimal MinimumValueTwoCards = (decimal)Session["MinimumValueTwoCards"];
     decimal TotalCart = (decimal)Session["TotalCart"];
@@ -12,7 +12,7 @@
     if (temOneClickSalvo == false)
     {
         LstOneClickPagSeguroV4 = (List<DomainPayment.Entities.PagSeguroV4.PagSeguroV4_OneClick>)Session["LstOneClickPagSeguroV4"];
-        temOneClickSalvo = LstOneClickPagSeguroV4.Count() > 0 ? true : false;
+        temOneClickSalvo = LstOneClickPagSeguroV4.Count > 0 ? true : false;
         btnExcluiOneClick = true;
     }
 

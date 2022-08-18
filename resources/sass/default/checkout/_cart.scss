@@ -917,7 +917,6 @@ $radiusBox: 0px;
 
 
 .blc-key {
-
     width: 100%;
     max-width: 300px;
 
@@ -930,13 +929,40 @@ $radiusBox: 0px;
     }
 
     #key {
-        border: 1px dashed  #ccc !important;
+        border: 1px dashed #ccc !important;
         border-radius: 12px !important;
         flex: 1 0 auto;
         width: auto;
     }
 
     #applyDiscount, #deleteDiscount {
+        background: transparent;
+        position: absolute;
+        right: 0;
+        line-height: 30px;
+        display: none;
+    }
+}
+
+.sellerCode-key {
+    width: 100%;
+    max-width: 400px;
+
+    label {
+        line-height: 50px;
+        color: #4c4c4c;
+        font-size: 14px;
+        margin-right: 15px;
+    }
+
+    #sellerCode {
+        border: 1px dashed #ccc !important;
+        border-radius: 12px !important;
+        flex: 1 0 auto;
+        width: auto;
+    }
+
+    #applySellerCode, #deleteSellerCode {
         background: transparent;
         position: absolute;
         right: 0;

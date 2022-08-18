@@ -202,7 +202,7 @@ var newFilter = {
 
                     var queryString = window.location.search.slice(1).split('&');
 
-                    if(queryString.length > 1) {
+                    if(queryString.length > 0) {
 
                         var result = "";
 

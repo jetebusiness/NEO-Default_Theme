@@ -3,6 +3,14 @@
     ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
     var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
+
+    string PathLogo = "/assets/image/logo/logo.png";
+
+    Uri Url = System.Web.HttpContext.Current.Request.Url;
+
+    string UrlLogoStore = Url.Scheme + "://" + Url.Host + PathLogo;
+
+    string UrlLogo = String.IsNullOrEmpty(Model.Image) ? UrlLogoStore : Url.Scheme + ":" + Model.Image;
 }
 
 @section CustomSeo {
@@ -18,7 +26,7 @@
         <meta name="twitter:url" content="@HttpUtility.HtmlEncode(Request.Url)">
         <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
         <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
-        <meta property="og:image" content="/assets/image/logo/logo.png">
+        <meta property="og:image" content="@UrlLogo">
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿@model DomainProduct.Entities.ProductDetail
 @{
-                /**/
+    /**/
 
     DomainProduct.Entities.Sku SKUPadrao = new DomainProduct.Entities.Sku();
     if (TempData["SKUPadrao"] != null)
@@ -13,6 +13,12 @@
     string JsonDetail = string.Empty;
     string variacaoSelecionada = string.Empty;
     string skuSelecionado = string.Empty;
+
+    Uri Url = System.Web.HttpContext.Current.Request.Url;
+
+    string PathLogo = "/assets/image/logo/logo.png";
+
+    string UrlLogo = Url.Scheme + "://" + Url.Host + PathLogo;
 
     ViewModels.ViewModelStore.Produto.TreeReference treeReference = (ViewModels.ViewModelStore.Produto.TreeReference)TempData["TreeReference"];
 
@@ -136,6 +142,8 @@
     }
 
     ViewBag.PurchaseRecurring = "false";
+
+    string ImageOpenGraph = productImages.Count > 0 ? Url.Scheme + ":" + productImages.FirstOrDefault().ImageDefault : UrlLogo;
 }
 
 <script>
@@ -172,7 +180,7 @@
         <meta name="twitter:url" content="@HttpUtility.HtmlEncode(Request.Url)">
         <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
         <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
-        <meta property="og:image" content="@productImages.FirstOrDefault()?.ImageDefault">
+        <meta property="og:image" content="@ImageOpenGraph">
     }
 }
 

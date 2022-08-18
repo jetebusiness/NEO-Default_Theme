@@ -2,21 +2,25 @@
 
 @{
     string JsonPaymentMethod = Newtonsoft.Json.JsonConvert.SerializeObject(@Model);
-    var UseTwoCards = (bool)Session["UseTwoCards"];
+    var UseTwoCardsDebit = (bool)Session["UseTwoCards"];
     decimal MinimumValueTwoCards = (decimal)Session["MinimumValueTwoCards"];
     decimal TotalCart = (decimal)Session["TotalCart"];
 
     if (TotalCart < MinimumValueTwoCards)
     {
-        UseTwoCards = false;
+        UseTwoCardsDebit = false;
     }
 
+    if (Model.PaymentBrands.Select(p => p.IdPaymentBrand).Contains(364) || Model.PaymentBrands.Select(p => p.IdPaymentBrand).Contains(365))
+    {
+        UseTwoCardsDebit = false;
+    }
 }
 
 <div class="ui tab segment basic padding none" data-tab="cardDebit">
     <div class="container-card contentcartao cardDebit">
         <form action="" method="post" class="jet checkout ui form debit-card" id="validCardDebit" data-paymentmethod="@JsonPaymentMethod">
-            @if (UseTwoCards)
+            @if (UseTwoCardsDebit)
             {
                 <div class="field margin bottom medium">
                     <div class="ui toggle checkbox box-debit">
@@ -25,7 +29,7 @@
                     </div>
                 </div>
                 <div class="container-card multi-debit hideme">
-                    
+
                     <div class="ui top attached tabular menu">
                         <a class="item active" data-tab="debit-1">
                             Cartão 1
@@ -77,8 +81,8 @@
                                 <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitValor1" id="DebitValor1" placeholder="Valor a ser pago no cartão" data-type="money" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal=",">
                             </div>
                         </div>
-                        <input type="hidden" name="debitBrandCard1" id="debitBrandCard1" value=""/>
-                        <input type="hidden" name="debitIdBrandCard1" id="debitIdBrandCard1" value=""/>
+                        <input type="hidden" name="debitBrandCard1" id="debitBrandCard1" value="" />
+                        <input type="hidden" name="debitIdBrandCard1" id="debitIdBrandCard1" value="" />
                     </div>
                     <div class="ui bottom attached tab segment debit-2 basic margin padding none" data-tab="debit-2">
                         <div class="card-wrapper-debit2 margin top bottom medium"></div>
@@ -124,8 +128,8 @@
                                 <input type="text" class="fieldCheckPayment" maxlength="100" name="DebitValor2" id="DebitValor2" placeholder="Valor a ser pago no cartão" data-type="money" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal=",">
                             </div>
                         </div>
-                        <input type="hidden" name="debitBrandCard2" id="debitBrandCard2" value=""/>
-                        <input type="hidden" name="debitIdBrandCard2" id="debitIdBrandCard2" value=""/>
+                        <input type="hidden" name="debitBrandCard2" id="debitBrandCard2" value="" />
+                        <input type="hidden" name="debitIdBrandCard2" id="debitIdBrandCard2" value="" />
                     </div>
                 </div>
             }
@@ -165,11 +169,11 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="debitBrandCard" id="debitBrandCard" value=""/>
-                    <input type="hidden" name="debitIdBrandCard" id="debitIdBrandCard" value=""/>
+                    <input type="hidden" name="debitBrandCard" id="debitBrandCard" value="" />
+                    <input type="hidden" name="debitIdBrandCard" id="debitIdBrandCard" value="" />
                 </div>
             </div>
-        
+
             <div class="field">
                 <button class="ui labeled icon action large fluid button GerarPedido" id="btnCardDebit" data-idBrand="" data-externalcode="" data-Card="D">
                     <i class="credit card alternative icon"></i>

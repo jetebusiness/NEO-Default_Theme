@@ -91,41 +91,11 @@ $(document).ready(function () {
         debitcard_config.expiryInput = "[data-type='debitexpiry']";
     }
 
-    $("form.jet.checkout.credit-card > .one-card").card({
-        container: '.card-wrapper', // *required*
+    try {
+        $("form.jet.checkout.credit-card > .one-card").card({
+            container: '.card-wrapper', // *required*
 
-        formSelectors: creditcard_config,
-
-        width: 300, // optional — default 350px
-        formatting: true, // optional - default true
-
-        // Strings for translation - optional
-        messages: {
-            validDate: 'válido\naté', // optional - default 'valid\nthru'
-            monthYear: 'mm/aa', // optional - default 'month/year'
-        },
-
-        // Default placeholders for rendered fields - optional
-        placeholders: {
-            number: '•••• •••• •••• ••••',
-            name: 'Nome Impresso',
-            expiry: '••/••',
-            cvc: '•••'
-        },
-
-        masks: {
-            cardNumber: '•' // optional - mask card number
-        },
-
-        // if true, will log helpful messages for setting up Card
-        debug: false // optional - default false
-    });
-
-    if ($("form.jet.checkout.credit-card > .multi-card > .card-1").length > 0) {
-        $("form.jet.checkout.credit-card > .multi-card > .card-1").card({
-            container: '.card-wrapper1', // *required*
-
-            formSelectors: creditcard_config1,
+            formSelectors: creditcard_config,
 
             width: 300, // optional — default 350px
             formatting: true, // optional - default true
@@ -152,11 +122,83 @@ $(document).ready(function () {
             debug: false // optional - default false
         });
     }
-    if ($("form.jet.checkout.credit-card > .multi-card > .card-2").length > 0) {
-        $("form.jet.checkout.credit-card > .multi-card > .card-2").card({
-            container: '.card-wrapper2', // *required*
+    catch (ex) {}
 
-            formSelectors: creditcard_config2,
+    try {
+        if ($("form.jet.checkout.credit-card > .multi-card > .card-1").length > 0) {
+            $("form.jet.checkout.credit-card > .multi-card > .card-1").card({
+                container: '.card-wrapper1', // *required*
+
+                formSelectors: creditcard_config1,
+
+                width: 300, // optional — default 350px
+                formatting: true, // optional - default true
+
+                // Strings for translation - optional
+                messages: {
+                    validDate: 'válido\naté', // optional - default 'valid\nthru'
+                    monthYear: 'mm/aa', // optional - default 'month/year'
+                },
+
+                // Default placeholders for rendered fields - optional
+                placeholders: {
+                    number: '•••• •••• •••• ••••',
+                    name: 'Nome Impresso',
+                    expiry: '••/••',
+                    cvc: '•••'
+                },
+
+                masks: {
+                    cardNumber: '•' // optional - mask card number
+                },
+
+                // if true, will log helpful messages for setting up Card
+                debug: false // optional - default false
+            });
+        }
+    }
+    catch (ex) { }
+
+    try {
+        if ($("form.jet.checkout.credit-card > .multi-card > .card-2").length > 0) {
+            $("form.jet.checkout.credit-card > .multi-card > .card-2").card({
+                container: '.card-wrapper2', // *required*
+
+                formSelectors: creditcard_config2,
+
+                width: 300, // optional — default 350px
+                formatting: true, // optional - default true
+
+                // Strings for translation - optional
+                messages: {
+                    validDate: 'válido\naté', // optional - default 'valid\nthru'
+                    monthYear: 'mm/aa', // optional - default 'month/year'
+                },
+
+                // Default placeholders for rendered fields - optional
+                placeholders: {
+                    number: '•••• •••• •••• ••••',
+                    name: 'Nome Impresso',
+                    expiry: '••/••',
+                    cvc: '•••'
+                },
+
+                masks: {
+                    cardNumber: '•' // optional - mask card number
+                },
+
+                // if true, will log helpful messages for setting up Card
+                debug: false // optional - default false
+            });
+        }
+    }
+    catch (ex) { }
+
+    try {
+        $("form.jet.checkout.debit-card > .one-debit").card({
+            container: '.card-wrapper-debit', // *required*
+
+            formSelectors: debitcard_config,
 
             width: 300, // optional — default 350px
             formatting: true, // optional - default true
@@ -183,100 +225,77 @@ $(document).ready(function () {
             debug: false // optional - default false
         });
     }
+    catch (ex) { }
 
-    $("form.jet.checkout.debit-card > .one-debit").card({
-        container: '.card-wrapper-debit', // *required*
+    try {
+        if ($("form.jet.checkout.debit-card > .multi-debit > .debit-1").length > 0) {
+            $("form.jet.checkout.debit-card > .multi-debit > .debit-1").card({
+                container: '.card-wrapper-debit1', // *required*
 
-        formSelectors: debitcard_config,
+                formSelectors: debitcard_config1,
 
-        width: 300, // optional — default 350px
-        formatting: true, // optional - default true
+                width: 300, // optional — default 350px
+                formatting: true, // optional - default true
 
-        // Strings for translation - optional
-        messages: {
-            validDate: 'válido\naté', // optional - default 'valid\nthru'
-            monthYear: 'mm/aa', // optional - default 'month/year'
-        },
+                // Strings for translation - optional
+                messages: {
+                    validDate: 'válido\naté', // optional - default 'valid\nthru'
+                    monthYear: 'mm/aa', // optional - default 'month/year'
+                },
 
-        // Default placeholders for rendered fields - optional
-        placeholders: {
-            number: '•••• •••• •••• ••••',
-            name: 'Nome Impresso',
-            expiry: '••/••',
-            cvc: '•••'
-        },
+                // Default placeholders for rendered fields - optional
+                placeholders: {
+                    number: '•••• •••• •••• ••••',
+                    name: 'Nome Impresso',
+                    expiry: '••/••',
+                    cvc: '•••'
+                },
 
-        masks: {
-            cardNumber: '•' // optional - mask card number
-        },
+                masks: {
+                    cardNumber: '•' // optional - mask card number
+                },
 
-        // if true, will log helpful messages for setting up Card
-        debug: false // optional - default false
-    });
-
-    if ($("form.jet.checkout.debit-card > .multi-debit > .debit-1").length > 0) {
-        $("form.jet.checkout.debit-card > .multi-debit > .debit-1").card({
-            container: '.card-wrapper-debit1', // *required*
-
-            formSelectors: debitcard_config1,
-
-            width: 300, // optional — default 350px
-            formatting: true, // optional - default true
-
-            // Strings for translation - optional
-            messages: {
-                validDate: 'válido\naté', // optional - default 'valid\nthru'
-                monthYear: 'mm/aa', // optional - default 'month/year'
-            },
-
-            // Default placeholders for rendered fields - optional
-            placeholders: {
-                number: '•••• •••• •••• ••••',
-                name: 'Nome Impresso',
-                expiry: '••/••',
-                cvc: '•••'
-            },
-
-            masks: {
-                cardNumber: '•' // optional - mask card number
-            },
-
-            // if true, will log helpful messages for setting up Card
-            debug: false // optional - default false
-        });
+                // if true, will log helpful messages for setting up Card
+                debug: false // optional - default false
+            });
+        }
     }
+    catch (ex) { }
 
-    if ($("form.jet.checkout.debit-card > .multi-debit > .debit-2").length > 0) {
-        $("form.jet.checkout.debit-card > .multi-debit > .debit-2").card({
-            container: '.card-wrapper-debit2', // *required*
+    try {
+        if ($("form.jet.checkout.debit-card > .multi-debit > .debit-2").length > 0) {
+            $("form.jet.checkout.debit-card > .multi-debit > .debit-2").card({
+                container: '.card-wrapper-debit2', // *required*
 
-            formSelectors: debitcard_config2,
+                formSelectors: debitcard_config2,
 
-            width: 300, // optional — default 350px
-            formatting: true, // optional - default true
+                width: 300, // optional — default 350px
+                formatting: true, // optional - default true
 
-            // Strings for translation - optional
-            messages: {
-                validDate: 'válido\naté', // optional - default 'valid\nthru'
-                monthYear: 'mm/aa', // optional - default 'month/year'
-            },
+                // Strings for translation - optional
+                messages: {
+                    validDate: 'válido\naté', // optional - default 'valid\nthru'
+                    monthYear: 'mm/aa', // optional - default 'month/year'
+                },
 
-            // Default placeholders for rendered fields - optional
-            placeholders: {
-                number: '•••• •••• •••• ••••',
-                name: 'Nome Impresso',
-                expiry: '••/••',
-                cvc: '•••'
-            },
+                // Default placeholders for rendered fields - optional
+                placeholders: {
+                    number: '•••• •••• •••• ••••',
+                    name: 'Nome Impresso',
+                    expiry: '••/••',
+                    cvc: '•••'
+                },
 
-            masks: {
-                cardNumber: '•' // optional - mask card number
-            },
+                masks: {
+                    cardNumber: '•' // optional - mask card number
+                },
 
-            // if true, will log helpful messages for setting up Card
-            debug: false // optional - default false
-        });
+                // if true, will log helpful messages for setting up Card
+                debug: false // optional - default false
+            });
+        }
     }
+    catch (ex) { }
 
     $('.title').click(function () {
         if ($(this).hasClass('active')) {

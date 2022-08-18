@@ -12,6 +12,14 @@
 
     //GRADE ABERTA B2C
     var hasOpenSku = ViewBag.HasOpenSku != null ? ViewBag.HasOpenSku : false;
+
+    string PathLogo = "/assets/image/logo/logo.png";
+
+    Uri Url = System.Web.HttpContext.Current.Request.Url;
+
+    string UrlLogo = Url.Scheme + "://" + Url.Host + PathLogo;
+
+    string ImageOpenGraph = Model.ProductImages.Count > 0 ? Url.Scheme + ":" + Model.ProductImages.FirstOrDefault().ImageDefault : UrlLogo;
 }
 
 <script>
@@ -38,6 +46,8 @@
         {
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
+
+        <meta property="og:image" content="@ImageOpenGraph"/>
     }
 }
 

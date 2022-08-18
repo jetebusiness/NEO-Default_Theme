@@ -1,9 +1,15 @@
 ﻿@model DomainProduct.Result
 
 @{
-  Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
-  ViewBag.Title = string.IsNullOrEmpty(LojaCorp.Control.Company._Company.Title) ? "Resultado da Busca" : LojaCorp.Control.Company._Company.Title;
-  var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
+    Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
+    ViewBag.Title = string.IsNullOrEmpty(LojaCorp.Control.Company._Company.Title) ? "Resultado da Busca" : LojaCorp.Control.Company._Company.Title;
+    var returnUrl = HttpContext.Current.Request.Url.AbsolutePath;
+
+    string PathLogo = "/assets/image/logo/logo.png";
+
+    Uri Url = System.Web.HttpContext.Current.Request.Url;
+
+    string UrlLogo = Url.Scheme + "://" + Url.Host + PathLogo;
 }
 
 @section CustomSeo {
@@ -13,7 +19,7 @@
         <meta name="twitter:url" content="@HttpUtility.HtmlEncode(Request.Url)">
         <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
         <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
-        <meta property="og:image" content="/assets/image/logo/logo.png">
+        <meta property="og:image" content="@UrlLogo">
     }
 }
 

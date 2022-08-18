@@ -2589,6 +2589,55 @@ function deleteDiscount() {
     });
 }
 
+function applySellerCode() {
+    $("#applySellerCode").click(function () {
+        var sellercode = $("#sellerCode").val();
+
+        if ((sellercode != "")) {
+            $.ajax({
+                method: "POST",
+                url: "ApplySellerCode",
+                data: {
+                    SellerCode: sellercode
+                },
+                success: function success(response) {
+                    if (response.success) {
+                        $("#applySellerCode").hide();
+                        $("#deleteSellerCode").show();
+                        $("#sellerCode").attr("disabled", true);
+
+                        _alert("", response.msg, "success");
+                    }
+                    else {
+                        $("#sellerCode").val("");
+                        _alert("", response.msg, "warning");
+                    }
+                }
+            });
+        }
+        else {
+            _alert("", "Você não informou um código de vendedor!", "warning");
+        }
+    });
+}
+
+function deleteSellerCode() {
+    $("#deleteSellerCode").click(function () {
+        $.ajax({
+            method: "POST",
+            url: "DeleteSellerCode",
+            success: function success(response) {
+                if (response.success) {
+                    $("#sellerCode").val("");
+                    $("#applySellerCode").show();
+                    $("#deleteSellerCode").hide();
+                    $("#sellerCode").attr("disabled", false);
+                }
+            }
+        });   
+    });
+}
+
 function updateAddress() {
     $.ajax({
         method: "POST",
@@ -3680,6 +3729,8 @@ $(document).ready(function () {
         showAddressPayment();
         applyDiscount();
         deleteDiscount();
+        applySellerCode();
+        deleteSellerCode();
         CheckAccessKey("#ListaEnderecosCliente");
         ReEnviarCodigoEmail();
         onChangeParcelamento();
@@ -3692,6 +3743,15 @@ $(document).ready(function () {
                 del.style.display = 'block'
             } else {
                 var apply = document.getElementById('applyDiscount')
+                apply.style.display = 'block'
+            }
+        }
+        if ($("#deleteSellerCode").val() != undefined && $("#applySellerCode").val() != undefined) {
+            if ($("#sellerCode").val() != "") {
+                var del = document.getElementById('deleteSellerCode')
+                del.style.display = 'block'
+            } else {
+                var apply = document.getElementById('applySellerCode')
                 apply.style.display = 'block'
             }
         }
@@ -3890,8 +3950,6 @@ $(document).ready(function () {
         })
     }
 
-
-
     $(document).on('click', '#CopyQrCode', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -3916,7 +3974,6 @@ $(document).ready(function () {
             $(this).html($(this).text() + ' <i class="check icon"></i>');
         }
     });
-
 
     $(document).on('click', '#PaymentLinkCopy', function (e) {
         e.preventDefault();
@@ -4119,7 +4176,6 @@ $(document).ready(function () {
     })
     //***************************************************************************
 
-
     //Botões modal de cadastro de senha    **************************************
     function RegisterPasswordWithKeyAccess() {
         let password = $("#password").val()
@@ -4182,8 +4238,6 @@ $(document).ready(function () {
         }
     })
     //************************************************************************
-
-
 
     if ($('form#validCardCredit').length > 0) {
         $('#Valor1, #Valor2').maskMoney();
@@ -4286,6 +4340,21 @@ $(document).ready(function () {
 
             }
         });
+    }
+
+    if ($("#MsgCartHash").length > 0) {
+        if ($("#MsgCartHash").val().trim() != "") {
+            swal({
+                title: '',
+                html: $("#MsgCartHash").val(),
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+            $("#MsgCartHash").val("");
+        }
     }
 });
 

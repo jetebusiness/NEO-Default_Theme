@@ -1,22 +1,45 @@
 ﻿@{
     string _valueKey = "";
     string disabled = "";
+    string _valueSellerCode = "";
+    string disabledSellerCode = "";
 
     if (Session["DiscountKey"] != null)
     {
         _valueKey = Session["DiscountKey"].ToString();
         disabled = "disabled";
     }
+
+    if (Session["SellerCode"] != null)
+    {
+        _valueSellerCode = Session["SellerCode"].ToString();
+        disabledSellerCode = "disabled";
+    }
 }
 <div class="ui form margin bottom small">
     <div class="ui right labeled input blc-key">
         <label>Cupom: </label>
         <input type="text" name="key" id="key" placeholder="Cupom de Desconto" autocomplete="off" value="@_valueKey" @disabled>
-            <a class="ui label" id="applyDiscount">
+        <a class="ui label" id="applyDiscount">
+            OK
+        </a>
+        <a class="ui label" id="deleteDiscount">
+            X
+        </a>
+    </div>
+
+    @if((bool)ViewBag.UseSellerCode)
+    {
+        <div class="ui right labeled input margin left medium sellerCode-key">
+            <label>Código do vendedor: </label>
+            <input type="text" name="sellerCode" id="sellerCode" placeholder="Código do vendedor" autocomplete="off" value="@_valueSellerCode" @disabledSellerCode>
+            <a class="ui label" id="applySellerCode">
                 OK
             </a>
-            <a class="ui label" id="deleteDiscount">
+            <a class="ui label" id="deleteSellerCode">
                 X
             </a>
-    </div>
+        </div>
+    }
+
 </div>

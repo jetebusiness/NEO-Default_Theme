@@ -32,7 +32,6 @@
     </a>
 }
 <div class="ui container">
-
     <div class="ui two column grid stackable middle aligned">
         <div class="row">
             <div class="column ui ten wide computer six wide tablet">
@@ -122,6 +121,11 @@
     </div>
 
     <div class="ui grid horizontal" id="ListProductsCheckoutCompleto">
+        @if (Session["MsgCartHash"] != null)
+        {
+            <input type="hidden" name="MsgCartHash" id="MsgCartHash" value="@Session["MsgCartHash"]" />
+            Session["MsgCartHash"] = null;
+        }
         <div class="row">
 
             @if (Model != null && Model.CartItems != null)
