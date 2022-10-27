@@ -34,7 +34,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <button class="removeCartItem" data-id="@Model.IdCartItem" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)">
+                                <button class="removeCartItem" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)">
                                     <i class="trash alternate outline icon"></i>
                                 </button>
                             </td>
@@ -56,20 +56,20 @@
                         <tr>
                             <td data-idCartItem="@Model.IdCartItem">
                                 <div class="ui qtd action mini input">
-                                    <button class="ui icon button qtdAction" data-id="@Model.IdCartItem" data-action="minus" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
+                                    <button class="ui icon button qtdAction" data-id="@Model.IdCartItem" data-action="minus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
                                         <i class="minus icon"></i>
                                     </button>
                                     <input type="hidden" id="qtdInicial_@Model.IdCartItem" value="@Model.Quantity" />
                                     <input type="hidden" value="@Model.Stock" name="stock_@Model.IdCartItem" id="stock_@Model.IdCartItem" />
-                                    <input type="number" class="text center" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" />
-                                    <button class="ui icon button qtdAction" data-id="@Model.IdCartItem" data-action="plus" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
+                                    <input type="number" class="text center qtdProduct" min="0" step="1" size="3" value="@Model.Quantity" name="@Model.IdCartItem" id="qtd_@Model.IdCartItem" data-id="@Model.IdCartItem" data-action="ipt" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" />
+                                    <button class="ui icon button qtdAction" data-id="@Model.IdCartItem" data-action="plus" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">
                                         <i class="add icon"></i>
                                     </button>
                                 </div>
                             </td>
                             <td id="preco_unitario_@Model.IdCartItem" data-qtd="@Model.Quantity" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">@(Model.Quantity > 1 ? Model.Quantity + "x" : "") @string.Format("{0:c}", Model.PriceProduct)</td>
                             <td>
-                                <button class="removeCartItem" data-id="@Model.IdCartItem" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" data-restricted-delivery="@Model.RestrictedDelivery">
+                                <button class="removeCartItem" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" data-restricted-delivery="@Model.RestrictedDelivery">
                                     <i class="trash alternate outline icon"></i>
                                 </button>
                             </td>

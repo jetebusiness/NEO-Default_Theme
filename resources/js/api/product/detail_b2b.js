@@ -1,7 +1,8 @@
-﻿import {moneyPtBR} from "../../functions/money";
+import {moneyPtBR} from "../../functions/money";
 import {LoadCarrinho} from "../../functions/mini_cart_generic";
 import {_alert, _confirm} from "../../functions/message";
 import {SomenteNumeros} from './detail'
+import { isGtmEnabled, getProductAndPushAddToCartEvent } from "../../api/googleTagManager/googleTagManager";
 
 
 const toastr = require("toastr");
@@ -75,24 +76,26 @@ $(document).ready(function () {
         });
 
         if (_contProducts > 0) {
-            AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho);
-
-            if ($(this)[0].id == "btn_comprar_oneclick_b2b") {
-                $.ajax({
-                    method: "GET",
-                    url: "/Checkout/CheckoutNext",
-                    data: {},
-                    success: function (data) {
-                        if (data.success === true)
-                            window.location.href = "/" + data.redirect.toLowerCase()
-                        else
-                            _alert("Mensagem", data.message, "error")
-                    },
-                    onFailure: function (data) {
-                        //console.log("Erro ao excluir frete");
+            AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho)
+                .then((response) => {
+                    if ($(this)[0].id == "btn_comprar_oneclick_b2b") {
+                        $.ajax({
+                            method: "GET",
+                            url: "/Checkout/CheckoutNext",
+                            data: {},
+                            success: function (data) {
+                                if (data.success === true)
+                                    window.location.href = "/" + data.redirect.toLowerCase()
+                                else
+                                    _alert("Mensagem", data.message, "error")
+                            },
+                            onFailure: function (data) {
+                                //console.log("Erro ao excluir frete");
+                            }
+                        });
                     }
-                });
-            }
+                })
+                .catch((response) => { });
         }
         else {
             _msgErrors = "Você deve selecionar ao menos 1 produto";
@@ -176,22 +179,23 @@ export function CarregarParcelamento(isB2b) {
                                 detalhes_maiorParc = 0;
 
                                 for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+
+                                    if (json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase().trim() !== "sem juros")//maior parcela sem juros
+                                    {
+                                        break;
+                                    }
+
                                     html += `<span class="item parcelamentos">
                                                   <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
                                                   <span class="valor"> ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
                                                   <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                   <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                               </span>`
-                                    var ret = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase()
 
                                     detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
                                     detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
                                     detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
-
-                                    if (ret !== "sem juros")//maior parcela sem juros
-                                    {
-                                        return;
-                                    }
+  
                                 }
                                 html += `</div>
                                   </div>`
@@ -347,38 +351,54 @@ function AviseMe (produtoID, skuID){
 
 
 function AdicionarListaProdutosCarrinho(Cart, exibeMiniCarrinho) {
-    $.ajax({
-        url: '/Product/InsertItemCart',
-        type: 'POST',
-        contentType: 'application/json; charset=UTF-8',
-        data: JSON.stringify(Cart),
-        dataType: 'json',
-        success: function (response) {
-            if (response.success === true) {
-                $(document).find(".loading").removeClass("loading");
-                toastr.success("Produto adicionado ao carrinho com sucesso!");
-                LoadCarrinho(exibeMiniCarrinho);
-                if(exibeMiniCarrinho === true){
-                    window.location.href = "/checkout";
-                }
-            } else {
-                swal({
-                    title: '',
-                    text: response.msg,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                });
-                $(document).find(".loading").removeClass("loading");
-            }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/Product/InsertItemCart',
+            type: 'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(Cart),
+            dataType: 'json',
+            success: function (response) {
+                if (response.success === true) {
 
-        },
-        error : function(request,error)
-        {
-            $(document).find(".loading").removeClass("loading");
-        }
+                    if (isGtmEnabled()) {
+                        Cart.forEach((c) => {
+                            getProductAndPushAddToCartEvent({ idProduct: c.IdProduct, idSku: c.IdSku, quantity: Number(c.Quantity) });
+                        });
+                    }
+
+                    $(document).find(".loading").removeClass("loading");
+                    toastr.success("Produto adicionado ao carrinho com sucesso!");
+                    LoadCarrinho(exibeMiniCarrinho);
+                    if(exibeMiniCarrinho === true){
+                        window.location.href = "/checkout";
+                    }
+
+                    resolve(response);
+
+                } else {
+                    swal({
+                        title: '',
+                        text: response.msg,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                    $(document).find(".loading").removeClass("loading");
+
+                    reject(response);
+                }
+
+            },
+            error : function(request,error)
+            {
+                $(document).find(".loading").removeClass("loading");
+
+                reject(error);
+            }
+        });
     });
 }
 

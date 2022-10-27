@@ -85,7 +85,7 @@
                     </div>
                 }
 
-                @if (Model.ProgressiveDiscount != null && (Session["segment"] == null || Session["segment"].ToString() != "b2b"))
+                @if (Model.ProgressiveDiscount != null)
                 {
                     if (!String.IsNullOrEmpty(Model.ProgressiveDiscount.Image))
                     {
@@ -120,7 +120,7 @@
                     </div>
                 }
 
-                @if (Model.ProgressiveDiscount != null && (Session["segment"] == null || Session["segment"].ToString() != "b2b"))
+                @if (Model.ProgressiveDiscount != null)
                 {
                     if (!String.IsNullOrEmpty(Model.ProgressiveDiscount.Image))
                     {

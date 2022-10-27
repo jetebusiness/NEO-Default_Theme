@@ -12,6 +12,7 @@
     string ButtonColor = "gold";
     string Env = "sandbox";
     bool Active = false;
+    string RecoverCartErrorMsg = TempData["RecoverCartError"] != null ? TempData["RecoverCartError"].ToString() : null;
 
     if (payPal != null && payPal.Active)
     {
@@ -255,6 +256,12 @@
                     @Html.Action("googleRemarketing", "common", new { origin = ViewContext.RouteData.Values["controller"] })
                     <!-- End Google Remarketing -->
                 }
+            }
+            else if (!string.IsNullOrEmpty(RecoverCartErrorMsg))
+            {
+                <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
+                    @RecoverCartErrorMsg
+                </div>
             }
             else
             {

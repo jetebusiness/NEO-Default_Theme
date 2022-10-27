@@ -9,6 +9,7 @@ import { updateProductConjunctTable } from "./detail";
 import { getAllMask } from "../../ui/modules/mask";
 import { HaveInWishList } from "../customer/wishlist";
 import { CompraRecorrenteCart, CompraRecorrenteStorage } from '../../functions/recurringPurchase';
+import { isGtmEnabled, getProductAndPushAddToCartEvent } from "../../api/googleTagManager/googleTagManager";
 
 const color_comprar_button_class = "action",
     color_aviseme_button_class = "grey";
@@ -356,6 +357,11 @@ export function callAjaxInsertItemInCart(idProduct, variations, quantity, elemen
         data: { idProduct, variations, quantity, signature},
         success: function (response) {
             if (response.success) {
+
+                if (isGtmEnabled()) {
+                    getProductAndPushAddToCartEvent({ idProduct: idProduct, variations: variations, quantity: quantity });
+                }
+
                 $(document).find(".loading").removeClass("loading");
                 LoadCarrinho(showSidebar);
 
@@ -366,7 +372,6 @@ export function callAjaxInsertItemInCart(idProduct, variations, quantity, elemen
                 // Limpa a Storage caso um produto sem recorrencia seja adicionado
                 if (!signature)
                     CompraRecorrenteStorage.cleanStorage();
-
             }
             else {
                 $(document).find(".loading").removeClass("loading");

@@ -15,6 +15,8 @@ import { VariacaoDropDown, VariacaoCor, VariacaoImagem, VariacaoRadio, Atualizar
 import { generateRecaptcha } from "../../ui/modules/recaptcha";
 import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 
+import { isGtmEnabled, getProductAndPushAddToCartEvent } from "../../api/googleTagManager/googleTagManager";
+
 $(document).ready(function () {
     "use strict";
     //nova estrutura de variacao do produto
@@ -523,6 +525,10 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
         success: function (response) {
             if (response.success === true) {
 
+                if (isGtmEnabled()) {
+                    getProductAndPushAddToCartEvent({ idProduct: product.IdProduct, idSku: product.IdSku, quantity: product.Quantity });
+                }
+
                 // Ativa ou desativa o modal de termos de aceite do Compra Recorrente
                 if ($(CompraRecorrenteCart.modalConfig.id).length > 0)
                     $(CompraRecorrenteCart.modalConfig.id).attr("data-active", signature);
@@ -683,10 +689,17 @@ function RefreshInfoPreco(valor_total) {
     $("#max-value").text(moneyPtBR(valor_total / max_p))
 }
 
+function shippingCalculateDetail(status) {
+    $(".qtdminus").prop("disabled", status);
+    $(".qtdplus").prop("disabled", status);
+    $("#quantidade").prop("disabled", status);
+}
+
 function calcShipping() {
     $('#simular-frete-cep').mask('00000-000');
 
     $('#simular-frete-submit').click(function () {
+        shippingCalculateDetail(true)
         let ZipCode = $('#simular-frete-cep').val();
         let B2b = "false";
         if ($("#b2b").val() != undefined) {
@@ -802,6 +815,7 @@ function calcShipping() {
                             $('#simular-frete-cep').val('').focus();
                         }
                     }
+                    shippingCalculateDetail(false)
                 }
             });
         }
@@ -816,6 +830,7 @@ function calcShipping() {
                 confirmButtonText: 'OK'
             });
             $('#simular-frete-cep').val('').focus();
+            shippingCalculateDetail(false)
         }
 
         return false;

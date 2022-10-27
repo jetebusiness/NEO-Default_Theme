@@ -695,22 +695,23 @@ variations = {
                                     detalhes_maiorParc = 0;
 
                                     for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+
+                                        if (json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase().trim() !== "sem juros")//maior parcela sem juros
+                                        {
+                                            break;
+                                        }
+
                                         html += `<span class="item parcelamentos">
                                                               <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
                                                               <span class="valor"> ${this.moneyBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
                                                               <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                               <span class="total">Total Parcelado: ${this.moneyBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                                           </span>`
-                                        var ret = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase()
 
                                         detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
                                         detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
                                         detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
 
-                                        if (ret !== "sem juros")//maior parcela sem juros
-                                        {
-                                            return;
-                                        }
                                     }
                                     html += `</div>
                                         </div>`

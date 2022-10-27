@@ -1,11 +1,9 @@
-﻿import {_alert, _confirm} from './message';
-
-
-export function getCartItens() {
+﻿export function getProductDetails({ idProduct, variations, idSku }) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `/Checkout/GetCartItensJsonResult`,
+            url: `/Product/GetProductDetails`,
             method: "GET",
+            data: { idProduct, variations, idSku },
             success: function (response) {
                 if (response.success) {
                     resolve(response.result);
@@ -14,7 +12,7 @@ export function getCartItens() {
                 }
             },
             error: function (response) {
-                reject(response.datresulta);
+                reject(response.result);
             }
         });
     });

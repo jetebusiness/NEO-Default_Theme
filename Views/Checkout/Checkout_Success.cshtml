@@ -129,7 +129,7 @@
                     if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64))
                     {
                         <div class="column">
-                            <h3>Escanei ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
+                            <h3>Escaneie ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
                             <img src="data:image/jpeg;base64,@ViewBag.QrCodeBase64" width="250px" /><br />
                             <div class="ui divQrCode">@ViewBag.QrCode</div>
                             <button class="ui right labeled icon button action" id="CopyQrCode">
@@ -141,7 +141,7 @@
                     else if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeUrl))
                     {
                         <div class="column">
-                            <h3>Escanei ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
+                            <h3>Escaneie ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
                             <img src="@ViewBag.QrCodeUrl" width="250px" /><br />
                             <div class="ui divQrCode">@ViewBag.QrCode</div>
                             <button class="ui right labeled icon button action" id="CopyQrCode">

@@ -868,7 +868,9 @@ export function PayPalCheckoutInCart() {
 }
 export function PayPalCheckoutTransparent() {
 
-    if ($('#paypal-cc-form').length > 0) {
+    var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
+
+    if ($('#paypal-cc-form').length > 0 && totalCheckout > 0) {
         $('#continueButton').hide();
         $("#installmentCheckoutTransparent").html("<option>Aguarde carregando.</option>");
 

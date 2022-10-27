@@ -54,15 +54,6 @@
                                                          data-brand="@brands.Name.ToLower()">
                                                     </div>
                                                 }
-                                                else if (gateways.IdPaymentGateway == 19)
-                                                {
-                                                    <div class="mercadoPagoParcelamento"
-                                                         id="mercadoPagoParcelamento"
-                                                         data-paymentbrand="@brands.IdPaymentBrand"
-                                                         data-brand="@brands.Name.ToLower()"
-                                                         data-externalcode="@brands.ExternalCode.ToLower()">
-                                                    </div>
-                                                }
                                                 else
                                                 {
                                                     foreach (var parcelas in brands.Installments)

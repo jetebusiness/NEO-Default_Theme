@@ -22,6 +22,7 @@ export function LoadCarrinho(showSidebar) {
 
 export function UpdateCarrinho(showSidebar) {
     isLoading("#miniCarrinho");
+    isLoading("#ListProductsCheckoutCompleto");
     $.ajax({
         method: "GET",
         url: "/Checkout/LoadPartialCart",
@@ -142,8 +143,10 @@ export function UpdateCarrinho(showSidebar) {
 
             $(".qtdActionMiniCart").on("click");
 
-            if ($('.loading-div').hasClass("active"))
+            if ($('.loading-div').hasClass("active")) {
                 isLoading("#miniCarrinho");
+                isLoading("#ListProductsCheckoutCompleto");
+            }
 
             if (showSidebar === true) {
                 $(".carrinho").sidebar('toggle');
@@ -153,6 +156,7 @@ export function UpdateCarrinho(showSidebar) {
             $(".qtdActionMiniCart").on("click");
             //console.log("Erro ao atualizar carrinho");
             isLoading("#miniCarrinho");
+            isLoading("#ListProductsCheckoutCompleto");
         }
     });
 }

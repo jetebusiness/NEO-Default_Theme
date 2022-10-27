@@ -925,7 +925,7 @@
         }
         
 
-        @if (!Model.FlagExhausted || Session["EventList"] != null && !hasOpenSku)
+        @if (!Model.FlagExhausted || Session["EventList"] != null)
         {
             @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
         }

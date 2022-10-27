@@ -2282,7 +2282,7 @@ function changeAddressPayment() {
 export function atualizaResumoCarrinho(oneclick) {
     $.ajax({
         method: "POST",
-        url: "LoadResumoPayment",
+        url: "/Checkout/LoadResumoPayment",
         success: function (data) {
 
             isLoading("#resumoCheckout")
@@ -2356,7 +2356,7 @@ export function atualizaResumoCarrinho(oneclick) {
 function pagamentocomDesconto() {
     $.ajax({
         method: "POST",
-        url: "PagamentoComDesconto",
+        url: "/Checkout/PagamentoComDesconto",
         success: function success(data) {
 
             if (data.pagamentoDesconto) {
