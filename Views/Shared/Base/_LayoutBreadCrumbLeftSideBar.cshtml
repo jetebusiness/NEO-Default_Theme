@@ -80,12 +80,13 @@
           </div>
 
           <div class="ui container margin bottom large">
-            <div class="ui grid">
-              <div class="row divided horizontal stackable">
-                @RenderSection("filters", required: true)
-                @RenderBody()
+              @RenderSection("descriptionCategory", required: false)
+              <div class="ui grid">
+                  <div class="row divided horizontal stackable">
+                      @RenderSection("filters", required: true)
+                      @RenderBody()
+                  </div>
               </div>
-            </div>
           </div>
 
           <div class="row one column">

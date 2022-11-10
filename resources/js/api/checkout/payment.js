@@ -1050,7 +1050,7 @@ function OrderCreate() {
                 var issuer = "";
 
                 var validaFrete = "";
-                var hasBraspag3DS20 = $('#hasBraspag3DS20').val();
+                //var hasBraspag3DS20 = $('#hasBraspag3DS20').val();
 
                 switch ($this.prop("id")) {
                     case "btnCardDebit":
@@ -1197,6 +1197,33 @@ function OrderCreate() {
                 }
                 else {
                     if (validaFrete === "S") {
+                        var hasBraspag3DS20 = false;
+                        var envBraspag3DS20 = "PRD";
+
+                        //Verifica se é BrasPag para verificar e retornar o status do 3DS
+                        if (tipoVerificacao === "S" || tipoVerificacao === "D") {
+                            $.ajax({
+                                method: "GET",
+                                url: "/Checkout/ValidateStatus3DSBrasPag",
+                                data: {
+                                    idPaymentBrand: idPaymentBrand
+                                },
+                                async: false,
+                                success: function (response) {
+                                    hasBraspag3DS20 = response.active3DS20;
+                                    envBraspag3DS20 = response.production3DS20;
+                                },
+                                error: function (response) {
+                                    hasBraspag3DS20 = false;
+                                }
+                            });
+
+                            //Disponibiliza Model SDK da BrasPag referente ao 3DS
+                            if (hasBraspag3DS20 == "true") {
+                                bpmpi_environment(envBraspag3DS20);
+                            }
+                        }
+                        //---------------------------------------------------------------
                         //Verifica se o Antifraud do MaxiPago está ativo, se estiver gera o pré-pedido na sessão e carrega o iframe na página.
                         if (useAntiFraudMaxiPago && kind !== "oneclick") {
                             LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
@@ -1264,7 +1291,7 @@ function OrderCreate() {
                                 }
                             });
                         }
-                        else if (hasBraspag3DS20 == "true" && (tipoVerificacao === "S" || tipoVerificacao === "D")) {
+                        else if (hasBraspag3DS20 == true && (tipoVerificacao === "S" || tipoVerificacao === "D")) {
                             $.ajax({
                                 method: "POST",
                                 url: "/Checkout/LoadBrasPag3DS20",
@@ -1277,7 +1304,8 @@ function OrderCreate() {
                                     card: card,
                                     cardExpirationMonth: validaMes,
                                     cardExpirationYear: validaAno,
-                                    installmentNumber: installmentNumber
+                                    installmentNumber: installmentNumber,
+                                    use3DSBrasPagFlag: hasBraspag3DS20
                                 },
                                 async: false,
                                 success: function (response) {
@@ -2606,6 +2634,13 @@ function applySellerCode() {
                         $("#deleteSellerCode").show();
                         $("#sellerCode").attr("disabled", true);
 
+                        atualizaResumoCarrinho();
+
+                        //VALIDA SE O VENDEDOR POSSUI FRETE GRATIS HABILITADO PARA ATUALIZAR LISTA DE FRETES
+                        if (response.freeShipping) {
+                            atualizaEnderecos();
+                        }
+
                         _alert("", response.msg, "success");
                     }
                     else {
@@ -2632,6 +2667,9 @@ function deleteSellerCode() {
                     $("#applySellerCode").show();
                     $("#deleteSellerCode").hide();
                     $("#sellerCode").attr("disabled", false);
+
+                    atualizaResumoCarrinho();
+                    atualizaEnderecos();
                 }
             }
         });   
@@ -3398,11 +3436,12 @@ $(document).ready(function () {
 
     if($("#formas-pagamento").length > 0)
         checkValidatePersonalization();
-    
-
-    if ($("#hasBraspag3DS20").val() == "true") {
+   
+    /*
+     if ($("#hasBraspag3DS20").val() == "true") {
         bpmpi_environment($('#envBraspag3DS20').val());
     }
+    */
 
     $("#formas-pagamento .itemTabPayment").appendTo($("#formas-pagamento #tabPayment"));
 
@@ -3502,7 +3541,7 @@ $(document).ready(function () {
         });
 
         $("#ApplyVoucher").on("click", function() {
-
+             
             var $voucher = $('#ShoppingVoucherValue');
             let valor = $voucher.val();
             let balance = $voucher.data('balance');

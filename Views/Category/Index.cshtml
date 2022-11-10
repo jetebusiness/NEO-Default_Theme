@@ -1,4 +1,4 @@
-﻿@model DomainProduct.Entities.Category
+@model DomainProduct.Entities.Category
 @{
     ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
     Layout = "~/Views/Shared/Base/_LayoutBreadCrumbLeftSideBar.cshtml";
@@ -70,6 +70,17 @@
 
 @section footerHalfbanner {
     @Html.Action("bannerCategory", "banner", new {id = Model.IdCategory, type = 'R'})
+}
+
+@section descriptionCategory{
+    @if (Model.Description != null && Model.Description.Length > 0)
+    {
+        <div class="ui container margin top medium">
+            <div class="row">
+                @Html.Raw(@Model.Description)
+            </div>
+        </div>
+    }
 }
 
 @section filters {
@@ -182,8 +193,8 @@
         }
     </div>
 </div>
-<input type="hidden" name="CurrentPage" id="CurrentPage" value="category"/>
-<input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdCategory"/>
-<input type="hidden" name="infinityPage" id="infinityPage" value="@LojaCorp.Control.Company._Company.InfiniteScrolling.ToString()"/>
-<input type="hidden" name="itensPage" id="itensPage" value="@LojaCorp.Control.Company._Company.QuantityItemsPage"/>
-<input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()"/>
+<input type="hidden" name="CurrentPage" id="CurrentPage" value="category" />
+<input type="hidden" name="GenericPageFilter" id="GenericPageFilter" value="@Model.IdCategory" />
+<input type="hidden" name="infinityPage" id="infinityPage" value="@LojaCorp.Control.Company._Company.InfiniteScrolling.ToString()" />
+<input type="hidden" name="itensPage" id="itensPage" value="@LojaCorp.Control.Company._Company.QuantityItemsPage" />
+<input type="hidden" name="ViewProductFiltersUrl" id="ViewProductFiltersUrl" value="@LojaCorp.Control.Company._Company.ViewProductFiltersUrl.ToString()" />
