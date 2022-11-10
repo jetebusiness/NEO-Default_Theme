@@ -1,5 +1,5 @@
 # NEO - Omnichannel commerce platform
-![alt-text](https://img.shields.io/badge/version-2.71.77RC-orange.svg "Release Version")
+![alt-text](https://img.shields.io/badge/version-2.71.78RC-orange.svg "Release Version")
 
 Tema padrão para as novas lojas criadas na plataforma NEO.
 
