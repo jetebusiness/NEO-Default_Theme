@@ -252,6 +252,10 @@
                         {
                             productImages = Model.ProductImages;
                         }
+
+                        var imageVideo = Model.ProductImages.Where(img => !string.IsNullOrWhiteSpace(img?.Video?.URL)).ToList();
+                        productImages.AddRange(imageVideo);
+
                         if (productImages.Count == 0)
                         {
                             Model.ProductImages.RemoveAll(item => item.Variacao_ids == null);

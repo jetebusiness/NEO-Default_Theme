@@ -59,7 +59,7 @@ $(document).ready(function () {
     })
 
     $("#address_checkout").focusin(function () {
-        verifyZipcode()
+        //verifyZipcode()
         if ($("#zipcode_checkout").val().trim() == "")
             $("#zipcode_checkout").focus()
     })

@@ -437,7 +437,7 @@ variations = {
     },
     thumbAction: function() {
 
-        $('.thumbnails a').on('click', function(e) {
+        $('.thumbnails a:not(.slick-arrow)').on('click', function (e) {
 
             var $this = $(this),
                 $toggle = $('.toggleZoom'),
@@ -447,6 +447,19 @@ variations = {
 
             $this.parents(".slick-slide").siblings().removeClass("slick-current")
             $this.parents(".slick-slide").addClass("slick-current")
+
+            if ($this.data("video-url").length > 0) {
+                $("#imagem-padrao").hide();
+                $("#imagem-padrao").attr('style', 'display: none !important');
+
+                $("#video-product").attr('src', $this.data("video-url"));
+
+                $("#video-product").show();
+            } else {
+                $("#imagem-padrao").show();
+                $("#video-product").hide();
+                $("#video-product").attr('src', '');
+            }
 
             if ($toggle.data("active") === true || !variations.isDevice()) {
                 $easyzoom.easyZoom().filter('.easyzoom--with-thumbnails').data('easyZoom').swap($this.data('standard'), $this.attr('href'));
