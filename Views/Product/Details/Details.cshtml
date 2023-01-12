@@ -281,6 +281,7 @@
 <!-- FIM - Váriaveis Produto Unitário-->
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="description" content="">
+    <meta itemprop="image" content="@productImages.FirstOrDefault()?.ImageDefault">
     <link itemprop="url" href="" rel="author" />
     <div class="ui grid stackable produto">
         <div class="row product information one column">
@@ -410,7 +411,7 @@
                                             </div>
                                         </div>
                                     }
-                                    
+
                                     if (Model.Personalizations != null)
                                     {
                                         @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
@@ -444,6 +445,7 @@
 
                                                 <!--COMEÇO GRADE-->
                                                 <div class="column padding-bottom no text right blocoPreco" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
+                                                    <meta itemprop="priceCurrency" content="BRL" />
                                                     <div id="variacao-preco">
                                                         @if (Model.IsKit)
                                                         {
@@ -458,8 +460,9 @@
                                                             if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
                                                             {
                                                                 decimal dec = (decimal)@SKUPadrao.PricePromotion;
+                                                                string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",", ".");
                                                                 <span id="preco-antigo">@SKUPadrao.Price.ToString("C")</span>
-                                                                <span itemprop="price" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
+                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
 
                                                                 if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
                                                                 {
@@ -478,7 +481,8 @@
                                                             }
                                                             else
                                                             {
-                                                                <span itemprop="price" class="preco" id="preco" data-preco-inicial="@SKUPadrao.Price">@SKUPadrao.Price.ToString("C")</span>
+                                                                string priceGoogleMerchant = string.Format("{0:0.00}", SKUPadrao.Price).Replace(",", ".");
+                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@SKUPadrao.Price">@SKUPadrao.Price.ToString("C")</span>
                                                                 if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
                                                                 {
                                                                     <div class="infoPreco">
@@ -500,8 +504,9 @@
                                                             if (Model.PricePromotion != null && Model.PricePromotion > 0)
                                                             {
                                                                 decimal dec = (decimal)@Model.PricePromotion;
+                                                                string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",",".");
                                                                 <span id="preco-antigo">@Model.Price.ToString("C")</span>
-                                                                <span itemprop="price" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
+                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
                                                                 if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {
                                                                     <div class="infoPreco">
@@ -519,7 +524,8 @@
                                                             }
                                                             else
                                                             {
-                                                                <span itemprop="price" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
+                                                                string priceGoogleMerchant = string.Format("{0:0.00}", Model.Price).Replace(",", ".");
+                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
                                                                 if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {
                                                                     <div class="infoPreco">
@@ -548,7 +554,10 @@
                                                 @if (Model.PurchaseRecurring)
                                                 {
                                                     <div class="sixteen wide column text right signature-line">
-                                                        <span itemprop="price" class="signature-value" data-preco-inicial="@Model.PricepromotionCA">@string.Format("R${0:0.00}", Model.PricepromotionCA)</span>
+                                                        @{ 
+                                                            string priceGoogleMerchant = string.Format("{0:0.00}", Model.PricepromotionCA).Replace(",", ".");                                                             
+                                                        }
+                                                        <span itemprop="price" content="@priceGoogleMerchant" class="signature-value" data-preco-inicial="@Model.PricepromotionCA">@string.Format("R${0:0.00}", Model.PricepromotionCA)</span>
                                                         <span class="recurrentperiods" data-html="Périodos de Assinatura Disponível:<br/>
                                                     @foreach (var item in Model.ProductRecurrentPeriod)
                                                     {
@@ -699,15 +708,15 @@
                             <div class="one column row">
                                 <div class="column">
                                     @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
-                    <div class="addthis_inline_share_toolbox"></div>
-                <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
-                <div class="g-plus" data-action="share"></div>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
-                <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
-                <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
+                                            <div class="addthis_inline_share_toolbox"></div>
+                                        <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
+                                        <div class="g-plus" data-action="share"></div>
+                                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
+                                        <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
+                                        <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
                                     <!-- Go to www.addthis.com/dashboard to customize your tools
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
-            Go to www.addthis.com/dashboard to customize your tools -->
+                                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
+                                    Go to www.addthis.com/dashboard to customize your tools -->
                                     <div class="addthis_inline_share_toolbox"></div>
                                 </div>
                             </div>
@@ -912,22 +921,22 @@
                 }
             </div>
         }
-        
+
         @if (Model.AlsoProductsPurchased != null && Model.AlsoProductsPurchased.Count > 0)
         {
             <div class="row" id="AlsoProducts">
                 @Html.Partial("~/Views/Product/Details/_AlsoPurchased.cshtml", Model.AlsoProductsPurchased)
             </div>
         }
-        
-        
+
+
         @if (Model.RelatedProducts != null && Model.RelatedProducts.Count > 0)
         {
             <div class="row" id="RelatedProducts">
                 @Html.Partial("~/Views/Product/Details/_RelatedProducts.cshtml", Model.RelatedProducts)
             </div>
         }
-        
+
 
         @if (!Model.FlagExhausted || Session["EventList"] != null)
         {
