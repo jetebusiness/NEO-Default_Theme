@@ -594,15 +594,16 @@ function AdicionarProdutoAjxEventList(productSKU, productID, quantity) {
         dataType: 'json',
         success: function (response) {
             if (response.success === true) {
+                LoadCarrinhoEventList(false);
                 $(document).find(".loading").removeClass("loading");
-                LoadCarrinhoEventList(true);
             } else {
                 _alert(response.msg, "", "error");
+                $(document).find(".loading").removeClass("loading");
             }
         },
         error: function (request, error) {
             _alert("Erro ao adicionar produto.", "", "error");
-            //console.log("Erro ao adicionar produto a lista de eventos");
+            $(document).find(".loading").removeClass("loading");
         }
     });
 }

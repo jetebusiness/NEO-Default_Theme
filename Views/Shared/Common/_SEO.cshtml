@@ -1,7 +1,7 @@
 ﻿@{
-    List<string> arrCustomSEOIgnore = new List<string>() { "Home-index", "Search-index" };
-    string currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
-    string currentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+    List<string> arrCustomSEOIgnore = new List<string>() { "home-index", "search-index" };
+    string currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower();
+    string currentAction = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower();
 
     if (arrCustomSEOIgnore.Contains(String.Format("{0}-{1}", currentController, currentAction)))
     {

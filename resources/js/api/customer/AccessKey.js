@@ -7,9 +7,9 @@ $(document).ready(function () {
         $("#enviar").prop("disabled", true);
     }
     $("#login").on('input', function () {
-        
+
         var $value = $(this).val();
-        
+
         if (validarEmail($value) || $.fn["jetCheckout"].validateCPF($value) || $.fn["jetCheckout"].validateCNPJ($value)) {
             $("#enviar").prop("disabled", false);
         } else {
@@ -55,7 +55,7 @@ $(document).ready(function () {
 
             $this.removeClass("loading");
         }
-        
+
     });
 
 
@@ -68,6 +68,8 @@ $(document).ready(function () {
         let isValidCpf = $.fn["jetCheckout"].validateCPF(strLogin);
         let isValidCnpj = $.fn["jetCheckout"].validateCNPJ(strLogin);
 
+        $("#form-accesskey").addClass("loading");
+
         $.ajax({
             method: "POST",
             url: "/Customer/Accesskey",
@@ -79,13 +81,40 @@ $(document).ready(function () {
             },
             success: function (data) {
                 if (data.Success == true && data.Message == "Login") {
+                    $("#form-accesskey").removeClass("loading");
                     $("#UserName").val(strLogin);
                     $('.ui.modal.key-login').modal('show');
                 } else if (data.Success == true && data.Message == "CadastrarSenha") {
                     window.location.href = "/customer/checkAccessKey?email=" + data.Email;
                 } else if (data.Success == true && data.Message == "Cadastro") {
-                    window.location.href = "/customer/register?email=" + (isValidEmail ? strLogin : "") + "&cpfCnpj=" + ((isValidCpf || isValidCnpj) ? strLogin : "");
+                    var urlActionRegister = "/customer/register";
+                    $.ajax({
+                        method: "GET",
+                        url: urlActionRegister,
+                        data: {
+                            email: (isValidEmail ? strLogin : ""),
+                            cpfCnpj: ((isValidCpf || isValidCnpj) ? strLogin : "")
+                        },
+                        success: function (data) {
+                            $("#form-accesskey").removeClass("loading");
+                            _confirm({
+                                title: "Validação dados cliente",
+                                text: "Aguarde, estamos direcionando você para a página de cadastro",
+                                type: "info",
+                                confirm: { text: "OK" },
+                                cancel: {},
+                                callback: {}
+                            }, false);
+
+                            window.location.href = urlActionRegister;
+                        },
+                        onFailure: function (data) {
+                            $("#form-accesskey").removeClass("loading");
+                            _alert("", data.message, "error");
+                        }
+                    });
                 } else {
+                    $("#form-accesskey").removeClass("loading");
                     swal({
                         text: data.Message,
                         type: 'error',
@@ -97,9 +126,11 @@ $(document).ready(function () {
                 }
             },
             error: function (data) {
+                $("#form-accesskey").removeClass("loading");
                 _alert("", data.message, "error");
             },
             complete: function () {
+                $("#form-accesskey").removeClass("loading");
                 if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
                     if ($("[id^=googleVersion_]").eq(0).val() === "2") {
                         grecaptcha.reset();
@@ -121,7 +152,7 @@ function gettoken() {
 function customerLogin(userName, password, returnUrl, tokenGoogleRecaptchaV3 = "") {
 
     var form = $('#formAccessKey');
-    
+
     $.ajax({
         method: "POST",
         url: "/Customer/Login",

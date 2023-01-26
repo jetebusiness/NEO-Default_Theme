@@ -50,6 +50,8 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                     });
                 }
 
+                ValeCompraRefresh();
+
 
                 if($('#ShoppingVoucherValue').length > 0) {
                     var shoppingVoucherValue = Number($('#ShoppingVoucherValue').val().replace(".", "").replace(",", "."));
@@ -2633,6 +2635,7 @@ function applySellerCode() {
                         $("#deleteSellerCode").show();
                         $("#sellerCode").attr("disabled", true);
 
+                        ValeCompraRefresh();
                         atualizaResumoCarrinho();
 
                         //VALIDA SE O VENDEDOR POSSUI FRETE GRATIS HABILITADO PARA ATUALIZAR LISTA DE FRETES
@@ -2641,6 +2644,22 @@ function applySellerCode() {
                         }
 
                         _alert("", response.msg, "success");
+                    }
+                    else if (response.exceededvaluevoucher) {
+                        $("#applySellerCode").hide();
+                        $("#deleteSellerCode").show();
+                        $("#sellerCode").attr("disabled", true);
+
+                        ValeCompraAplicar(0);
+                        ValeCompraRefresh();
+                        atualizaResumoCarrinho();
+
+                        //VALIDA SE O VENDEDOR POSSUI FRETE GRATIS HABILITADO PARA ATUALIZAR LISTA DE FRETES
+                        if (response.freeShipping) {
+                            atualizaEnderecos();
+                        }
+
+                        _alert("", response.msg, "warning");
                     }
                     else {
                         $("#sellerCode").val("");
@@ -2655,6 +2674,7 @@ function applySellerCode() {
     });
 }
 
+
 function deleteSellerCode() {
     $("#deleteSellerCode").click(function () {
         $.ajax({
@@ -2667,6 +2687,7 @@ function deleteSellerCode() {
                     $("#deleteSellerCode").hide();
                     $("#sellerCode").attr("disabled", false);
 
+                    ValeCompraRefresh();
                     atualizaResumoCarrinho();
                     atualizaEnderecos();
                 }
