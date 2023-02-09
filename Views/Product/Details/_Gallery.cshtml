@@ -25,7 +25,7 @@
         {
             <a href="@(item.ImageHighResolution != null ? item.ImageHighResolution : "#" )" data-standard="@item.ImageDefault" data-video-url="@videoUrl">
                 @* HREF = Imagem ZOOMO / Data-starndard = Imagem Sem zoom*@
-                <img src="@item.ImageDefault" onerror="imgError(this)" class="ui image small centered" />
+                <img src="@item.ImageDefault" alt="@item.ImageAlt" onerror="imgError(this)" class="ui image small centered" />
             </a>
         }
         else

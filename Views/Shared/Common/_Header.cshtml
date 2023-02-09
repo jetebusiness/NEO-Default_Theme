@@ -8,13 +8,13 @@
 
 @{
     string urlCanonical = Request.Url.AbsolutePath.ToLower();
-    string canonical = !Request.Url.AbsoluteUri.Contains("www") ? "https://www." + Request.Url.Host + Request.Path : "https://" + Request.Url.Host + Request.Path;
+    string canonical = "https://" + Request.Url.Host + Request.Path;
 
     string[] words = urlCanonical.Split('/');
 
     if (words[1] == "" || words[1].ToLower() == "home")
     {
-        <link rel="canonical" href="@(!Request.Url.Host.Contains("www") ? "https://www." + Request.Url.Host : "https://" + Request.Url.Host)" />
+        <link rel="canonical" href="@("https://" + Request.Url.Host)" />
     }
     else
     {

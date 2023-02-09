@@ -56,8 +56,8 @@
         @if (Model.AlternativeImage != null)
         {
             <a class="ui slide masked reveal image fluid attached" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
-                <img itemprop="image" id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
-                <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+                <img itemprop="image" id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@(string.IsNullOrEmpty(Model.ImageHomeAlt) ? Model.Name : Model.ImageHomeAlt )" title="@Model.Name">
+                <img src="@Model.AlternativeImage" class="hidden content" onerror="imgError(this)" alt="@(string.IsNullOrEmpty(Model.AlternativeImageAlt) ? Model.Name : Model.AlternativeImageAlt )" title="@Model.Name">
 
                 @if (Model.BuyXGetYSeal != null)
                 {
@@ -99,7 +99,7 @@
         else
         {
             <a class="ui image fluid attached" itemprop="url" href="@(Model.UrlFriendlyCustom != null ? Model.UrlFriendlyCustom : Model.UrlFriendly)" title="@Model.Name">
-                <img id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+                <img id="mainImageCard_@Model.IdProduct" src="/assets/image/img_default.png" data-src="@(Model.ImageHome != null ? Model.ImageHome : "/assets/image/img_default.png")" class="visible content" onerror="imgError(this)" alt="@(string.IsNullOrEmpty(Model.ImageHomeAlt) ? Model.Name : Model.ImageHomeAlt)" title="@Model.Name">
                 @if (Model.BuyXGetYSeal != null)
                 {
                     <div class="ui top left attached label imagetag">
