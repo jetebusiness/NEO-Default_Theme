@@ -396,12 +396,12 @@ $(document).ready(function () {
                                 confirm: { text: "OK" },
                                 cancel: {},
                                 callback: function () {
-                                    window.location = response.redirectUrl.toLowerCase()
+                                    window.location = response.redirectUrl;
                                 }
                             }, false);
                             return false;
                         }
-                        window.location = response.redirectUrl.toLowerCase()
+                        window.location = response.redirectUrl;
                     }
                 },
                 error: function (response) {
@@ -434,12 +434,12 @@ $(document).ready(function () {
                                 confirm: { text: "OK" },
                                 cancel: {},
                                 callback: function () {
-                                    window.location = response.redirectUrl.toLowerCase()
+                                    window.location = response.redirectUrl;
                                 }
                             }, false);
                             return false;
                         }
-                        window.location = response.redirectUrl.toLowerCase()
+                        window.location = response.redirectUrl;
                     }
                 },
                 error: function (response) {

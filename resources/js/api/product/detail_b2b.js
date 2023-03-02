@@ -13,7 +13,7 @@ var carregar_resumo_parcelamento = true;
 $(document).ready(function () {
 
     personalization.init();
-    
+
     $(".b2b_minus.detalhes, .b2b_plus.detalhes").click(function () {
         let skuID = $(this).parents(".sku_b2b").attr("data-sku-id");
         let quantidade_selecionada = parseInt($("#quantidade_b2b_"+skuID).val());
@@ -50,13 +50,13 @@ $(document).ready(function () {
                 return;
             }
         }
-        
+
         $(this).addClass(".loading");
         let Cart = [];
         let _contProducts = 0;
         let _msgErrors = "";
         $("#grade_sku .sku_b2b").each(function(posicao) {
-            
+
             let CartItem = new Object(),
                 personaliza = personalization.renderArray();
             CartItem.IdProduct = $(this).data("produto-id");
@@ -134,7 +134,10 @@ export function CarregarParcelamento(isB2b) {
     let json = "",
         html = "",
         json_string = "",
-        json_content = "";
+        json_content = "",
+        detalhes_valorParc = 0,
+        detalhes_descricao = "",
+        detalhes_maiorParc = 0;
 
     json_string = BuscarJsonParcelamento(isB2b);
 
@@ -174,28 +177,26 @@ export function CarregarParcelamento(isB2b) {
                                   <div class="content">
                                       <div class="ui list">`
 
-                                detalhes_valorParc = 0;
-                                detalhes_descricao = "";
-                                detalhes_maiorParc = 0;
+                                let inst = json_content[i].paymentMethods[j].paymentBrands[k].installments;
 
-                                for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
+                                for (var l = 0; l < inst.length; l++) {
 
-                                    if (json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase().trim() !== "sem juros")//maior parcela sem juros
+                                    if (detalhes_maiorParc < inst[l].installmentNumber && inst[l].description.toLowerCase().trim() === "sem juros")//maior parcela sem juros
                                     {
-                                        break;
+                                        detalhes_maiorParc = inst[l].installmentNumber;
+                                        detalhes_valorParc = inst[l].value;
+                                        detalhes_descricao = inst[l].description;
                                     }
 
                                     html += `<span class="item parcelamentos">
-                                                  <span class="parcelas">${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber} x</span>
-                                                  <span class="valor"> ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value)} </span>
-                                                  <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
-                                                  <span class="total">Total Parcelado: ${moneyPtBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
+                                                  <span class="parcelas">${inst[l].installmentNumber}x</span>
+                                                  <span class="valor"> ${moneyPtBR(inst[l].value)} </span>
+                                                  <span class="modelo">(${inst[l].description})</span>
+                                                  <span class="total">Total Parcelado: ${moneyPtBR(inst[l].total)}</span>
                                               </span>`
 
-                                    detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
-                                    detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
-                                    detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
-  
+
+
                                 }
                                 html += `</div>
                                   </div>`

@@ -378,7 +378,7 @@ export function AtualizarQuantidade() {
 
     if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) === false) {
         preco_final = quantidade * preco_promocao;
-        $("#preco-antigo").text(moneyPtBR(preco_final));
+        $("#preco-antigo").text(moneyPtBR(quantidade * preco));
     } else {
         preco_final = quantidade * preco;
         $("#preco-antigo").text("");

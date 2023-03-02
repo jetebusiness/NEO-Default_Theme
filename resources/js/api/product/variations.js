@@ -48,7 +48,7 @@ variations = {
                 personalizationValue: '.personalization-value',
                 totalValue: '.total-value',
                 price: '#preco'
-            },  
+            },
         },
         getSession: '.modal.login'
     },
@@ -409,7 +409,9 @@ variations = {
             transition : 'fade in',
             duration   : 1000,
             observeChanges: true,
-            once:true
+            once:true,
+            silent: true,
+            debug: false
         });
 
         if(!this.isDevice()) {
@@ -510,7 +512,7 @@ variations = {
 
             if(PricePromotion > 0) {
                 $(this.config.personalization.total.productValue).html(this.moneyBR(parseFloat(PricePromotion)))
-                $(this.config.personalization.total.totalValue).html(this.moneyBR(parseFloat($(this.config.personalization.total.personalizationValue).text().replace(/[R$\s]/g, '').replace(',', '.')) + parseFloat(PricePromotion)))                
+                $(this.config.personalization.total.totalValue).html(this.moneyBR(parseFloat($(this.config.personalization.total.personalizationValue).text().replace(/[R$\s]/g, '').replace(',', '.')) + parseFloat(PricePromotion)))
             } else {
                 $(this.config.personalization.total.productValue).html(this.moneyBR(parseFloat(Price)))
                 $(this.config.personalization.total.totalValue).html(this.moneyBR(parseFloat($(this.config.personalization.total.personalizationValue).text().replace(/[R$\s]/g, '').replace(',', '.')) + parseFloat(Price)))
@@ -607,7 +609,7 @@ variations = {
                 $('.visible', this.config.itensDisable.btnSignature).text('ASSINAR PRODUTO')
         }
 
-        this.reloadInstallment(false, Price);
+        this.reloadInstallment(false, PricePromotion > 0 ? PricePromotion : Price);
 
 
         //setando as variacoes selecionadas para utilizacao no aviseme
@@ -661,7 +663,10 @@ variations = {
         var json = "",
             html = "",
             json_string = "",
-            json_content = "";
+            json_content = "",
+            detalhes_valorParc = 0,
+            detalhes_descricao = "",
+            detalhes_maiorParc = 0;
 
         json_string = this.searchInstallment(isB2b, Price);
 
@@ -703,15 +708,15 @@ variations = {
                                         <div class="content">
                                             <div class="ui list">`
 
-                                    detalhes_valorParc = 0;
-                                    detalhes_descricao = "";
-                                    detalhes_maiorParc = 0;
+                                    let inst = json_content[i].paymentMethods[j].paymentBrands[k].installments;
 
                                     for (var l = 0; l < json_content[i].paymentMethods[j].paymentBrands[k].installments.length; l++) {
 
-                                        if (json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description.toLowerCase().trim() !== "sem juros")//maior parcela sem juros
+                                        if (detalhes_maiorParc < inst[l].installmentNumber && inst[l].description.toLowerCase().trim() === "sem juros")//maior parcela sem juros
                                         {
-                                            break;
+                                            detalhes_maiorParc = inst[l].installmentNumber;
+                                            detalhes_valorParc = inst[l].value;
+                                            detalhes_descricao = inst[l].description;
                                         }
 
                                         html += `<span class="item parcelamentos">
@@ -720,10 +725,6 @@ variations = {
                                                               <span class="modelo">(${json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description})</span>
                                                               <span class="total">Total Parcelado: ${this.moneyBR(json_content[i].paymentMethods[j].paymentBrands[k].installments[l].total)}</span>
                                                           </span>`
-
-                                        detalhes_maiorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].installmentNumber;
-                                        detalhes_valorParc = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].value;
-                                        detalhes_descricao = json_content[i].paymentMethods[j].paymentBrands[k].installments[l].description;
 
                                     }
                                     html += `</div>

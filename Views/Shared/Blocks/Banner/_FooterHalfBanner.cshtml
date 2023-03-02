@@ -14,6 +14,15 @@
                     <div class="column slideshow-item">
                         <a href="@randombanner.Link" title="@randombanner.Name" class="ui">
                             <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
+
+                            @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                            {
+                                <br />
+                                <div class="description">
+                                    <div class="html">@Html.Raw(randombanner.Description)</div>
+                                </div>
+                                <br />
+                            }
                         </a>
                     </div>
                 }
@@ -30,6 +39,15 @@
                     <div class="column">
                         <a href="@banner.Link" class="ui" title="@banner.Name">
                             <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
+
+                            @if (System.Text.RegularExpressions.Regex.Replace(banner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                            {
+                                <br />
+                                <div class="description">
+                                    <div class="html">@Html.Raw(banner.Description)</div>
+                                </div>
+                                <br />
+                            }
                         </a>
                     </div>
                   }
