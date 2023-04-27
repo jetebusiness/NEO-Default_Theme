@@ -1,0 +1,19 @@
+﻿<!--_Part_Checkout_Bonus-->
+@{ 
+    var _hidden = ViewBag.Bonus.HasBonus == false ? "hideme" : "";
+    var _hiddenInfo = ViewBag.Bonus.NotCumulative == "" ? "hideme" : "";
+}
+<div class="column @_hidden" id="bonus">
+    <div class="content">
+        <div class="title">
+            BÔNUS
+            <i class="info circle icon popup hoverable @_hiddenInfo"
+               data-html='@ViewBag.Bonus.NotCumulative'></i>
+        </div>
+        <div class="message">
+            <span class="bonus-message">@Html.Raw(ViewBag.Bonus.BonusMessage.Replace("[bonus]", "<span class='value'>" + string.Format("{0:c}", ViewBag.Bonus.BonusBalance) + "</span>"))</span>
+            <i class="info circle icon popup hoverable" data-html='Esta simulação não está considerando os descontos das formas de pagamentos, ou seja, na finalização do pedido o valor de desconto do bônus poderá variar de acordo com o valor final da compra.'></i></br>
+        </div>
+    </div>
+</div>
+

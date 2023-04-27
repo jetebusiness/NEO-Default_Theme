@@ -142,6 +142,12 @@
                     }
                 </div>
             </div>
+            @{
+                if (ViewBag.Bonus != null)
+                {
+                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Bonus.cshtml");
+                }
+            }
             <div class="sixteen wide column jetCheckout @_disabledPaymentBrands margin top small" id="checkoutColumn2">
 
 

@@ -47,6 +47,7 @@
                             <div class="column">
                                 <div class="ui form">
                                     <h4 class="ui dividing header">Informações Pessoais</h4>
+
                                     @if (Model.TypeCustomer == DomainCustomer.Entities.Customer.enumTypeCustomer.fisica)
                                     {
                                         <div class="field required">
@@ -136,6 +137,7 @@
                                     }
                                     else
                                     {
+                                        <input type="hidden" name="name" placeholder="Nome" data-validate="name" disabled="disabled">
                                         <div class="field required">
                                             <label>Responsável</label>
                                             <div class="ui left icon input">

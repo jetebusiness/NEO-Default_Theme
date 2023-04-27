@@ -970,3 +970,43 @@ $radiusBox: 0px;
         display: none;
     }
 }
+
+#bonus {
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+
+    @media screen and (min-width: $mobile-bp) {
+        margin: 1rem;
+    }
+
+    .content {
+        padding: 1rem 0;
+
+        @media screen and (max-width: $mobile-bp) {
+            padding: 1rem;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 16px;
+        }
+
+        .message {
+            font-size: 16px;
+            line-height: 25px;
+
+            .value {
+                font-weight: bold;
+            }
+
+            .obs {
+                font-size: 12px;
+                margin-top: 10px;
+                display: block;
+                line-height: 20px;
+            }
+        }
+    }
+}

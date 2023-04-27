@@ -50,7 +50,8 @@ variations = {
                 price: '#preco'
             },
         },
-        getSession: '.modal.login'
+        getSession: '.modal.login',
+        googleShopping: 'idsku'
     },
     init: function() {
 
@@ -101,9 +102,28 @@ variations = {
         this.getVariations(json.Variations, json.IdReference);
 
     },
+    getGoogleShoppingId: function() {
+        const queryString = window.location.search.slice(1).split('&');
+        let params = this.config.googleShopping,
+            id = 0;
+
+        if(queryString.length > 0) {
+
+            queryString.forEach(function (query) {
+                query = query.split('=');
+
+                if(query[0].toLowerCase() === params) {
+                    if(Number(query[1]) > 0)
+                        id = Number(query[1]);
+                }
+            });
+        }
+        return id;
+    },
     //funcao responsavel por retornar todas as variacoes de um objeto
     getVariations: function(obj, idReference) {
 
+        let idGoogle = this.getGoogleShoppingId();
         container = $(this.config.container);
 
         $.each(obj, function (key, item) {
@@ -141,9 +161,8 @@ variations = {
 
             //verificamos se as variacoes foram criadas e se a informacao de valores existe
             if(obj[key]['SubTreeReference'] == null && obj[key]['Sku'] != null) {
-
                 //setando a variacao default
-                if(obj[key]['Sku'].Standard === true) {
+                if(idGoogle > 0 ? obj[key]['Sku'].IdSku === idGoogle : obj[key]['Sku'].Standard === true) {
 
                     $.each(obj[key]['Sku'].Variations, function (i, el) {
                         $(variations.config.productSKU).val(obj[key]['Sku'].IdSku)

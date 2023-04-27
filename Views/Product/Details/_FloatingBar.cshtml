@@ -1,4 +1,5 @@
-﻿@model DomainProduct.Entities.ProductDetail
+@model DomainProduct.Entities.ProductDetail
+@using LojaCorp.Extensions
 
 @{
     DomainProduct.Entities.Sku SKUPadrao = (DomainProduct.Entities.Sku)TempData["SKUPadrao"];
@@ -52,17 +53,18 @@
                 </div>
                 <div class="five wide column text right" itemprop="offers" itemscope
                      itemtype="http://schema.org/Offer">
+                    <meta itemprop="priceCurrency" content="BRL" />
                     @if (preco_promocional != null && preco_promocional > 0)
                     {
                         <span class="precoAntigo">
                             de: @preco.ToString("C")
                             por:
                         </span>
-                        <span itemprop="price" class="preco" id="preco-floating-bar">@preco_promocional.Value.ToString("C")</span>
+                        <span itemprop="price" content="@preco_promocional.Value.ToStringWithFixedDecimal()" class="preco" id="preco-floating-bar">@preco_promocional.Value.ToString("C")</span>
                     }
                     else
                     {
-                        <span itemprop="price" class="preco" id="preco-floating-bar">@preco.ToString("C")</span>
+                        <span itemprop="price" content="@preco.ToStringWithFixedDecimal()" class="preco" id="preco-floating-bar">@preco.ToString("C")</span>
                     }
                 </div>
 

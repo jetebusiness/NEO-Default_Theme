@@ -134,12 +134,13 @@
                                     }
                                     else
                                     {
+                                        <input type="hidden" name="name" placeholder="Nome" data-validate="name" disabled="disabled">
                                         <div class="field required">
                                             <label>Responsável</label>
                                             <div class="ui left icon input">
                                                 <i class="user icon"></i>
                                                 <input type="text" name="contact" placeholder="Responsável pela Empresa" data-validate="businessRepresentant"
-                                                            value="@(Model.Contact != "" ? Model.Contact : "")" >
+                                                       value="@(Model.Contact != "" ? Model.Contact : "")">
                                             </div>
                                         </div>
                                         <div class="two fields">
@@ -199,7 +200,7 @@
                                                 <i class="phone icon"></i>
                                                 <input type="tel" name="Phone.Phone1"
                                                        placeholder="(00) 00000-0000" class="masked mask_phone"
-                                                       value="@Model.Phone.Phone1"                                                       
+                                                       value="@Model.Phone.Phone1"
                                                        data-validate="phone">
                                             </div>
                                         </div>

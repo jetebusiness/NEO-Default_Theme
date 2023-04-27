@@ -309,12 +309,6 @@ $(document).ready(function () {
         UpdateCarrinho();
     });
 
-    //Limpar os Fretes que consta no carrinho a cada refresh
-    if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0")
-    {
-        CancelarCalculoFreteCart(0);
-    }
-
 });
 
 function shippingCalculateMiniCart(status) {

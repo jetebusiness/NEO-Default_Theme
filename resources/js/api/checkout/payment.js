@@ -37,6 +37,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
             correiosEntregaNome: correiosEntregaNome
         },
         success: function (response) {
+            updateBonus();
             if (response.success) {
 
                 if (valorFrete === "0,0" || valorFrete === "0") {
@@ -212,7 +213,7 @@ var useAntiFraudMaxiPago = false;
 function GerarPedidoCompleto(
     idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
-    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument, has3DS20, cavv3DS20, xid3DS20, eci3DS20, version3DS20, referenceId3DS20
+    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument, has3DS20, cavv3DS20, xid3DS20, eci3DS20, version3DS20, referenceId3DS20, cancelBonus
 ) {
     if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
         var stop = false;
@@ -262,7 +263,8 @@ function GerarPedidoCompleto(
             xid3DS20: xid3DS20,
             eci3DS20: eci3DS20,
             version3DS20: version3DS20,
-            referenceId3DS20: referenceId3DS20
+            referenceId3DS20: referenceId3DS20,
+            cancelBonus: cancelBonus
         },
         success: function (response) {
             if (response.success === true) {
@@ -299,7 +301,28 @@ function GerarPedidoCompleto(
             }
             else {
                 if (response.errorMsg != "" && (response.idPedido == "" || response.idPedido == "0")) {
-
+                    if (response.bonusError) {
+                        swal({
+                            title: response.errorMsg,
+                            html: response.msg,
+                            type: 'error',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Sim',
+                            cancelButtonText: 'Não'
+                        }).then(function (result) {
+                            GerarPedidoCompleto(
+                                idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
+                                saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
+                                googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument, has3DS20, cavv3DS20, xid3DS20, eci3DS20, version3DS20, referenceId3DS20, true
+                            )
+                        }).catch(function (){
+                            $(".GerarPedido").removeClass("loading");
+                            $(".GerarPedido").removeClass("disabled");
+                        });
+                        return;
+                    } 
                     swal({
                         title: '',
                         html: response.errorMsg,
@@ -2581,6 +2604,7 @@ function applyDiscount() {
                         $("#key").val("");
                         _alert("", response.msg, "warning");
                     }
+                    updateBonus();
                 }
             });
         }
@@ -2595,6 +2619,7 @@ function deleteDiscount() {
         $.ajax({
             url: "RemoveDescontoCheckout",
             success: function success(response) {
+                updateBonus();
                 if (response.success) {
                     atualizaResumoCarrinho();
                     atualizaEnderecos();
@@ -2630,6 +2655,7 @@ function applySellerCode() {
                     SellerCode: sellercode
                 },
                 success: function success(response) {
+                    updateBonus();
                     if (response.success) {
                         $("#applySellerCode").hide();
                         $("#deleteSellerCode").show();
@@ -2681,6 +2707,7 @@ function deleteSellerCode() {
             method: "POST",
             url: "DeleteSellerCode",
             success: function success(response) {
+                updateBonus();
                 if (response.success) {
                     $("#sellerCode").val("");
                     $("#applySellerCode").show();
@@ -3097,6 +3124,7 @@ function ValeCompraAplicar(_valor) {
             valor: _valor
         },
         success: function (responseValeCompra) {
+            updateBonus();
             if (responseValeCompra.success) {
 
                 //Atualiza dados do Frete
@@ -3165,6 +3193,7 @@ function ValeCompraRemover() {
         method: "PUT",
         url: "/Checkout/ValeCompraRemover",
         success: function (responseValeCompra) {
+            updateBonus();
             if (responseValeCompra.success) {
                 atualizaEnderecos();
                 ValeCompraRefresh();
@@ -4405,6 +4434,8 @@ $(document).ready(function () {
             $("#MsgCartHash").val("");
         }
     }
+
+    $("#bonus .popup").popup();
 });
 
 
@@ -4467,6 +4498,23 @@ function checkValidatePersonalization() {
             complete: function () {
                 $(".GerarPedidoMercadoPagoCheckoutVPRO").removeClass("loading");
                 $(".GerarPedidoMercadoPagoCheckoutVPRO").removeClass("disabled");
+            }
+        });
+    }
+}
+
+function updateBonus() {
+    if ($("#bonus").length > 0) {
+        $.ajax({
+            url: "/Checkout/GetBonus",
+            method: "GET",
+            success: function (response) {
+                if (response.ApplyBonus && response.HasBonus && response.BonusBalance.toFixed(2) != '0.00') {
+                    $("#bonus").removeClass('hideme');
+                    $("#bonus .value").text(response.BonusBalance.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
+                } else {
+                    $("#bonus").addClass('hideme');
+                }
             }
         });
     }

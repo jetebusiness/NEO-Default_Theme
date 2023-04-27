@@ -322,8 +322,15 @@
                             </tr>
                             <tr>
                                 <th colspan="4" class="right aligned">Valor do Desconto</th>
-                                <th class="right aligned">@string.Format("{0:c}", Model.TotalDiscount)</th>
+                                <th class="right aligned">@string.Format("{0:c}", Model.TotalDiscount - Model.TotalBonus)</th>
                             </tr>
+                            @if (Model.TotalBonus > 0)
+                            {
+                                <tr>
+                                    <th colspan="4" class="right aligned">Valor do Bônus</th>
+                                    <th class="right aligned">@string.Format("{0:c}", Model.TotalBonus)</th>
+                                </tr>
+                            }
                             @if (Model.TotalShoppingVoucher > 0)
                             {
                                 <tr>
