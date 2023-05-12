@@ -13,6 +13,7 @@
     string JsonDetail = string.Empty;
     string variacaoSelecionada = string.Empty;
     string skuSelecionado = string.Empty;
+    var breadcrumb = new List<LojaCorp.Control.BreadcrumbList>();
 
     Uri Url = System.Web.HttpContext.Current.Request.Url;
 
@@ -22,24 +23,29 @@
 
     ViewModels.ViewModelStore.Produto.TreeReference treeReference = (ViewModels.ViewModelStore.Produto.TreeReference)TempData["TreeReference"];
 
+    if (Model.Categories != null)
+    {
+        breadcrumb = LojaCorp.Control.BreadcrumbProduct.GetBreadcrumCategories(Model.Categories);
+    }
+
     if (treeReference != null)
     {
-        JsonDetail = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(treeReference);
+        JsonDetail = Newtonsoft.Json.JsonConvert.SerializeObject(treeReference);
     }
 
     if (Model.ProductImages != null)
     {
-        ListaImagens = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.ProductImages);
+        ListaImagens = Newtonsoft.Json.JsonConvert.SerializeObject(Model.ProductImages);
     }
 
     if (Model.SKUs != null)
     {
-        ListaSKU = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.SKUs);
+        ListaSKU = Newtonsoft.Json.JsonConvert.SerializeObject(Model.SKUs);
     }
 
     if (Model.AvailableReferences != null)
     {
-        AvailableReferences = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.AvailableReferences);
+        AvailableReferences = Newtonsoft.Json.JsonConvert.SerializeObject(Model.AvailableReferences);
     }
 
     if (Model.AvailableReferences != null && Model.AvailableReferences.Count > 0)
@@ -152,7 +158,7 @@
 
 <script>
     var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
-    var lista_avaliacao_produto = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
+    var lista_avaliacao_produto = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(lista_avaliacoes_completa)));
 </script>
 @{
     ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
@@ -178,13 +184,23 @@
         {
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
-        
+
         <meta property="og:type" content="website">
         <meta property="og:url" content="@HttpUtility.HtmlEncode(Request.Url)">
         <meta name="twitter:url" content="@HttpUtility.HtmlEncode(Request.Url)">
         <meta property="og:title" content="@Html.Raw(ViewBag.Title)">
         <meta name="twitter:title" content="@Html.Raw(ViewBag.Title)">
         <meta property="og:image" content="@ImageOpenGraph">
+
+        <script type="application/ld+json">
+        @{
+            if(breadcrumb != null)
+            {
+                LojaCorp.Models.BreadcrumbListStructureSEO BreadcrumbStructureSEO = new LojaCorp.Models.BreadcrumbListStructureSEO(breadcrumb);
+                @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(BreadcrumbStructureSEO))
+            }
+        }
+        </script>
     }
 }
 
@@ -195,37 +211,15 @@
                 <div class="ui breadcrumb margin top medium">
                     <a class="section" href=""></a>
 
-                    <!--COMEÇO FOREACH CATEGORIAS-->
-                    @if (Model.Categories != null)
+                    @if (breadcrumb != null)
                     {
                         <a class="section" href="/">Home</a>
-                        var _categoriaDefault = Model.Categories.Find(c => c.Default == true);
-                        if (_categoriaDefault != null)
+                        foreach (var item in breadcrumb)
                         {
-                            var _url = "";
-                            var _level = _categoriaDefault.Level.Substring(0, _categoriaDefault.Level.Length - 2);
-                            List<DomainProduct.Entities.Category> _lstAuxCategories = new List<DomainProduct.Entities.Category>();
-                            while (_level.Length >= 2)
-                            {
-                                var _auxCategory = Model.Categories.Find(c => c.Level == _level);
-                                if (_auxCategory != null)
-                                {
-                                    _lstAuxCategories.Add(_auxCategory);
-                                }
-                                _level = _level.Substring(0, _level.Length - 2);
-                            }
-                            _lstAuxCategories.Add(_categoriaDefault);
-
-                            foreach (var _auxCategory in _lstAuxCategories.OrderBy(c => c.Level.Length).ToList())
-                            {
-                                _url = string.Concat("/categoria", _url.Replace("/categoria", ""), _auxCategory.Url.Replace("/categoria", ""));
-                                var _urlFriendly = (_auxCategory.Url != _auxCategory.UrlFriendly ? _auxCategory.UrlFriendly : _url);
-                                <i class="right angle icon divider"></i>
-                                <a class="section" href="@_urlFriendly">@_auxCategory.Name</a>
-                            }
+                            <i class="right angle icon divider"></i>
+                            <a class="section" href="@item.Link">@item.CategorieName</a>
                         }
                     }
-                    <!-- FIM FOREACH CATEGORIAS-->
                 </div>
             </div>
         </div>
@@ -504,7 +498,7 @@
                                                             if (Model.PricePromotion != null && Model.PricePromotion > 0)
                                                             {
                                                                 decimal dec = (decimal)@Model.PricePromotion;
-                                                                string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",",".");
+                                                                string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",", ".");
                                                                 <span id="preco-antigo">@Model.Price.ToString("C")</span>
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
                                                                 if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
@@ -554,8 +548,8 @@
                                                 @if (Model.PurchaseRecurring)
                                                 {
                                                     <div class="sixteen wide column text right signature-line">
-                                                        @{ 
-                                                            string priceGoogleMerchant = string.Format("{0:0.00}", Model.PricepromotionCA).Replace(",", ".");                                                             
+                                                        @{
+                                                            string priceGoogleMerchant = string.Format("{0:0.00}", Model.PricepromotionCA).Replace(",", ".");
                                                         }
                                                         <span itemprop="price" content="@priceGoogleMerchant" class="signature-value" data-preco-inicial="@Model.PricepromotionCA">@string.Format("R${0:0.00}", Model.PricepromotionCA)</span>
                                                         <span class="recurrentperiods" data-html="Périodos de Assinatura Disponível:<br/>

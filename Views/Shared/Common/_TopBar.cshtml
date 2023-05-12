@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                         }
-                        else if ((Session["Seller"] == null))
+                        else if ((Session["UserAuthenticated"] == null || (Convert.ToBoolean(Session["Guest"]) == true)) && Session["Seller"] == null)
                         {
                             <div class="item">
                                 <a href="/assistedsale" title="Venda Assistida">
@@ -97,7 +97,7 @@
                                 </a>
                             </div>
                         }
-                        @if ((Session["Seller"] == null))
+                        @if ((Session["UserAuthenticated"] == null || (Convert.ToBoolean(Session["Guest"]) == true)) && Session["Seller"] == null)
                         {
                             @Html.Action("b2BIsActived", "company", null)
                         }

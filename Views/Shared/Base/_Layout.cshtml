@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-br">
-<head>   
+<head>
     @if (LojaCorp.Control.Company._Company.StatusGTM)
     {<!-- GoogleTagManager Common -->
         @Html.Action("googleTagManager", "common", new { origin = ViewContext.RouteData.Values["controller"], action = ViewContext.RouteData.Values["action"] })
@@ -38,6 +38,14 @@
         }
     }
     <!-- End Google Analytics -->
+
+    <script type="application/ld+json">
+        @{
+            LojaCorp.Models.CompanyLogoStructureSEO structureSEO = new LojaCorp.Models.CompanyLogoStructureSEO(LojaCorp.Control.Company._Company, (List<DomainSocialNetwork.Entities.SocialNetwork>)Session["SocialNetworkLinks"]);
+            @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(structureSEO))
+        }
+    </script>
+
 </head>
 <body>
     @if (LojaCorp.Control.Company._Company.StatusGTM)

@@ -24,7 +24,7 @@
 
 <script>
     var total_avaliacoes_produto = @(Model.ProductRatings != null ? Model.ProductRatings.Count : 0);
-    var lista_avaliacao_produto = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(lista_avaliacoes_completa)));
+    var lista_avaliacao_produto = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(lista_avaliacoes_completa)));
 </script>
 @{
     ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? Model.Name : Model.Title;
@@ -47,33 +47,36 @@
             <meta name="Keywords" content="@Model.MetaKeyWords">
         }
 
-        <meta property="og:image" content="@ImageOpenGraph"/>
+        <meta property="og:image" content="@ImageOpenGraph" />
     }
 }
 
-@section breadcrumbs {
-}
 @{
-
     string ListaImagens = string.Empty;
     string ListaSKU = string.Empty;
     string AvailableReferences = string.Empty;
     string variacaoSelecionada = string.Empty;
     string skuSelecionado = string.Empty;
+    var breadcrumb = new List<LojaCorp.Control.BreadcrumbList>();
+
+    if (Model.Categories != null)
+    {
+        breadcrumb = LojaCorp.Control.BreadcrumbProduct.GetBreadcrumCategories(Model.Categories);
+    }
 
     if (Model.ProductImages != null)
     {
-        ListaImagens = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.ProductImages);
+        ListaImagens = Newtonsoft.Json.JsonConvert.SerializeObject(Model.ProductImages);
     }
 
     if (Model.SKUs != null)
     {
-        ListaSKU = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.SKUs);
+        ListaSKU = Newtonsoft.Json.JsonConvert.SerializeObject(Model.SKUs);
     }
 
     if (Model.AvailableReferences != null)
     {
-        AvailableReferences = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.AvailableReferences);
+        AvailableReferences = Newtonsoft.Json.JsonConvert.SerializeObject(Model.AvailableReferences);
     }
 
 
@@ -106,6 +109,30 @@
         Model.SKUPadrao.InstallmentMax.Value = 0;
     }
 }
+
+@section breadcrumbs {
+    <div class="ui two column centered grid stackable middle aligned">
+        <div class="container">
+            <div class="column">
+                <div class="ui breadcrumb margin top medium">
+                    <a class="section" href=""></a>
+
+                    @if (breadcrumb != null)
+                    {
+                        <a class="section" href="/">Home</a>
+                        foreach (var item in breadcrumb)
+                        {
+                            <i class="right angle icon divider"></i>
+                            <a class="section" href="@item.Link">@item.CategorieName</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+}
+
 <div id="fb-root"></div>
 <script>
     (function (d, s, id) {
@@ -151,23 +178,7 @@
     <link itemprop="url" href="" rel="author" />
     <div class="ui grid stackable produto">
         <div class="row product information one column">
-            <div class="column">
-                <div class="ui breadcrumb">
-                    <a class="section" href=""></a>
-                    <!--COMEÇO FOREACH CATEGORIAS-->
-                    @if (Model.Categories != null)
-                    {
-                        <a class="section" href="/">Home</a>
-                        var categoriaDefault = Model.Categories.Find(c => c.Default == true);
-                        if (categoriaDefault != null)
-                        {
-                            <i class="right angle icon divider"></i>
-                            <a class="section" href="@categoriaDefault.Link">@categoriaDefault.Name</a>
-                        }
-                    }
-                    <!-- FIM FOREACH CATEGORIAS-->
-                </div>
-            </div>
+
             <!-- COMEÇO MARCA MOBILE-->
             <div class="mobile only column">
                 <h1 itemprop="name" class="nomeProduto" id="produto-nome">@Model.Name</h1>
