@@ -618,7 +618,7 @@ var newFilter = {
 
         } else {
 
-            $(document).one('click', configFilter.config.pagination.prev, function() {
+            $(document).on('click', configFilter.config.pagination.prev, function() {
                 var isDisabled = $(this).hasClass("disabled");
                 if (!isDisabled) {
                     var params = {
@@ -629,7 +629,7 @@ var newFilter = {
                 }
             })
 
-            $(document).one('click', configFilter.config.pagination.next, function() {
+            $(document).on('click', configFilter.config.pagination.next, function() {
                 var isDisabled = $(this).hasClass("disabled");
                 if (!isDisabled) {
                     var params = {
@@ -640,7 +640,7 @@ var newFilter = {
                 }
             })
 
-            $(document).one('click', configFilter.config.pagination.number, function() {
+            $(document).on('click', configFilter.config.pagination.number, function() {
                 var isDisabled = $(this).hasClass("disabled"),
                     isActive = $(this).hasClass("active");
                 if (!isDisabled && !isActive) {
