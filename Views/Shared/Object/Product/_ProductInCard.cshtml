@@ -247,6 +247,28 @@
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
                     <meta itemprop="priceCurrency" content="BRL" />
+                    
+                    
+                    @{
+
+                        if (LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.HigherDiscount > 0)
+                        {
+                            var higherDiscount = LojaCorp.Control.Company._Company.HigherDiscount;
+                            var textDiscount = LojaCorp.Control.Company._Company.DescriptionHigherDiscount;
+                            var priceProduct = Model.PricePromotion != null && Model.PricePromotion > 0 ? Model.PricePromotion : Model.Price;
+                            var discountCalc = priceProduct - priceProduct / 100 * higherDiscount;
+
+                            <div class="baseDiscount">
+                                <div class="priceDiscount">
+                                    R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @textDiscount</span>
+                                </div>
+                                <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
+                            </div>
+                        }
+
+                    }
+
+
                     @if (Model.PricePromotion != null && Model.PricePromotion > 0)
                     {
                         <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span>

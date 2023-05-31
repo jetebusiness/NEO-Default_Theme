@@ -39,14 +39,6 @@
           margin: 0 !important;
         }
       }
-
-      > .content {
-        >.description {
-          @media screen and (max-width: $mobile-bp) {
-            display: none !important;
-          }
-        }
-      }
     }
   }
 

@@ -1,4 +1,3 @@
-import { openModalQuickView } from "../../functions/modal";
 import { LoadCarrinho } from "../../functions/mini_cart_generic";
 import { LoadCarrinhoEventList } from "../../functions/mini_cart_generic";
 import { _alert, _confirm } from "../../functions/message";
@@ -203,24 +202,7 @@ $(document).on("change", ".dropdownreference", function () {
     });
 });
 
-$(document).ready(function () {
-    $(".quick-view-opener").api({
-        action: 'quickview product',
-        dataType: 'html',
-        beforeSend: function (settings) {
-            settings.urlData = {
-                code: $(this).attr("data-modal-open")
-            };
-            return settings;
-        },
-        onSuccess: function (response) {
-            $(".modal-block").append(response);
-            openModalQuickView($(this).attr("data-modal-open"));
-        },
-        onError: function (errorMessage) {
-            //console.log(errorMessage);
-        }
-    });
+$(document).ready(function () {    
 
     if ($(".conjunct_product:checked").length > 0) {
 
@@ -283,6 +265,9 @@ function callAjaxGetSku(element) {
                 var ponteiroPricesCurrent = $parent.find("#basePrice_" + productId + "> i").length;
 
                 if (sku.Price > 0 && sku.PricePromotion > 0) {
+
+                    getDiscountStore($parent, sku.PricePromotion)
+                    
                     if (ponteiroPricesCurrent > 0) {
                         $parent.find("#basePrice_" + productId + "> i").text(moneyPtBR(sku.Price));
                     } else {
@@ -291,6 +276,9 @@ function callAjaxGetSku(element) {
                     $parent.find(".preco").text(moneyPtBR(sku.PricePromotion));
                 }
                 else {
+
+                    getDiscountStore($parent, sku.Price)
+                    
                     if (ponteiroPricesCurrent > 0) {
                         $parent.find("#basePrice_" + productId).remove();
                     }
@@ -478,3 +466,25 @@ export function getVariationIds(parentElement, productId) {
     return _return;
 }
 
+
+
+export function getDiscountStore(element, value) {
+    
+    $.ajax({
+        method: "GET",
+        url: "/Company/GetDiscountStore",
+        success: function (data) {
+            if(data && data.success && data.showPriceWithDiscount) {
+                
+                var discountCalc = (value - ((value / 100) * Number(data.higherDiscount)));
+
+                $('.baseDiscount', element).html(`<div class="baseDiscount">
+                    <div class="priceDiscount">
+                        ${moneyPtBR(discountCalc)}<span class="textDiscount">no ${data.descriptionHigherDiscount}</span></div>
+                    <span class="descriptionDiscount">com ${data.higherDiscount}% de desconto</span>
+                </div>`)
+            }
+        }
+    });
+    
+}

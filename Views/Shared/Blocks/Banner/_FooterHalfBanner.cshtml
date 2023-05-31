@@ -11,20 +11,47 @@
             <div class="ui fluid container car-banners slick-dotted slideshow" data-qtd="1" data-auto="true" data-arrow="false" data-dots="true">
                 @foreach (var randombanner in bannerRandom)
                 {
-                    <div class="column slideshow-item">
-                        <a href="@randombanner.Link" title="@randombanner.Name" class="ui">
-                            <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
+                    if (randombanner.TypeContent == DomainCompany.Entities.Banner.enumTypeContent.Imagem)
+                    {
+                        <div class="column slideshow-item">
+                            <a href="@randombanner.Link" title="@randombanner.Name" class="ui">
+                                <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
 
-                            @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
-                            {
-                                <br />
-                                <div class="description">
-                                    <div class="html">@Html.Raw(randombanner.Description)</div>
+                                @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                                {
+                                    <br />
+                                    <div class="description">
+                                        <div class="html">@Html.Raw(randombanner.Description)</div>
+                                    </div>
+                                    <br />
+                                }
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        string linkHtml = string.IsNullOrEmpty(randombanner.Link) ? "" : $"<a href='{randombanner.Link}' title='{randombanner.Name}'>";
+
+                        <div class="column slideshow-item">
+                            <div class="video">
+                                @Html.Raw(linkHtml)
+                                <div class="item youtube">
+                                    <div class="video-wrapper">
+                                        <div class="embed-player slide-media ytplayer" id="ytplayer_@randombanner.IdBanner" data-src="@randombanner.UrlVideo"></div>
+                                    </div>
                                 </div>
-                                <br />
-                            }
-                        </a>
-                    </div>
+                                @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                                {
+                                    <br />
+                                    <div class="description">
+                                        <div class="html">@Html.Raw(randombanner.Description)</div>
+                                    </div>
+                                    <br />
+                                }
+                                @Html.Raw(linkHtml.Replace("<a", "</a"))
+                            </div>
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -36,23 +63,51 @@
             <div class="ui equal width grid images middle aligned center aligned stackable">
                 @foreach (var banner in bannerNoRandom)
                 {
-                    <div class="column">
-                        <a href="@banner.Link" class="ui" title="@banner.Name">
-                            <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
+                    if (banner.TypeContent == DomainCompany.Entities.Banner.enumTypeContent.Imagem)
+                    {
+                        <div class="column">
+                            <a href="@banner.Link" class="ui" title="@banner.Name">
+                                <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
 
-                            @if (System.Text.RegularExpressions.Regex.Replace(banner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
-                            {
-                                <br />
-                                <div class="description">
-                                    <div class="html">@Html.Raw(banner.Description)</div>
+                                @if (System.Text.RegularExpressions.Regex.Replace(banner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                                {
+                                    <br />
+                                    <div class="description">
+                                        <div class="html">@Html.Raw(banner.Description)</div>
+                                    </div>
+                                    <br />
+                                }
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        string linkHtml = string.IsNullOrEmpty(banner.Link) ? "" : $"<a href='{banner.Link}' title='{banner.Name}'>";
+
+                        <div class="column">
+                            <div class="video">
+                                @Html.Raw(linkHtml)
+                                <div class="item youtube">
+                                    <div class="video-wrapper">
+                                        <div class="embed-player slide-media ytplayer" id="ytplayer_@banner.IdBanner" data-src="@banner.UrlVideo"></div>
+                                    </div>
                                 </div>
-                                <br />
-                            }
-                        </a>
-                    </div>
-                  }
+                                @if (System.Text.RegularExpressions.Regex.Replace(banner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                                {
+                                    <br />
+                                    <div class="description">
+                                        <div class="html">@Html.Raw(banner.Description)</div>
+                                    </div>
+                                    <br />
+                                }
+                                @Html.Raw(linkHtml.Replace("<a", "</a"))
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
     }
 
 }
+

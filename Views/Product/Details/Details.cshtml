@@ -1,4 +1,6 @@
-﻿@model DomainProduct.Entities.ProductDetail
+﻿@using LojaCorp.Models
+@using Newtonsoft.Json.Linq
+@model DomainProduct.Entities.ProductDetail
 @{
     /**/
 
@@ -153,7 +155,17 @@
 
     ViewBag.PurchaseRecurring = "false";
 
+    string ImagemDefault = @productImages.FirstOrDefault()?.ImageDefault.ToString();
+
     string ImageOpenGraph = productImages.Count > 0 ? Url.Scheme + ":" + productImages.FirstOrDefault().ImageDefault : UrlLogo;
+
+
+    bool showPriceDiscount = LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.HigherDiscount > 0;
+    var higherDiscount = LojaCorp.Control.Company._Company.HigherDiscount;
+    var descriptionHigherDiscount = LojaCorp.Control.Company._Company.DescriptionHigherDiscount;
+    bool showBillet = !showPriceDiscount || (showPriceDiscount && !string.IsNullOrEmpty(descriptionHigherDiscount) && !descriptionHigherDiscount.ToLower().Contains("boleto"));
+    string priceGoogleMerchant = String.Empty;
+
 }
 
 <script>
@@ -227,20 +239,6 @@
     <div class="ui divider"></div>
 }
 
-<div id="fb-root"></div>
-<script>
-    (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.10&appId=656083874584141";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
-<!-- Posicione esta tag no cabeçalho ou imediatamente antes da tag de fechamento do corpo. -->
-<script src="https://apis.google.com/js/platform.js" async defer>
-    { lang: 'pt-BR' }
-</script>
-
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 <!-- COMEÇO - Váriaveis Produto Principal-->
 <input type="hidden" id="produto-id" name="produto-id" value="@Model.IdProduct" />
@@ -260,8 +258,12 @@
 
 <!-- FIM - Váriaveis Produto Principal-->
 <!-- COMEÇO - Váriaveis Produto Unitário-->
-<input type="hidden" value="@Model.Price" id="preco-unidade" name="preco-unidade" />
-<input type="hidden" value="@Model.PricePromotion" id="preco-promocao-unidade" name="preco-promocao-unidade" />
+@if (!Model.HaveSku)
+{
+    <input type="hidden" value="@Model.Price" id="preco-unidade" name="preco-unidade" />
+    <input type="hidden" value="@Model.PricePromotion" id="preco-promocao-unidade" name="preco-promocao-unidade" />
+}
+
 @if (Model.InstallmentMax != null)
 {
     <input type="hidden" value="@Model.InstallmentMax.Value" id="parcela-maxima-unidade" name="parcela-maxima-unidade" />
@@ -275,7 +277,7 @@
 <!-- FIM - Váriaveis Produto Unitário-->
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="description" content="">
-    <meta itemprop="image" content="@productImages.FirstOrDefault()?.ImageDefault">
+    <meta itemprop="image" content="@ImagemDefault">
     <link itemprop="url" href="" rel="author" />
     <div class="ui grid stackable produto">
         <div class="row product information one column">
@@ -451,11 +453,30 @@
 
                                                         @if (Model.HaveSku)
                                                         {
+
                                                             if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
                                                             {
+
+                                                                if (showPriceDiscount)
+                                                                {
+                                                                    var discountCalc = SKUPadrao.PricePromotion - SKUPadrao.PricePromotion / 100 * higherDiscount;
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
+                                                                    
+                                                                    <div class="baseDiscount">
+                                                                        <div class="priceDiscount">
+                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                        </div>
+                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", SKUPadrao.PricePromotion).Replace(",", ".");
+                                                                }
+
+
                                                                 decimal dec = (decimal)@SKUPadrao.PricePromotion;
-                                                                string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",", ".");
-                                                                <span id="preco-antigo">@SKUPadrao.Price.ToString("C")</span>
+                                                                <span class="precoAntigo" id="preco-antigo">@SKUPadrao.Price.ToString("C")</span>
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
 
                                                                 if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
@@ -467,7 +488,7 @@
                                                                     </div>
                                                                 }
 
-                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
                                                                 {
                                                                     var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
@@ -475,7 +496,24 @@
                                                             }
                                                             else
                                                             {
-                                                                string priceGoogleMerchant = string.Format("{0:0.00}", SKUPadrao.Price).Replace(",", ".");
+
+                                                                if (showPriceDiscount)
+                                                                {
+                                                                    var discountCalc = SKUPadrao.Price - SKUPadrao.Price / 100 * higherDiscount;
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
+                                                                    
+                                                                    <div class="baseDiscount">
+                                                                        <div class="priceDiscount">
+                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                        </div>
+                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", SKUPadrao.Price).Replace(",", ".");
+                                                                }
+
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@SKUPadrao.Price">@SKUPadrao.Price.ToString("C")</span>
                                                                 if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
                                                                 {
@@ -486,7 +524,7 @@
                                                                     </div>
                                                                 }
 
-                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
                                                                 {
                                                                     var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
@@ -497,9 +535,26 @@
                                                         {
                                                             if (Model.PricePromotion != null && Model.PricePromotion > 0)
                                                             {
+                                                                
+                                                                if (showPriceDiscount)
+                                                                {
+                                                                    var discountCalc = Model.PricePromotion - Model.PricePromotion / 100 * higherDiscount;
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
+                                                                    
+                                                                    <div class="baseDiscount">
+                                                                        <div class="priceDiscount">
+                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                        </div>
+                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", Model.PricePromotion).Replace(",", ".");
+                                                                }
+                                                                
                                                                 decimal dec = (decimal)@Model.PricePromotion;
-                                                                string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",", ".");
-                                                                <span id="preco-antigo">@Model.Price.ToString("C")</span>
+                                                                <span class="precoAntigo" id="preco-antigo">@Model.Price.ToString("C")</span>
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
                                                                 if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {
@@ -510,7 +565,7 @@
                                                                     </div>
 
                                                                 }
-                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
                                                                 {
                                                                     var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
@@ -518,7 +573,24 @@
                                                             }
                                                             else
                                                             {
-                                                                string priceGoogleMerchant = string.Format("{0:0.00}", Model.Price).Replace(",", ".");
+                                                                
+                                                                if (showPriceDiscount)
+                                                                {
+                                                                    var discountCalc = Model.Price - Model.Price / 100 * higherDiscount;
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
+                                                                    
+                                                                    <div class="baseDiscount">
+                                                                        <div class="priceDiscount">
+                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                        </div>
+                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    priceGoogleMerchant = string.Format("{0:0.00}", Model.Price).Replace(",", ".");
+                                                                }
+                                                                
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
                                                                 if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {
@@ -529,7 +601,7 @@
                                                                     </div>
 
                                                                 }
-                                                                if (ViewBag.DescontoBoleto > 0)
+                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
                                                                 {
                                                                     var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
                                                                     <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
@@ -549,7 +621,7 @@
                                                 {
                                                     <div class="sixteen wide column text right signature-line">
                                                         @{
-                                                            string priceGoogleMerchant = string.Format("{0:0.00}", Model.PricepromotionCA).Replace(",", ".");
+                                                            priceGoogleMerchant = string.Format("{0:0.00}", Model.PricepromotionCA).Replace(",", ".");
                                                         }
                                                         <span itemprop="price" content="@priceGoogleMerchant" class="signature-value" data-preco-inicial="@Model.PricepromotionCA">@string.Format("R${0:0.00}", Model.PricepromotionCA)</span>
                                                         <span class="recurrentperiods" data-html="Périodos de Assinatura Disponível:<br/>
@@ -697,24 +769,6 @@
                                 </table>
                             </div>
                             <!-- FIM SIMULADOR FRETE-->
-                            <!-- COMEÇO REDES SOCIAIS-->
-                            <div class="ui divider hidden"></div>
-                            <div class="one column row">
-                                <div class="column">
-                                    @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5915ec2f00f07226"></script>
-                                            <div class="addthis_inline_share_toolbox"></div>
-                                        <div class="fb-share-button" data-href="@Request.Url.AbsoluteUri.ToString()" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A52868%2FProduct%2FDetails%2F20081&amp;src=sdkpreparse">Compartilhar</a></div>
-                                        <div class="g-plus" data-action="share"></div>
-                                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="testes" data-show-count="false">Tweet</a>
-                                        <a href="whatsapp://send?text=http://google.com.br">Compartilhar</a>
-                                        <a href="https://api.whatsapp.com/send?text=@Request.Url.AbsoluteUri"><img style="max-width: 80px;" src="~/assets/image/whats.jpg" /></a>*@
-                                    <!-- Go to www.addthis.com/dashboard to customize your tools
-                                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dc437c87fdb766"></script>
-                                    Go to www.addthis.com/dashboard to customize your tools -->
-                                    <div class="addthis_inline_share_toolbox"></div>
-                                </div>
-                            </div>
-                            <!-- FIM REDES SOCIAIS-->
                         </div>
                     </div>
                 </div>
@@ -929,14 +983,7 @@
             <div class="row" id="RelatedProducts">
                 @Html.Partial("~/Views/Product/Details/_RelatedProducts.cshtml", Model.RelatedProducts)
             </div>
-        }
-
-
-        @if (!Model.FlagExhausted || Session["EventList"] != null)
-        {
-            @Html.Partial("~/Views/Product/Details/_FloatingBar.cshtml", Model)
-        }
-    </div>
+        }</div>
 </div>
 
 <div class="ui modal login">

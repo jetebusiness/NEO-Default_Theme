@@ -2,40 +2,80 @@
 @if (Model != null && Model.Count() > 0)
 {
 
-  List<DomainCompany.Entities.Banner> bannerRandom = Model.Where(b => b.Random == true).ToList();
-  List<DomainCompany.Entities.Banner> bannerNoRandom = Model.Where(b => b.Random == false).ToList();
+    List<DomainCompany.Entities.Banner> bannerRandom = Model.Where(b => b.Random == true).ToList();
+    List<DomainCompany.Entities.Banner> bannerNoRandom = Model.Where(b => b.Random == false).ToList();
 
-  if (bannerRandom.Any())
-  {
+    if (bannerRandom.Any())
+    {
 
-    <div class="ui fluid container car-banners slick-dotted slideshow" data-qtd="1" data-auto="true" data-arrow="false" data-dots="true">
-      @foreach (var randombanner in bannerRandom)
-      {
-        <div class="container slideshow-item">
-          <div class="image">
-            <a href="@randombanner.Link" title="@randombanner.Name">
-              <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
-            </a>
-          </div>
-          @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
-          {
-            <div class="description">
-              <div class="html">@Html.Raw(randombanner.Description)</div>
-            </div>
-          }
+        <div class="ui fluid container car-banners slick-dotted slideshow" data-qtd="1" data-auto="true" data-arrow="false" data-dots="true">
+            @foreach (var randombanner in bannerRandom)
+            {
+                if (randombanner.TypeContent == DomainCompany.Entities.Banner.enumTypeContent.Imagem)
+                {
+                    <div class="container slideshow-item">
+                        <div class="image">
+                            <a href="@randombanner.Link" title="@randombanner.Name">
+                                <img src="/assets/image/img_default.png" data-src="@randombanner.NameFileImage" class="ui image centered" alt="@randombanner.Name" title="@randombanner.Name" onerror="imgError(this)" />
+                            </a>
+                        </div>
+                        @if (System.Text.RegularExpressions.Regex.Replace(randombanner.Description.Trim(), "<.*?>|&nbsp;", String.Empty).Trim() != "")
+                        {
+                            <div class="description">
+                                <div class="html">@Html.Raw(randombanner.Description)</div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    string linkHtml = string.IsNullOrEmpty(randombanner.Link) ? "" : $"<a href='{randombanner.Link}' title='{randombanner.Name}'>";
+
+                    <div class="container slideshow-item">
+                        <div class="video">
+                            @Html.Raw(linkHtml)
+                            <div class="item youtube">
+                                <div class="video-wrapper">
+                                    <div class="embed-player slide-media ytplayer" id="ytplayer_@randombanner.IdBanner" data-src="@randombanner.UrlVideo"></div>
+                                </div>
+                            </div>
+                            @Html.Raw(linkHtml.Replace("<a", "</a"))
+                        </div>
+                    </div>
+                }
+            }
+
         </div>
-      }
-    </div>
-  }
-  if (bannerNoRandom.Any())
-  {
-    <div class="ui images middle aligned center aligned">
-      @foreach (var banner in bannerNoRandom)
-      {
-        <a href="@banner.Link" title="@banner.Name">
-          <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
-        </a>
-      }
-    </div>
-  }
+    }
+    if (bannerNoRandom.Any())
+    {
+        <div class="ui fluid container car-banners slick-dotted slideshow">
+            @foreach (var banner in bannerNoRandom)
+            {
+                if (banner.TypeContent == DomainCompany.Entities.Banner.enumTypeContent.Imagem)
+                {
+                    <a href="@banner.Link" title="@banner.Name">
+                        <img src="/assets/image/img_default.png" data-src="@banner.NameFileImage" class="ui image centered" alt="@banner.Name" title="@banner.Name" onerror="imgError(this)" />
+                    </a>
+                }
+                else
+                {
+                    string linkHtml = string.IsNullOrEmpty(banner.Link) ? "" : $"<a href='{banner.Link}' title='{banner.Name}'>";
+
+                    <div class="container slideshow-item">
+                        <div class="video">
+                            @Html.Raw(linkHtml)
+                            <div class="item youtube">
+                                <div class="video-wrapper">
+                                    <div class="embed-player slide-media ytplayer" id="ytplayer_@banner.IdBanner" data-src="@banner.UrlVideo"></div>
+                                </div>
+                            </div>
+                            @Html.Raw(linkHtml.Replace("<a", "</a"))
+                        </div>
+                    </div>
+                }
+
+            }
+        </div>
+    }
 }

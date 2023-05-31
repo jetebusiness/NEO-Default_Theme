@@ -1,6 +1,5 @@
 import {isLoading} from "../api_config";
 import {_alert, _confirm} from "../../functions/message";
-import {openModalQuickView} from "../../functions/modal";
 import {isValidEmail} from "../../functions/validate.js"
 import {openLongModal} from "../../functions/modal";
 import {SomenteNumerosPositivos} from "../../functions/form-control";

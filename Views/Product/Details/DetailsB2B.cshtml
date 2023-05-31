@@ -19,6 +19,8 @@
 
     string UrlLogo = Url.Scheme + "://" + Url.Host + PathLogo;
 
+    string ImagemDefault = Model.ProductImages.FirstOrDefault()?.ImageDefault.ToString();
+
     string ImageOpenGraph = Model.ProductImages.Count > 0 ? Url.Scheme + ":" + Model.ProductImages.FirstOrDefault().ImageDefault : UrlLogo;
 }
 
@@ -175,6 +177,7 @@
 <!-- FIM - Váriaveis Produto Unitário-->
 <div class="ui container" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="description" content="">
+    <meta itemprop="image" content="@ImagemDefault">
     <link itemprop="url" href="" rel="author" />
     <div class="ui grid stackable produto">
         <div class="row product information one column">

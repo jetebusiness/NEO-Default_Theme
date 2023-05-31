@@ -640,7 +640,7 @@ var newFilter = {
                 }
             })
 
-            $(document).one('click', configFilter.config.pagination.number, function() {
+            $(document).on('click', configFilter.config.pagination.number, function() {
                 var isDisabled = $(this).hasClass("disabled"),
                     isActive = $(this).hasClass("active");
                 if (!isDisabled && !isActive) {

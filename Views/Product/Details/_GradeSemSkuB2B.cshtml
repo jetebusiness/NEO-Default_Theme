@@ -13,7 +13,7 @@
 
             </div>
             <!--FIM VARIAÇÔES-->
-            <div class="doubling column row sku_b2b" data-sku-id="0" data-stock="@Model.Stock" data-produto-id="@Model.IdProduct" >
+            <div class="doubling column row sku_b2b" data-sku-id="0" data-stock="@Model.Stock" data-produto-id="@Model.IdProduct">
                 <div class="six wide column right aligned">
                     <div class="ui qtd action mini input">
                         <button class="ui icon button qtdminus" id="qtdminus-detalhes">
@@ -27,12 +27,15 @@
                 </div>
                 <!--COMEÇO GRADE-->
                 <div class="ten wide column text right" itemprop="offers" id="block-price" itemscope="" itemtype="http://schema.org/Offer">
+                    <meta itemprop="priceCurrency" content="BRL" />
                     <div id="variacao-preco">
                         @if (Model.PricePromotion != null && Model.PricePromotion > 0)
                         {
                             decimal dec = (decimal)@Model.PricePromotion;
+                            string priceGoogleMerchant = string.Format("{0:0.00}", dec).Replace(",", ".");
                             <span class="precoAntigo"><span>de: </span><span id="preco-antigo">@Model.Price.ToString("C")</span><span> por</span></span>
-                            <span itemprop="price" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
+                            <meta itemprop="price" content="@priceGoogleMerchant" />
+                            <span class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
                             if (Model.InstallmentMax != null)
                             {
                                 <span class="infoPreco">
@@ -52,7 +55,9 @@
                         }
                         else
                         {
-                            <span itemprop="price" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
+                            string priceGoogleMerchant = string.Format("{0:0.00}", @Model.Price).Replace(",", ".");
+                            <meta itemprop="price" content="@priceGoogleMerchant" />
+                            <span class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
                             if (Model.InstallmentMax != null)
                             {
                                 <span class="infoPreco">
@@ -132,15 +137,15 @@
             <!--FIM DISPONIBILIDADE / CARRINHO-->
         </div>
         @if (!Model.FlagExhausted)
-         {
-             if (Model.Personalizations != null)
-             {
-                 <div class="row margin top medium">
-                     <div class="column">
-                         @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
-                     </div>
-                 </div>
-             }
+        {
+            if (Model.Personalizations != null)
+            {
+                <div class="row margin top medium">
+                    <div class="column">
+                        @Html.Partial("~/Views/Product/Details/_Personalizations.cshtml", Model.Personalizations)
+                    </div>
+                </div>
+            }
 
             <div id="pagamento-calculado">
                 @if (@Model.PricePromotion != null && @Model.PricePromotion > 0)
@@ -163,7 +168,6 @@
         }
 
         <!-- COMEÇO REDES SOCIAIS-->
-
         <!-- FIM REDES SOCIAIS-->
     </div>
 </div>

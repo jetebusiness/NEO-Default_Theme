@@ -16,10 +16,11 @@ import { generateRecaptcha } from "../../ui/modules/recaptcha";
 import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 
 import { isGtmEnabled, getProductAndPushAddToCartEvent } from "../../api/googleTagManager/googleTagManager";
+import {getDiscountStore} from "./card";
 
 $(document).ready(function () {
     "use strict";
-    //nova estrutura de variacao do produto
+    //nova estrutura de variacao do produto    
     variations.init();
     personalization.init();
 
@@ -404,6 +405,7 @@ export function AtualizarQuantidade() {
         $('.total-value', '.total-personalization').html(moneyPtBR(personalizationValue + parseFloat(preco_final)))
     }
 
+    getDiscountStore(variations.config.htmlPrice.containerValues, preco_final)
 
     if (desconto_boleto !== "0,00") {
         var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * parseFloat(desconto_boleto)));
@@ -559,7 +561,7 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
                     $(".carrinho").sidebar('toggle');
                 }
                 //window.location.href = "/checkout/index";
-                
+
             }
             else {
                 swal({

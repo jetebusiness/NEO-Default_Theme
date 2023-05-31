@@ -1,7 +1,7 @@
 .card.produto {
     box-shadow: none !important;
-    
-    
+
+
 
     .content {
         position: relative;
@@ -28,6 +28,51 @@
                     color: $black;
                     font-size: 14px;
                     margin-bottom: 10px;
+                }
+
+                .baseDiscount {
+                    color: $primary-color;
+
+
+                    .priceDiscount {
+                        font-size: 20px;
+                        line-height: 25px;
+                        font-weight: 700;
+                        margin-bottom: .5rem;
+
+                        .textDiscount {
+                            font-size: 14px;
+                            font-weight: 500;
+                            margin-left: .5rem;
+                        }
+
+                        @media screen and (max-width: $mobile-bp) {
+                            font-size: 18px;
+                        }
+                    }
+
+
+
+                    span {
+                        &.descriptionDiscount {
+                            color: black;
+                            font-size: 13px;
+                            font-weight: normal;
+                            display: block;
+                            margin-bottom: 1rem;
+                            line-height: initial;
+                            @media screen and (max-width: $mobile-bp) {
+                                font-size: 12px;
+                            }
+                        }
+                    }
+
+
+                    ~ .preco {
+                        font-size: 16px;
+                    }
+
+
                 }
 
                 .precoBase {
@@ -194,29 +239,29 @@
             line-height: initial;
         }
     }
-    
-    
-    
-    
+
+
+
+
     &.skeleton {
         .content {
 
-            .line {                
-                width: 100%;                
+            .line {
+                width: 100%;
                 border-radius: 7px;
                 background-image: linear-gradient(90deg, #F4F4F4 0px, rgba(229, 229, 229, 0.8) 40px, #F4F4F4 80px);
                 background-size: 600px;
                 animation: shine-lines 2s infinite ease-out;
-                
+
                 &.img {
                     height: 240px;
                 }
-                
+
                 &.name {
                     height: 18px;
                     margin-bottom: 10px;
                 }
-                
+
                 &.rating {
                     height: 18px;
                     margin-bottom: 10px;
@@ -228,7 +273,7 @@
                     margin-top: 15px;
                     margin-bottom: 10px;
                 }
-                
+
                 &.installment {
                     height: 18px;
                 }

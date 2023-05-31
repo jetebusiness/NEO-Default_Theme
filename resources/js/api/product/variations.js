@@ -51,13 +51,19 @@ variations = {
             },
         },
         getSession: '.modal.login',
-        googleShopping: 'idsku'
+        googleShopping: 'idsku',
+        discountPrice: {
+            higherDiscount: 0,
+            descriptionHigherDiscount: "",
+            showBillet: true,
+            showPriceWithDiscount: false
+        }
     },
-    init: function() {
+    init: async function() {
 
         if($(this.config.references).length > 0 && $(this.config.container).length > 0) {
-            this.verifyContent()//iniciamos a criacao das variacoes
-            this.clickBtn($(this.config.container)) //setamos as acoes do click das variacoes
+            this.verifyContent()//iniciamos a criacao das variacoes            
+            this.clickBtn($(this.config.container)) //setamos as acoes do click das variacoes               
             this.hideVariations() //escondemos as variacoes que nao pertencem a variacao selecionada           
 
         } else {
@@ -97,7 +103,7 @@ variations = {
 
         //adicionamos a div inicial para receber as primeiras referencias
         container.append("<div class='references' data-reference='" + json.IdReference +"' data-active='true'><span class='title'>"+ json.Name +"</span><div class='variations'></div></div>")
-
+        
         //enviamos as primeiras variacoes para criacao
         this.getVariations(json.Variations, json.IdReference);
 
@@ -119,6 +125,28 @@ variations = {
             });
         }
         return id;
+    },
+    getDiscountStore: function() {
+        var self = this; // Armazena a referência a 'this' em uma variável local 'self'
+
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                method: "GET",
+                url: "/Company/GetDiscountStore",
+                success: function(data) {
+                    if (data && data.success && data.showPriceWithDiscount) {
+                        self.config.discountPrice.showPriceWithDiscount = data.showPriceWithDiscount;
+                        self.config.discountPrice.descriptionHigherDiscount = data.descriptionHigherDiscount;
+                        self.config.discountPrice.higherDiscount = data.higherDiscount;
+                        self.config.discountPrice.showBillet = !data.showPriceWithDiscount || (data.showPriceWithDiscount && data.descriptionHigherDiscount.toLowerCase().indexOf("boleto") === -1);
+                    }
+                    resolve(); // Resolve a promessa após o AJAX retornar
+                },
+                error: function() {
+                    reject(); // Rejeita a promessa em caso de erro no AJAX
+                }
+            });
+        });
     },
     //funcao responsavel por retornar todas as variacoes de um objeto
     getVariations: function(obj, idReference) {
@@ -249,8 +277,6 @@ variations = {
 
         //caso nao exista uma grade default, setamos a primeira opcao
         if($('.references .variacao.select', container).length == 0) {
-
-
 
             if($('.references', container).length > 1)
                 $(".references[data-active] .variacao:eq(0)", container).click();
@@ -513,7 +539,7 @@ variations = {
         return money;
     },
     //atualizando os valores
-    reloadValues: function(values) {
+    reloadValues: async function(values) {
 
         var IdSku = values.data("idsku");
         var quantity = parseInt($(this.config.htmlPrice.quantity).val());
@@ -527,6 +553,11 @@ variations = {
         var Description = values.data("description");
         var Discount = parseFloat($(this.config.htmlPrice.discountBillet).val().replace(',', '.'));
         var personalization = $(this.config.personalization.total.container).length > 0;
+        var isLoaded = $(this.config.container).hasClass("loaded");
+
+        if(!isLoaded)
+            await this.getDiscountStore();
+
         if(personalization) {
 
             if(PricePromotion > 0) {
@@ -540,7 +571,16 @@ variations = {
 
         //atribuindo os valores para utilizacao em compre-junto
         $("#produto-stock").val(Stock);
-        $("#preco-unidade").val(values.data("price"));
+        if($("#preco-unidade").length)
+            $("#preco-unidade").val(values.data("price"));
+        else
+            $('body').prepend(`<input type="hidden" value="${values.data("price")}" id="preco-unidade" name="preco-unidade" />`)
+
+        if($("#preco-promocao-unidade").length)
+            $("#preco-promocao-unidade").val(values.data("pricepromotion"));
+        else
+            $('body').prepend(`<input type="hidden" value="${values.data("price")}" id="preco-promocao-unidade" name="preco-promocao-unidade" />`)
+
         $("#preco-promocao-unidade").val(values.data("pricepromotion"));
         $("#parcela-maxima-unidade").val(Value);
         $("#qtd-parcela-maxima-unidade").val(Parc);
@@ -549,7 +589,6 @@ variations = {
         //setando o sku selecionado para adicionar ao carrinho
         $(this.config.productSKU).val(IdSku)
 
-
         //preco De e Por
         if(PricePromotion > 0) {
             if($(this.config.htmlPrice.oldPrice).length == 0
@@ -557,30 +596,70 @@ variations = {
                 : $(this.config.htmlPrice.oldPrice).show())
 
                 $(this.config.htmlPrice.oldPrice).html(this.moneyBR(Price)) //'#preco-antigo', //preco antigo
-            $(this.config.htmlPrice.newPrice).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
+
+
+            if(this.config.discountPrice.showPriceWithDiscount) {
+                var discountCalc = (PricePromotion - ((PricePromotion / 100) * this.config.discountPrice.higherDiscount));
+
+                $('.baseDiscount', this.config.htmlPrice.containerValues).html(`<div class="baseDiscount">
+                    <div class="priceDiscount">
+                        ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${this.config.discountPrice.descriptionHigherDiscount}</span></div>
+                    <span class="descriptionDiscount">com ${this.config.discountPrice.higherDiscount}% de desconto</span>
+                </div>`)
+
+                if(!isLoaded)
+                    $(this.config.htmlPrice.newPrice).attr('content', discountCalc) //'#preco', //preco promocional e/ou atual
+            }
+
+            $(this.config.htmlPrice.newPrice).html(this.moneyBR(PricePromotion))
             $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
 
 
-            if(Discount > 0) {
+            if(Discount > 0 && this.config.discountPrice.showBillet) {
                 $(this.config.htmlPrice.billet_price).html(
                     "ou " +
                     this.moneyBR(PricePromotion - (PricePromotion * parseFloat(Discount / 100)))
                     + " no boleto bancário ("+ $(this.config.htmlPrice.discountBillet).val() +"% de desconto)"
-                )
+                ).show()
+            } else {
+                $(this.config.htmlPrice.billet_price).hide();
             }
-
 
         } else {
             $(this.config.htmlPrice.oldPrice).hide()
-            $(this.config.htmlPrice.newPrice).html(this.moneyBR(Price)) //'#preco', //preco promocional e/ou atual
+
+            if(this.config.discountPrice.showPriceWithDiscount) {
+                var discountCalc = (Price - ((Price / 100) * this.config.discountPrice.higherDiscount));
+
+                $('.baseDiscount', this.config.htmlPrice.containerValues).html(`<div class="baseDiscount">
+                    <div class="priceDiscount">
+                        ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${this.config.discountPrice.descriptionHigherDiscount}</span></div>
+                    <span class="descriptionDiscount">com ${this.config.discountPrice.higherDiscount}% de desconto</span>
+                </div>`)
+
+                if(!isLoaded)
+                    $(this.config.htmlPrice.newPrice).attr('content', discountCalc) //'#preco', //preco promocional e/ou atual
+            }
+
+            $(this.config.htmlPrice.newPrice).html(this.moneyBR(Price))
             $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(Price)) //'#preco', //preco promocional e/ou atual
 
-            if(Discount > 0) {
+            if(Discount > 0 && this.config.discountPrice.showBillet) {
                 $(this.config.htmlPrice.billet_price).html(
                     "ou " +
                     this.moneyBR(Price - (Price * parseFloat(Discount / 100)))
                     + " no boleto bancário ("+ $(this.config.htmlPrice.discountBillet).val() +"% de desconto)"
-                )
+                ).show()
+            }  else {
+                $(this.config.htmlPrice.billet_price).hide();
+            }
+
+            if(discountCalc > 0 && this.config.discountPrice.showPriceWithDiscount) {
+                $('.baseDiscount', this.config.htmlPrice.containerValues).html(`<div class="baseDiscount">
+                    <div class="priceDiscount">
+                        ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${this.config.discountPrice.descriptionHigherDiscount}</span></div>
+                    <span class="descriptionDiscount">com ${this.config.discountPrice.higherDiscount}% de desconto</span>
+                </div>`)
             }
         }
 
@@ -764,6 +843,7 @@ variations = {
         $("#parcelamento_info").html(html);
     },
     searchInstallment(isB2b, Price){
+        var retorno;
         $.ajax({
             url: '/Product/BuscarParcelamento',
             type: 'POST',

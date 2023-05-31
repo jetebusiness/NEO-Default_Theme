@@ -13,20 +13,6 @@
     <div class="row">
         <div class="column center aligned">
             <div class="ui image" style="display: unset">
-                @if (tags != null && tags.Count > 0)
-                {
-                    <div class="ui top right attached label imagetag seals">
-                        @foreach (var _sealStatus in tags)
-                        {
-                            if (_sealStatus.Name != "Normal")
-                            {
-                                <img src="@_sealStatus.Image" class="ui image tiny" onerror="imgError(this)">
-                            }
-                        }
-                    </div>
-                }
-
-
                 @if (Model != null && Model.Count() > 0)
                 {
                     var productImage = Model.FirstOrDefault();
@@ -37,6 +23,18 @@
                             @* Tem de Setar aqui a imagem de tamanho maior ZOOM!*@
                             <img id="imagem-padrao" class="img" src="/assets/image/img_default.png" alt="@productImage.ImageAlt" data-src="@productImage.ImageDefault" data-type-media="image" onerror="imgError(this)" width="100%" @(hasVideo ? "style=display:none !important" : "") />
                         </a>
+                        @if (tags != null && tags.Count > 0)
+                        {
+                            <div class="ui top right attached label imagetag seals">
+                                @foreach (var _sealStatus in tags)
+                                {
+                                    if (_sealStatus.Name != "Normal")
+                                    {
+                                        <img src="@_sealStatus.Image" class="ui image tiny" onerror="imgError(this)">
+                                    }
+                                }
+                            </div>
+                        }
                     </div>
 
                     <iframe id="video-product" class="video" src="@(productImage?.Video?.URL)" data-src="@(productImage?.Video?.URL)" data-type-media="video" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" width="100%" allowfullscreen @(hasVideo ? "" : "style=display:none !important")></iframe>

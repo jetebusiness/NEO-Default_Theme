@@ -6,7 +6,6 @@
 $.fn.api.settings.api = {
     'post cart shipping': '/order/shipping/{zipCode}/{sessionID}',
     'search products' : '/search/searchproduct/',
-    'quickview product': '/product/quickview/{code}',
     'remove product': '/cart/remove/{id}',
     'products list': '/product/getproducts/?v={viewList}&p={pageNumber}&o={/order}&m={/brand}&c={/category}&pi={/initialPrice}&pf={/finalPrice}&r={/variations}',
     'slide update': '/Product/SlideCor/',

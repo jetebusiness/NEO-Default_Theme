@@ -1,7 +1,7 @@
 
 /**
  * Semantic-UI Modal
- * Abre Modal QuickView de produto
+ * Abre Modal QuickView de produto (Descontinuado)
  * @param modal
  */
 export function openModalQuickView(modal, callback) {
