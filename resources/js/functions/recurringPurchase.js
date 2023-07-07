@@ -20,7 +20,7 @@ export const CompraRecorrenteStorage = {
       options = CompraRecorrenteStorage.getStorageValue(CompraRecorrenteStorage.keys.dropdownOptions) !== null ? JSON.parse(CompraRecorrenteStorage.getStorageValue(CompraRecorrenteStorage.keys.dropdownOptions)) : [],
       optionSelected = options.filter((item) => item.value == value);
    
-    return optionSelected.length > 0 ? optionSelected[0] : null;
+      return optionSelected.length > 0 ? optionSelected[0] : null;
   },
   setStorageValue: (key, value) => { localStorage.setItem(key, value); },
   removeStorageValue: key => localStorage.removeItem(key),
@@ -43,7 +43,6 @@ export const CompraRecorrenteCart = {
                 </div>
                 <div class="compraRecorrenteSelect">
                   <select class="ui dropdown">
-                      <option value="">Selecione</option>
                       {OPTIONS}
                   </select>
                 </div>
@@ -54,8 +53,12 @@ export const CompraRecorrenteCart = {
       id: ".compraRecorrenteSelect .ui.dropdown",
       getDropdownHtmlBox: (options) => {
         let html = "", optionsHtml = "";
-        options.forEach((option) => {
-          optionsHtml += `<option value="${option.value}">${option.text}</option>`;
+        options.forEach((option, index) => {
+            if (index == 0) {
+                optionsHtml += `<option value="${option.value}" selected>${option.text}</option>`;
+            } else {
+                optionsHtml += `<option value="${option.value}">${option.text}</option>`;
+            }
         });
         html = CompraRecorrenteCart.selectBox.html.replace("{OPTIONS}", optionsHtml);
         return html;
@@ -67,6 +70,7 @@ export const CompraRecorrenteCart = {
 
         // Atualiza a storage com as opcoes de recorrencia disponiveis
         CompraRecorrenteStorage.setStorageValue(CompraRecorrenteStorage.keys.dropdownOptions, JSON.stringify(options));
+        CompraRecorrenteStorage.setStorageValue(CompraRecorrenteStorage.keys.dropdownValue, options[0].value);
 
         return options;
       }, 

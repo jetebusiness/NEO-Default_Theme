@@ -155,7 +155,9 @@
 
     ViewBag.PurchaseRecurring = "false";
 
-    string ImagemDefault = @productImages.FirstOrDefault()?.ImageDefault.ToString();
+    var firstImageWithVideoNull = productImages.FirstOrDefault(image => image.Video == null);
+    string ImagemDefault = firstImageWithVideoNull?.ImageDefault.ToString();
+
 
     string ImageOpenGraph = productImages.Count > 0 ? Url.Scheme + ":" + productImages.FirstOrDefault().ImageDefault : UrlLogo;
 

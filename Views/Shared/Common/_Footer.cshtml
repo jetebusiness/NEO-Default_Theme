@@ -7,35 +7,44 @@
 
 <div class="ui container fluid newsletter-bar">
     <div class="ui container">
-        <div class="ui grid middle aligned">
+        <div class="ui grid two column centered middle aligned">
             <div class="row stackable">
                 <div class="column">
-                    <div class="ui form">
-                        <div class="inline fields margin none">
+                    <div class="ui form center aligned">
+                        <div class="field">
+                            <strong class="header">Newsletter</strong>
+                        </div>
+                        <div class="field">
+                            <span class="text center aligned">
+                                Cadastre seu e-mail e celular para ficar por dentro de todas as nossas novidades e promoções.
+                            </span>
+                        </div>
+                        <div class="two fields">
                             <div class="field">
-                                <span>
-                                    <i class="icon envelope"></i>
-                                    <h4 class="header">Newsletter</h4>
-                                </span>
-                            </div>
-                            <div class="field textNews">
-                                <span class="text">
-                                    Cadastre seu e-mail e receba novidades e promoções.
-                                </span>
-                            </div>
-                            <div class="field">
-                                <div class="ui left icon input">
-                                    <i class="mail icon"></i>
-                                    <input type="text" placeholder="seu@email.com.br" id="email_news">
+                                <div class="ui left icon input fluid">
+                                    <i class="user icon inverted"></i>
+                                    <input type="text" placeholder="Seu nome" id="name_news">
                                 </div>
                             </div>
                             <div class="field">
-                                <button class="ui button red" id="btn_news">
-                                    Cadastrar
-                                </button>
+                                <div class="ui left icon input">
+                                    <i class="mobile icon inverted alternate"></i>
+                                    <input type="text" placeholder="(xx) 9xxxx-xxxx" class="masked mask_phone" id="phone_news">
+                                </div>
                             </div>
-                            @Html.Action("getRecaptchaV3", "company", new { Module = "Newsletter" })
                         </div>
+                        <div class="field">
+                            <div class="ui left icon input fluid">
+                                <i class="mail icon inverted"></i>
+                                <input type="text" placeholder="seu@email.com.br" id="email_news">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <button class="ui button fluid primary circular" id="btn_news">
+                                CADASTRAR
+                            </button>
+                        </div>
+                        @Html.Action("getRecaptchaV3", "company", new { Module = "Newsletter" })
                     </div>
                 </div>
             </div>

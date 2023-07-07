@@ -13,10 +13,17 @@
                     </div>
                     <div class="compraRecorrenteSelect">
                         <select class="ui dropdown">
-                            <option value="">Selecione</option>
+                            @{var firstSelectedRecurrentTime = Model.RecurringPurchaseCart.First();}
                             @foreach (var item in Model.RecurringPurchaseCart)
                             {
-                                <option value="@item.IdCompraAutomaticaTipoEntrega">@item.TipoEntrega</option>
+                                if (item.Equals(firstSelectedRecurrentTime))
+                                {
+                                    <option value="@item.IdCompraAutomaticaTipoEntrega" selected>@item.TipoEntrega</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdCompraAutomaticaTipoEntrega">@item.TipoEntrega</option>
+                                }
                             }
                         </select>
                     </div>

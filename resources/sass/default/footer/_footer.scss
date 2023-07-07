@@ -1,111 +1,50 @@
 .newsletter-bar {
-	padding-bottom: 10px;
+	padding: 2rem 0;
 	background: #333;
 	position: relative;
 
-	i.envelope {
-		float: left;
-		margin-right: 5px;
-		font-size: 3em;
-		color: #fff;
-		line-height: 40px;
-	}
-
-	h4.header {
+	.header {
 		color: #fff;
 		font-size: 18px;
 		font-weight: 700;
 		text-transform: uppercase;
-		border-right: 1px solid lighten($secondary-color, 30);
-		padding-right: 15px;
 		margin: 0;
-		float: left;
 		line-height: 40px;
-
-		@media screen and (max-width: $mobile-bp) {
-			border:0;
-			padding-right: 0;
-		}
 	}
 
 	span.text {
 		color: #999;
 		font-size: 12px;
+		display: block;
+		text-align: center;
+		margin: 15px 0;
 	}
-
-
-	.inline.fields {
-		-webkit-box-pack: center;
-		-ms-flex-pack: center;
-		justify-content: center;
-
+	
+	
+	.form {
 		.field {
-			@media screen and (max-width: $mobile-bp) {
-				padding-right: 0 !important;
+			input {
+				background: darken(#333, 5);
+				border-radius: 50rem;
+				color: $white;
+
+				&:focus,
+				&:active {
+					background: darken(#333, 5);
+					border-radius: 50rem;
+				}
+			}
+
+			.icon {
+				color: $white;
 			}
 		}
-
+		
 	}
 
-
-	.inline {
-		>.icon.input {
-			@media screen and (max-width: $mobile-bp) {
-				display:table;
-			}
-		}
-
-		.textNews {
-			@media screen and (min-width: $tablet-bp-min) and (max-width: $tablet-bp-max) {
-				max-width: 180px;
-
-			}
-
-			@media screen and (max-width: $mobile-bp) {
-				margin: 10px auto !important;
-				padding:0 !important;
-			}
-		}
-
-		#email_news {
-			background: #fff;
-			font-size: 12px;
-			color: #666666;
+	
 
 
-			@media screen and (max-width: $mobile-bp) {
-				max-width: 200px;
-
-			}
-
-
-		}
-
-		i.mail.icon {
-			color: $secondary-color;
-			opacity: 1 !important;
-
-			@media screen and (max-width: $mobile-bp) {
-				top: 16px;
-				height:initial;
-			}
-		}
-
-		#btn_news {
-			margin-left: 5px;
-			color: #ffffff;
-			text-transform: uppercase;
-			background: lighten($secondary-color , 20);
-			font-size: 13px;
-
-			@media screen and (max-width: $mobile-bp) {
-				width: 100%;
-				margin:0 auto;
-			}
-		}
-
-
-	}
 
 }
 
@@ -115,173 +54,174 @@
 }
 
 .footer {
-    background-color: $secondary-color !important;
-    padding-bottom: 20px !important;
+	background-color: $secondary-color !important;
+	padding-bottom: 20px !important;
 
-    > .ui.container {
-        > .ui.grid {
-            > .column {
-                padding-bottom: 0 !important;
-            }
-        }
-    }
+	> .ui.container {
+		> .ui.grid {
+			> .column {
+				padding-bottom: 0 !important;
+			}
+		}
+	}
 
-    .listMobile {
-        .column {
-            @media screen and (max-width: $mobile-bp) {
-                border-bottom: 1px solid lighten($secondary-color, 10);
-            }
-        }
-    }
+	.listMobile {
+		.column {
+			@media screen and (max-width: $mobile-bp) {
+				border-bottom: 1px solid lighten($secondary-color, 10);
+			}
+		}
+	}
 
-    .header {
-        text-transform: uppercase;
-        font-size: 14px !important;
-        margin: 0;
+	.header {
+		text-transform: uppercase;
+		font-size: 14px !important;
+		margin: 0;
 
-        @media screen and (max-width: $mobile-bp) {
-            line-height: 30px;
-        }
+		@media screen and (max-width: $mobile-bp) {
+			line-height: 30px;
+		}
 
-        i.icon:only-child {
-            display: none;
-            float: right !important;
-            font-size: 1em;
-        }
-    }
-
-
-    socialbar {
-        margin-top: 10px;
-        display: inline-block;
-
-        a {
-            i.icon {
-                font-size: 1.7em;
-                line-height: 0.95em;
-            }
-        }
-    }
-
-    .list {
-        &.link {
-            a,
-            h5 {
-                color: #999999 !important;
-                font-size: 12px;
-                font-weight: bold;
-                margin: 0;
-                line-height: 20px;
-
-                &:hover,
-                &:focus,
-                &:checked,
-                &:active {
-                    color: #fff !important;
-                }
-            }
-
-            @media screen and (max-width: $mobile-bp) {
-                padding: 1em;
-                text-align: left !important;
-                margin: 10px 0 0 0;
-                display: none;
-                background: lighten($secondary-color, 5);
-            }
-        }
-
-        &.selos {
-            margin-top: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-
-            @media screen and (min-width: $mobile-bp) {
-                justify-content: flex-start;
-            }
-
-            a {
-                margin: 5px;
-                &#seloEconfy {
-                    position: relative !important;
-                }
-            }
-        }
+		i.icon:only-child {
+			display: none;
+			float: right !important;
+			font-size: 1em;
+		}
+	}
 
 
+	socialbar {
+		margin-top: 10px;
+		display: inline-block;
 
-        &.selos a img {
-            max-height: 100px;
-            display: inline-block;
-            background-size: cover;
-        }
-    }
+		a {
+			i.icon {
+				font-size: 1.7em;
+				line-height: 0.95em;
+			}
+		}
+	}
 
-    p {
-        color: #999999;
-        font-size: 12px;
-        font-weight: bold;
-    }
+	.list {
+		&.link {
+			a,
+			h5 {
+				color: #999999 !important;
+				font-size: 12px;
+				font-weight: bold;
+				margin: 0;
+				line-height: 20px;
 
-    h4,
-    h5 {
-        font-weight: bold;
-        font-size: 16px;
-        color: $white;
-    }
+				&:hover,
+				&:focus,
+				&:checked,
+				&:active {
+					color: #fff !important;
+				}
+			}
 
-    .tireDuvidas {
-        background: #fff;
+			@media screen and (max-width: $mobile-bp) {
+				padding: 1em;
+				text-align: left !important;
+				margin: 10px 0 0 0;
+				display: none;
+				background: lighten($secondary-color, 5);
+			}
+		}
 
-        h5 {
-            color: $black;
-            margin: 0;
-            font-size: 1rem;
-        }
-    }
+		&.selos {
+			margin-top: 10px;
+			margin-bottom: 30px;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+
+			@media screen and (min-width: $mobile-bp) {
+				justify-content: flex-start;
+			}
+
+			a {
+				margin: 5px;
+
+				&#seloEconfy {
+					position: relative !important;
+				}
+			}
+		}
 
 
-    .ui.form {
+
+		&.selos a img {
+			max-height: 100px;
+			display: inline-block;
+			background-size: cover;
+		}
+	}
+
+	p {
+		color: #999999;
+		font-size: 12px;
+		font-weight: bold;
+	}
+
+	h4,
+	h5 {
+		font-weight: bold;
+		font-size: 16px;
+		color: $white;
+	}
+
+	.tireDuvidas {
+		background: #fff;
+
+		h5 {
+			color: $black;
+			margin: 0;
+			font-size: 1rem;
+		}
+	}
 
 
-        > .inline {
-            > .icon.input {
-                @media screen and (max-width: $mobile-bp) {
-                    display: table;
-                }
+	.ui.form {
 
-                .mail {
-                    color: $black;
-                    opacity: 1 !important;
 
-                    @media screen and (max-width: $mobile-bp) {
-                        top: 22px;
-                        height: initial;
-                    }
-                }
+		> .inblock {
+			> .icon.input {
+				@media screen and (max-width: $mobile-bp) {
+					display: table;
+				}
 
-                #email_news {
-                    @media screen and (max-width: $mobile-bp) {
-                        width: 100%;
-                    }
-                }
+				.mail {
+					color: $black;
+					opacity: 1 !important;
 
-                #btn_news {
-                    margin-left: 5px;
-                    color: #000;
-                    text-transform: uppercase;
-                    background: #fff;
+					@media screen and (max-width: $mobile-bp) {
+						top: 22px;
+						height: initial;
+					}
+				}
 
-                    @media screen and (max-width: $mobile-bp) {
-                        width: 100%;
-                        margin: 5px auto 0 auto;
-                    }
-                }
-            }
-        }
-    }
+				#email_news {
+					@media screen and (max-width: $mobile-bp) {
+						width: 100%;
+					}
+				}
+
+				#btn_news {
+					margin-left: 5px;
+					color: #000;
+					text-transform: uppercase;
+					background: #fff;
+
+					@media screen and (max-width: $mobile-bp) {
+						width: 100%;
+						margin: 5px auto 0 auto;
+					}
+				}
+			}
+		}
+	}
 }
 
 .subFooter {
@@ -313,14 +253,14 @@
 			font-size:12px;
 			font-weight: normal;
 			margin:0 0 10px 0;
-			display: inline-block;
+			display: inline;
 		}
 		> address {
 			color:#fff;
 			font-size:12px;
 			font-weight: normal;
 			font-style: normal;
-			display: inline-block;
+			display: inline;
 		}
 	}
 

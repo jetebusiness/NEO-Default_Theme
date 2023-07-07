@@ -17,7 +17,7 @@
     </div>
     <div class="column">
         <div class="ui segment basic attached">
-            <div class="ui accordion shopping-voucher">
+            <div class="ui accordion shopping-voucher disable_column">
                 <div class="title">
                     <i class="icon ticket alternate"></i>
                     Utilizar <strong>Vale Compras</strong>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="field">
                         <input type="hidden" name="freteGratisValeCompra" id="freteGratisValeCompra" value="@(LojaCorp.Control.Company._Company.FreeShippingVoucher ? "1" : "0")" />
-                        <button class="ui action large fluid button GerarPedido hideme" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" data-externalcode="" data-Card="N">
+                        <button class="ui action large fluid button GerarPedido disabled" id="btnGerarPedidoValeCompra" data-idBrand="@Model.idPaymentBrand" data-externalcode="" data-Card="N">
                             <i class="tag icon"></i>
                             Finalizar com Vale Compras
                         </button>

@@ -7,7 +7,9 @@ function RegisterNews() {
         type: 'GET',
         data: {
             email: $("#email_news").val(),
-            googleResponse
+            name: $("#name_news").val(),
+            phone: $("#phone_news").val(),
+            googleResponse: googleResponse  
         },
         dataType: 'json',
         success: function (response) {
@@ -21,6 +23,8 @@ function RegisterNews() {
                     confirmButtonText: 'OK'
                 }).then(function () {
                     $("#email_news").val("");
+                    $("#name_news").val("");
+                    $("#phone_news").val("");
                 });
             }
             else {
