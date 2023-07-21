@@ -1516,8 +1516,6 @@ function GetPaymentGateway(nameBrand, typeForm) {
             if(valueRecurrency > 0) {
                 var listPermissionRecurrent = [258, 259, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274];
 
-                console.log(jQuery.inArray( IdPaymentBrand, listPermissionRecurrent))
-
                 if(jQuery.inArray( IdPaymentBrand, listPermissionRecurrent) < 0)
                     return -1;
 
@@ -2166,7 +2164,6 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
         }
 
         if (Total > 0) {
-            console.log("oi 1")
             $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Total));
         }
 
@@ -2220,8 +2217,17 @@ function listAddressPayment() {
             var response = localStorage.getItem('multiCdAddress');
             localStorage.removeItem('multiCdAddress');
             $('.ui.modal.lista-endereco-cliente')
-                .modal({closable: false})
                 .modal({
+                    closable: false,
+                    onVisible: function() {
+                        $.ajax({
+                            method: "GET",
+                            url: "/Checkout/AddressViewPushDataLayer",
+                            success: function (data) {
+                                eval(data);
+                            }
+                        });
+                    },
                     onHidden: function () {
                         if (response.indexOf('redirecionado') == -1) {
                             changeCd(false, true, undefined, false, true)
@@ -2238,14 +2244,24 @@ function listAddressPayment() {
                 })
                 .modal('show');
         } else {
-            $('.ui.modal.lista-endereco-cliente').modal({closable: false}).modal('show');
+            $('.ui.modal.lista-endereco-cliente').modal({
+                closable: false,
+                onVisible: function() {
+                    $.ajax({
+                        method: "GET",
+                        url: "/Checkout/AddressViewPushDataLayer",
+                        success: function (data) {
+                            eval(data);
+                        }
+                    });
+                }
+            }).modal('show');
         }
     });
 }
 
 function showAddressPayment() {
     $("#addDataAddress").click(function () {
-        console.log("oi")
         if ($(".addAddress").length > 0) {
             var jsonArray = [];
             var splittedFormData = $("#disparaForm").serialize().split('&');

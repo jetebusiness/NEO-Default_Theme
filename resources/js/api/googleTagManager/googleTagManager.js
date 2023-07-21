@@ -37,7 +37,9 @@ export function getProductAndPushAddToCartEvent({ idProduct, idSku, variations, 
                             'brand': response.brand,
                             'category': response.category,
                             'variant': response.variant,
-                            'quantity': quantity
+                            'quantity': quantity,
+                            'url': response.url,
+                            'sku': response.sku
                         }]
                     }
                 }
@@ -61,7 +63,9 @@ export function getProductAndPushRemoveFromCartEvent({ idProduct, idSku, variati
                             'brand': response.brand,
                             'category': response.category,
                             'variant': response.variant,
-                            'quantity': quantity
+                            'quantity': quantity,
+                            'url': response.url,
+                            'sku': response.sku
                         }]
                     }
                 }

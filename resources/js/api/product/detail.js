@@ -72,9 +72,6 @@ $(document).ready(function () {
             $("textarea:not(.g-recaptcha-response), input:visible:not([type='checkbox']):not(.search)", form).each(function() {
                 if($(this).val().trim() === "")
                     count++;
-
-                if($(this).val().trim() === "")
-                    console.log($(this))
             });
 
             $('.dropdown:not(.icon)', form).each(function() {

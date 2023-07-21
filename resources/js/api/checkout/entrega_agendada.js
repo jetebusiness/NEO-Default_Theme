@@ -14,7 +14,6 @@
 }
 
 export function BuscaFreteEntregaAgendada() {
-    console.log("abrindo");
     isLoading(".ui.accordion.frete");
     $.ajax({
         method: "POST",
@@ -28,7 +27,6 @@ export function BuscaFreteEntregaAgendada() {
             $("#dateAgendada_" + idFrete).show("slow");
             $("#json_dataagendada_" + idFrete).val(response.msg);
             DataPickerEntregaAgendada(response.msg, idFrete);
-            console.log("fechando");
             isLoading(".ui.accordion.frete");
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
