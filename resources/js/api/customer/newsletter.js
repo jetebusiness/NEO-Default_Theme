@@ -1,4 +1,5 @@
-﻿import {_alert, _confirm} from "../../functions/message";
+﻿import { _alert, _confirm } from "../../functions/message";
+import { generateRecaptcha } from "../../ui/modules/recaptcha";
 
 function RegisterNews() {
     var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
@@ -44,7 +45,7 @@ function RegisterNews() {
             //console.log("Erro ao realizar cadastro de news letter");
         },
         complete: function () {
-            if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+            if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined" && $("#googleModule_newsletter").val()) {
                 if ($("[id^=googleVersion_]").eq(0).val() === "2") {
                     grecaptcha.reset();
                 } else {

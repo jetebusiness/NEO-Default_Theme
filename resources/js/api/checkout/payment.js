@@ -1456,15 +1456,7 @@ function onChangeParcelamento() {
             if (codigoBandeira != "" && parcela_selecionada != "") {
                 AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
             }
-            
-            var total_parcela_selecionada = Number($("#parcCard").find(':selected').attr("data-installmenttotal"));
-            var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
-            //var totalDiscount = Number($('#desconto_checkout').text().replace("R$", "").replace("&nbsp;", "").replace(".", "").replace(",", "."))
-            //var juros = total_parcela_selecionada - (totalCheckout - totalDiscount);
-            //if ($('#hasPagSeguro').val() == "1" || $('#hasPagSeguroApp').val() == "1" || $('#hasMercadoPago').val() == "1") {
-            var juros = total_parcela_selecionada - totalCheckout;
-            //}
-            $('#interest_checkout').html(juros.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
+
         });
     }
 
@@ -1479,11 +1471,6 @@ function onChangeParcelamento() {
                 AtualizaResumoCarrinhocomDesconto(codigoBandeira, id_tipo, parcela_selecionada);
             }
 
-            var total_parcela_selecionada = Number($("#parcCard").find(':selected').attr("data-installmenttotal"));
-            var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
-            var totalDiscount = Number($('#desconto_checkout').text().replace("R$", "").replace("&nbsp;", "").replace(".", "").replace(",", "."))
-            var juros = total_parcela_selecionada - (totalCheckout - totalDiscount);
-            $('#interest_checkout').html(juros.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
         });
     }
 
@@ -1493,10 +1480,6 @@ function onChangeParcelamento() {
             if (($('#parcCard1').val() != '') && ($('#parcCard2').val() != '')) {
                 var total_card1 = Number($("#parcCard1").find(':selected').attr("data-installmenttotal"));
                 var total_card2 = Number($("#parcCard2").find(':selected').attr("data-installmenttotal"));
-                var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", "."));
-                var totalDiscount = Number($('#desconto_checkout').text().replace("R$", "").replace("&nbsp;", "").replace(".", "").replace(",", "."))
-                var juros = (total_card1 + total_card2) - (totalCheckout - totalDiscount);
-                $('#interest_checkout').html(juros.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
                 $('#total_checkout').html((total_card1 + total_card2).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
             }
         });
@@ -2149,7 +2132,6 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
         var obj_parcelamento1 = buscaTotalParcelamentoValor(idBrandCard1, 1, parcCard1, ValorCartao1);
 
         if (Object.keys(obj_parcelamento1).length > 0) {
-            Discount1 = obj_parcelamento1.discount;
             Total += obj_parcelamento1.result;
         }
 
@@ -2159,7 +2141,6 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
         var obj_parcelamento2 = buscaTotalParcelamentoValor(idBrandCard2, 1, parcCard2, ValorCartao2);
 
         if (Object.keys(obj_parcelamento2).length > 0) {
-            Discount2 = obj_parcelamento2.discount;
             Total += obj_parcelamento2.result;
         }
 
@@ -2189,17 +2170,7 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
 
             //var obj_carrinho = buscaValorFinalCarrinho();
             if (Object.keys(obj_parcelamento).length > 0) {
-                var desconto_inicial = $("#desconto_checkout").attr("data-discount-initial");
-
-                if (desconto_inicial.indexOf(',') != -1) {
-                    desconto_inicial = desconto_inicial.substring(0, desconto_inicial.indexOf(','));
-                }
-                desconto_inicial = desconto_inicial.replace(/[^0-9\.-]+/g, "");
-                desconto_inicial = parseFloat(desconto_inicial);
-
-                $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.discount + desconto_inicial));
                 $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.result));
-                $("#interest_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.juros));
             }
         }, 1000)        
     }
@@ -3225,20 +3196,20 @@ function ValeCompraRefresh() {
         method: "GET",
         url: "/Checkout/ValeCompraRefresh",
         success: function (responseValeCompra) {
-
             if (responseValeCompra.success) {
+                if (responseValeCompra.valeCompra !== null) {
+                    var balance = ("" + responseValeCompra.valeCompra.balanceAmount).replace(",", ".");
 
-                var balance = ("" + responseValeCompra.valeCompra.balanceAmount).replace(",", ".");
+                    $('#ShoppingVoucherValue').data('balance', balance);
 
-                $('#ShoppingVoucherValue').data('balance', balance);
+                    var remainingBalance = responseValeCompra.valeCompra.remainingBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    var balanceAmount = responseValeCompra.valeCompra.balanceAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    var suggestedAmount = responseValeCompra.valeCompra.suggestedAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-                var remainingBalance = responseValeCompra.valeCompra.remainingBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                var balanceAmount = responseValeCompra.valeCompra.balanceAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                var suggestedAmount = responseValeCompra.valeCompra.suggestedAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-                $('#ValeCompra_remainingBalance').html(remainingBalance);
-                $('#ValeCompra_balanceAmount').html(balanceAmount);
-                $('#ValeCompra_suggestedAmount').html(suggestedAmount);
+                    $('#ValeCompra_remainingBalance').html(remainingBalance);
+                    $('#ValeCompra_balanceAmount').html(balanceAmount);
+                    $('#ValeCompra_suggestedAmount').html(suggestedAmount);
+                }    
 
                 if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
                     $('.ui.toggle.checkbox.box-card').trigger('click');
@@ -3273,7 +3244,7 @@ function CampoEntregaAgendada() {
             var valorSomaFrete = "";
             var data_selecionada = "";
             var value = "";
-            var ponteiroCurrent = $(".shippingGet", this);
+            var ponteiroCurrent = $(`#radio_${idFrete}.shippingGet`);
             $(".shippingGet").attr("checked", false);
             $(ponteiroCurrent).attr("checked", true);
 

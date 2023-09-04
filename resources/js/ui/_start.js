@@ -46,6 +46,9 @@ require('./modules/policy');
 //--------------------[ MultiCD ]--------------------//
 require('./modules/multiCd');
 
+//--------------------[ Session Idle Modal ]--------------------//
+require('./modules/sessionIdleModal');
+
 //--------------------[ Start Document ]--------------------//
 $(document).ready(function(){
     "use strict";    

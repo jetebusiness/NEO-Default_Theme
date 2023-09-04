@@ -164,6 +164,7 @@
 
     bool showPriceDiscount = LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.HigherDiscount > 0;
     var higherDiscount = LojaCorp.Control.Company._Company.HigherDiscount;
+    var valMinDiscount = LojaCorp.Control.Company._Company.ValMinDiscount;
     var descriptionHigherDiscount = LojaCorp.Control.Company._Company.DescriptionHigherDiscount;
     bool showBillet = !showPriceDiscount || (showPriceDiscount && !string.IsNullOrEmpty(descriptionHigherDiscount) && !descriptionHigherDiscount.ToLower().Contains("boleto"));
     string priceGoogleMerchant = String.Empty;
@@ -463,13 +464,16 @@
                                                                 {
                                                                     var discountCalc = SKUPadrao.PricePromotion - SKUPadrao.PricePromotion / 100 * higherDiscount;
                                                                     priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-                                                                    
-                                                                    <div class="baseDiscount">
-                                                                        <div class="priceDiscount">
-                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+
+                                                                    if (discountCalc > valMinDiscount)
+                                                                    {
+                                                                        <div class="baseDiscount">
+                                                                            <div class="priceDiscount">
+                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                            </div>
+                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
                                                                         </div>
-                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                    </div>
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -503,13 +507,16 @@
                                                                 {
                                                                     var discountCalc = SKUPadrao.Price - SKUPadrao.Price / 100 * higherDiscount;
                                                                     priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-                                                                    
-                                                                    <div class="baseDiscount">
-                                                                        <div class="priceDiscount">
-                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+
+                                                                    if (discountCalc > valMinDiscount)
+                                                                    {
+                                                                        <div class="baseDiscount">
+                                                                            <div class="priceDiscount">
+                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                            </div>
+                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
                                                                         </div>
-                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                    </div>
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -537,24 +544,27 @@
                                                         {
                                                             if (Model.PricePromotion != null && Model.PricePromotion > 0)
                                                             {
-                                                                
+
                                                                 if (showPriceDiscount)
                                                                 {
                                                                     var discountCalc = Model.PricePromotion - Model.PricePromotion / 100 * higherDiscount;
                                                                     priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-                                                                    
-                                                                    <div class="baseDiscount">
-                                                                        <div class="priceDiscount">
-                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+
+                                                                    if (discountCalc > valMinDiscount)
+                                                                    {
+                                                                        <div class="baseDiscount">
+                                                                            <div class="priceDiscount">
+                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                            </div>
+                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
                                                                         </div>
-                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                    </div>
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
                                                                     priceGoogleMerchant = string.Format("{0:0.00}", Model.PricePromotion).Replace(",", ".");
                                                                 }
-                                                                
+
                                                                 decimal dec = (decimal)@Model.PricePromotion;
                                                                 <span class="precoAntigo" id="preco-antigo">@Model.Price.ToString("C")</span>
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
@@ -575,24 +585,27 @@
                                                             }
                                                             else
                                                             {
-                                                                
+
                                                                 if (showPriceDiscount)
                                                                 {
                                                                     var discountCalc = Model.Price - Model.Price / 100 * higherDiscount;
                                                                     priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-                                                                    
-                                                                    <div class="baseDiscount">
-                                                                        <div class="priceDiscount">
-                                                                            R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+
+                                                                    if (discountCalc > valMinDiscount)
+                                                                    {
+                                                                        <div class="baseDiscount">
+                                                                            <div class="priceDiscount">
+                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
+                                                                            </div>
+                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
                                                                         </div>
-                                                                        <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                    </div>
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
                                                                     priceGoogleMerchant = string.Format("{0:0.00}", Model.Price).Replace(",", ".");
                                                                 }
-                                                                
+
                                                                 <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
                                                                 if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
                                                                 {

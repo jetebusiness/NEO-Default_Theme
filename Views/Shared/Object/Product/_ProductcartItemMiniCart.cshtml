@@ -39,7 +39,7 @@
             <div class="kit">
                 @foreach (var productKit in Model.ProductsKit)
                 {
-                    <div class="description">@(string.Concat(string.Format("{0:n0}", productKit.Quantity), " x ", productKit.Name))</div>
+                    <div class="description">@string.Format("{0:c}", productKit.Name)</div>
                 }
             </div>
         }
@@ -54,7 +54,7 @@
             }
         </div>
 
-        <div class="priceProduct" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)" id="priceProduct_@Model.IdCartItem">@(Model.Quantity > 1 ? Model.Quantity+"x" : "") @string.Format("{0:c}", Model.PriceProduct)</div>
+        <div class="priceProduct" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : Model.IdCartItem)" id="priceProduct_@Model.IdCartItem">@string.Format("{0:c}", Model.PriceProduct)</div>
 
         <div class="description">
             @if (Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes)

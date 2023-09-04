@@ -81,7 +81,7 @@
                 else if (Model.SealStatus != null && Model.SealStatus.Name != "Normal")
                 {
                     <div class="ui top right attached label imagetag seals">
-                        <img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)" alt="@Model.Name" title="@Model.Name">
+                        <img src="@Model.SealStatus.Image" alt="@Model.SealStatus.Name" class="ui image tiny" onerror="imgError(this)" title="@Model.Name">
                     </div>
                 }
 
@@ -245,35 +245,43 @@
                     </h3>
                 </a>
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-
                     <meta itemprop="priceCurrency" content="BRL" />
-                    
-                    
                     @{
-
+                        var priceProduct = Model.PricePromotion != null && Model.PricePromotion > 0 ? Model.PricePromotion.Value : Model.Price;
+                        var itempropPrice = priceProduct;
                         if (LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.HigherDiscount > 0)
                         {
                             var higherDiscount = LojaCorp.Control.Company._Company.HigherDiscount;
                             var textDiscount = LojaCorp.Control.Company._Company.DescriptionHigherDiscount;
-                            var priceProduct = Model.PricePromotion != null && Model.PricePromotion > 0 ? Model.PricePromotion : Model.Price;
+                            var valMinDiscount = LojaCorp.Control.Company._Company.ValMinDiscount;
                             var discountCalc = priceProduct - priceProduct / 100 * higherDiscount;
 
-                            <div class="baseDiscount">
-                                <div class="priceDiscount">
-                                    R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @textDiscount</span>
+                            itempropPrice = discountCalc;
+                            
+                            if (priceProduct < valMinDiscount)
+                            {
+                                <div class="baseDiscount">
+                                    <span class="descriptionDiscount">com @(higherDiscount)% de desconto nas compras acima de R$@(valMinDiscount) no @textDiscount</span>
                                 </div>
-                                <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                            </div>
+                            }
+                            else
+                            {
+                                <div class="baseDiscount">
+                                    <div class="priceDiscount">
+                                        R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @textDiscount</span>
+                                    </div>
+                                    <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
+                                </div>
+                            }
                         }
-
+                        
+                        <meta itemprop="price" content="@string.Format("{0:n2}", itempropPrice).Replace(".", "").Replace(",", ".")" />
                     }
-
 
                     @if (Model.PricePromotion != null && Model.PricePromotion > 0)
                     {
                         <span id="basePrice_@Model.IdProduct" class="precoBase">de <i>@string.Format("{0:c}", Model.Price)</i> por @(Session["segment"] != null && Session["segment"].ToString() == "b2b" && Model.AvailableReferences != null ? "a partir de" : string.Empty)</span>
                         <span class="preco">R$ <span>@string.Format("{0:n2}", Model.PricePromotion)</span></span>
-                        <meta itemprop="price" content="@string.Format("{0:n2}", Model.PricePromotion).Replace(".", "").Replace(",", ".")" />
                     }
                     else
                     {
@@ -283,8 +291,8 @@
                             </span>
                             R$ @string.Format("{0:n2}", Model.Price)
                         </span>
-                        <meta itemprop="price" content="@string.Format("{0:n2}", Model.Price).Replace(".", "").Replace(",", ".")" />
                     }
+
                     @if (Model.InstallmentMax != null)
                     {
                         <span class="parcelamento">

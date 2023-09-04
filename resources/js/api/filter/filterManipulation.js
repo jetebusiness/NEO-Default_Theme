@@ -65,10 +65,26 @@ var newFilter = {
             sessionStorage.getItem(configFilter.config.nameSessionPosition) === undefined ||
             reset) {
             sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(this.resetFilter())); //criando valores
+            this.loadParamFromUrl()
             sessionStorage.removeItem(configFilter.config.nameSessionPosition);
         } else
             this.getFilter(); //recuperando valores
 
+    },
+    loadParamFromUrl: function (){
+        if ($(configFilter.config.viewUrl).length > 0 && $(configFilter.config.viewUrl).val().toLowerCase() === "true") {
+
+            var filters = JSON.parse(sessionStorage.getItem(configFilter.config.nameSession));
+
+            let query = window.location.search.slice(1).split("&")
+            for (let param of query) {
+                let [key, val] = param.split("=")
+                filters[key] = val
+            }
+            sessionStorage.setItem(configFilter.config.nameSession, JSON.stringify(filters))
+            this.createLabel()
+            this.checkFilter()
+        }
     },
     urlProducts: function() {
         return "/product/getproducts"+

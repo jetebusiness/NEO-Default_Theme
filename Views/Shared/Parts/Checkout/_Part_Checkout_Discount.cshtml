@@ -1,10 +1,10 @@
 ﻿@model List<DomainCheckout.Entities.PaymentGateway>
 <div class="descontos relaxed list display grid">
     @{
-        bool IsCompraRecorrente = Convert.ToBoolean(TempData["IsRecurrent"]);
+        bool IsRecurrent = Convert.ToBoolean(TempData["IsRecurrent"]);
     }
 
-    @if (!IsCompraRecorrente)
+    @if (!IsRecurrent)
     {
         foreach (var gateway in Model)
         {
@@ -14,81 +14,45 @@
                 {
                     if (brand.Discount > 0)
                     {
-                        if (brand.typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
+                        decimal _exibeDesconto = 0;
+                        if (ViewBag.TotalCarrinho != null)
                         {
-                            decimal _exibeDescontoDebito = 0;
-                            if (ViewBag.TotalCarrinho != null)
+                            if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
                             {
-                                if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
+                                if ((ViewBag.TotalProduto - ViewBag.TotalDiscount) >= brand.ValMinDiscount)
                                 {
-                                    _exibeDescontoDebito = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
-                                }
-                                else
-                                {
-                                    _exibeDescontoDebito = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
-                                }
-                            }
-                            if (ViewBag.TotalCarrinho > _exibeDescontoDebito)
-                            {
-                                <div class="item">
-                                    <div class="content">
-                                        <p class="ui header">
-                                            <span class="text small color green left floated">
-                                                No @brand.NamePayment (@brand.Discount% de desconto)
-                                            </span>
-                                            <span class="ui label green margin none right floated">@string.Format("{0}", _exibeDescontoDebito.ToString("C"))</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            if (brand.Installments.Count() > 0)
-                            {
-                                decimal _exibeDescontoInstallment = brand.Installments != null && brand.Installments.Count() > 0 ? brand.Installments.FirstOrDefault().Total : 0;
-                                if (ViewBag.TotalCarrinho > _exibeDescontoInstallment)
-                                {
-                                <div class="item">
-                                    <div class="content">
-                                        <p class="ui header">
-                                            <span class="text small color green left floated">
-                                                No @brand.NamePayment (@brand.Discount% de desconto)
-                                            </span>
-                                            <span class="ui label green margin none right floated">@string.Format("{0}", _exibeDescontoInstallment.ToString("C"))</span>
-                                        </p>
-                                    </div>
-                                </div>
+                                    _exibeDesconto = Math.Round((ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100), 2);
                                 }
                             }
                             else
                             {
-                                decimal _exibeDescontoBoleto = 0;
-                                if (ViewBag.TotalCarrinho != null)
+                                if (ViewBag.TotalCarrinho >= brand.ValMinDiscount)
                                 {
-                                    if (LojaCorp.Control.Company._Company.DescontoTotalProduto)
-                                    {
-                                        _exibeDescontoBoleto = (ViewBag.TotalCarrinho - ((ViewBag.TotalProduto - ViewBag.TotalDiscount) * brand.Discount) / 100);
-                                    }
-                                    else
-                                    {
-                                        _exibeDescontoBoleto = ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100;
-                                    }
+                                    _exibeDesconto = Math.Round(ViewBag.TotalCarrinho - (ViewBag.TotalCarrinho * brand.Discount) / 100, 2);
                                 }
-                                if (ViewBag.TotalCarrinho > _exibeDescontoBoleto)
-                                {
-                                <div class="item">
-                                    <div class="content">
-                                        <p class="ui header">
+                            }
+                        }
+                        if (_exibeDesconto > 0 && ViewBag.TotalCarrinho > _exibeDesconto)
+                        {
+                            <div class="item">
+                                <div class="content">
+                                    <p class="ui header">
+                                        @if(brand.typeDiscount == DomainCheckout.Entities.typeDiscount.FirstInstalment)
+                                        {
+                                            <span class="text small color green left floated">
+                                                No @brand.NamePayment (@brand.Discount% de desconto) à vista
+                                            </span>
+                                        }
+                                        else
+                                        {
                                             <span class="text small color green left floated">
                                                 No @brand.NamePayment (@brand.Discount% de desconto)
                                             </span>
-                                            <span class="ui label green margin none right floated">@string.Format("{0}", _exibeDescontoBoleto.ToString("C"))</span>
-                                        </p>
-                                    </div>
+                                        }               
+                                    <span class="ui label green margin none right floated">@string.Format("{0}", _exibeDesconto.ToString("C"))</span>
+                                    </p>
                                 </div>
-                                }
-                            }
+                            </div>
                         }
                     }
                 }

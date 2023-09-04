@@ -27,22 +27,18 @@ $(document).ready(function () {
     window.onload = function () {
         $('.recurrentperiods').popup();
 
-        $("#quantidade").keyup(function (e) {
-            if ($(this).val().length > 0){
+        $("#quantidade").on("change", function () {
+            if ($(this).val().length > 0) {
                 var valor_final = SomenteNumerosPositivos($(this).val());
                 $(this).val(valor_final);
                 AtualizarQuantidade();
                 e.stopPropagation();
-            }
-        });
-
-        $("#quantidade").blur(function (e) {
-            if ($(this).val().length == 0) {
+            } else {
                 $(this).val(1);
                 AtualizarQuantidade();
                 e.stopPropagation();
             }
-        });
+        })
 
         $(".variacao[data-idSku]").click(function () {
 
@@ -361,56 +357,60 @@ export function AtualizarQuantidade() {
         $("#quantidade").val("1");
     }
 
-    let preco = parseFloat(SomenteNumeros($("#preco-unidade").val())),
-        preco_promocao = SomenteNumeros($("#preco-promocao-unidade").val()),
-        preco_max = SomenteNumeros($("#parcela-maxima-unidade").val()),
-        max_p = $("#qtd-parcela-maxima-unidade").val(),
-        description = $("#pagamento-descricao").val(),
-        desconto_boleto = $("#desconto_boleto").val(),
-        preco_final = 0;
-
-
-    $("#max-value").text(moneyPtBR(quantidade * preco_max));
-    $("#max-p").text(max_p + "X de ");
-    $("#description").text("(" + description + ")");
-
-    if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) === false) {
-        preco_final = quantidade * preco_promocao;
-        $("#preco-antigo").text(moneyPtBR(quantidade * preco));
-    } else {
-        preco_final = quantidade * preco;
-        $("#preco-antigo").text("");
-    }
-
-    $("#preco").text(moneyPtBR(preco_final));
-    $("#preco").data("preco-inicial", preco_final);
-
-
-    if($(".total-personalization").length > 0) {
-        var personalizationValue = 0;
-
-        $("input, select", "#personalizations").each(function () {
-            if ($(this).is(":checked") || ($(this).prop('nodeName').toLowerCase() === 'select' && $(this).val() !== "")) {
-                personalizationValue += parseFloat($(this).data('price'))
-            }
-        });
-
-        personalizationValue = personalizationValue * quantidade;
-
-        $('.product-value', '.total-personalization').html(moneyPtBR(parseFloat(preco_final)))
-        $('.personalization-value', '.total-personalization').html(moneyPtBR(personalizationValue))
-        $('.total-value', '.total-personalization').html(moneyPtBR(personalizationValue + parseFloat(preco_final)))
-    }
-
-    getDiscountStore(variations.config.htmlPrice.containerValues, preco_final)
-
-    if (desconto_boleto !== "0,00") {
-        var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * parseFloat(desconto_boleto)));
-        $("#preco_boleto").text("ou "+valor_boleto+" no boleto bancário ("+desconto_boleto+"% de desconto)");
-    }
 
     var stock = $("#produto-stock").val();
-    if (parseInt(stock) > quantidade) {
+    if (parseInt(stock) < quantidade) {
+        _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning")
+        $("#quantidade").val(stock)
+    } else {
+        let preco = parseFloat(SomenteNumeros($("#preco-unidade").val())),
+            preco_promocao = SomenteNumeros($("#preco-promocao-unidade").val()),
+            preco_max = SomenteNumeros($("#parcela-maxima-unidade").val()),
+            max_p = $("#qtd-parcela-maxima-unidade").val(),
+            description = $("#pagamento-descricao").val(),
+            desconto_boleto = $("#desconto_boleto").val(),
+            preco_final = 0;
+
+
+        $("#max-value").text(moneyPtBR(quantidade * preco_max));
+        $("#max-p").text(max_p + "X de ");
+        $("#description").text("(" + description + ")");
+
+        if (preco_promocao != null && preco_promocao != "" && isNaN(preco_promocao) === false) {
+            preco_final = quantidade * preco_promocao;
+            $("#preco-antigo").text(moneyPtBR(quantidade * preco));
+        } else {
+            preco_final = quantidade * preco;
+            $("#preco-antigo").text("");
+        }
+
+        $("#preco").text(moneyPtBR(preco_final));
+        $("#preco").data("preco-inicial", preco_final);
+
+
+        if($(".total-personalization").length > 0) {
+            var personalizationValue = 0;
+
+            $("input, select", "#personalizations").each(function () {
+                if ($(this).is(":checked") || ($(this).prop('nodeName').toLowerCase() === 'select' && $(this).val() !== "")) {
+                    personalizationValue += parseFloat($(this).data('price'))
+                }
+            });
+
+            personalizationValue = personalizationValue * quantidade;
+
+            $('.product-value', '.total-personalization').html(moneyPtBR(parseFloat(preco_final)))
+            $('.personalization-value', '.total-personalization').html(moneyPtBR(personalizationValue))
+            $('.total-value', '.total-personalization').html(moneyPtBR(personalizationValue + parseFloat(preco_final)))
+        }
+
+        getDiscountStore(variations.config.htmlPrice.containerValues, preco_final)
+
+        if (desconto_boleto !== "0,00") {
+            var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * parseFloat(desconto_boleto)));
+            $("#preco_boleto").text("ou "+valor_boleto+" no boleto bancário ("+desconto_boleto+"% de desconto)");
+        }
+
         if (preco_promocao != "" && preco_promocao != null && preco_promocao > 0) {
             AtualizarParcelamento(quantidade * preco_promocao);
         } else {

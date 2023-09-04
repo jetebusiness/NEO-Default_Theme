@@ -80,7 +80,6 @@ $(document).ready(function () {
     })
 
     $(document).on("click", "#reprintBankSlip", function () {
-        openShopline()
         $.ajax({
             method: "GET",
             url: "/Checkout/ReprintBankSlip",
