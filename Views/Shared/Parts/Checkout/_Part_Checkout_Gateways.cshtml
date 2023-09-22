@@ -130,6 +130,10 @@
                                     <!-- Mercado Pago PIX -->
                                     @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_Pix.cshtml", itemM.PaymentBrands)
                                     break;
+                                case 28:
+                                    <a class="item itemTabPayment" data-tab="picpay"><div class="text"><i class="icon qrcode"></i><span>PicPay</span></div></a>
+                                    @Html.Partial("~/Views/Shared/Parts/Checkout/_Part_Checkout_Pagamento_PicPay.cshtml", itemM.PaymentBrands)
+                                    break;
                             }
                         }
                     }

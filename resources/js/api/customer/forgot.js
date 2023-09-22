@@ -1,23 +1,47 @@
 ﻿import {_alert, _confirm} from "../../functions/message";
-import {isValidEmail} from "../../functions/validate"
+import { isValidEmail } from "../../functions/validate"
+import { generateRecaptcha } from "../../ui/modules/recaptcha";
 
 $(document).ready(function () {
-
     $("#recuperarSenha").click(function () {
-        forgotByEmail();
+        preLogin("password");
     });
 
     $("#recuperaEmail").click(function () {
-        forgotByCpfPassword();
+        preLogin("email");
   });
-
-
-
 
 });
 
-function forgotByEmail() {
+function preLogin(recoverType) {
+    var form = $('#formRecover');
+    var googleRecaptchaStatus = !$("[id^=googleResponse]", form).length;
+    var _googleResponse = $("[id^=googleResponse]").val()
 
+    if (googleRecaptchaStatus) {
+        if (recoverType == "password")
+            forgotByEmail(googleRecaptchaStatus, _googleResponse);
+        if (recoverType == "email")
+            forgotByCpfPassword(googleRecaptchaStatus, _googleResponse);
+    } else {
+        if ($("[id^=googleVersion]", form).val() === "2") {
+            if (generateRecaptcha($("[id^=googleModule]", form).val(), form)) {
+                if (recoverType == "password")
+                    forgotByEmail(googleRecaptchaStatus, _googleResponse);
+                if (recoverType == "email")
+                    forgotByCpfPassword(googleRecaptchaStatus, _googleResponse);
+            }
+        } else {
+            if (recoverType == "password")
+                forgotByEmail(googleRecaptchaStatus, _googleResponse);
+            if (recoverType == "email")
+                forgotByCpfPassword(googleRecaptchaStatus, _googleResponse);
+        }
+    }
+}
+
+function forgotByEmail(googleRecaptchaStatus, _googleResponse) {
+    var form = $('#formRecover');
     var _email = $("#email").val();    
     if(_email == ""){
         _alert("", "Informe um e-mail.", "warning")
@@ -31,7 +55,7 @@ function forgotByEmail() {
             method: "POST",
             dataType: "json",
             url: _url,
-            data:{email:_email},
+            data: { email: _email, googleResponse: _googleResponse },
             success: function (data) {
                 if(data.Success)
                     _alert("", data.Message, "success")
@@ -39,6 +63,9 @@ function forgotByEmail() {
                     _alert("", data.Message, "error")
             },
             error: function (data) {
+                if (!googleRecaptchaStatus)
+                    (typeof grecaptcha !== "undefined" && $("[id^=googleVersion_]").eq(0).val() === "2" ? grecaptcha.reset() : "")
+
                 _alert("", data.Message, "error")
             }
         });
@@ -49,8 +76,8 @@ function forgotByEmail() {
 }
 
 
-function forgotByCpfPassword() {
-
+function forgotByCpfPassword(googleRecaptchaStatus, _googleResponse) {
+    var form = $('#formRecover');
     var _cpf = $("#cpf").val();
     var _password = $("#password").val();
     var _url = "/customer/RecoverEmailByCpfPassword";
@@ -63,7 +90,7 @@ function forgotByCpfPassword() {
     $.ajax({
         method: "POST",
         url: _url,
-        data: { cpf: _cpf, password: _password},
+        data: { cpf: _cpf, password: _password, googleResponse: _googleResponse },
         success: function (result) {
             if (result.Success) {
                 _alert("","O seu e-mail de cadastro é: " + result.Message, "success")
@@ -73,6 +100,9 @@ function forgotByCpfPassword() {
             }
         },
         error: function (result) {
+            if (!googleRecaptchaStatus)
+                (typeof grecaptcha !== "undefined" && $("[id^=googleVersion_]").eq(0).val() === "2" ? grecaptcha.reset() : "")
+
             _alert("","Falha ao buscar o e-mail!", "error")
         }
     });

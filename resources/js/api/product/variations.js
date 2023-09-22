@@ -6,6 +6,7 @@ var json,
 
 variations = {
     config: {
+        containerDefault: '#variations-container', //div responsavel por receber as variacoes default
         container: '#variations-container', //div responsavel por receber as variacoes
         references: '#json-detail', //json que contem todas as referencias
         selectedReferences: '#principal-referencias-selecionadas',
@@ -336,9 +337,19 @@ variations = {
             //removendo o sku selecionado
             $(variations.config.productSKU).val('')
 
+            reloadVariations = true;
+            var elemento = this;
+            while (elemento.parentElement) {
+                elemento = elemento.parentElement;
+                if (elemento.getAttribute('id') === 'variations-buy-together') {
+                    reloadVariations = false;
+                    break;
+                }
+            }
 
             //removendo a mensagem de estoque
-            $('#' + variations.config.stock.messageStockContainer).remove()
+            if (reloadVariations)
+                $('#' + variations.config.stock.messageStockContainer).remove()
 
             //se for a ultima variacao, realiza a atualizacao de valores do produto, caso contrario percorre o fluxo para esconder ou mostrar as variacoes
             if($(this).data("skucode")) {
@@ -346,7 +357,7 @@ variations = {
                 $(this).addClass("select")
 
                 //atualizando valores
-                variations.reloadValues($(this))
+                variations.reloadValues($(this), reloadVariations)
 
             } else {
 
@@ -498,15 +509,18 @@ variations = {
             if ($this.data("video-url").length > 0) {
                 $("#imagem-padrao").hide();
                 $("#imagem-padrao").attr('style', 'display: none !important');
+                $(".seals").attr('style', 'display: none !important');
 
                 $("#video-product").attr('src', $this.data("video-url"));
 
                 $("#video-product").show();
             } else {
+                $(".seals").show();
                 $("#imagem-padrao").show();
                 $("#video-product").hide();
                 $("#video-product").attr('src', '');
             }
+ 
 
             if ($toggle.data("active") === true || !variations.isDevice()) {
                 $easyzoom.easyZoom().filter('.easyzoom--with-thumbnails').data('easyZoom').swap($this.data('standard'), $this.attr('href'));
@@ -539,7 +553,7 @@ variations = {
         return money;
     },
     //atualizando os valores
-    reloadValues: async function(values) {
+    reloadValues: async function (values, reloadValues = true) {
 
         var IdSku = values.data("idsku");
         var quantity = parseInt($(this.config.htmlPrice.quantity).val());
@@ -554,6 +568,7 @@ variations = {
         var Discount = parseFloat($(this.config.htmlPrice.discountBillet).val().replace(',', '.'));
         var personalization = $(this.config.personalization.total.container).length > 0;
         var isLoaded = $(this.config.container).hasClass("loaded");
+        var reload = reloadValues;
 
         if(!isLoaded)
             await this.getDiscountStore();
@@ -675,14 +690,31 @@ variations = {
         )
 
         //mensagem de quantidade em estoque
-        if(this.config.stock.showMessageStock)
+        if (this.config.stock.showMessageStock) {
+            if (reload) {
+                if (Stock >= 1 && Stock <= this.config.stock.maxStockValue) {
+                    $('[id="' + this.config.stock.messageStockContainer + '"]').remove();
 
-            if(Stock >= 1 && Stock <= this.config.stock.maxStockValue )
-                if($('#' + this.config.stock.messageStockContainer).length == 0)
-                    $(this.config.container).append('<div class="ui label text regular basic margin top bottom medium" id="'+ this.config.stock.messageStockContainer +'">'+ this.config.stock.messageStockHtml.replace('${value}', Stock) +'</div>')
-                else
-                    $('#' + this.config.stock.messageStockContainer).html(this.config.stock.messageStockHtml.replace('${value}', Stock))
-
+                    if ($('#' + this.config.stock.messageStockContainer).length == 0) {
+                        if ($(this.config.container).prop('id') !== $(this.config.containerDefault).prop('id')) {
+                            $(this.config.containerDefault).append('<div class="ui label text regular basic margin top bottom medium" id="' + this.config.stock.messageStockContainer + '">' + this.config.stock.messageStockHtml.replace('${value}', Stock) + '</div>')
+                        }
+                        else {
+                            $(this.config.container).append('<div class="ui label text regular basic margin top bottom medium" id="' + this.config.stock.messageStockContainer + '">' + this.config.stock.messageStockHtml.replace('${value}', Stock) + '</div>')
+                        }
+                    }
+                    else {
+                        $('#' + this.config.stock.messageStockContainer).html(this.config.stock.messageStockHtml.replace('${value}', Stock))
+                        if ($(this.config.container).prop('id') !== $(this.config.containerDefault).prop('id')) {
+                            $(this.config.containerDefault).append('<div class="ui label text regular basic margin top bottom medium" id="' + this.config.stock.messageStockContainer + '">' + this.config.stock.messageStockHtml.replace('${value}', Stock) + '</div>')
+                        }
+                        else {
+                            $(this.config.container).append('<div class="ui label text regular basic margin top bottom medium" id="' + this.config.stock.messageStockContainer + '">' + this.config.stock.messageStockHtml.replace('${value}', Stock) + '</div>')
+                        }
+                    }
+                }
+            }
+        }
 
         //se a variacao estiver esgotada, esconde os itens e exibe o avise-me
         if (Stock == 0) {

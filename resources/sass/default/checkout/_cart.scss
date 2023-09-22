@@ -141,6 +141,12 @@ $radiusBox: 0px;
         cursor: pointer !important;
         font-weight: 400;
     }
+
+    .shippingDescription {
+        display: flex;
+        font-size: .8rem;
+        font-style: italic;
+    }
 }
 
 .header-checkout {
@@ -875,13 +881,14 @@ $radiusBox: 0px;
 
 #updateShippingPayment {
     #GetShippping {
-        margin-left:0;
+        margin-left: 0;
         margin-right: 0;
+
         &.card-checkout {
             .card {
                 box-shadow: none !important;
                 border-radius: 8px !important;
-                padding:1em;
+                padding: 1em;
                 cursor: pointer;
 
                 @media only screen and (max-width: $mobile-bp) {
@@ -889,11 +896,13 @@ $radiusBox: 0px;
                     margin-left: 0;
                     margin-right: 0;
                 }
-               
+
                 .checkbox {
                     width: 100%;
+
                     label {
                         font-weight: 600;
+
                         span {
                             display: block;
                             line-height: 25px;
@@ -904,7 +913,7 @@ $radiusBox: 0px;
 
                 .meta {
                     padding-left: 2rem;
-                    color:#000;
+                    color: #000;
                 }
 
                 &.checked {
@@ -912,6 +921,13 @@ $radiusBox: 0px;
                 }
             }
         }
+    }
+
+    .shippingDescription {
+        display: flex;
+        font-size: .8rem;
+        font-style: italic;
+        font-weight: normal;
     }
 }
 

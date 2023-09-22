@@ -26,7 +26,7 @@
 <div class="ui grid middle aligned center aligned">
     <div class="row">
         <div class="ten wide computer sixteen wide tablet sixteen wide mobile column">
-            <form action="" class="ui large form">
+            <form action="" id="formRecover" class="ui large form">
                 <div class="ui segment">
                     <div class="ui grid very relaxed stackable middle aligned grid">
                         <div class="row two column">
@@ -62,6 +62,9 @@
                                 </div>
                                 <div class="ui large primary submit button" id="recuperaEmail">Recuperar Email</div>
                             </div>
+                        </div>
+                        <div class="ui row centered">
+                            @Html.Action("getRecaptchaV3", "company", new { Module = "RecoverPassword" })
                         </div>
                     </div>
                 </div>

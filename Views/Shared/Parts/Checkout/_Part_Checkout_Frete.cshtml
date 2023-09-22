@@ -85,7 +85,12 @@
 
                             @if (item.ShippingMode.ScheduledDelivery)
                             {
-                                <label>@(item.ShippingMode.Name + " (*)") </label>
+                                <label>@(item.ShippingMode.Name + " (*)")
+                                @if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
+                                {
+                                    <small class="shippingDescription">@item.ShippingMode.Description</small>
+                                }
+                                </label>
                             }
                             else if (item.ShippingMode.DeliveryTime == null)
                             {
@@ -93,9 +98,21 @@
                             }
                             else
                             {
-                                <label>@item.ShippingMode.Name <span>(@item.ShippingMode.DeliveryTime dia(s) @string.Format("{0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 0 || item.ShippingMode.DeliveryTime == 0) ? "úteis" : "útil") : ""))</span> </label>
+                                <label>
+                                    @item.ShippingMode.Name
+                                    @if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
+                                    {
+                                        <small class="shippingDescription">@item.ShippingMode.Description</small>
+                                    }
+                                    <span>
+                                        @Html.Raw(string.Format("Previsão: {0}", (!String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? Convert.ToDateTime(item.ShippingMode.DeliveryEstimateDate).ToString("dd/MM/yyyy") : ""))
+                                        + string.Format("{0}", !String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? " (" : "")
+                                        + string.Format("{0}{1}", item.ShippingMode.DeliveryTime, item.ShippingMode.DeliveryTime > 1 ? " dias" : " dia")
+                                        + string.Format(" {0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 1 || item.ShippingMode.DeliveryTime == 0) ? " úteis" : " útil") : "")
+                                        + string.Format("{0}", !String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? ")" : ""))
+                                    </span>
+                                </label>
                             }
-
                         </div>
                     </div>
                     <div class="meta">

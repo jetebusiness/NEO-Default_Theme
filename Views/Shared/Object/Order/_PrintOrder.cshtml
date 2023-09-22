@@ -61,7 +61,11 @@
                                 <i class="shipping icon"></i>
                                 <div class="content">
                                     Prazo de Entrega:
-                                    <strong>@((Model.DeliveryTime == 0) ? "Imediáto." : Model.DeliveryTime + " dia(s)" + ((Model.UsefulDay == true) ? ((Model.DeliveryTime >= 1) ? " úteis" : " útil") : "") + ".")</strong>
+                                    <strong>@((Model.DeliveryTime == 0) ? "Imediato." : "Previsão " + (!String.IsNullOrEmpty(Model.DeliveryEstimateDate) ? Convert.ToDateTime(Model.DeliveryEstimateDate).ToString("dd/MM/yyyy") : "")
+                                            + (!String.IsNullOrEmpty(Model.DeliveryEstimateDate) ? " (" : " ")
+                                            + Model.DeliveryTime + (Model.DeliveryTime > 1 ? " dias" : " dia") + ((Model.UsefulDay == true) ? ((Model.DeliveryTime > 1) ? " úteis" : " útil") : "")
+                                            + (!String.IsNullOrEmpty(Model.DeliveryEstimateDate) ? ")" : "")
+                                            + ".")</strong>
                                     <em>* Após a data de confimação de pagamento.</em>
                                 </div>
                             </div>
@@ -138,6 +142,20 @@
                                         </div>
                                     </div>
                                 }
+                                @* Forma de pagamento com PicPay*@
+                                else if (Model.IdPaymentBrand == 370 && !string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeUrl))
+                                {
+                                    <a href="javascript:void(0)" id="btnOpenMercadoPagoPix" class="ui action button">Copiar código</a>
+                                    <div class="ui modal mercadopago-pix">
+                                        <i class="close icon"></i>
+                                        <div class="content" style="text-align: center;">
+                                            <h3>Abra o PicPay em seu celular e escaneie o código abaixo para realizar o pagamento.</h3>
+                                            <img src="@ViewBag.QrCodeUrl" width="250px" /><br />
+                                            <div class="ui message compact margin top bottom small" style="max-width: 100%;word-break: break-all;">@ViewBag.QrCode</div>
+                                            <a href="@ViewBag.QrCode" class="ui large action button margin none" id="CopyQrCodePicPay">Copiar código</a>
+                                        </div>
+                                    </div>
+                                }
                                 @* Forma de pagamento com PIX PagHiper*@
                                 else if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeUrl))
                                 {
@@ -147,7 +165,7 @@
                                         <div class="content" style="text-align: center;">
                                             <h3>Escaneie ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
                                             <img src="@ViewBag.QrCodeUrl" width="250px" /><br />
-                                            <div class="ui message compact margin top bottom small">@ViewBag.QrCode</div>
+                                            <div class="ui message compact margin top bottom small" style="max-width: 100%;word-break: break-all;">@ViewBag.QrCode</div>
                                             <a href="@ViewBag.QrCode" class="ui large action button margin none" id="CopyQrCode">PIX Copia e cola</a>
                                         </div>
                                     </div>
@@ -171,7 +189,7 @@
                                         <div class="content" style="text-align: center;">
                                             <h3>Escaneie ou copie o código Pix para realizar o pagamento através de sua conta.</h3>
                                             <img src="data:image/jpeg;base64,@ViewBag.QrCodeBase64" width="250px" /><br />
-                                            <div class="ui message compact margin top bottom small">@ViewBag.QrCode</div>
+                                            <div class="ui message compact margin top bottom small" style="max-width: 100%;word-break: break-all;">@ViewBag.QrCode</div>
                                             <a href="@ViewBag.QrCode" class="ui large action button margin none" id="CopyQrCode">PIX Copia e cola</a>
                                         </div>
                                     </div>
@@ -229,12 +247,32 @@
                                 @(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping)<br>
                             </div>
                         </div>
+                        @if (!String.IsNullOrEmpty(Model.TrackingNumber))
+                        {
+                            <div class="item">
+                                <i class="shipping icon"></i>
+                                <div class="content">
+                                    Código Rastreio: @Model.TrackingNumber<br>
+                                </div>
+                            </div>
+                        }
+                            
+                        @if (string.IsNullOrEmpty(Model.ShippingDescription) == false)
+                        {
+                            <div class="item">
+                                <i class="shipping icon"></i>
+                                <div class="content">
+                                    @Model.ShippingDescription<br>
+                                </div>
+                            </div>
+                        }
                         <div class="item margin top medium">
                             @{
-                                if (!string.IsNullOrEmpty(Model.HistoryListOrderStatus.LastOrDefault().TrackingLink))
+                                List<DomainOrder.Entities.OrderStatus> TrackingLink = Model.HistoryListOrderStatus.Where(c => c.StatusCode == "07").ToList();
+                                if (!string.IsNullOrEmpty(TrackingLink.FirstOrDefault().TrackingLink))
                                 {
 
-                                    <a href="@Model.HistoryListOrderStatus.LastOrDefault().TrackingLink" class="ui button positive">Rastrear Pedido</a>
+                                    <a href="@TrackingLink.FirstOrDefault().TrackingLink" target="_blank" class="ui button positive">Rastrear Pedido</a>
                                 }
 
                                 foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus.Where(o => o.DateRegisterStatus != null).OrderByDescending(o => o.DateRegisterStatus).ToList())
@@ -244,10 +282,10 @@
                                         if (ViewBag.Yami != null && ViewBag.Yami.Trim() != "")
                                         {
                                             string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
-                                            <a href="@urlYami" class="ui button orange btn-yami">Solicitar troca/devolução</a>
+                                            <a href="@urlYami" target="_blank" class="ui button orange btn-yami">Solicitar troca/devolução</a>
 
                                             string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
-                                            <a href="@urlYamiAcompanha" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>
+                                            <a href="@urlYamiAcompanha" target="_blank" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>
                                         }
                                     }
                                     break;
@@ -275,7 +313,17 @@
                             <div class="@(status.DateRegisterStatus == null ? "disabled" : "active") step">
                                 <i class="@status.Icon icon"></i>
                                 <div class="content">
-                                    <div class="title">@status.StatusName</div>
+                                    <div class="title">@status.StatusName 
+                                    @if(status.StatusCode == "04" && status.OrderInfo.HasXMLNFe == true)
+                                    {
+                                        <div class="description">Conteudo NF-e: 
+                                            <a class="text regular" href="/order/getpdfnfe/@Model.IdOrder" target="_blank">
+                                                <u class="text regular">Vizualizar NFE</u>
+                                            </a>
+                                        </div>
+                                        
+                                    }
+                                    </div>
                                     <div class="description">
                                         @Html.Raw(status.Message)
                                     </div>
@@ -343,10 +391,6 @@
                         <tr>
                             <th colspan="4" class="right aligned">Valor do Frete</th>
                             <th class="right aligned">@string.Format("{0:c}", Model.TotalShipping)</th>
-                        </tr>
-                        <tr>
-                            <th colspan="4" class="right aligned">Juros</th>
-                            <th class="right aligned">@string.Format("{0:c}", (Model.InterestValue != null ? Model.InterestValue : 0))</th>
                         </tr>
                         <tr>
                             <th colspan="4" class="right aligned">Valor do Desconto</th>

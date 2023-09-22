@@ -783,11 +783,18 @@ function calcShipping() {
                                     usefulDay = ' úteis';
                                 }
                             }
+                            let deliveryEstimateDate = "Previsão: ";
+                            if (item.ShippingMode.DeliveryEstimateDate !== null) {
+                                deliveryEstimateDate += new Date(item.ShippingMode.DeliveryEstimateDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) + " - ";
+                            }
+                            var textDescription = "";
+                            if (item.ShippingMode.Description !== null)
+                                textDescription = '<small class="shippingDescription">' + item.ShippingMode.Description + '</small>';
 
                             var strTr = '<tr>' +
-                                '<td>' + item.ShippingMode.Name + '</td>' +
+                                '<td>' + item.ShippingMode.Name + textDescription + '</td> ' +
                                 '<td align="center">' + valueShipping + '</td>' +
-                                '<td align="center">' + ((item.ShippingMode.ScheduledDelivery) ? '(*)' : ((item.ShippingMode.DeliveryTime == null) ? '( Envio Imediato )' : item.ShippingMode.DeliveryTime + ' dia(s)' + usefulDay + '.')) + '</td>' +
+                                '<td align="center">' + ((item.ShippingMode.ScheduledDelivery) ? '(*)' : ((item.ShippingMode.DeliveryTime == null) ? '( Envio Imediato )' : deliveryEstimateDate + item.ShippingMode.DeliveryTime + (item.ShippingMode.DeliveryTime > 1 ? ' dias' : ' dia') + usefulDay + '.')) + '</td>' +
                                 '</tr>';
                             $('#listSimulateFreight').append(strTr);
                         });

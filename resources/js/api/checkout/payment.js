@@ -4039,6 +4039,31 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('click', '#CopyQrCodePicPay', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $(this).html("Copiar código");
+
+        if ($(this).attr("disabled") != "disabled") {
+            let value = $(this).attr("href");
+
+            let inputTest = document.createElement("input");
+            inputTest.value = value;
+            //Anexa o elemento ao body
+            document.body.appendChild(inputTest);
+            //seleciona todo o texto do elemento
+            inputTest.select();
+            //executa o comando copy
+            //aqui é feito o ato de copiar para a area de trabalho com base na seleção
+            document.execCommand('copy');
+            //remove o elemento
+            document.body.removeChild(inputTest);
+
+            $(this).html($(this).text() + ' <i class="check icon"></i>');
+        }
+    });
+
     $(document).on('click', '#PaymentLinkCopy', function (e) {
         e.preventDefault();
         e.stopPropagation();

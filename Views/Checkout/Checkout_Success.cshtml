@@ -1,4 +1,4 @@
-Ôªø@model DomainOrder.Entities.Order
+@model DomainOrder.Entities.Order
 
 @{
     ViewBag.Title = "Pedido Finalizado";
@@ -18,12 +18,12 @@
 
     if (Request.QueryString["s"] == null)
     {
-        tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Assinatura Confirmada" : "Assinatura n√£o Confirmada");
+        tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Assinatura Confirmada" : "Assinatura n„o Confirmada");
         msgSucesso = Request.QueryString["m"] == null ? "Seu pedido foi realizado com sucesso. Agora falta pouco para receber seus produtos." : string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
 
         if (String.IsNullOrEmpty(Model.RecurrentCodePlan))
         {
-            tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido n√£o Confirmado");
+            tituloSucesso = string.Format("{0}", Request.QueryString["m"] == null ? "Pedido Confirmado" : "Pedido n„o Confirmado");
         }
 
     }
@@ -37,7 +37,7 @@
         }
         else
         {
-            tituloSucesso = "Assinatura n√£o Confirmada";
+            tituloSucesso = "Assinatura n„o Confirmada";
             msgSucesso = string.Format("Ocorreu um erro ao realizar o pagamento. {0}", LojaCorp.Control.Static.DecryptData(Request.QueryString["m"].ToString()));
         }
 
@@ -50,7 +50,7 @@
             }
             else
             {
-                tituloSucesso = "Pedido n√£o Confirmado";
+                tituloSucesso = "Pedido n„o Confirmado";
             }
         }
 
@@ -69,7 +69,7 @@
                     <span><i class="icon check"></i></span>
                 </div>
             </div>
-            <h4>Identifica√ß√£o</h4>
+            <h4>IdentificaÁ„o</h4>
         </div>
         <div class="jCrumb completed">
             <div class="jBullet">
@@ -85,7 +85,7 @@
                     <span>3</span>
                 </div>
             </div>
-            <h4>Confirma√ß√£o</h4>
+            <h4>ConfirmaÁ„o</h4>
         </div>
     </div>
 }
@@ -126,10 +126,22 @@
             </div>
             <div class="row text center">
                 @{
-                    if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64))
+                    if (Model.IdPaymentBrand == 370 && !string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeUrl)) 
                     {
                         <div class="column">
-                            <h3>Escaneie ou copie o c√≥digo Pix para realizar o pagamento atrav√©s de sua conta.</h3>
+                            <h3>Abra o PicPay em seu celular e escaneie o cÛdigo abaixo para realizar o pagamento.</h3>
+                            <img src="@ViewBag.QrCodeUrl" width="250px" /><br />
+                            <div class="ui divQrCode">@ViewBag.QrCode</div>
+                            <button class="ui right labeled icon button action" id="CopyQrCode">
+                                <i class="copy outline icon"></i>
+                                Copiar†cÛdigo
+                            </button>
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeBase64))
+                    {
+                        <div class="column">
+                            <h3>Escaneie ou copie o cÛdigo Pix para realizar o pagamento atravÈs de sua conta.</h3>
                             <img src="data:image/jpeg;base64,@ViewBag.QrCodeBase64" width="250px" /><br />
                             <div class="ui divQrCode">@ViewBag.QrCode</div>
                             <button class="ui right labeled icon button action" id="CopyQrCode">
@@ -141,7 +153,7 @@
                     else if (!string.IsNullOrEmpty(ViewBag.QrCode) && !string.IsNullOrEmpty(ViewBag.QrCodeUrl))
                     {
                         <div class="column">
-                            <h3>Escaneie ou copie o c√≥digo Pix para realizar o pagamento atrav√©s de sua conta.</h3>
+                            <h3>Escaneie ou copie o cÛdigo Pix para realizar o pagamento atravÈs de sua conta.</h3>
                             <img src="@ViewBag.QrCodeUrl" width="250px" /><br />
                             <div class="ui divQrCode">@ViewBag.QrCode</div>
                             <button class="ui right labeled icon button action" id="CopyQrCode">
@@ -150,6 +162,7 @@
                             </button>
                         </div>
                     }
+
 
                     if (!string.IsNullOrEmpty(ViewBag.PaymentLink))
                     {
@@ -160,7 +173,7 @@
                     if (!string.IsNullOrEmpty(ViewBag.DigitableLine))
                     {
                         <div class="column">
-                            <div class="header">INFORMA√á√ïES DO BOLETO</div>
+                            <div class="header">INFORMA«’ES DO BOLETO</div>
                             <div class="ui message compact margin top bottom small">@ViewBag.DigitableLine</div>
                         </div>
 
@@ -414,7 +427,7 @@
                             <div class="column">
                                 <a href="/home" class="ui animated button fluid large basic"
                                    tabindex="0">
-                                    <div class="visible content">Voltar √† Loja</div>
+                                    <div class="visible content">Voltar ‡ Loja</div>
                                     <div class="hidden content">
                                         <i class="left arrow icon"></i>
                                     </div>
@@ -424,20 +437,20 @@
                     </div>
                 </div>
             </div>
-            <!-- Come√ßo do Itau Shopline -->
+            <!-- ComeÁo do Itau Shopline -->
             <div class="ui modal shopline">
                 <div class="content">
                     <iframe name="openShopline" id="openShopline" style="width: 100%; height: 33em; border: none;"></iframe>
                 </div>
             </div>
             <!-- Final do Itau Shopline -->
-            <!-- Come√ßo do PagSeguro D√©bito -->
+            <!-- ComeÁo do PagSeguro DÈbito -->
             <div class="ui modal pagseguro">
                 <div class="content">
                     <iframe name="openPagSeguro" id="openPagSeguro" style="width: 100%; height: 33em; border: none;"></iframe>
                 </div>
             </div>
-            <!-- Final do PagSeguro D√©bito -->
+            <!-- Final do PagSeguro DÈbito -->
         </div>
     </div>
 </div>
