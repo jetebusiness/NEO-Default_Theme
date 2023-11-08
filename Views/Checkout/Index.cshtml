@@ -13,6 +13,9 @@
     string Env = "sandbox";
     bool Active = false;
     string RecoverCartErrorMsg = TempData["RecoverCartError"] != null ? TempData["RecoverCartError"].ToString() : null;
+    bool ShowAlert = TempData["HasCartItens"] != null ? Convert.ToBoolean(TempData["HasCartItens"]) : false;
+    string hashAbandonedCart = Session["HashAbandonedCart"] != null ? Session["HashAbandonedCart"].ToString() : null;
+
 
     if (payPal != null && payPal.Active)
     {
@@ -31,6 +34,57 @@
     <a href="/home" title="@LojaCorp.Control.Company._Company.FantasyName">
         <img class="ui middle aligned image logo" src="~/assets/image/logo/logo.png" />
     </a>
+}
+@if (ShowAlert)
+{
+    @section custom_js{
+        <script>
+            $(document).ready(function () {
+                swal({
+                    text: 'Você já possui itens em seu carrinho, caso atualize com os produtos do link, os itens de seu carrinho serão removidos. Deseja atualizar o carrinho?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#16ab39',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sim',
+                    cancelButtonText: 'Não'
+                }).then(function (result) {
+                    if (!result) {
+                        return;
+                    }
+                    $.ajax({
+                        method: "POST",
+                        url: "/Checkout/recoverCart/@hashAbandonedCart",
+                        success: function (response) {
+                            if (response.Success === true) {
+                                window.location.href = "/checkout/index";
+                            }
+                            else {
+                                swal({
+                                    text: response.StatusMessage,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                })
+                            }
+                        },
+                        error: function () {
+                            swal({
+                                text: "Ocorreu um erro ao recuperar o carrinho",
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            })
+                        }
+                    });
+                });
+            })
+        </script>
+    }
 }
 <div class="ui container">
     <div class="ui two column grid stackable middle aligned">

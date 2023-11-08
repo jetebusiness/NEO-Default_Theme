@@ -8,6 +8,11 @@ function gettoken() {
 	return token;
 }
 
+function preLoginWithEnterKey(e) {
+    if (e.which == 13)
+        preLogin();
+}
+
 function preLogin() {
 
     var form = $('#formLogin');    
@@ -15,9 +20,10 @@ function preLogin() {
 	
 
 	if ($("#email").val().length > 0 && $("#password").val().length > 0) {
-	    
-	    
 		$("#submitForm").addClass("loading");
+        
+        $(document).off("click", "#submitForm", preLogin);
+        $(document).off("keypress", "#password", preLoginWithEnterKey);
 
 		if (googleRecaptchaStatus) {
 			Login();			
@@ -43,6 +49,11 @@ function preLogin() {
 	}
 }
 
+function preLoginB2BWithEnterKey(e) {
+    if (e.which == 13)
+        preLoginB2B();
+}
+
 function preLoginB2B() {
     
     var form = $('#formLogin');
@@ -51,6 +62,9 @@ function preLoginB2B() {
 	if ($("#userName").val().length > 0 && $("#passwordb2b").val().length > 0) {
 	    
 		$("#loginB2B").addClass("loading");
+        
+        $(document).off("click", "#loginB2B", preLoginB2B);
+        $(document).off("keypress", "#passwordb2b", preLoginB2BWithEnterKey);
 
         if (googleRecaptchaStatus) {
             
@@ -97,9 +111,13 @@ function Login() {
 				setTimeout(function() {
 				    $(".ui.message.form-message", form).hide()
                 }, 3000)
+
+                $("#submitForm").removeClass("loading");
+                
+                $(document).on("click", "#submitForm", preLogin);
+                $(document).on("keypress", "#password", preLoginWithEnterKey);
 			}
 			else {
-                $("#submitForm").removeClass("loading");
                 if (response.recoveredCart) {
                     _confirm({
                         title: "Carrinho Recuperado!",
@@ -128,9 +146,13 @@ function Login() {
                 }, 3000)
                 
 			}
+
+            $("#submitForm").removeClass("loading");
+            
+            $(document).on("click", "#submitForm", preLogin);
+            $(document).on("keypress", "#password", preLoginWithEnterKey);
 		},
 		complete: function () {
-			$("#submitForm").removeClass("loading");
 			
 			if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
 			    if($("[id^=googleVersion_]").eq(0).val() === "2") {
@@ -163,6 +185,11 @@ function LoginB2B() {
                 setTimeout(function() {
                     $(".ui.message.form-message", form).hide()
                 }, 3000)
+
+                $("#loginB2B").removeClass("loading");
+                
+                $(document).on("click", "#loginB2B", preLoginB2B);
+                $(document).on("keypress", "#passwordb2b", preLoginB2BWithEnterKey);
 			}
 			else {
 				if (response.showAcceptTerm) {
@@ -174,7 +201,6 @@ function LoginB2B() {
 					$("#termoAceite").removeClass("hideme")
 				}
 				else {
-					$("#loginB2B").removeClass("loading");
                     location.href = response.redirectUrl.toLowerCase();
 				}
 			}
@@ -189,10 +215,13 @@ function LoginB2B() {
                     $(".ui.message.form-message", form).hide()
                 }, 3000)
 			}
+
+            $("#loginB2B").removeClass("loading");
+
+            $(document).on("click", "#loginB2B", preLoginB2B);
+            $(document).on("keypress", "#passwordb2b", preLoginB2BWithEnterKey);
 		},
 		complete: function () {
-			$("#loginB2B").removeClass("loading");
-
             if($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
                 if($("[id^=googleVersion_]").eq(0).val() === "2") {
                     (form.parents(".modal-login").length > 0 ? grecaptcha.reset(1) : grecaptcha.reset())
@@ -206,13 +235,9 @@ function LoginB2B() {
 
 $(document).ready(function () {
 
-	$(document).on("click", "#submitForm", function () {
-		preLogin();
-	});
+	$(document).on("click", "#submitForm", preLogin);
 
-	$(document).on("click", "#loginB2B", function () {
-		preLoginB2B();
-    })
+	$(document).on("click", "#loginB2B", preLoginB2B);
 
 	$(document).on("click", "#btnCancelar", function (e) {
 		$("#loginB2B").show()
@@ -259,15 +284,9 @@ $(document).ready(function () {
 		}
 	})
 
-	$(document).on("keypress", "#password", function (e) {
-		if (e.which == 13)
-			preLogin();
-	});
+	$(document).on("keypress", "#password", preLoginWithEnterKey);
 
-	$(document).on("keypress", "#passwordb2b", function (e) {
-		if (e.which == 13)
-			preLoginB2B();
-    });
+	$(document).on("keypress", "#passwordb2b", preLoginB2BWithEnterKey);
 
     $(document).on("click", "#Google", function (e) {
         $(this).addClass("loading");

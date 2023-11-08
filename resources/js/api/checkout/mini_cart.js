@@ -34,10 +34,23 @@ $(document).ready(function () {
             return false;
         }
 
-        if($(".exhausted").length > 0) {
-            createModelExhausted("#ListProductsCheckout");
-            return false;
-        }
+        $(".exhausted").each(function () {
+            let _div = $(this);
+            let divIgnore = false;
+            let arrDivIgnore = ["buy-together", "AlsoProducts", "RelatedProducts"]
+
+            for (let i = 0; i < arrDivIgnore.length; i++) {
+                if (_div.closest("#" + arrDivIgnore[i]).length > 0) {
+                    divIgnore = true;
+                    break;
+                }
+            }
+
+            if (!divIgnore) {
+                createModelExhausted("#ListProductsCheckout");
+                return false;
+            }
+        });
         
         if (CompraRecorrenteCart.modalConfig.hasModal())
             CompraRecorrenteCart.modalConfig.showModal(url);

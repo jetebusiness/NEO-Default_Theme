@@ -15,14 +15,9 @@ $(document).ready(function () {
         }
     })
 
-    $(document).on("keypress", "#passwordAssisted", function (e) {
-        if (e.which == 13)
-            preLoginVendaAssistida();
-    });
+    $(document).on("keypress", "#passwordAssisted", preLoginVendaAssistidaWithEnterKey)
 
-    $(document).on("click", "#loginVendaAssistida", function () {
-        preLoginVendaAssistida();
-    })
+    $(document).on("click", "#loginVendaAssistida", preLoginVendaAssistida);
 });
 
 function AttachClient() {
@@ -126,10 +121,18 @@ $(document).on("click", ".searchOrder .search.link", function (e) {
     location.href = `/assistedsale?search=${$(".busca_lista_cliente").val()}&page=${$("#metaDataField").val()}&pagesize=${$("#metaDataValue").val()}`;
 });
 
+function preLoginVendaAssistidaWithEnterKey(e) {
+    if (e.which == 13)
+        preLoginVendaAssistida();
+}
 
 function preLoginVendaAssistida() {
     if ($("#emailAssisted").val().length > 0 && $("#passwordAssisted") && $("#passwordAssisted").val().length > 0) {
         $("#loginVendaAssistida").addClass("loading");
+
+        $(document).off("keypress", "#passwordAssisted", preLoginVendaAssistidaWithEnterKey)
+        $(document).off("click", "#loginVendaAssistida", preLoginVendaAssistida);
+        
         LoginVendaAssistida();
     }
     else {
@@ -149,6 +152,11 @@ function LoginVendaAssistida() {
             if (response.success == false) {
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
+
+                $("#loginVendaAssistida").removeClass("loading");
+                
+                $(document).on("keypress", "#passwordAssisted", preLoginVendaAssistidaWithEnterKey)
+                $(document).on("click", "#loginVendaAssistida", preLoginVendaAssistida);
             }
             else {
                 if (response.showAcceptTerm) {
@@ -159,7 +167,6 @@ function LoginVendaAssistida() {
                     $("#loginVendaAssistida").hide();
                 }
                 else {
-                    $("#loginVendaAssistida").removeClass("loading");
                     location.href = response.redirectUrl.toLowerCase();
                 }
             }
@@ -169,9 +176,13 @@ function LoginVendaAssistida() {
                 $(".ui.message.form-message p").text(response.message);
                 $(".ui.message.form-message").show();
             }
+
+            $("#loginVendaAssistida").removeClass("loading");
+
+            $(document).on("keypress", "#passwordAssisted", preLoginVendaAssistidaWithEnterKey)
+            $(document).on("click", "#loginVendaAssistida", preLoginVendaAssistida);
         },
         complete: function () {
-            $("#loginVendaAssistida").removeClass("loading");
         }
     });
 }

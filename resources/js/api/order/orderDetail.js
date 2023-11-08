@@ -1,19 +1,34 @@
 ﻿import { isLoading } from "../../api/api_config";
 
 function printDiv(divID) {
-    var divElements = document.getElementById(divID).innerHTML;
-    var oldPage = document.body.innerHTML;
+    let printContent = document.getElementById(divID).parentElement.cloneNode(true)
 
-    document.body.innerHTML =
-        "<html><head><title></title></head><body>" +
-        "<div class='ui eight wide tablet four wide computer column'><a href='/home'><img class='ui middle aligned image' src='/assets/image/logo/logo.png' alt='' onerror=\"imgError(this)\"></a></div></br>" +
-        divElements + "</body>";
-    window.print();
-    document.body.innerHTML = oldPage;
-    if ($("#htmlOrderPrint").length > 0) {
-        isLoading("body");
-        $("#htmlOrderPrint").html("");
+    let newWindow = window.open('', '', 'width=600,height=600')
+
+    newWindow.document.write('<html><head><title>Imprimir Pedido</title>')
+    newWindow.document.write("<div class='ui eight wide tablet four wide computer column'><a href='/home'><img class='ui middle aligned image' src='/assets/image/logo/logo.png' alt='' onerror=\"imgError(this)\"></a></div></br>")
+
+    newWindow.document.write("<style>@media print { body { visibility: visible !important; } }</style>")
+
+    let style = newWindow.document.createElement("link")
+    style.setAttribute('rel', 'stylesheet')
+    style.setAttribute('type', 'text/css')
+    style.setAttribute('href', '/assets/css/style.css')
+
+    style.onload = function () {
+
+        newWindow.print()
+        newWindow.close()
     }
+
+    newWindow.document.head.appendChild(style)
+
+    newWindow.document.write('</head><body style="visibility: hidden">')
+    newWindow.document.write(printContent.innerHTML)
+    newWindow.document.write('</body></html>')
+    newWindow.document.close()
+
+    styleSheet.insertRule("@media print { body { visibility: visible !important; } }", styleSheet.cssRules.length)
 }
 
 function openShopline(clearShopline = false) {
