@@ -33,6 +33,7 @@ export function getProductAndPushAddToCartEvent({ idProduct, idSku, variations, 
                         'products': [{
                             'name': response.name,
                             'id': response.id,
+                            'item_id': response.item_id,
                             'price': response.price,
                             'brand': response.brand,
                             'category': response.category,
@@ -59,6 +60,7 @@ export function getProductAndPushRemoveFromCartEvent({ idProduct, idSku, variati
                         'products': [{
                             'name': response.name,
                             'id': response.id,
+                            'item_id': response.item_id,
                             'price': response.price,
                             'brand': response.brand,
                             'category': response.category,

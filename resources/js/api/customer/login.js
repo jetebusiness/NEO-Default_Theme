@@ -170,10 +170,20 @@ function Login() {
 function LoginB2B() {
 
     var form = $("#formLogin");
+    let queryParams = new URLSearchParams(window.location.search);
+    let redirectUrl = queryParams.get("RedirectUrl");
+    let recoverLastCart = queryParams.get("RecoverLastCart");
+    let newQueryParams = new URLSearchParams();
+
+    if (redirectUrl)
+        newQueryParams.append('redirectUrl', redirectUrl);
+
+    if (recoverLastCart)
+        newQueryParams.append('recoverLastCart', recoverLastCart);
 	
-	$.ajax({
+    $.ajax({
 		type: "POST",
-		url: "/Customer/LoginB2B",
+        url: `/Customer/LoginB2B?${newQueryParams.toString()}`,
 		data: form.serialize(),
 		dataType: "json",
 		success: function (response) {

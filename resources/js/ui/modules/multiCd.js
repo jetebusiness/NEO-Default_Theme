@@ -154,7 +154,8 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
 }
 
 export async function changeCdCheckout() {
-    if ($("#multiCDActive").val().toLowerCase() == "true") {
+    if ($("#multiCDActive").val().toLowerCase() == "true" && ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0"))
+    {
         var cep = $("#zipcode").val()
         cep = cep.replace("-", "").trim();
         if (cep.length == 8 && $("#localizacao").length > 0) {

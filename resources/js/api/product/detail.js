@@ -798,29 +798,34 @@ function calcShipping() {
                                 '</tr>';
                             $('#listSimulateFreight').append(strTr);
                         });
-                    } else {
-                        if (response.message == "CD:1") {
-                            $("#zipcode").val(ZipCode)
-                            buscaCepCD(ZipCode).then(function () {
-                                changeCd(true, true, "#simular-frete-submit", true, true);
-                            })
-                        } else if (response.message == "CD:2") {
-                            $("#zipcode").val(ZipCode)
-                            buscaCepCD(ZipCode).then(function () {
-                                changeCd(true, true, "#simular-frete-submit", true, true);
-                            })
-                        } else {
+
+                        //Checa estoque do produto com CD selecionado, se maior que quantidade digitada, altera valor de input
+                        if (response.idMultiCD > 0 && response.productStockCD > 0 && LstProductsFreight[0].Quantity > response.productStockCD) {
+                            $("#quantidade").val(response.productStockCD);
+                            AtualizarQuantidade();
+
                             swal({
                                 title: '',
-                                text: response.message,
-                                type: 'error',
+                                text: 'Quantidade atualizada para sua região',
+                                type: 'warning',
                                 showCancelButton: false,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
                                 confirmButtonText: 'OK'
                             });
-                            $('#simular-frete-cep').val('').focus();
                         }
+
+                    } else {
+                        swal({
+                            title: response.title,
+                            text: response.message,
+                            type: response.type,
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                        $('#simular-frete-cep').val('').focus();
                     }
                     shippingCalculateDetail(false)
                 }

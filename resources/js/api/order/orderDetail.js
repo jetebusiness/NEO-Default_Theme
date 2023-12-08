@@ -240,7 +240,6 @@ $(document).ready(function () {
                 orderId: $(this).attr("data-id-order")
             },
             success: function (data) {
-                isLoading("body");
                 $("#htmlOrderPrint").html("").append(data);
                 printDiv("pagePrint");
             },
