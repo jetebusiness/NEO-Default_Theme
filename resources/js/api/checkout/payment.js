@@ -87,7 +87,7 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 }
 
                 atualizaResumoCarrinho();
-                //------------------------------------
+
                 if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
                     $('.ui.toggle.checkbox.box-card').trigger('click');
                 }
@@ -99,7 +99,6 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 _alert("", response.msg, "warning");
                 HabilitaBlocoPagamento(false);
                 isLoading("#resumoCheckout");
-                //location.reload(true);
             }
 
         }
@@ -107,8 +106,6 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
 }
 
 function BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAgendada) {
-    //console.log("abrindo");
-    //isLoading(".ui.accordion.frete");
     $.ajax({
         method: "POST",
         url: "EntregaAgendada",
@@ -126,19 +123,9 @@ function BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAge
                 _alert("", "Nao existem mais entregas disponíveis para essa data!", "warning");
             }
             else {
-                //$("#dateAgendada_" + idFrete).show("slow");
                 DataPickerEntregaAgendada(response.msg, idFrete);
             }
 
-            //console.log("fechando");
-            //SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, dataEntregaAgenda, periodoEntregaAgendada, valorEntregaAgendada);
-            //SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada);
-            //isLoading(".ui.accordion.frete");
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //alert("Status: " + textStatus); alert("Error: " + errorThrown); 
-            //console.log("fechando com erro");
-            //isLoading(".ui.accordion.frete");
         }
     })
 }
@@ -152,10 +139,8 @@ function DataPickerEntregaAgendada(msg, idFrete) {
             for (var i = 0; i < DataAgendadas[0].listScheduled.length; i++) {
                 if (DataAgendadas[0].listScheduled[i].listScheduledPeriodo != null)
                     availableDates.push(DataAgendadas[0].listScheduled[i].date.substr(5, 2) + "-" + DataAgendadas[0].listScheduled[i].date.substr(8, 2) + "-" + DataAgendadas[0].listScheduled[i].date.substr(0, 4));
-                //optionData = optionData + "<option data-id-frete = '"+idFrete+"' value=" +  DataAgendadas[0].listScheduled[i].date.substr(8,2)+"-"+DataAgendadas[0].listScheduled[i].date.substr(5,2)+"-"+DataAgendadas[0].listScheduled[i].date.substr(0,4) + ">" + DataAgendadas[0].listScheduled[i].dayName + " - " + DataAgendadas[0].listScheduled[i].date.substr(8,2)+"/"+DataAgendadas[0].listScheduled[i].date.substr(5,2)+"/"+DataAgendadas[0].listScheduled[i].date.substr(0,4) + " </option>";
             }
 
-            //availableDates = ['2018-04-25'];
             $("#dateAgendada_" + idFrete).show("slow");
             if (availableDates.length == 0) {
                 $(".agendar").hide();
@@ -284,7 +269,6 @@ function GerarPedidoCompleto(
                     } else {
                         if (response.urlBoleto != "") {
                             window.location.href = "/checkout/success?orderId=" + response.idPedido + "&b=" + response.urlBoleto;
-                            //window.location.href = "success?orderId=" + response.idPedido;
                         }
                         else if (response.paymentLink != "") {
                             window.location.href = "/checkout/success?orderId=" + response.idPedido + "&l=" + response.paymentLink;
@@ -490,11 +474,9 @@ function clickShipping() {
 }
 
 function disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete, correiosEntregaNome) {
-
     isLoading("#resumoCheckout")
 
     if (entregaAgendada == "True") {
-        //isLoading(".ui.accordion.frete");
         BuscaFreteEntregaAgendada(zipcode, idFrete, correiosEntrega, entregaAgendada);
     }
     else
@@ -2443,99 +2425,7 @@ export function atualizaEnderecos(responseChange) {
         $("#zipcode").val(zipCode)
     }
 
-    $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
-    removeFrete();
-    $.ajax({
-        method: "POST",
-        url: "ListaFretePagamento",
-        success: function success(data) {
-            if (data.indexOf("|@|&RR0RM&SS@G&|@|CD") > -1) {
-                $("#updateShippingPayment").html("");
-                HabilitaBlocoPagamento(false);
-                $('.ui.modal').modal('hide');
-            } else {
-                $("#updateShippingPayment").html(data);
-                clickShipping();
-                HabilitaBlocoPagamento(false);
-                CampoEntregaAgendada();
-                // Para não ficar alternando entre 0 e o valor do frete em link de pagamento -- existe uma outra chamada posteriormente
-                if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") { 
-                    atualizaResumoCarrinho();
-                }
-
-                $('.ui.modal.lista-endereco-cliente').modal('hide');
-
-                if ($("#recalculatedRestrictedProducts").length) {
-                    var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
-                    if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
-                        $(".productRestrictedMessage").show();
-                        $(".ui.accordion.productSummary").accordion('open', 0);
-                    }
-                }
-
-                if ($('#PaymentLinkChangeBrand').length > 0) {
-                    if ($('#PaymentLinkChangeBrand').val() == "1") {
-
-                        var zipcode = $("#zipcode").val();
-
-                        if ($("#installmentCheckoutTransparent").length) {
-                            $("#installmentCheckoutTransparent > option").remove();
-                            $("#installmentCheckoutTransparent").append('<option value="0">Aguarde carregando.</option>');
-                        }
-
-                        if ($("#paypal-cc-form").length)
-                            $("#paypal-cc-form").empty();
-
-                        if ($("#paypal-button-reference").length)
-                            $("#paypal-button-reference").empty();
-
-                        $("#GetShippping .card, #GetShippping .card .checkbox").removeClass("checked")
-                        $(this).addClass("checked").find(".checkbox").addClass("checked")
-
-                        $(".card:not(.checked) .agendar", "#GetShippping").hide("slow");
-                        $(".card:not(.checked) .hasDatepicker", "#GetShippping").datepicker('setDate', null);
-
-                        var ponteiroCurrent = $(".shippingGet:checked");
-
-                        var valorFrete = $(ponteiroCurrent).attr("data-value");
-                        var valorAdicional = $(ponteiroCurrent).data("addvalue");
-                        var idFrete = $(ponteiroCurrent).attr("data-id");
-                        var correiosEntrega = $(ponteiroCurrent).attr("data-correios");
-                        var carrier = $(ponteiroCurrent).data("carrier");
-                        var mode = $(ponteiroCurrent).data("mode");
-                        var hub = $(ponteiroCurrent).data("hub");
-
-                        var entregaAgendada = $(ponteiroCurrent).attr("data-entregaagendada");
-                        var exclusivaEntregaAgendada = $(ponteiroCurrent).attr("data-exclusiva-entregaagendada");
-
-                        if ((valorFrete != "") && (idFrete != "") && (correiosEntrega != "") && (zipcode != "")) {
-                            var dataperiodoentregaescolhida = null;
-                            var dataentregaescolhida = null;
-                            var idPeridoescolhido = null;
-
-                            if (exclusivaEntregaAgendada == "True") {
-                                if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != "")) {
-                                    idPeridoescolhido = $("#combo_dataperiodoagendada_" + idFrete).val();
-                                    dataperiodoentregaescolhida = $("#combo_dataperiodoagendada_" + idFrete).val();
-                                    dataentregaescolhida = $("#dateAgendada_" + idFrete).val();
-                                }
-                            }
-
-                            disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete);
-                        }
-                        $('.ui.toggle.checkbox.box-card').trigger('click');
-                    }
-                }
-            }
-        },
-        error: function (error) {
-            if (error.responseText.indexOf("CD") > -1) {
-                $("#updateShippingPayment").html("");
-                HabilitaBlocoPagamento(false);
-                $('.ui.modal.lista-endereco-cliente').modal('hide');
-            }
-        }
-    });
+    CalculaFretePagamento();
 }
 
 
@@ -2645,10 +2535,8 @@ function applySellerCode() {
                         ValeCompraRefresh();
                         atualizaResumoCarrinho();
 
-                        //VALIDA SE O VENDEDOR POSSUI FRETE GRATIS HABILITADO PARA ATUALIZAR LISTA DE FRETES
-                        if (response.freeShipping) {
+                        if (response.freeShipping) 
                             atualizaEnderecos();
-                        }
 
                         _alert("", response.msg, "success");
                     }
@@ -2661,10 +2549,8 @@ function applySellerCode() {
                         ValeCompraRefresh();
                         atualizaResumoCarrinho();
 
-                        //VALIDA SE O VENDEDOR POSSUI FRETE GRATIS HABILITADO PARA ATUALIZAR LISTA DE FRETES
-                        if (response.freeShipping) {
+                        if (response.freeShipping) 
                             atualizaEnderecos();
-                        }
 
                         _alert("", response.msg, "warning");
                     }
@@ -3094,7 +2980,6 @@ function onlyNumbers(evt) {
 }
 
 function ValeCompraAplicar(_valor) {
-
     _valor = (_valor + "").replace(".", ",");
 
     $.ajax({
@@ -3107,46 +2992,8 @@ function ValeCompraAplicar(_valor) {
         success: function (responseValeCompra) {
             updateBonus();
             if (responseValeCompra.success) {
-
-                //Atualiza dados do Frete
-
                 if ($('#freteGratisValeCompra').length > 0 && $('#freteGratisValeCompra').val() == "1") {
-                    $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
-
-                    $.ajax({
-                        method: "POST",
-                        url: "ListaFretePagamento",
-                        data: {
-                            freteGratisValeCompra: true
-                        },
-                        success: function success(data) {
-
-                            sessionStorage.setItem("shippingSelected", $("#GetShippping .card .checkbox.checked input").val())
-                            sessionStorage.setItem("ShippingValue", $("#GetShippping .card .checkbox.checked input").data("value"))
-
-                            $("#updateShippingPayment").html(data);
-
-                            var ShippingSelected = sessionStorage.getItem("shippingSelected");
-                            var ShippingValue = sessionStorage.getItem("ShippingValue");
-                            var idShipping = $("#GetShippping .card .checkbox input[data-id='"+ShippingSelected+"']", "#updateShippingPayment");
-                            var valueShipping = $("#GetShippping .card .checkbox input[data-id='"+ShippingSelected+"']").data("value");
-
-                            clickShipping();
-                            HabilitaBlocoPagamento(false);
-
-                            if(idShipping.length > 0 && valueShipping == ShippingValue) {
-                                idShipping.click();
-                                _alert("", "Vale compras aplicado com sucesso", "success");
-                            } else {
-                                _alert("Vale compras aplicado com sucesso", "Os valores de frete foram atualizados. Selecione o frete desejado", "warning");
-                            }
-                            CampoEntregaAgendada();
-                            $('.ui.modal').modal('hide');
-
-
-                            //isLoading(".ui.accordion.frete");
-                        }
-                    });
+                    CalculaFretePagamento(true);
                 } else {
                     _alert("", "Vale Compras aplicado com sucesso!", "success");
                 }
@@ -4025,14 +3872,9 @@ $(document).ready(function () {
 
             let inputTest = document.createElement("input");
             inputTest.value = value;
-            //Anexa o elemento ao body
             document.body.appendChild(inputTest);
-            //seleciona todo o texto do elemento
             inputTest.select();
-            //executa o comando copy
-            //aqui é feito o ato de copiar para a area de trabalho com base na seleção
             document.execCommand('copy');
-            //remove o elemento
             document.body.removeChild(inputTest);
 
             $(this).html($(this).text() + ' <i class="check icon"></i>');
@@ -4050,14 +3892,9 @@ $(document).ready(function () {
 
             let inputTest = document.createElement("input");
             inputTest.value = value;
-            //Anexa o elemento ao body
             document.body.appendChild(inputTest);
-            //seleciona todo o texto do elemento
             inputTest.select();
-            //executa o comando copy
-            //aqui é feito o ato de copiar para a area de trabalho com base na seleção
             document.execCommand('copy');
-            //remove o elemento
             document.body.removeChild(inputTest);
 
             $(this).html($(this).text() + ' <i class="check icon"></i>');
@@ -4075,14 +3912,9 @@ $(document).ready(function () {
 
             let inputTest = document.createElement("input");
             inputTest.value = value;
-            //Anexa o elemento ao body
             document.body.appendChild(inputTest);
-            //seleciona todo o texto do elemento
             inputTest.select();
-            //executa o comando copy
-            //aqui é feito o ato de copiar para a area de trabalho com base na seleção
             document.execCommand('copy');
-            //remove o elemento
             document.body.removeChild(inputTest);
 
             $(this).html($(this).text() + ' <i class="check icon"></i>');
@@ -4098,14 +3930,9 @@ $(document).ready(function () {
 
             let inputTest = document.createElement("input");
             inputTest.value = value;
-            //Anexa o elemento ao body
             document.body.appendChild(inputTest);
-            //seleciona todo o texto do elemento
             inputTest.select();
-            //executa o comando copy
-            //aqui é feito o ato de copiar para a area de trabalho com base na seleção
             document.execCommand('copy');
-            //remove o elemento
             document.body.removeChild(inputTest);
 
             $(this).html($(this).text() + ' <i class="check icon"></i>');
@@ -4133,7 +3960,6 @@ $(document).ready(function () {
             success: function (response) {
                 let email = response.email
                 if (!response.AutomaticSecurePasswordGeneration) {
-                    //Exibir modal de senha
                     $("#UserName").val(email)
                     $("#modalPassword").removeClass("hidden")
                     $("#modalPassword").modal('show')
@@ -4163,8 +3989,7 @@ $(document).ready(function () {
                 KeyAccess: keyAccess
             },
             success: function (response) {
-                if (response.Success) {
-                    //Exibir modal de cadastro de senha        
+                if (response.Success) {     
                     $("#modalAccessCode").modal("hide")
                     $("#modalRegisterPassword").removeClass("hidden")
                     $("#modalRegisterPassword").modal("show")
@@ -4195,7 +4020,6 @@ $(document).ready(function () {
         e.stopPropagation()
         let email = $("#UserName").val()
         if (SendCheckAccessKeyByEmail(email)) {
-            //Exibir modal de Access Code (token enviado por e-mail)
             $("#KeyAccess").val("")
             swal('', "Código de acesso enviado.", 'success');
         }
@@ -4453,7 +4277,6 @@ $(document).ready(function () {
 function checkValidatePersonalization() {
 
     if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
-        //PersonalizationsValidation
         $.ajax({
             url: "/Checkout/PersonalizationsValidation",
             method: "GET",
@@ -4543,8 +4366,133 @@ function removeFrete() {
     });
 }
 
-window.onload = function () {
+function CalculaFretePagamento(freteGratisValeCompra = false) {
+    $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
+    removeFrete();
+    $.ajax({
+        method: "POST",
+        url: "ListaFretePagamentoV2",
+        success: function (data) {
+            if (data.success == true) {
+                $("#updateShippingPayment").html(data.result);
+                $('.ui.modal.lista-endereco-cliente').modal('hide');
+                $('.ui.modal').modal('hide');
+                clickShipping();
+                CampoEntregaAgendada();
+                HabilitaBlocoPagamento(false); 
 
+                if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") 
+                    atualizaResumoCarrinho();
+
+                if ($("#recalculatedRestrictedProducts").length) {
+                    var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+                    if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
+                        $(".productRestrictedMessage").show();
+                        $(".ui.accordion.productSummary").accordion('open', 0);
+                    }
+                }
+
+                if (freteGratisValeCompra) {
+                    sessionStorage.setItem("shippingSelected", $("#GetShippping .card .checkbox.checked input").val())
+                    sessionStorage.setItem("ShippingValue", $("#GetShippping .card .checkbox.checked input").data("value"))
+                    var ShippingSelected = sessionStorage.getItem("shippingSelected");
+                    var ShippingValue = sessionStorage.getItem("ShippingValue");
+                    var idShipping = $("#GetShippping .card .checkbox input[data-id='" + ShippingSelected + "']", "#updateShippingPayment");
+                    var valueShipping = $("#GetShippping .card .checkbox input[data-id='" + ShippingSelected + "']").data("value");
+
+                    if (idShipping.length > 0 && valueShipping == ShippingValue) {
+                        idShipping.click();
+                        _alert("", "Vale compras aplicado com sucesso", "success");
+                    } else {
+                        _alert("Vale compras aplicado com sucesso", "Os valores de frete foram atualizados. Selecione o frete desejado", "warning");
+                    }
+                }
+
+                SelecionaFreteLinkPagamento();
+
+            }
+            else {
+                $("#updateShippingPayment").html(`<div class="row text center">${data.message}</div>`);
+                $('.ui.modal.lista-endereco-cliente').modal('hide');
+                $('.ui.modal').modal('hide');   
+                HabilitaBlocoPagamento(false);    
+            }
+        },
+        error: function (error) {
+            $("#updateShippingPayment").html(`<div class="row text center">${error.message}</div>`);
+            $('.ui.modal.lista-endereco-cliente').modal('hide');
+            $('.ui.modal').modal('hide');      
+            HabilitaBlocoPagamento(false);
+        }
+    });
+}
+
+function SelecionaFreteLinkPagamento() {
+    if ($('#PaymentLinkChangeBrand').length > 0) {
+        if ($('#PaymentLinkChangeBrand').val() == "1") {
+
+            var zipcode = $("#zipcode").val();
+
+            if ($("#installmentCheckoutTransparent").length) {
+                $("#installmentCheckoutTransparent > option").remove();
+                $("#installmentCheckoutTransparent").append('<option value="0">Aguarde carregando.</option>');
+            }
+
+            if ($("#paypal-cc-form").length)
+                $("#paypal-cc-form").empty();
+
+            if ($("#paypal-button-reference").length)
+                $("#paypal-button-reference").empty();
+
+            $("#GetShippping .card, #GetShippping .card .checkbox").removeClass("checked")
+            $(this).addClass("checked").find(".checkbox").addClass("checked")
+
+            $(".card:not(.checked) .agendar", "#GetShippping").hide("slow");
+            $(".card:not(.checked) .hasDatepicker", "#GetShippping").datepicker('setDate', null);
+
+            var idFreteSelecionado = $('#idShipping').val();
+            var ponteiroCurrent = $(`#radio_${idFreteSelecionado}.shippingGet`);
+            if (ponteiroCurrent.length > 0) {
+                $(".shippingGet").attr("checked", false);
+                $(ponteiroCurrent).attr("checked", true);
+            }
+            else {
+                ponteiroCurrent = $(".shippingGet:checked");
+            }
+
+            var valorFrete = $(ponteiroCurrent).attr("data-value");
+            var valorAdicional = $(ponteiroCurrent).data("addvalue");
+            var idFrete = $(ponteiroCurrent).attr("data-id");
+            var correiosEntrega = $(ponteiroCurrent).attr("data-correios");
+            var carrier = $(ponteiroCurrent).data("carrier");
+            var mode = $(ponteiroCurrent).data("mode");
+            var hub = $(ponteiroCurrent).data("hub");
+
+            var entregaAgendada = $(ponteiroCurrent).attr("data-entregaagendada");
+            var exclusivaEntregaAgendada = $(ponteiroCurrent).attr("data-exclusiva-entregaagendada");
+
+            if ((valorFrete != "") && (idFrete != "") && (correiosEntrega != "") && (zipcode != "")) {
+                var dataperiodoentregaescolhida = null;
+                var dataentregaescolhida = null;
+                var idPeridoescolhido = null;
+
+                if (exclusivaEntregaAgendada == "True") {
+                    if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != "")) {
+                        idPeridoescolhido = $("#combo_dataperiodoagendada_" + idFrete).val();
+                        dataperiodoentregaescolhida = $("#combo_dataperiodoagendada_" + idFrete).val();
+                        dataentregaescolhida = $("#dateAgendada_" + idFrete).val();
+                    }
+                }
+
+                disparaAjaxShipping(zipcode, idFrete, correiosEntrega, entregaAgendada, valorAdicional, dataperiodoentregaescolhida, dataentregaescolhida, idPeridoescolhido, carrier, mode, hub, valorFrete);
+            }
+            $('.ui.toggle.checkbox.box-card').trigger('click');
+        }
+    }
+}
+
+
+window.onload = function () {
     $(".blocoTypePayment").on("click", function () {
         $(".contentPayment").hide()
         $(".contentPayment", this).show()

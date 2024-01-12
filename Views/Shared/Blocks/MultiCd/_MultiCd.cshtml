@@ -23,11 +23,15 @@
                                     <div class="ui column seven wide computer sixteen wide tablet sixteen wide mobile">
                                         <div class="busca cep">
                                             <p>
-                                                Não sabe o seu CEP? <b><a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank">Consulte Aqui</a>.</b>
+                                                Não sabe o seu CEP? <b><br/>
+                                                <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank">Consulte Aqui</a>.</b>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="ui divider"></div>
+
                                 <div class="row two column stackable">
                                     <div class="column">
                                         <div class="field">
@@ -35,7 +39,7 @@
                                             @{
                                                 string estado = (MultiCd != null ? MultiCd.Localizacao.Replace("-", "").Split('/')[1].Trim() : "");
                                             }
-                                            <input id="uf" placeholder="Estado" type="text" value="@estado" disabled />
+                                            <input id="uf" placeholder="Estado" type="text" value="@estado" readonly />
                                         </div>
                                     </div>
                                     <div class="ui column">
@@ -44,11 +48,11 @@
                                             @{
                                                 string cidade = (MultiCd != null ? MultiCd.Localizacao.Replace("-", "").Split('/')[0].Trim() : "");
                                             }
-                                            <input id="localidade" placeholder="Município" type="text" value="@cidade" disabled />
+                                            <input id="localidade" placeholder="Município" type="text" value="@cidade" readonly />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row ">
+                                <div class="row">
                                     <div class="ui column">
                                         <button class="select-locale ui button primary fluid large" id="selecionar">SELECIONAR</button>
                                     </div>

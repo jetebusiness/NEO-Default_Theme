@@ -28,3 +28,19 @@
         }
     }
 }
+
+.ui.modal.smartenvios {
+    ol {
+        list-style: circle;
+
+        li {
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 14px;
+
+            strong {
+                font-weight: 900;
+            }
+        }
+    }
+}

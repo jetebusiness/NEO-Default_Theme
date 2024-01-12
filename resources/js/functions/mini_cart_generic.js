@@ -20,6 +20,13 @@ export function LoadCarrinho(showSidebar) {
     });
 }
 
+export function UpdateUnitPrice(idCartItem, quantity, priceProduct) {
+    var precoUnt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(priceProduct);
+    var inputId = "#preco_unitario_" + idCartItem;
+
+    $(inputId).text(quantity > 1 ? quantity + "x " + precoUnt : precoUnt);
+}
+
 export function UpdateCarrinho(showSidebar) {
     isLoading("#miniCarrinho");
     isLoading("#ListProductsCheckoutCompleto");
@@ -54,7 +61,8 @@ export function UpdateCarrinho(showSidebar) {
                     $("#priceProduct_" + idCartItem + dataPersonalization).html(objCarrinho.cartItems[i].quantity > 1 ? objCarrinho.cartItems[i].quantity + "x " + precoUnt : precoUnt)
                     $("#preco_total_" + idCartItem + dataPersonalization).text(precoTotal);
                     $("#preco_unitario_" + idCartItem + dataPersonalization).text(objCarrinho.cartItems[i].quantity > 1 ? objCarrinho.cartItems[i].quantity + "x " + precoUnt : precoUnt);
-                    
+
+                    UpdateUnitPrice(idCartItem, quantidade, objCarrinho.cartItems[i].priceProduct);
 
                     if ($("#itemCartProduct_" + idCartItem).attr("data-signature") != null && $("#itemCartProduct_" + idCartItem).attr("data-signature").toLowerCase() == "false")
                         isRecurringPurchase = false;

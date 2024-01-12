@@ -173,13 +173,19 @@ function LoginB2B() {
     let queryParams = new URLSearchParams(window.location.search);
     let redirectUrl = queryParams.get("RedirectUrl");
     let recoverLastCart = queryParams.get("RecoverLastCart");
+    
+    let urlLogin = "/Customer/LoginB2B?";
     let newQueryParams = new URLSearchParams();
-
     if (redirectUrl)
+    {
+        urlLogin = urlLogin + `redirectUrl=${redirectUrl}&`;
         newQueryParams.append('redirectUrl', redirectUrl);
-
+    }
     if (recoverLastCart)
+    {
+        urlLogin = urlLogin + `recoverLastCart=${recoverLastCart}`
         newQueryParams.append('recoverLastCart', recoverLastCart);
+    }
 	
     $.ajax({
 		type: "POST",

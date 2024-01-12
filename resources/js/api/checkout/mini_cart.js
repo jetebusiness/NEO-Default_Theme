@@ -60,77 +60,8 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#CallServiceShippingMiniCart", function (event) {
-        $(this).addClass("loading");
-        shippingCalculateMiniCart(true)
-        var zipCode = $(this).prev('input').cleanVal();
-        if (zipCode != "") {
-            $.ajax({
-                method: "POST",
-                url: "/Checkout/GetShippingValues",
-                data: { zipCode: zipCode },
-                success: function (data) {
-                    if (data.indexOf("|@|&RR0RM&SS@G&|@|CD:") > -1)
-                    {
-                        $("#CallServiceShippingMiniCart").removeClass("loading");
-                        $("#zipcode").val(zipCode);
-                        buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
-                                LoadCarrinho();
-                            });
-                        });
-                    }
-                    else
-                    {
-                        $("#CallServiceShippingMiniCart").removeClass("loading");
-                        $(".description.frete").hide();
-                        //Coloca as infoamções no Bloco HMTL com os valores corretos
-                        $(".description.resultado .valor").html(data);
-                        //$(".tabela.frete").dropdown('refresh');
-                        $(".description.resultado").show();
-
-                        if ($("#recalculatedRestrictedProducts").length) {
-                            var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
-                            if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
-                                $(".productRestrictedMessage").show();
-                            }
-                        }
-
-                        ChangeFrete();
-                    }
-                    shippingCalculateMiniCart(false)
-                },
-                error: function (error) {
-                    $("#CallServiceShippingMiniCart").removeClass("loading");
-                    if (error.responseText.indexOf("CD:1") > -1) {
-                        $("#zipcode").val(zipCode)
-                        buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
-                                LoadCarrinho()
-                            });
-                        })
-                    } else if (error.responseText.indexOf("CD:2") > -1) {
-                        $("#zipcode").val(zipCode)
-                        buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
-                                LoadCarrinho()
-                            });
-                        })
-                    }
-                    shippingCalculateMiniCart(false)
-                }
-            });
-        } else {
-            swal({
-                title: '',
-                text: 'Digite um CEP válido!',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-            $(this).removeClass('loading');
-        }
+        var zipCode = $('#CallServiceShippingMiniCart').prev('input').cleanVal();
+        CalculaFreteMiniCarrinho(zipCode, true);
         event.stopPropagation();
     });
 
@@ -279,7 +210,6 @@ $(document).ready(function () {
     }
 
     $(document).on("click", ".qtdActionMiniCart", function (event) {
-        // CancelarCalculoFreteCart(1);
         $(".qtdActionMiniCart").off("click");
         var action = $(this).attr("data-action");
         var idCurrent = $(this).attr("data-id");
@@ -383,15 +313,10 @@ export function excluirProdutoCarrinho(idCurrent, idCartPersonalization, restric
 
 function PushRemoveFromCartEvent(idCurrent) {
     let cartItem = document.querySelector(`[data-id-cart='${idCurrent}']`);
-
     let cartButon = cartItem.querySelector("[data-id-produto][data-id-sku]");
-
     let idSku = cartButon.getAttribute('data-id-sku');
-
     let idProduct = cartButon.getAttribute('data-id-produto');
-
     var initialQuantity = Number($("#qtdInicial_" + idCurrent).val());
-
     getProductAndPushRemoveFromCartEvent({ idProduct: idProduct, idSku: idSku, quantity: initialQuantity });
 }
 
@@ -499,13 +424,9 @@ export function disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonali
 
 function pushAddOrRemoveGtmEvent(idCurrent, valorInput, qtdInicial) {
     let cartItem = document.querySelector(`[data-id-cart='${idCurrent}']`);
-
     let cartButon = cartItem.querySelector("[data-id-produto][data-id-sku]");
-
     let idSku = cartButon.getAttribute('data-id-sku');
-
     let idProduct = cartButon.getAttribute('data-id-produto');
-
     let incrementProductQuantity = valorInput > qtdInicial;
     let difference = Math.abs(valorInput - qtdInicial);
 
@@ -571,54 +492,84 @@ function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carri
     });
 }
 
-export function RecalcularFrete(zipCode) {
+function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
+    $('#CallServiceShippingMiniCart').addClass("loading");
+    shippingCalculateMiniCart(true)
     if (zipCode != "") {
         $.ajax({
             method: "POST",
-            url: "/Checkout/GetShippingValues",
+            url: "/Checkout/GetShippingValuesV2",
             data: { zipCode: zipCode },
             success: function (data) {
-                if (data.indexOf("|@|&RR0RM&SS@G&|@|CD:") > -1)
-                {
-                    $("#CallServiceShippingMiniCart").removeClass("loading");
-                    $("#zipcode").val(zipCode);
-                    buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
-                            LoadCarrinho();
-                        });
-                    });
-                }
-                else
-                {
+                if (data.success == true) {
                     $("#CallServiceShippingMiniCart").removeClass("loading");
                     $(".description.frete").hide();
-                    //Coloca as infoam��es no Bloco HMTL com os valores corretos
-                    $(".description.resultado .valor").html(data);
-                    //$(".tabela.frete").dropdown('refresh');
+                    $(".description.resultado .valor").html(data.result); //preenche conteudo HTML
                     $(".description.resultado").show();
+
+                    if ($("#recalculatedRestrictedProducts").length) {
+                        var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+                        if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
+                            $(".productRestrictedMessage").show();
+                        }
+                    }
 
                     ChangeFrete();
                 }
+                else {
+                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $("#zipcode").val(zipCode);
+
+                    if (data.relocateCD == true) {
+                        buscaCepCD(zipCode).then(function () {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
+                                LoadCarrinho();
+                            });
+                        });
+                        return;
+                    }
+
+                    swal({
+                        title: data.title,
+                        text: data.message,
+                        type: data.type,
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        LoadCarrinho();
+                        if (data.recalculateShipping == true && recalculaFrete == true)
+                            CalculaFreteMiniCarrinho(zipCode, false); //recalcula frete
+                    });
+                }
+
+                shippingCalculateMiniCart(false);
             },
             error: function (error) {
-                $("#CallServiceShippingMiniCart").removeClass("loading");
-                if (error.responseText.indexOf("Mudanca de CD.") > -1) {
-                    $("#zipcode").val(zipCode)
-                    buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
-                            LoadCarrinho()
-                        });
-                    })
-                } else if (error.responseText.indexOf("Nenhum CD configurado.") > -1) {
-                    $("#zipcode").val(zipCode)
-                    buscaCepCD(zipCode).then(function () {
-                        changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
-                            LoadCarrinho()
-                        });
-                    })
-                }
+                $('#CallServiceShippingMiniCart').removeClass('loading');
+                swal({
+                    title: error.title,
+                    text: error.message,
+                    type: error.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             }
         });
+    } else {
+        swal({
+            title: '',
+            text: 'Digite um CEP válido!',
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'OK'
+        });
+        $('#CallServiceShippingMiniCart').removeClass('loading');
     }
 }
 

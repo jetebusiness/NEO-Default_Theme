@@ -14,7 +14,18 @@ $(document).ready(function () {
 
     personalization.init();
 
-    $(".b2b_minus.detalhes, .b2b_plus.detalhes").click(function () {
+    $("input.quantidade_b2b").on("keyup", function () {
+        let skuID = $(this).parents(".sku_b2b").attr("data-sku-id");
+        let quantidade_selecionada = parseInt($("#quantidade_b2b_" + skuID).val());
+        let quantidade_stock = $(this).parents(".sku_b2b").attr("data-stock");
+        ValidaQuantidadeSelecionada(skuID, quantidade_selecionada, quantidade_stock, "INPUT");
+        $.when(AtualizarValoresUnitarios(skuID)).done(function (x) {
+            AtualizaValoresGerais();
+            $("#parcelamento_b2b").find(".active").removeClass("active");
+        });
+    })
+
+    $(".b2b_minus.detalhes, .b2b_plus.detalhes").on("click", function () {
         let skuID = $(this).parents(".sku_b2b").attr("data-sku-id");
         let quantidade_selecionada = parseInt($("#quantidade_b2b_"+skuID).val());
         let quantidade_stock = $(this).parents(".sku_b2b").attr("data-stock");

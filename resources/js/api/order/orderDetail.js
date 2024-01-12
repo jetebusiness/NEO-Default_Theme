@@ -84,12 +84,63 @@ function createHtmlMaxiPago(el) {
                   </div>
                 </div>`;
 
-    el.after(html);
-    resolve(el.attr("data-id-order"));
-});
+        el.after(html);
+        resolve(el.attr("data-id-order"));
+    });
 }
 
 $(document).ready(function () {
+
+    $(document).on("click", "#btn-traking-smartenvios", function () {
+        let idOrder = $(this).data("id");
+
+        $.ajax({
+            method: "GET",
+            url: "/Order/TrackingOrderSmartEnvios",
+            data: {
+                idOrder: idOrder
+            },
+            success: function (data) {
+                if (data.Success) {
+                    let html = "";
+
+                    if (data.Data.trackings.length > 0) {
+                        html += "<h3>Alterações de status do pedido até o momento</h3>";
+                        html += "<ol>";
+                        $.each(data.Data.trackings, function (key, item) {
+                            console.log(item.date.replace("/Date(", "").replace(")/", ""));
+                            let date = new Date(parseInt(item.date.replace("/Date(", "").replace(")/", "")));
+                            console.log(date);
+                            html += "<li><strong>" + item.code.name + "</strong><br><span>" + date.toLocaleDateString().substr(0, 10) + " - " + date.toLocaleTimeString('it-IT').substr(0, 5) + "</span> <span>Observações: " + item.code.description + "</span></li>";
+                        });
+                        html += "</ol>";
+                    }
+                    else {
+                        html += "<h3>Nenhuma informação a ser exibida</h3>";
+                        html += "<p>Não existem alterações no status desse pedido por parte da transportadora</p>";
+                    }
+                    $('.ui.modal.smartenvios .content').empty().append(html);
+
+                    $('.ui.modal.smartenvios').modal('show');
+                }
+                else {
+                    let html = "<h3>Nenhuma informação a ser exibida</h3>";
+                    html += "<p>Não existem alterações no status desse pedido por parte da transportadora</p>";
+
+                    $('.ui.modal.smartenvios .content').empty().append(html);
+
+                    $('.ui.modal.smartenvios').modal('show');
+                }
+            },
+            error: function (data) {
+
+            }
+        })
+
+
+        return false;
+    });
+
     $(document).on("click", "#print", function () {
         printDiv("pagePrint")
     })

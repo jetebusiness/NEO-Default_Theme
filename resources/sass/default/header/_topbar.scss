@@ -18,10 +18,13 @@
                     text-overflow: ellipsis;
                     display: block;
                     width: 100%;
+                    font-weight: bold;
                 }
+
+                font-weight: bold;
             }
 
-            #changeLocation {
+            #changeLocation, #clearRegionMultiCD {
                 cursor: pointer;
                 border: none;
                 background: transparent;

@@ -58,7 +58,7 @@ export function hideModal() {
     }, 500)
 }
 
-export async function changeCd(calcShipping = false, redirect = false, shippingButton = "", redirectOnError = false, showMessage = true) {
+export async function changeCd(calcShipping = false, redirect = false, shippingButton = "", redirectOnError = false, showMessage = true, refreshPage = false) {
     if ($("#localizacao").val().length > 0 && ($("#localizacao").val() != $("#localizacao_old").val() || calcShipping) && $("#multiCDActive").val().toLowerCase() == "true") {
         var cep = $("#zipcode").val()
         cep = cep.replace("-", "").replace(" ", "").trim();
@@ -97,6 +97,7 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                                     }
                                 })
                             }
+
                             if ($("#updateShippingPayment")) {
                                 $("#updateShippingPayment").html("Os produtos não estão disponíveis para sua região.");
                             }
@@ -114,6 +115,8 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                                     confirmButtonText: 'OK'
                                 }).then(function () {
                                     notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
+                                    if (refreshPage)
+                                        window.location.reload();
                                 }).catch(function () {
                                     notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
                                 });
@@ -267,5 +270,15 @@ $(function () {
         if ($(".multi-cd-modal").length > 0) {
             showModal();
         }
+    })
+    $("#clearRegionMultiCD").click(function (event) {
+        event.preventDefault()
+        $.ajax({
+            method: "POST",
+            url: "/Customer/ClearRegionMultiCD",
+            success: function (data) {
+                window.location.reload();
+            }
+        });
     })
 })

@@ -24,13 +24,17 @@
                 case 5:
                     _hub = DomainCheckout.Entities.ShippingMode.Hub.Frenet;
                     break;
+                case 6:
+                    _hub = DomainCheckout.Entities.ShippingMode.Hub.SmartEnvios;
+                    break;
             }
             string _carrier = Session["PaymentLinkShippingCarrier"].ToString();
             string _mode = Session["PaymentLinkShippingMode"].ToString();
             decimal _value = 0;
             decimal.TryParse(Session["PaymentLinkShippingValue"].ToString(), out _value);
 
-            if (_hub.HasValue) {
+            if (_hub.HasValue)
+            {
                 var _shipping = Model.FirstOrDefault(f => f.ShippingMode.hub == _hub && f.ShippingMode.mode == _mode);
                 if (_shipping != null)
                 {
@@ -39,27 +43,27 @@
             }
         }
     }
-}
+            }
 <div class="ui three cards doubling card-checkout margin top bottom small @_disabled" id="GetShippping">
     @if (Model != null)
-    {
-        int _contador = 0;
-        string _checkFrete = "";
-        string _classCheckFrete = "";
+            {
+                int _contador = 0;
+                string _checkFrete = "";
+                string _classCheckFrete = "";
 
-        foreach (var item in Model)
-        {
-            _contador++;
-            if (IdShippingModeCart == item.ShippingMode.IdShippingMode && IdShippingModeCart != 0)
-            {
-                _classCheckFrete = "checked";
-                _checkFrete = "checked='checked'";
-            }
-            else
-            {
-                _classCheckFrete = "";
-                _checkFrete = "";
-            }
+                foreach (var item in Model)
+                {
+                    _contador++;
+                    if (IdShippingModeCart == item.ShippingMode.IdShippingMode && IdShippingModeCart != 0)
+                    {
+                        _classCheckFrete = "checked";
+                        _checkFrete = "checked='checked'";
+                    }
+                    else
+                    {
+                        _classCheckFrete = "";
+                        _checkFrete = "";
+                    }
 
             <div class="card @_classCheckFrete @_disabled">
                 <div class="content">
@@ -84,12 +88,12 @@
                                    data-pickupstore="@item.ShippingMode.PickUpInStore">
 
                             @if (item.ShippingMode.ScheduledDelivery)
-                            {
+            {
                                 <label>@(item.ShippingMode.Name + " (*)")
                                 @if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
                                 {
                                     <small class="shippingDescription">@item.ShippingMode.Description</small>
-                                }
+        }
                                 </label>
                             }
                             else if (item.ShippingMode.DeliveryTime == null)
@@ -101,7 +105,7 @@
                                 <label>
                                     @item.ShippingMode.Name
                                     @if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
-                                    {
+    {
                                         <small class="shippingDescription">@item.ShippingMode.Description</small>
                                     }
                                     <span>
