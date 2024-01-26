@@ -1,4 +1,4 @@
-﻿import { _alert, _confirm } from "../../functions/message";
+import { _alert, _confirm } from "../../functions/message";
 import { generateRecaptcha }  from "../../ui/modules/recaptcha";
 
 
@@ -173,7 +173,7 @@ function LoginB2B() {
     let queryParams = new URLSearchParams(window.location.search);
     let redirectUrl = queryParams.get("RedirectUrl");
     let recoverLastCart = queryParams.get("RecoverLastCart");
-    
+
     let urlLogin = "/Customer/LoginB2B?";
     let newQueryParams = new URLSearchParams();
     if (redirectUrl)

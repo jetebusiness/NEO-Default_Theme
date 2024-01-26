@@ -1,4 +1,6 @@
-﻿@using LojaCorp.Models
+﻿@using DomainCompany.Entities
+@using DomainProduct.Entities
+@using LojaCorp.Models
 @using Newtonsoft.Json.Linq
 @model DomainProduct.Entities.ProductDetail
 @{
@@ -160,13 +162,8 @@
 
 
     string ImageOpenGraph = productImages.Count > 0 ? Url.Scheme + ":" + productImages.FirstOrDefault().ImageDefault : UrlLogo;
-
-
-    bool showPriceDiscount = LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.HigherDiscount > 0;
-    var higherDiscount = LojaCorp.Control.Company._Company.HigherDiscount;
-    var valMinDiscount = LojaCorp.Control.Company._Company.ValMinDiscount;
-    var descriptionHigherDiscount = LojaCorp.Control.Company._Company.DescriptionHigherDiscount;
-    bool showBillet = !showPriceDiscount || (showPriceDiscount && !string.IsNullOrEmpty(descriptionHigherDiscount) && !descriptionHigherDiscount.ToLower().Contains("boleto"));
+    
+    bool showPriceDiscount = LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.DiscountPaymentMethodList.Any();
     string priceGoogleMerchant = String.Empty;
 
 }
@@ -453,174 +450,72 @@
                                                                 <span class="display block">Desconto do Kit: @(string.Format("{0:c}", Model.KitProducts.Sum(m => m.Discount)))</span>
                                                             </div>
                                                         }
-
-                                                        @if (Model.HaveSku)
-                                                        {
-
-                                                            if (SKUPadrao.PricePromotion != null && SKUPadrao.PricePromotion > 0)
+                                                        @{
+                                                            decimal price = Model.Price;
+                                                            decimal? pricePromotion = Model.PricePromotion;
+                                                            InstallmentMax installmentMax = Model.InstallmentMax;
+                                                            
+                                                            if (Model.HaveSku)
                                                             {
-
-                                                                if (showPriceDiscount)
-                                                                {
-                                                                    var discountCalc = SKUPadrao.PricePromotion - SKUPadrao.PricePromotion / 100 * higherDiscount;
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-
-                                                                    if (discountCalc > valMinDiscount)
-                                                                    {
-                                                                        <div class="baseDiscount">
-                                                                            <div class="priceDiscount">
-                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
-                                                                            </div>
-                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                        </div>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", SKUPadrao.PricePromotion).Replace(",", ".");
-                                                                }
-
-
-                                                                decimal dec = (decimal)@SKUPadrao.PricePromotion;
-                                                                <span class="precoAntigo" id="preco-antigo">@SKUPadrao.Price.ToString("C")</span>
-                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
-
-                                                                if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
-                                                                {
-                                                                    <div class="infoPreco">
-                                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber</span>
-                                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                                        <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
-                                                                    </div>
-                                                                }
-
-                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
-                                                                {
-                                                                    var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
-                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                }
+                                                                price = SKUPadrao.Price;
+                                                                pricePromotion = SKUPadrao.PricePromotion;
+                                                                installmentMax = SKUPadrao.InstallmentMax;
                                                             }
-                                                            else
-                                                            {
-
-                                                                if (showPriceDiscount)
-                                                                {
-                                                                    var discountCalc = SKUPadrao.Price - SKUPadrao.Price / 100 * higherDiscount;
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-
-                                                                    if (discountCalc > valMinDiscount)
+                                                            
+                                                            bool hasPromotion = pricePromotion != null && price > 0;
+                                                            decimal? finalPrice = hasPromotion
+                                                                ? pricePromotion
+                                                                : price;
+                                                            
+                                                            priceGoogleMerchant = string.Format("{0:0.00}", finalPrice).Replace(",", ".");
+                                                            
+                                                            var eligibleDiscounts = LojaCorp.Control.Company._Company.DiscountPaymentMethodList
+                                                                .Where(p => finalPrice >= p.DiscountMinimumValue);
+                                                            
+                                                            <div class="baseDiscount">
+                                                                @{
+                                                                    if (showPriceDiscount && eligibleDiscounts.Any())
                                                                     {
-                                                                        <div class="baseDiscount">
+                                                                        var higherDiscount = eligibleDiscounts
+                                                                            .Max(p => p.Discount);
+
+                                                                        var higherDisocuntPaymentMethods = eligibleDiscounts
+                                                                            .Where(p => p.Discount == higherDiscount)
+                                                                            .OrderByDescending(p => p.Name)
+                                                                            .Take(2)
+                                                                            .ToList();
+                                                                        
+                                                                        if (higherDisocuntPaymentMethods.Any())
+                                                                        {
+                                                                            var descriptionHigherDiscount = higherDisocuntPaymentMethods.Count() == 2
+                                                                                ? $"{higherDisocuntPaymentMethods[0].Name} ou {higherDisocuntPaymentMethods[1].Name}"
+                                                                                : higherDisocuntPaymentMethods.First().Name;
+                                                                            
+                                                                            var discountCalc = finalPrice - finalPrice / 100 * higherDiscount;
+                                                                            priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
+                                                                            
                                                                             <div class="priceDiscount">
                                                                                 R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
                                                                             </div>
                                                                             <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                        </div>
+                                                                        }
                                                                     }
                                                                 }
-                                                                else
-                                                                {
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", SKUPadrao.Price).Replace(",", ".");
-                                                                }
+                                                            </div>
 
-                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@SKUPadrao.Price">@SKUPadrao.Price.ToString("C")</span>
-                                                                if (SKUPadrao.InstallmentMax != null && SKUPadrao.InstallmentMax.MaxNumber > 1)
-                                                                {
-                                                                    <div class="infoPreco">
-                                                                        <span id="max-p">@SKUPadrao.InstallmentMax.MaxNumber<span>X de</span></span>
-                                                                        <span id="max-value">@SKUPadrao.InstallmentMax.Value.ToString("C")</span>
-                                                                        <span id="description">@string.Format("({0})", @SKUPadrao.InstallmentMax.Description)</span>
-                                                                    </div>
-                                                                }
-
-                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
-                                                                {
-                                                                    var valor_final = (SKUPadrao.Price - ((SKUPadrao.Price / 100) * ViewBag.DescontoBoleto));
-                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                }
+                                                            if (hasPromotion)
+                                                            {
+                                                                <span class="precoAntigo" id="preco-antigo">@price.ToString("C")</span>
                                                             }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (Model.PricePromotion != null && Model.PricePromotion > 0)
+                                                            <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@finalPrice">@finalPrice.Value.ToString("C")</span>
+                                                            if (installmentMax != null && installmentMax.MaxNumber > 1)
                                                             {
+                                                                <div class="infoPreco">
+                                                                    <span id="max-p">@installmentMax.MaxNumber<span>X de</span></span>
+                                                                    <span id="max-value">@installmentMax.Value.ToString("C")</span>
+                                                                    <span id="description">@installmentMax.Description</span>
+                                                                </div>
 
-                                                                if (showPriceDiscount)
-                                                                {
-                                                                    var discountCalc = Model.PricePromotion - Model.PricePromotion / 100 * higherDiscount;
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-
-                                                                    if (discountCalc > valMinDiscount)
-                                                                    {
-                                                                        <div class="baseDiscount">
-                                                                            <div class="priceDiscount">
-                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
-                                                                            </div>
-                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                        </div>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", Model.PricePromotion).Replace(",", ".");
-                                                                }
-
-                                                                decimal dec = (decimal)@Model.PricePromotion;
-                                                                <span class="precoAntigo" id="preco-antigo">@Model.Price.ToString("C")</span>
-                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@dec">@dec.ToString("C")</span>
-                                                                if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
-                                                                {
-                                                                    <div class="infoPreco">
-                                                                        <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de</span></span>
-                                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
-                                                                        <span id="description">(@Model.InstallmentMax.Description)</span>
-                                                                    </div>
-
-                                                                }
-                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
-                                                                {
-                                                                    var valor_final = (dec - ((dec / 100) * ViewBag.DescontoBoleto));
-                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-
-                                                                if (showPriceDiscount)
-                                                                {
-                                                                    var discountCalc = Model.Price - Model.Price / 100 * higherDiscount;
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", discountCalc).Replace(",", ".");
-
-                                                                    if (discountCalc > valMinDiscount)
-                                                                    {
-                                                                        <div class="baseDiscount">
-                                                                            <div class="priceDiscount">
-                                                                                R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @descriptionHigherDiscount</span>
-                                                                            </div>
-                                                                            <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                                                        </div>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    priceGoogleMerchant = string.Format("{0:0.00}", Model.Price).Replace(",", ".");
-                                                                }
-
-                                                                <span itemprop="price" content="@priceGoogleMerchant" class="preco" id="preco" data-preco-inicial="@Model.Price">@Model.Price.ToString("C")</span>
-                                                                if (Model.InstallmentMax != null && Model.InstallmentMax.MaxNumber > 1)
-                                                                {
-                                                                    <div class="infoPreco">
-                                                                        <span id="max-p">@Model.InstallmentMax.MaxNumber<span>X de</span></span>
-                                                                        <span id="max-value">@Model.InstallmentMax.Value.ToString("C")</span>
-                                                                        <span id="description">(@Model.InstallmentMax.Description)</span>
-                                                                    </div>
-
-                                                                }
-                                                                if (ViewBag.DescontoBoleto > 0 && showBillet)
-                                                                {
-                                                                    var valor_final = (Model.Price - ((Model.Price / 100) * ViewBag.DescontoBoleto));
-                                                                    <span id="preco_boleto">ou @string.Format("R${0:0.00}", valor_final) @string.Format(" no boleto bancário ({0}% de desconto)", ViewBag.DescontoBoleto)</span>
-                                                                }
                                                             }
                                                         }
                                                     </div>

@@ -404,7 +404,8 @@ export function AtualizarQuantidade() {
             $('.total-value', '.total-personalization').html(moneyPtBR(personalizationValue + parseFloat(preco_final)))
         }
 
-        getDiscountStore(variations.config.htmlPrice.containerValues, preco_final)
+        let parent = document.querySelector(variations.config.htmlPrice.containerValues);
+        getDiscountStore(parent, preco_final)
 
         if (desconto_boleto !== "0,00") {
             var valor_boleto = moneyPtBR((preco_final - (preco_final / 100) * parseFloat(desconto_boleto)));

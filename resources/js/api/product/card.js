@@ -265,8 +265,7 @@ function callAjaxGetSku(element) {
                 var ponteiroPricesCurrent = $parent.find("#basePrice_" + productId + "> i").length;
 
                 if (sku.Price > 0 && sku.PricePromotion > 0) {
-
-                    getDiscountStore($parent, sku.PricePromotion)
+                    getDiscountStore($parent[0], sku.PricePromotion, true)
                     
                     if (ponteiroPricesCurrent > 0) {
                         $parent.find("#basePrice_" + productId + "> i").text(moneyPtBR(sku.Price));
@@ -276,8 +275,7 @@ function callAjaxGetSku(element) {
                     $parent.find(".preco").text(moneyPtBR(sku.PricePromotion));
                 }
                 else {
-
-                    getDiscountStore($parent, sku.Price)
+                    getDiscountStore($parent[0], sku.Price, true)
                     
                     if (ponteiroPricesCurrent > 0) {
                         $parent.find("#basePrice_" + productId).remove();
@@ -468,21 +466,51 @@ export function getVariationIds(parentElement, productId) {
 
 
 
-export function getDiscountStore(element, value) {
-    
+export function getDiscountStore(element, value, showTextDiscountNotReached = false) {
     $.ajax({
         method: "GET",
-        url: "/Company/GetDiscountStore",
+        url: "/Company/GetDiscountStoreV2",
         success: function (data) {
             if(data && data.success && data.showPriceWithDiscount) {
                 
-                var discountCalc = (value - ((value / 100) * Number(data.higherDiscount)));
+                let eligibleDiscounts = data.result.filter(d => value >= d.DiscountMinimumValue);
 
-                $('.baseDiscount', element).html(`<div class="baseDiscount">
-                    <div class="priceDiscount">
-                        ${moneyPtBR(discountCalc)}<span class="textDiscount">no ${data.descriptionHigherDiscount}</span></div>
-                    <span class="descriptionDiscount">com ${data.higherDiscount}% de desconto</span>
-                </div>`)
+                let divBaseDiscount = element.querySelector(`.baseDiscount`);
+
+                if (!divBaseDiscount) {
+                    return;
+                }
+                
+                divBaseDiscount.innerHTML = '';
+                
+                let discountList = eligibleDiscounts.length > 0
+                    ? eligibleDiscounts
+                    : data.result;
+                
+                let higherDiscount = _.maxBy(discountList, 'Discount').Discount;
+
+                let higherDisocuntPaymentMethods = discountList
+                higherDisocuntPaymentMethods = _.filter(higherDisocuntPaymentMethods, {'Discount': higherDiscount});
+                higherDisocuntPaymentMethods = _.orderBy(higherDisocuntPaymentMethods, [d => d.Name.toUpperCase()], ['desc']);
+                higherDisocuntPaymentMethods = _.take(higherDisocuntPaymentMethods, 2);
+                
+                let descriptionHigherDiscount = higherDisocuntPaymentMethods.length == 2
+                    ? `${higherDisocuntPaymentMethods[0].Name} ou ${higherDisocuntPaymentMethods[1].Name}`
+                    : higherDisocuntPaymentMethods[0].Name;
+                
+                if (eligibleDiscounts.length > 0) {
+                    var discountCalc = (value - ((value / 100) * Number(higherDiscount)));
+
+                    divBaseDiscount.innerHTML = `
+                            <div class="priceDiscount">
+                                ${moneyPtBR(discountCalc)}<span class="textDiscount">no ${descriptionHigherDiscount}</span></div>
+                            <span class="descriptionDiscount">com ${higherDiscount}% de desconto</span>`;
+                    
+                }  else if (showTextDiscountNotReached) {
+                    let higherDiscountMinimumValue =_.maxBy(higherDisocuntPaymentMethods, 'DiscountMinimumValue').DiscountMinimumValue;
+
+                    divBaseDiscount.innerHTML = `<span class="descriptionDiscount">com ${higherDiscount}% de desconto nas compras acima de R$${higherDiscountMinimumValue} no ${descriptionHigherDiscount}</span>`
+                }
             }
         }
     });

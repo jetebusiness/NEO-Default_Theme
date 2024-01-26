@@ -246,37 +246,57 @@
                 </a>
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <meta itemprop="priceCurrency" content="BRL" />
-                    @{
-                        var priceProduct = Model.PricePromotion != null && Model.PricePromotion > 0 ? Model.PricePromotion.Value : Model.Price;
-                        var itempropPrice = priceProduct;
-                        if (LojaCorp.Control.Company._Company.ShowPriceWithDiscount && LojaCorp.Control.Company._Company.HigherDiscount > 0)
-                        {
-                            var higherDiscount = LojaCorp.Control.Company._Company.HigherDiscount;
-                            var textDiscount = LojaCorp.Control.Company._Company.DescriptionHigherDiscount;
-                            var valMinDiscount = LojaCorp.Control.Company._Company.ValMinDiscount;
-                            var discountCalc = priceProduct - priceProduct / 100 * higherDiscount;
-
-                            itempropPrice = discountCalc;
+                    <div class="baseDiscount">
+                        @{
+                            var priceProduct = Model.PricePromotion != null && Model.PricePromotion > 0 ? Model.PricePromotion.Value : Model.Price;
+                            var itempropPrice = priceProduct;
+                            var discountPaymentMethodList = LojaCorp.Control.Company._Company.DiscountPaymentMethodList;
+                            bool showPriceDiscount = LojaCorp.Control.Company._Company.ShowPriceWithDiscount && discountPaymentMethodList.Any();
                             
-                            if (priceProduct < valMinDiscount)
+                            if (showPriceDiscount && !isb2b)
                             {
-                                <div class="baseDiscount">
-                                    <span class="descriptionDiscount">com @(higherDiscount)% de desconto nas compras acima de R$@(valMinDiscount) no @textDiscount</span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="baseDiscount">
+                                 var eligibleDiscounts = discountPaymentMethodList
+                                     .Where(p => priceProduct >= p.DiscountMinimumValue);
+
+                                var discountList = eligibleDiscounts.Any()
+                                    ? eligibleDiscounts
+                                    : discountPaymentMethodList;
+                                
+                                var higherDiscount = discountList
+                                    .Max(p => p.Discount);
+
+                                var higherDisocuntPaymentMethods = discountList
+                                    .Where(p => p.Discount == higherDiscount)
+                                    .OrderByDescending(p => p.Name)
+                                    .Take(2)
+                                    .ToList();
+                            
+                                var textDiscount = higherDisocuntPaymentMethods.Count() == 2
+                                    ? $"{higherDisocuntPaymentMethods[0].Name} ou {higherDisocuntPaymentMethods[1].Name}"
+                                    : higherDisocuntPaymentMethods.First().Name;
+                                
+                                if (eligibleDiscounts.Any())
+                                {
+                                    var discountCalc = priceProduct - priceProduct / 100 * higherDiscount;
+                                    itempropPrice = discountCalc;
+                                    
                                     <div class="priceDiscount">
                                         R$ @string.Format("{0:n2}", discountCalc)<span class="textDiscount">no @textDiscount</span>
                                     </div>
                                     <span class="descriptionDiscount">com @(higherDiscount)% de desconto</span>
-                                </div>
+                                }
+                                else
+                                {
+                                    var higherDiscountMinimumValue = higherDisocuntPaymentMethods
+                                        .Max(p => p.DiscountMinimumValue);
+                                    
+                                    <span class="descriptionDiscount">com @(higherDiscount)% de desconto nas compras acima de R$@(higherDiscountMinimumValue) no @textDiscount</span>
+                                }
                             }
                         }
-                        
-                        <meta itemprop="price" content="@string.Format("{0:n2}", itempropPrice).Replace(".", "").Replace(",", ".")" />
-                    }
+                    </div>
+                    
+                    <meta itemprop="price" content="@string.Format("{0:n2}", itempropPrice).Replace(".", "").Replace(",", ".")" />
 
                     @if (Model.PricePromotion != null && Model.PricePromotion > 0)
                     {

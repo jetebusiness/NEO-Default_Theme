@@ -54,9 +54,7 @@ variations = {
         getSession: '.modal.login',
         googleShopping: 'idsku',
         discountPrice: {
-            higherDiscount: 0,
-            descriptionHigherDiscount: "",
-            showBillet: true,
+            paymentMethodList: [],
             showPriceWithDiscount: false
         }
     },
@@ -133,13 +131,11 @@ variations = {
         return new Promise(function(resolve, reject) {
             $.ajax({
                 method: "GET",
-                url: "/Company/GetDiscountStore",
+                url: "/Company/GetDiscountStoreV2",
                 success: function(data) {
                     if (data && data.success && data.showPriceWithDiscount) {
                         self.config.discountPrice.showPriceWithDiscount = data.showPriceWithDiscount;
-                        self.config.discountPrice.descriptionHigherDiscount = data.descriptionHigherDiscount;
-                        self.config.discountPrice.higherDiscount = data.higherDiscount;
-                        self.config.discountPrice.showBillet = !data.showPriceWithDiscount || (data.showPriceWithDiscount && data.descriptionHigherDiscount.toLowerCase().indexOf("boleto") === -1);
+                        self.config.discountPrice.paymentMethodList = data.result;
                     }
                     resolve(); // Resolve a promessa após o AJAX retornar
                 },
@@ -604,80 +600,67 @@ variations = {
         //setando o sku selecionado para adicionar ao carrinho
         $(this.config.productSKU).val(IdSku)
 
+
         //preco De e Por
-        if(PricePromotion > 0) {
+        let hasPromotion = PricePromotion > 0;
+        let finalPrice = hasPromotion
+            ? PricePromotion
+            : Price
+        
+        if (hasPromotion) {
             if($(this.config.htmlPrice.oldPrice).length == 0
                 ? $(this.config.htmlPrice.containerValues).prepend("<span id='"+ this.config.htmlPrice.oldPrice.replace("#", "") +"'></span>")
-                : $(this.config.htmlPrice.oldPrice).show())
-
+                : $(this.config.htmlPrice.oldPrice).show()) {
+                
                 $(this.config.htmlPrice.oldPrice).html(this.moneyBR(Price)) //'#preco-antigo', //preco antigo
-
-
-            if(this.config.discountPrice.showPriceWithDiscount) {
-                var discountCalc = (PricePromotion - ((PricePromotion / 100) * this.config.discountPrice.higherDiscount));
-
-                $('.baseDiscount', this.config.htmlPrice.containerValues).html(`<div class="baseDiscount">
-                    <div class="priceDiscount">
-                        ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${this.config.discountPrice.descriptionHigherDiscount}</span></div>
-                    <span class="descriptionDiscount">com ${this.config.discountPrice.higherDiscount}% de desconto</span>
-                </div>`)
-
-                if(!isLoaded)
-                    $(this.config.htmlPrice.newPrice).attr('content', discountCalc) //'#preco', //preco promocional e/ou atual
             }
-
-            $(this.config.htmlPrice.newPrice).html(this.moneyBR(PricePromotion))
-            $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(PricePromotion)) //'#preco', //preco promocional e/ou atual
-
-
-            if(Discount > 0 && this.config.discountPrice.showBillet) {
-                $(this.config.htmlPrice.billet_price).html(
-                    "ou " +
-                    this.moneyBR(PricePromotion - (PricePromotion * parseFloat(Discount / 100)))
-                    + " no boleto bancário ("+ $(this.config.htmlPrice.discountBillet).val() +"% de desconto)"
-                ).show()
-            } else {
-                $(this.config.htmlPrice.billet_price).hide();
-            }
-
         } else {
             $(this.config.htmlPrice.oldPrice).hide()
-
-            if(this.config.discountPrice.showPriceWithDiscount) {
-                var discountCalc = (Price - ((Price / 100) * this.config.discountPrice.higherDiscount));
-
-                $('.baseDiscount', this.config.htmlPrice.containerValues).html(`<div class="baseDiscount">
-                    <div class="priceDiscount">
-                        ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${this.config.discountPrice.descriptionHigherDiscount}</span></div>
-                    <span class="descriptionDiscount">com ${this.config.discountPrice.higherDiscount}% de desconto</span>
-                </div>`)
-
-                if(!isLoaded)
-                    $(this.config.htmlPrice.newPrice).attr('content', discountCalc) //'#preco', //preco promocional e/ou atual
-            }
-
-            $(this.config.htmlPrice.newPrice).html(this.moneyBR(Price))
-            $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(Price)) //'#preco', //preco promocional e/ou atual
-
-            if(Discount > 0 && this.config.discountPrice.showBillet) {
-                $(this.config.htmlPrice.billet_price).html(
-                    "ou " +
-                    this.moneyBR(Price - (Price * parseFloat(Discount / 100)))
-                    + " no boleto bancário ("+ $(this.config.htmlPrice.discountBillet).val() +"% de desconto)"
-                ).show()
-            }  else {
-                $(this.config.htmlPrice.billet_price).hide();
-            }
-
-            if(discountCalc > 0 && this.config.discountPrice.showPriceWithDiscount) {
-                $('.baseDiscount', this.config.htmlPrice.containerValues).html(`<div class="baseDiscount">
-                    <div class="priceDiscount">
-                        ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${this.config.discountPrice.descriptionHigherDiscount}</span></div>
-                    <span class="descriptionDiscount">com ${this.config.discountPrice.higherDiscount}% de desconto</span>
-                </div>`)
-            }
         }
 
+        if (this.config.discountPrice.showPriceWithDiscount) {
+
+            let eligibleDiscounts = this.config.discountPrice.paymentMethodList.filter(d => finalPrice >= d.DiscountMinimumValue);
+
+            let element = document.querySelector(this.config.htmlPrice.containerValues);
+            let divBaseDiscount = element.querySelector(`.baseDiscount`);
+
+            if (divBaseDiscount) {
+                divBaseDiscount.innerHTML = '';
+            }
+
+            if (eligibleDiscounts.length > 0) {
+
+                let higherDiscount = _.maxBy(eligibleDiscounts, 'Discount').Discount;
+
+                let higherDisocuntPaymentMethods = eligibleDiscounts
+                higherDisocuntPaymentMethods = _.filter(higherDisocuntPaymentMethods, {'Discount': higherDiscount});
+                higherDisocuntPaymentMethods = _.orderBy(higherDisocuntPaymentMethods, [d => d.Name.toUpperCase()], ['desc'])
+                higherDisocuntPaymentMethods = _.take(higherDisocuntPaymentMethods, 2);
+
+                if (higherDisocuntPaymentMethods.length > 0) {
+
+                    let descriptionHigherDiscount = higherDisocuntPaymentMethods.length == 2
+                        ? `${higherDisocuntPaymentMethods[0].Name} ou ${higherDisocuntPaymentMethods[1].Name}`
+                        : higherDisocuntPaymentMethods[0].Name;
+
+                    var discountCalc = (finalPrice - ((finalPrice / 100) * Number(higherDiscount)));
+
+
+                    divBaseDiscount.innerHTML = `
+                        <div class="priceDiscount">
+                            ${this.moneyBR(discountCalc)}<span class="textDiscount">no ${descriptionHigherDiscount}</span></div>
+                        <span class="descriptionDiscount">com ${higherDiscount}% de desconto</span>`;
+                }
+            }
+
+            if(!isLoaded)
+                $(this.config.htmlPrice.newPrice).attr('content', discountCalc) //'#preco', //preco promocional e/ou atual
+        }
+
+        $(this.config.htmlPrice.newPrice).html(this.moneyBR(finalPrice))
+        $(this.config.htmlPrice.priceBuyTogether).html(this.moneyBR(finalPrice)) //'#preco', //preco promocional e/ou atual
+        
         if (PriceCA > 0)
             $(this.config.htmlPrice.priceCA).html(this.moneyBR(PriceCA)) //'#precoCA', //preco Compra Recorrente
 
