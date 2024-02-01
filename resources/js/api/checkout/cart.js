@@ -114,6 +114,7 @@ function RemoveProductCart() {
                         idCartPersonalization
                     },
                     success: function (data) {
+                        LoadingCart(loading)
                         if (data.success === true) {
 
                             if (isGtmEnabled()) {

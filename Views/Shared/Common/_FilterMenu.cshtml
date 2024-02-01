@@ -16,7 +16,7 @@
                 </div>
                 <div class="column">
                     <div class="ui accordion" id="filtroList">
-                        @if (Model.GroupingTypes != null && Model.GroupingTypes.Count() > 0)
+                        @if (LojaCorp.Control.Company._Company.ShowProductGroupingFilter && Model.GroupingTypes != null && Model.GroupingTypes.Count() > 0)
                         {
                             <!-- Page: ~/Views/Shared/Blocks/Product/_GroupingTypesFilters.cshtml -->
                             @Html.Partial("~/Views/Shared/Blocks/Product/_GroupingTypesFilters.cshtml", Model.GroupingTypes)
