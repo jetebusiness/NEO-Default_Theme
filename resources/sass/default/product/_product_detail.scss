@@ -601,6 +601,21 @@ h6.codProduto {
         }
     }
 
+    .div-frete-retira-detalhes {
+        .column {
+            display: inline-flex;
+
+            .button.fs {
+                margin: 0em -0.2em 0em 0em;
+                border-radius: 0.2rem 0rem 0rem 0.2rem;
+            }
+
+            .button.sc {
+                border-radius: 0rem 0.2rem 0.2rem 0rem;
+            }
+        }
+    }
+
     .shippingDescription {
         display: flex;
         font-size: .8rem;

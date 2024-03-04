@@ -251,7 +251,7 @@ function BuscarJsonParcelamento(isB2b){
         total = $("#preco").data("preco-inicial");
     }
     var retorno = "0";
-    total = total.toString();
+    total = total.toString() || "";
     total = parseFloat(total.replace(",","."))
     if(total > 0){
         $.ajax({

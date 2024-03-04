@@ -699,7 +699,18 @@ function shippingCalculateDetail(status) {
 function calcShipping() {
     $('#simular-frete-cep').mask('00000-000');
 
+    $('#frete-receber-detalhes').click(function () {
+        $("#hdnRetirarDetalhes").val("false");
+        $('#simular-frete-submit').trigger('click');
+    });
+    $('#frete-retirar-detalhes').click(function () {
+        $("#hdnRetirarDetalhes").val("true");
+        $('#simular-frete-submit').trigger('click');
+    });
+
     $('#simular-frete-submit').click(function () {
+        $(".div-frete-retira-detalhes").hide();
+        $(".ui.dimmer.modals.page.transition.hidden").html("");
         shippingCalculateDetail(true)
         let ZipCode = $('#simular-frete-cep').val();
         let B2b = "false";
@@ -710,11 +721,25 @@ function calcShipping() {
         if ($(this).data("purchaserecurring") !== undefined && $(this).data("purchaserecurring") == true) {
             CompraRecorrente = "true";
         }
-
+        let RetirarLoja = "false";
+        if ($("#hdnRetirarDetalhes").val() != undefined) {
+            RetirarLoja = $("#hdnRetirarDetalhes").val();
+        }
 
         if (ZipCode != "") {
             $('#listSimulateFreight').empty().append('<tr><td colspan="3" class="center aligned">Carregando...</td></tr>');
 
+            if (RetirarLoja == "true") {
+                $("#frete-receber-detalhes").removeClass('primary');
+                $("#frete-retirar-detalhes").removeClass('basic');
+                $("#frete-receber-detalhes").addClass('basic');
+                $("#frete-retirar-detalhes").addClass('primary');
+            } else {
+                $("#frete-receber-detalhes").removeClass('basic');
+                $("#frete-retirar-detalhes").removeClass('primary');
+                $("#frete-receber-detalhes").addClass('primary');
+                $("#frete-retirar-detalhes").addClass('basic');
+            }
 
             let HasOpenSku = $('#has-open-sku').val();
 
@@ -765,40 +790,108 @@ function calcShipping() {
                     ProductShippings: LstProductsFreight,
                     ZipCode: ZipCode,
                     B2b: B2b,
-                    CompraRecorrente: CompraRecorrente
+                    CompraRecorrente: CompraRecorrente,
+                    RetirarLoja: RetirarLoja
                 },
                 success: function (response) {
-                    $('#listSimulateFreight').empty();
+                    $('#listSimulateFreight, #listHeadSimulateFreight').empty();
                     if (response.success == true) {
+                        var strHead = '';
+                        if (RetirarLoja == 'true') {
+                            strHead = '<tr><th>Pontos de retirada</th><th>Prazo</th></tr>';
+                        } else {
+                            strHead = '<tr><th>Entrega</th><th>Frete</th><th>Prazo</th></tr>';
+                        }
+                        $('#listSimulateFreight').append(strHead);
+
                         $.each(response.lista, function (key, item) {
+                            var strTr = '';
+                            if (RetirarLoja == 'true') {
+                                let usefulDay = ''
 
-                            let valueShipping = "Grátis";
-                            if (item.ValueShipping > 0) {
-                                valueShipping = item.ValueShipping.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                            }
-                            let usefulDay = "";
-                            if (item.ShippingMode.UsefulDay) {
-                                if (parseInt(item.ShippingMode.DeliveryTime, 10) < 2) {
-                                    usefulDay = ' útil';
+                                if (parseInt(item.ShippingMode.DeliveryTime) > 0) {
+                                    if (parseInt(item.ShippingMode.DeliveryTime, 10) < 2) {
+                                        usefulDay = item.ShippingMode.DeliveryTime + ' hora';
+                                    } else {
+                                        usefulDay = item.ShippingMode.DeliveryTime + ' horas';
+                                    }
                                 } else {
-                                    usefulDay = ' úteis';
+                                    usefulDay = 'Imediato';
                                 }
-                            }
-                            let deliveryEstimateDate = "Previsão: ";
-                            if (item.ShippingMode.DeliveryEstimateDate !== null) {
-                                deliveryEstimateDate += new Date(item.ShippingMode.DeliveryEstimateDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) + " - ";
-                            }
-                            var textDescription = "";
-                            if (item.ShippingMode.Description !== null)
-                                textDescription = '<small class="shippingDescription">' + item.ShippingMode.Description + '</small>';
+                                var textDescriptionFirstPickUpAddress = '';
+                                var textDescriptionSecondPickUpAddress = '';
+                                if (item.ShippingMode.PickUpAddress !== null) {
+                                    if (item.ShippingMode.PickUpAddress.StreetAddress !== "") {
+                                        textDescriptionFirstPickUpAddress = '<br><small>';
+                                        textDescriptionFirstPickUpAddress += item.ShippingMode.PickUpAddress.StreetAddress;
+                                        textDescriptionFirstPickUpAddress += (item.ShippingMode.PickUpAddress.StreetAddress !== "" && item.ShippingMode.PickUpAddress.Number !== "") ? ', ' + item.ShippingMode.PickUpAddress.Number : '';
+                                        textDescriptionFirstPickUpAddress += '</small>';
+                                    }
+                                    if (item.ShippingMode.PickUpAddress.Neighbourhood !== "" || item.ShippingMode.PickUpAddress.City !== "") {
+                                        textDescriptionSecondPickUpAddress = '<br><small>';
+                                        textDescriptionSecondPickUpAddress += item.ShippingMode.PickUpAddress.Neighbourhood;
+                                        textDescriptionSecondPickUpAddress += (item.ShippingMode.PickUpAddress.Neighbourhood !== "" && item.ShippingMode.PickUpAddress.City !== "") ? ', ' + item.ShippingMode.PickUpAddress.City : (item.ShippingMode.PickUpAddress.City !== "") ? item.ShippingMode.PickUpAddress.City + (item.ShippingMode.PickUpAddress.State !== "") ? ' - ' + item.ShippingMode.PickUpAddress.State : '' : '';
+                                        textDescriptionSecondPickUpAddress += ((item.ShippingMode.PickUpAddress.Neighbourhood !== "" || item.ShippingMode.PickUpAddress.City !== "") && item.ShippingMode.PickUpAddress.ZipCode !== "") ? ' - ' + item.ShippingMode.PickUpAddress.ZipCode : '';
+                                        textDescriptionSecondPickUpAddress += '</small>';
+                                    }
+                                }
 
-                            var strTr = '<tr>' +
-                                '<td>' + item.ShippingMode.Name + textDescription + '</td> ' +
-                                '<td align="center">' + valueShipping + '</td>' +
-                                '<td align="center">' + ((item.ShippingMode.ScheduledDelivery) ? '(*)' : ((item.ShippingMode.DeliveryTime == null) ? '( Envio Imediato )' : deliveryEstimateDate + item.ShippingMode.DeliveryTime + (item.ShippingMode.DeliveryTime > 1 ? ' dias' : ' dia') + usefulDay + '.')) + '</td>' +
-                                '</tr>';
+                                var textDescription = "";
+                                if (item.ShippingMode.Description !== null)
+                                    textDescription = '<a href="#" class="shippingDescription modal-shipping-button" data-id="' + item.ShippingMode.IdShippingMode + '">' +
+                                        '<h5> Ver mais detalhes</small></h5> ' +
+                                        '<div class="ui modal modal-shipping-description-' + item.ShippingMode.IdShippingMode + '">' +
+                                            '<i class="icon close"></i>' +
+                                            '<div class="content">' +
+                                                '<div class="ui header">Mais detalhes</div>' +
+                                                '<div class="ui divider"></div>' +
+                                                item.ShippingMode.Description +
+                                            '</div>' +
+                                        '</div>';
+
+                                strTr = '<tr>' +
+                                    '<td><i class="icon map marker"></i><strong>' + item.ShippingMode.Name + '</strong>' +
+                                    textDescriptionFirstPickUpAddress +
+                                    textDescriptionSecondPickUpAddress +
+                                    textDescription +
+                                    '</td> ' +
+                                    '<td align="center">' + usefulDay + '<p class="shippingDescription">Grátis</p></td>' +
+                                    '</tr>';
+                            } else {
+                                let valueShipping = "Grátis";
+                                if (item.ValueShipping > 0) {
+                                    valueShipping = item.ValueShipping.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                                }
+                                let usefulDay = "";
+                                if (item.ShippingMode.UsefulDay) {
+                                    if (parseInt(item.ShippingMode.DeliveryTime, 10) < 2) {
+                                        usefulDay = ' útil';
+                                    } else {
+                                        usefulDay = ' úteis';
+                                    }
+                                }
+                                let deliveryEstimateDate = "Previsão: ";
+                                if (item.ShippingMode.DeliveryEstimateDate !== null) {
+                                    deliveryEstimateDate += new Date(item.ShippingMode.DeliveryEstimateDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) + " - ";
+                                }
+                                var textDescription = "";
+                                if (item.ShippingMode.Description !== null)
+                                    textDescription = '<small class="shippingDescription">' + item.ShippingMode.Description + '</small>';
+
+                                strTr = '<tr>' +
+                                    '<td>' + item.ShippingMode.Name + textDescription + '</td> ' +
+                                    '<td align="center">' + valueShipping + '</td>' +
+                                    '<td align="center">' + ((item.ShippingMode.ScheduledDelivery) ? '(*)' : ((item.ShippingMode.DeliveryTime == null) ? '( Envio Imediato )' : deliveryEstimateDate + item.ShippingMode.DeliveryTime + (item.ShippingMode.DeliveryTime > 1 ? ' dias' : ' dia') + usefulDay + '.')) + '</td>' +
+                                    '</tr>';
+                            }
+
                             $('#listSimulateFreight').append(strTr);
+                            $(".div-frete-retira-detalhes").show();
                         });
+
+                        $(".modal-shipping-button").on("click", function (e) {
+                            $(".modal-shipping-description-" + e.currentTarget.attributes["data-id"].value).modal("show");
+                        })
 
                         //Checa estoque do produto com CD selecionado, se maior que quantidade digitada, altera valor de input
                         if (response.idMultiCD > 0 && response.productStockCD > 0 && LstProductsFreight[0].Quantity > response.productStockCD) {
@@ -817,16 +910,40 @@ function calcShipping() {
                         }
 
                     } else {
-                        swal({
-                            title: response.title,
-                            text: response.message,
-                            type: response.type,
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        });
-                        $('#simular-frete-cep').val('').focus();
+                        if (RetirarLoja == 'false') {
+                            swal({
+                                title: '',
+                                text: 'Não existem opções de entrega para o seu endereço',
+                                type: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                            $(".div-frete-retira-detalhes").show();
+                        } else if (RetirarLoja == 'true') {
+                            swal({
+                                title: '',
+                                text: 'Não existem opções de retirada para o seu endereço',
+                                type: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                            $(".div-frete-retira-detalhes").show();
+                        } else {
+                            swal({
+                                title: response.title,
+                                text: response.message,
+                                type: response.type,
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                            $('#simular-frete-cep').val('').focus();
+                        }
                     }
                     shippingCalculateDetail(false)
                 }

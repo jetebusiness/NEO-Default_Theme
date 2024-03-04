@@ -13,7 +13,6 @@ import { isGtmEnabled, getProductAndPushAddToCartEvent } from "../../api/googleT
 const color_comprar_button_class = "action",
     color_aviseme_button_class = "grey";
 
-
 function isExhausted(productId) {
     return !($("#Product_" + productId).data("exhausted").toLowerCase() === "false");
 }
@@ -45,7 +44,7 @@ $(document).on('click', '.btn-adiciona-conjunto', function () {
             .removeClass(color_aviseme_button_class)
             .addClass(color_comprar_button_class)
             .find(".icon")
-            .addClass("square outline")
+            .removeClass("square outline")
             .addClass("checkmark box")
             .next("span")
             .text("Selecionado");
@@ -110,49 +109,56 @@ function insertItemInList(productId, element) {
     }
 }
 
-$(document).on("click", "#btn_compre_conjunto_selecionado", function (e) {
-    let $product_selected = $(".conjunct_product:checked");
-    if ($product_selected.length > 0) {
-        $(this).addClass("loading");
-        CancelarCalculoFreteCart(1);
-        $product_selected.each(function () {
-            insertItemInCart($(this).val(), $(this), false, false);
-        })
-        LoadCarrinho(true)
-    } else if ($(".conjunct_product").length == 0) {
-        _alert('', 'Conjunto indisponível!', 'error');
-    }
-    else {
-        _alert('', 'Selecione ao menos um produto, antes de adicionar ao carrinho.', 'error');
-    }
-});
-
 $(document).on("click", "#btn_compre_oneclick_conjunto_selecionado", function (e) {
     let $product_selected = $(".conjunct_product:checked");
     if ($product_selected.length > 0) {
-        $(this).addClass("loading");
-        CancelarCalculoFreteCart(1);
-        $product_selected.each(function () {
-            insertItemInCart($(this).val(), $(this), false, false);
-        });
+        let botao = this.querySelector('a.buy-conjunct')
 
-        $.ajax({
-            method: "GET",
-            url: "/Checkout/CheckoutNext",
-            data: {},
-            success: function (data) {
-                if (data.success === true) {
-                    window.location.href = "/" + data.redirect.toLowerCase();
-                }
-                else {
-                    _alert("Mensagem", data.message, "error");
-                }
-            },
-            onFailure: function (data) {
-                //console.log("Erro ao excluir frete");
-            }
-        });
-        // LoadCarrinho(true)
+        if (botao)
+            botao.classList.add("loading")
+
+        insertItemsInCart($product_selected, false).done(e => {
+            if (e.success) {
+                $.ajax({
+                    method: "GET",
+                    url: "/Checkout/CheckoutNext",
+                    data: {},
+                    success: function (data) {
+                        if (data.success === true) {
+                            window.location.href = "/" + data.redirect.toLowerCase();
+                        }
+                        else {
+                            _alert("Mensagem", data.message, "error");
+                        }
+                    },
+                    onFailure: function (data) {
+                        _alert("Mensagem", data.message, "error");
+                    }
+                })
+            } else
+                botao.classList.remove("loading")
+        })
+    } else if ($(".conjunct_product").length == 0) {
+        _alert('', 'Conjunto indisponível!', 'error');
+    }
+    else {
+        _alert('', 'Selecione ao menos um produto, antes de adicionar ao carrinho.', 'error');
+    }
+
+});
+
+$(document).on("click", "#btn_compre_conjunto_selecionado", function (e) {
+    let $product_selected = $(".conjunct_product:checked");
+
+    if ($product_selected.length > 0) {
+        let botao = this.querySelector('a.buy-conjunct')
+
+        console.log(botao)
+        if (botao)
+            botao.classList.add("loading")
+
+        insertItemsInCart($product_selected).done(() => { botao.classList.remove("loading") })
+
     } else if ($(".conjunct_product").length == 0) {
         _alert('', 'Conjunto indisponível!', 'error');
     }
@@ -160,6 +166,7 @@ $(document).on("click", "#btn_compre_oneclick_conjunto_selecionado", function (e
         _alert('', 'Selecione ao menos um produto, antes de adicionar ao carrinho.', 'error');
     }
 });
+
 
 $(document).on("click", ".button.avise-card", function () {
     var that = $(this);
@@ -195,7 +202,7 @@ $(document).on("change", ".dropdownreference", function () {
     $(".sku-options [id=referencefromproduct_" + idProduct + "]").not(this).each(function () {
         $(this).find('.item').removeClass('hideme');
         $(this).find('.item').each(function () {
-            if ($(this).data('sku').indexOf(idVariationSelected) < 0) {
+            if ($(this).data('sku') && $(this).data('sku').indexOf(idVariationSelected) < 0) {
                 $(this).addClass('hideme');
             }
         });
@@ -203,6 +210,8 @@ $(document).on("change", ".dropdownreference", function () {
 });
 
 $(document).ready(function () {    
+
+    $(document).find(".loading").removeClass("loading");
 
     if ($(".conjunct_product:checked").length > 0) {
 
@@ -215,7 +224,8 @@ $(document).ready(function () {
                     $that.dropdown('set selected', variations[variation].IdVariation);
                 }
             });
-            callAjaxGetSku(element);
+            if (variations.length > 0)
+                callAjaxGetSku(element);
 
             updateStockConjunct(element);
         });
@@ -226,6 +236,7 @@ $(document).ready(function () {
         $("#buttonText").text("Indisponível")
         $("#iconCart").remove()
     }
+
 });
 
 export function insertItemInCart(productId, element, showSideBar, signature = false) {
@@ -239,6 +250,60 @@ export function insertItemInCart(productId, element, showSideBar, signature = fa
         _alert("", "Variação não selecionada!", "warning");
         $(element).removeClass('loading');
     }
+}
+
+function insertItemsInCart($product_selected, minicart = true) {
+
+    CancelarCalculoFreteCart(minicart);
+
+    let cart = []
+
+    for (let el of $product_selected) {
+        let parent = $(el).closest("div[id^='Product_']")
+        let productId = el.value
+        let variations = getVariationIds(parent, productId)
+        let idSku = parent.attr("data-idSku") && variations.ids ? parent.attr("data-idSku") : null
+        let itemCart = { idProduct: productId, idSku: idSku, quantity: 1, variations: variations }
+        cart.push(itemCart)
+    }
+
+    let signature = false //Não encontrei referencia nos objetos para compra recorrente.
+
+    return $.ajax({
+        method: "POST",
+        url: "/Checkout/InsertItemCart",
+        data: { CartItem: cart },
+        success: (data) => {
+
+            LoadCarrinho(minicart)
+
+            if (data.success) {
+
+
+                if (isGtmEnabled()) {
+                    cart.forEach(produto => {
+                        getProductAndPushAddToCartEvent({ idProduct: produto.idProduct, idSku: produto.IdSku, variations: produto.variations, quantity: produto.quantity })
+                    })
+                }
+
+                // Ativa ou desativa o modal de termos de aceite do Compra Recorrente
+                if ($(CompraRecorrenteCart.modalConfig.id).length > 0)
+                    $(CompraRecorrenteCart.modalConfig.id).attr("data-active", signature);
+
+                // Limpa a Storage caso um produto sem recorrencia seja adicionado
+                if (!signature)
+                    CompraRecorrenteStorage.cleanStorage();
+            }
+            else
+            {
+                _alert("Mensagem", "Um ou mais produtos não foram adicionados ao carrinho devido a indisponibilidade de estoque!", "warning");
+            }
+
+        },
+        onFailure: (data) => {
+            _alert("Mensagem", data.msg, "error");
+        }
+    })
 }
 
 function callAjaxGetSku(element) {

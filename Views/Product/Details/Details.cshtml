@@ -663,16 +663,17 @@
                                             <button name="simular-frete-submit" id="simular-frete-submit" data-purchaserecurring="@ViewBag.PurchaseRecurring" class="ui button primary">OK</button>
                                         </div>
                                     </div>
+                                    <div class="row stackable two column div-frete-retira-detalhes" style="display: none">
+                                        <div class="column">
+                                            <button name="frete-receber-detalhes" id="frete-receber-detalhes" class="ui button fs basic">Receber</button>
+                                            <button name="frete-retirar-detalhes" id="frete-retirar-detalhes" class="ui button sc basic">Retirar</button>
+                                        </div>
+                                        <input type="hidden" id="hdnRetirarDetalhes" value="false" />
+                                    </div>
                                 </div>
                                 <div class="ui divider"></div>
                                 <table class="ui very basic table">
-                                    <thead>
-                                        <tr>
-                                            <th>Entrega</th>
-                                            <th>Frete</th>
-                                            <th>Prazo</th>
-                                        </tr>
-                                    </thead>
+                                    <thead id="listHeadSimulateFreight"></thead>
                                     <tbody id="listSimulateFreight">
                                         <tr><td colspan="3" class="center aligned">Digite um CEP e clique no botão OK.</td></tr>
                                     </tbody>

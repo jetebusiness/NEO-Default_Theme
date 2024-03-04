@@ -16,7 +16,7 @@
                             @if (item.ShippingMode.ScheduledDelivery)
                             {
                                 @Html.Raw(item.ShippingMode.Name + " (*) - " + string.Format("{0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C")))
-                                if(string.IsNullOrEmpty(item.ShippingMode.Description) == false)
+                                if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
                                 {
                                     <small class="shippingDescription">@item.ShippingMode.Description</small>
                                 }
@@ -27,22 +27,71 @@
                             }
                             else
                             {
-                                @Html.Raw(item.ShippingMode.Name + " - " + string.Format("{0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C")))
-                                if(string.IsNullOrEmpty(item.ShippingMode.Description) == false)
+                                if (item.ShippingMode.PickUpInStore == true)
                                 {
-                                    <small class="shippingDescription">@item.ShippingMode.Description</small>
+                                    <i class="icon map marker"></i>
+                                    @Html.Raw(item.ShippingMode.Name)
+                                    if (item.ShippingMode.PickUpAddress != null)
+                                    {
+                                        <br>
+                                        <small>
+                                            @Html.Raw(string.Format("{0}", (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.StreetAddress)) ? item.ShippingMode.PickUpAddress.StreetAddress : "")
+                                            + string.Format("{0}", (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.StreetAddress) && !String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.Number)) ? ", " + item.ShippingMode.PickUpAddress.Number : ""))
+                                        </small>
+                                        <br>
+                                        <small>
+                                            @Html.Raw(string.Format("{0}", (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.Neighbourhood)) ? item.ShippingMode.PickUpAddress.Neighbourhood : "")
+                                            + string.Format("{0}", (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.Neighbourhood) && !String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.City)) ? " - " + item.ShippingMode.PickUpAddress.City : "")
+                                            + string.Format("{0}", (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.City) && !String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.State)) ? " - " + item.ShippingMode.PickUpAddress.State : "")
+                                            + string.Format("{0}", (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.ZipCode) && (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.Neighbourhood) || !String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.City))) ? " - " + item.ShippingMode.PickUpAddress.ZipCode : (!String.IsNullOrEmpty(item.ShippingMode.PickUpAddress.ZipCode)) ? item.ShippingMode.PickUpAddress.ZipCode : ""))
+                                        </small>
+                                        if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
+                                        {
+                                            <a href="#" class="shippingDescription modal-shipping-button-cart-b2c" data-id="@IdShippingMode">
+                                                <h5> Ver mais detalhes</h5>
+                                                <div class="ui modal modal-shipping-description-cart-b2c-@IdShippingMode">
+                                                    <i class="icon close"></i>
+                                                    <div class="content">
+                                                        <div class="ui header">Mais detalhes</div>
+                                                        <div class="ui divider"></div>
+                                                        @item.ShippingMode.Description
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                        <p class="font small text">
+                                            @if (item.ShippingMode.DeliveryTime == 0)
+                                            {
+                                                <strong>Imediato</strong>
+                                            } 
+                                            else 
+                                            { 
+                                                <strong>
+                                                    @Html.Raw(string.Format("{0}{1}", "Prazo: ", item.ShippingMode.DeliveryTime)
+                                                    + string.Format("{0}", (item.ShippingMode.DeliveryTime > 1) ? " horas" : " hora"))
+                                                </strong>
+                                            }
+                                        </p>
+                                        <p class="font small text"><strong>Grátis</strong></p>
+                                    }
                                 }
+                                else
+                                {
+                                    @Html.Raw(item.ShippingMode.Name + " - " + string.Format("{0:c}", item.ValueShipping == 0 ? "Frete Grátis" : item.ValueShipping.ToString("C")))
+                                    if (string.IsNullOrEmpty(item.ShippingMode.Description) == false)
+                                    {
+                                        <small class="shippingDescription">@item.ShippingMode.Description</small>
+                                    }
 
-                                <p class="font small text">
-                                    @Html.Raw(string.Format("Previsão: {0}", (!String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? Convert.ToDateTime(item.ShippingMode.DeliveryEstimateDate).ToString("dd/MM/yyyy") : ""))
-                                    + string.Format("{0}", !String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? " (" : "")
-                                    + string.Format("{0}{1}", item.ShippingMode.DeliveryTime, item.ShippingMode.DeliveryTime > 1 ? " dias" : " dia")
-                                    + string.Format(" {0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 1 || item.ShippingMode.DeliveryTime == 0) ? " úteis" : " útil") : "")
-                                    + string.Format("{0}", !String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? ")" : ""))
-                                </p>
+                                    <p class="font small text">
+                                        @Html.Raw(string.Format("Previsão: {0}", (!String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? Convert.ToDateTime(item.ShippingMode.DeliveryEstimateDate).ToString("dd/MM/yyyy") : ""))
+                                        + string.Format("{0}", !String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? " (" : "")
+                                        + string.Format("{0}{1}", item.ShippingMode.DeliveryTime, item.ShippingMode.DeliveryTime > 1 ? " dias" : " dia")
+                                        + string.Format(" {0}", ((bool)item.ShippingMode.UsefulDay) ? ((item.ShippingMode.DeliveryTime > 1 || item.ShippingMode.DeliveryTime == 0) ? " úteis" : " útil") : "")
+                                        + string.Format("{0}", !String.IsNullOrEmpty(item.ShippingMode.DeliveryEstimateDate) ? ")" : ""))
+                                    </p>
+                                }
                             }
-
-
                         </label>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 ﻿import { _alert, _confirm } from '../../functions/message';
-import { atualizaEnderecos } from '../../api/checkout/payment';
+import { atualizaEnderecos, RefreshApplyDiscount } from '../../api/checkout/payment';
 
 export function atualizaCampos(dados, onlyShow) {
     var obj = $.parseJSON(JSON.stringify(dados));
@@ -58,9 +58,9 @@ export function hideModal() {
     }, 500)
 }
 
-export async function changeCd(calcShipping = false, redirect = false, shippingButton = "", redirectOnError = false, showMessage = true, refreshPage = false) {
+export async function changeCd(calcShipping = false, redirect = false, shippingButton = "", redirectOnError = false, showMessage = true, refreshPage = false, idFrete = 0, retirarLoja = "false", isModal = false) {
     if ($("#localizacao").val().length > 0 && ($("#localizacao").val() != $("#localizacao_old").val() || calcShipping) && $("#multiCDActive").val().toLowerCase() == "true") {
-        var cep = $("#zipcode").val()
+        var cep = $("#zipcode").val();
         cep = cep.replace("-", "").replace(" ", "").trim();
         if (cep.length == 8 && $("#localizacao").length > 0) {
             await $.ajax({
@@ -68,40 +68,93 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                 url: "/customer/LocateMultiCd",
                 data: {
                     cep: cep,
-                    localizacao: $("#localizacao").val()
+                    localizacao: $("#localizacao").val(),
+                    idFrete: idFrete,
+                    retirarLoja: retirarLoja
                 },
                 success: function success(response) {
                     if (response.success == false) {
-                        swal({
-                            title: 'Indisponível para sua Região!',
-                            html: response.message.replaceAll('\"', ""),
-                            type: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#16ab39',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        }).then(function () {
-                            if (redirectOnError) {
-                                document.location.href = window.location.protocol + "//" + window.location.host + document.location.pathname + (calcShipping ? "?calcShipping=true" : "");
-                            } else {
-                                hideModal();
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/customer/GetCurrentCD",
-                                    success: function success(response) {
-                                        if (response) {
-                                            $("#shipping").val(response.CEP);
-                                            if (shippingButton && shippingButton.length > 0)
-                                                $(shippingButton).click()
-                                        }
-                                    }
-                                })
+                        if (retirarLoja == "true") {
+                            if ($("#updateShippingPayment").length > 0)
+                                $("#updateShippingPayment").html(`<div class="row text center">Não existem opções de retirada para o seu endereço</div>`);
+
+                            if ($("#btnsRetiraCheckout").length > 0) {
+                                $("#frete-receber").removeClass('primary');
+                                $("#frete-retirar").removeClass('basic');
+                                $("#frete-receber").addClass('basic');
+                                $("#frete-retirar").addClass('primary');
+                                $("#btnsRetiraCheckout").show();
                             }
 
-                            if ($("#updateShippingPayment")) {
-                                $("#updateShippingPayment").html("Os produtos não estão disponíveis para sua região.");
+                            swal({
+                                title: '',
+                                text: 'Não existem opções de retirada para o seu endereço',
+                                type: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+
+                            return;
+                        } else if (retirarLoja == "false") {
+                            if ($("#updateShippingPayment").length > 0)
+                                $("#updateShippingPayment").html(`<div class="row text center">Não existem opções de entrega para o seu endereço</div>`);
+
+                            if ($("#btnsRetiraCheckout").length > 0) {
+                                $("#frete-receber").removeClass('basic');
+                                $("#frete-retirar").removeClass('primary');
+                                $("#frete-receber").addClass('primary');
+                                $("#frete-retirar").addClass('basic');
+                                $("#btnsRetiraCheckout").show();
                             }
-                        })
+
+                            if (isModal == true) {
+                                changeCd(false, true, undefined, true, true, false, 0, "true", true);
+                            } else {
+                                swal({
+                                    title: '',
+                                    text: 'Não existem opções de entrega para o seu endereço',
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                            return;
+                        } else {
+                            swal({
+                                title: 'Indisponível para sua Região!',
+                                html: response.message.replaceAll('\"', ""),
+                                type: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#16ab39',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            }).then(function () {
+                                if (redirectOnError) {
+                                    document.location.href = window.location.protocol + "//" + window.location.host + document.location.pathname + (calcShipping ? "?calcShipping=true" : "");
+                                } else {
+                                    hideModal();
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "/customer/GetCurrentCD",
+                                        success: function success(response) {
+                                            if (response) {
+                                                $("#shipping").val(response.CEP);
+                                                if (shippingButton && shippingButton.length > 0)
+                                                    $(shippingButton).click()
+                                            }
+                                        }
+                                    })
+                                }
+
+                                if ($("#updateShippingPayment").length > 0) {
+                                    $("#updateShippingPayment").html(`<div class="row text center">Os produtos não estão disponíveis para sua região.</div>`);
+                                }
+                            })
+                        }
                     } else {
                         if (response.sameCD == false) {
                             if (showMessage) {
@@ -114,19 +167,23 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                                     cancelButtonColor: '#d33',
                                     confirmButtonText: 'OK'
                                 }).then(function () {
-                                    notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
-                                    if (refreshPage)
+                                    notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""), idFrete, retirarLoja);
+                                    if (refreshPage > 0)
                                         window.location.reload();
                                 }).catch(function () {
-                                    notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
+                                    notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""), idFrete, retirarLoja);
                                 });
                             } else {
-                                notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""));
+                                notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""), idFrete, retirarLoja);
                             }
                         } else {
                             $("#headLocation").val($("#localizacao").val())
                             $("#headLocation").text($("#localizacao").val())
                             hideModal()
+
+                            if (retirarLoja == "true")
+                                $("#hdnRetirarConfirmado").val("true");
+
                             if (shippingButton && shippingButton.length > 0)
                                 $(shippingButton).click()
                         }
@@ -143,7 +200,7 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                         confirmButtonText: 'OK'
                     }).then(function () {
                         hideModal();
-                        if ($("#updateShippingPayment")) {
+                        if ($("#updateShippingPayment").length > 0) {
                             $("#updateShippingPayment").html("Os produtos não estão disponíveis para sua região.");
                         }
                     });
@@ -159,14 +216,17 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
 export async function changeCdCheckout() {
     if ($("#multiCDActive").val().toLowerCase() == "true" && ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0"))
     {
-        var cep = $("#zipcode").val()
+        var cep = $("#zipcode").val(),
+            retirarLoja = $("#hdnRetirar").val();
+
         cep = cep.replace("-", "").trim();
         if (cep.length == 8 && $("#localizacao").length > 0) {
             await $.ajax({
                 method: "POST",
                 url: "/checkout/VerifyCDCheckout",
                 data: {
-                    cep: cep
+                    cep: cep,
+                    retirarLoja: retirarLoja
                 },
                 success: function success(response) {
                     if (response.replaceAll('\"', "") == "Mesmo CD") {
@@ -174,9 +234,8 @@ export async function changeCdCheckout() {
                     } else if (response.replaceAll('\"', "").length != 0){
                         changeAddress(response);
                     } else {
-                        changeCd(false, true, undefined, false, true);
+                        changeCd(true, true, undefined, false, true, false, 0, retirarLoja);
                     }
-                    
                 },
                 error: function () {
                     changeAddress();
@@ -216,7 +275,7 @@ function changeAddress(response) {
     });
 }
 
-function notSameCD(redirect, calcShipping, shippingButton, response) {
+async function notSameCD(redirect, calcShipping, shippingButton, response, idFrete, retirarLoja) {
     if (redirect) {
         if (document.location.pathname == '/checkout' && response.indexOf('redirecionado') > -1)
             document.location.href = '/';
@@ -226,8 +285,19 @@ function notSameCD(redirect, calcShipping, shippingButton, response) {
         $("#headLocation").val($("#localizacao").val())
         $("#headLocation").text($("#localizacao").val())
         hideModal()
-        if (shippingButton && shippingButton.length > 0)
-            $(shippingButton).click()
+
+        if (retirarLoja == "true") {
+            RefreshApplyDiscount();
+            $("#hdnRetirarConfirmado").val("true");
+
+            setTimeout(function () {
+                if (shippingButton && shippingButton.length > 0)
+                    $(shippingButton).click()
+            }, 500)
+        } else {
+            if (shippingButton && shippingButton.length > 0)
+                $(shippingButton).click()
+        }
     }
 }
 
@@ -257,7 +327,7 @@ $(function () {
         var cep = $("#zipcode").val().replace("-", "");
         if (cep.length == 8) {
             buscaCepCD(cep).then(function () {
-                changeCd(false, true, undefined, true, true);
+                changeCd(false, true, undefined, true, true, false, 0, "false", true);
             })
         }
     })

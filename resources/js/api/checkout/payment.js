@@ -94,6 +94,10 @@ function SaveFrete(zipcode, idFrete, correiosEntrega, entregaAgendada, valorSoma
                 if ($('.ui.toggle.checkbox.box-debit').hasClass('checked')) {
                     $('.ui.toggle.checkbox.box-debit').trigger('click');
                 }
+
+                if ($("#hdnRetirarConfirmado").length > 0) {
+                    $("#hdnRetirarConfirmado").val("false");
+                }
             }
             else {
                 _alert("", response.msg, "warning");
@@ -395,12 +399,21 @@ function clickShipping() {
     var correiosEntregaNome = "";
     var pickUpStore = false;
     var recalculatedRestrictedProducts = false;
+    var retirarLoja = "";
+    var retirarLojaConfirmado = "false";
 
     $("#GetShippping .card").click(function () {
 
         if ($("#installmentCheckoutTransparent").length) {
             $("#installmentCheckoutTransparent > option").remove();
             $("#installmentCheckoutTransparent").append('<option value="0">Aguarde carregando.</option>');
+        }
+
+        if ($("#hdnRetirar").length) {
+            retirarLoja = $("#hdnRetirar").val();
+        }
+        if ($("#hdnRetirarConfirmado").length) {
+            retirarLojaConfirmado = $("#hdnRetirarConfirmado").val();
         }
 
         if($("#paypal-cc-form").length)
@@ -452,6 +465,11 @@ function clickShipping() {
             var dataentregaescolhida = null;
             var idPeridoescolhido = null;
 
+            if (retirarLoja == "true" && retirarLojaConfirmado == "false" && $("#multiCDActive").val().toLowerCase() == "true") {
+                changeCd(true, false, "#GetShippping .card #radio_" + idFrete, false, true, false, idFrete, retirarLoja);
+                return false;
+            }
+
             if (exclusivaEntregaAgendada == "True") {
                 if (($("#dateAgendada_" + idFrete).val() != "") && ($("#combo_dataperiodoagendada_" + idFrete).val() != "")) {
                     idPeridoescolhido = $("#combo_dataperiodoagendada_" + idFrete).val();
@@ -500,22 +518,18 @@ function OrderCreateTwoCards(obj) {
     var mensagem = $("#mensagem").val();
     var tipoVerificacao = $(obj).attr("data-card");
     var shippingMode = "";
-    if ($('.shippingGet:checked').length > 0) shippingMode = $('.shippingGet:checked').data("mode");
-
-    var idFrete = $("#GetShippping .item .checkbox.checked input").val();
-    var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
-
-    var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
-
     var deliveryTime = null;
     var usefulDay = null;
-    if ($('input[name=radio]:checked').length > 0) {
-        deliveryTime = $('input[name=radio]:checked').data('deliverytime');
-        usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1") ? true : false);
-    }
+    if ($('.shippingGet:checked').length > 0) shippingMode = $('.shippingGet:checked').data("mode");
+    if ($('.shippingGet:checked').length > 0) deliveryTime = $('.shippingGet:checked').data("deliverytime");
+    if ($('.shippingGet:checked').length > 0) usefulDay = ($('.shippingGet:checked').data("usefullday") == "1" ? true : false);
+    var idFrete = $("#GetShippping .item .checkbox.checked input").val();
+    var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
+    var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
+    
+    
 
     var validaFrete = "";
-
     $("#GetShippping .item .description").each(function (index, value) {
         var ponteiroCurrent = $(this);
 
@@ -1041,18 +1055,15 @@ function OrderCreate() {
                 var cardToken = "";
                 var externalCode = $this.attr("data-externalcode");
                 var shippingMode = "";
+                var deliveryTime = null;
+                var usefulDay = null;
                 if ($('.shippingGet:checked').length > 0) shippingMode = $('.shippingGet:checked').data("mode");
+                if ($('.shippingGet:checked').length > 0) deliveryTime = $('.shippingGet:checked').data("deliverytime");
+                if ($('.shippingGet:checked').length > 0) usefulDay = ($('.shippingGet:checked').data("usefullday") == "1" ? true : false);
 
                 var idFrete = $("#GetShippping .card .checkbox.checked input").val();
                 var hasScheduledDelivery = $("#radio_" + idFrete).attr("data-entregaagendada");
-
-                var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
-                var deliveryTime = null;
-                var usefulDay = null;
-                if ($('input[name=radio]:checked').length > 0) {
-                    deliveryTime = $('input[name=radio]:checked').data('deliverytime');
-                    usefulDay = (($('input[name=radio]:checked').data('usefullday') == "1") ? true : false);
-                }
+                var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";                
                 var selectedRecurrentTime = $("#compraRecorrenteFrequencia").data('value');
                 var emailCard = $('#emailCard').val();
                 var typeDocument = "";
@@ -2444,31 +2455,37 @@ function applyDiscount() {
                 },
                 success: function success(response) {
                     if (response.success) {
-                        atualizaResumoCarrinho();
-                        atualizaEnderecos();
-                        ValeCompraRemover(false);
-                        
-                        if (response.couponfreeshipping) {
-                            _alert("Cupom aplicado com sucesso!", response.msg, "success");
-                        } else {
-                            _alert("Cupom de Desconto!", response.msg, "success");
-                        }
+                        var titleAlert = "Cupom de Desconto!";
+                        if (response.couponfreeshipping)
+                            titleAlert = "Cupom aplicado com sucesso!";
 
-                        if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
-                            $('.ui.toggle.checkbox.box-card').trigger('click');
-                        }
-                        if ($('.ui.toggle.checkbox.box-debit').hasClass('checked')) {
-                            $('.ui.toggle.checkbox.box-debit').trigger('click');
-                        }
+                        swal({
+                            title: titleAlert,
+                            html: response.msg,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#16ab39',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function () {
+                            ValeCompraRemover(false);
 
-                        //Alterando o botão para poder dar a escolha de excluir o desconto
-                        var apply = document.getElementById('applyDiscount')
-                        var del = document.getElementById('deleteDiscount')
-                        apply.style.display = 'none'
-                        del.style.display = 'block'
+                            if ($('.ui.toggle.checkbox.box-card').hasClass('checked')) {
+                                $('.ui.toggle.checkbox.box-card').trigger('click');
+                            }
+                            if ($('.ui.toggle.checkbox.box-debit').hasClass('checked')) {
+                                $('.ui.toggle.checkbox.box-debit').trigger('click');
+                            }
 
-                        var key = document.getElementById('key')
-                        key.disabled = true
+                            //Alterando o botão para poder dar a escolha de excluir o desconto
+                            var apply = document.getElementById('applyDiscount')
+                            var del = document.getElementById('deleteDiscount')
+                            apply.style.display = 'none'
+                            del.style.display = 'block'
+
+                            var key = document.getElementById('key')
+                            key.disabled = true
+                        });
                     }
                     else {
                         atualizaResumoCarrinho();
@@ -2483,6 +2500,52 @@ function applyDiscount() {
             _alert("", "Você não informou uma chave de desconto!", "warning");
         }
     });
+}
+
+export function RefreshApplyDiscount() {
+    var shoppingVoucher = $("#ShoppingVoucherValue").val();
+    if (shoppingVoucher !== "" && shoppingVoucher !== undefined) {
+        $.ajax({
+            async: false,
+            method: "PUT",
+            url: "/Checkout/ValeCompraRemover",
+            success: function (responseValeCompra) {
+                if (responseValeCompra.success) {
+                    ValeCompraRefresh();
+                    $('#ShoppingVoucherValue').val('');
+                    $('#btnGerarPedidoValeCompra').addClass("disabled");
+                    $(".ui.accordion.shopping-voucher").accordion('close', 0);
+                    $('#formas-pagamento').removeClass("disable_column");
+                }
+            }
+        });
+    }
+
+    var key = $("#key").val();
+    var customerId = $("#idCustomer").val();
+    if ((key !== "" && key !== undefined) && (customerId !== "" && customerId !== undefined)) {
+        $.ajax({
+            method: "POST",
+            url: "AplicaDescontoCheckout",
+            data: {
+                key: key,
+                customerId: customerId
+            },
+            success: function success(response) { }
+        });
+    }
+
+    var sellercode = $("#sellerCode").val();
+    if (sellercode !== "" && sellercode !== undefined) {
+        $.ajax({
+            method: "POST",
+            url: "ApplySellerCode",
+            data: {
+                SellerCode: sellercode
+            },
+            success: function success(response) { }
+        });
+    }
 }
 
 function deleteDiscount() {
@@ -3029,7 +3092,7 @@ function ValeCompraRemover(showAlert = true) {
                 $('#btnGerarPedidoValeCompra').addClass("disabled");
                 $(".ui.accordion.shopping-voucher").accordion('close', 0);
                 $('#formas-pagamento').removeClass("disable_column");
-                atualizaResumoCarrinho(false);
+                //atualizaResumoCarrinho(false);
                 if(showAlert)
                     _alert("", "Vale Compras removido com sucesso!", "success");
             }
@@ -4271,6 +4334,21 @@ $(document).ready(function () {
     }
 
     $("#bonus .popup").popup();
+
+    $(document).on('click', '#frete-receber', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#hdnRetirar").val("false");
+        $("#hdnRetirarConfirmado").val("false")
+        CalculaFretePagamento();
+    });
+    $(document).on('click', '#frete-retirar', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#hdnRetirar").val("true");
+        $("#hdnRetirarConfirmado").val("false");
+        CalculaFretePagamento();
+    });
 });
 
 
@@ -4367,12 +4445,32 @@ function removeFrete() {
 }
 
 function CalculaFretePagamento(freteGratisValeCompra = false) {
+    let RetirarLoja = "";
+    if ($("#hdnRetirar").val() != undefined) {
+        RetirarLoja = $("#hdnRetirar").val();
+    }
     $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
+    $(".ui.modal.shipping-pickupinstore").remove();
     removeFrete();
     $.ajax({
         method: "POST",
-        url: "ListaFretePagamentoV2",
+        url: "/Checkout/ListaFretePagamentoV2",
+        data: {
+            RetirarLoja: RetirarLoja
+        },
         success: function (data) {
+            if (RetirarLoja == "true") {
+                $("#frete-receber").removeClass('primary');
+                $("#frete-retirar").removeClass('basic');
+                $("#frete-receber").addClass('basic');
+                $("#frete-retirar").addClass('primary');
+            } else {
+                $("#frete-receber").removeClass('basic');
+                $("#frete-retirar").removeClass('primary');
+                $("#frete-receber").addClass('primary');
+                $("#frete-retirar").addClass('basic');
+            }
+            $("#btnsRetiraCheckout").show();
             if (data.success == true) {
                 $("#updateShippingPayment").html(data.result);
                 $('.ui.modal.lista-endereco-cliente').modal('hide');
@@ -4410,8 +4508,36 @@ function CalculaFretePagamento(freteGratisValeCompra = false) {
 
                 SelecionaFreteLinkPagamento();
 
+                $(".modal-shipping-button").on("click", function (e) {
+                    $(".modal-shipping-description-" + e.currentTarget.attributes["data-id"].value).modal("show");
+                    e.stopPropagation();
+                })
             }
             else {
+                if (data.relocateCD == true) {
+                    var zipCode = $("#dadosClienteUpdate #zipcode").val();
+                    if (data.message.replaceAll('\"', "") !== "") {
+                        swal({
+                            title: 'Região atualizada!',
+                            html: data.message.replaceAll('\"', ""),
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#16ab39',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function () {
+                            buscaCepCD(zipCode).then(function () {
+                                changeCdCheckout();
+                            })
+                        });
+                    } else {
+                        buscaCepCD(zipCode).then(function () {
+                            changeCdCheckout();
+                        })
+                    }
+                    return false;
+                }
+
                 $("#updateShippingPayment").html(`<div class="row text center">${data.message}</div>`);
                 $('.ui.modal.lista-endereco-cliente').modal('hide');
                 $('.ui.modal').modal('hide');   

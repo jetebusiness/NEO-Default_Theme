@@ -61,6 +61,7 @@ $(document).ready(function () {
 
     $(document).on("click", "#CallServiceShippingMiniCart", function (event) {
         var zipCode = $('#CallServiceShippingMiniCart').prev('input').cleanVal();
+        $(".ui.dimmer.modals.page.transition.hidden").html("");
         CalculaFreteMiniCarrinho(zipCode, true);
         event.stopPropagation();
     });
@@ -226,7 +227,7 @@ $(document).ready(function () {
             valorInput += 1;
             if (valorInput <= valorStock && valorInput < 1000) {
                 isLoading("#miniCarrinho");
-                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization);
+                disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonalization, true);
             }
             else {
                 _alert("Ops ... Encontramos um problema", "Produto sem Estoque!", "warning");
@@ -252,6 +253,16 @@ $(document).ready(function () {
         UpdateCarrinho();
     });
 
+    $('#frete-receber-cart-b2c').click(function (e) {
+        $("#hdnRetirarCartB2C").val("false");
+        $('#CallServiceShippingMiniCart').trigger('click');
+        e.stopPropagation();
+    });
+    $('#frete-retirar-cart-b2c').click(function (e) {
+        $("#hdnRetirarCartB2C").val("true");
+        $('#CallServiceShippingMiniCart').trigger('click');
+        e.stopPropagation();
+    });
 });
 
 function shippingCalculateMiniCart(status) {
@@ -493,16 +504,36 @@ function SaveFrete(zipCode, idShippingMode, deliveredByTheCorreiosService, carri
 }
 
 function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
-    $('#CallServiceShippingMiniCart').addClass("loading");
+    let RetirarLoja = "";
+    if ($("#hdnRetirarCartB2C").val() != undefined) {
+        RetirarLoja = $("#hdnRetirarCartB2C").val();
+    }
+
+    $('#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c').addClass("loading");
     shippingCalculateMiniCart(true)
     if (zipCode != "") {
         $.ajax({
             method: "POST",
             url: "/Checkout/GetShippingValuesV2",
-            data: { zipCode: zipCode },
+            data: {
+                zipCode: zipCode,
+                RetirarLoja: RetirarLoja
+            },
             success: function (data) {
+                if (RetirarLoja == "true") {
+                    $("#frete-receber-cart-b2c").removeClass('primary');
+                    $("#frete-retirar-cart-b2c").removeClass('basic');
+                    $("#frete-receber-cart-b2c").addClass('basic');
+                    $("#frete-retirar-cart-b2c").addClass('primary');
+                } else {
+                    $("#frete-receber-cart-b2c").removeClass('basic');
+                    $("#frete-retirar-cart-b2c").removeClass('primary');
+                    $("#frete-receber-cart-b2c").addClass('primary');
+                    $("#frete-retirar-cart-b2c").addClass('basic');
+                }
+
                 if (data.success == true) {
-                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $("#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c").removeClass("loading");
                     $(".description.frete").hide();
                     $(".description.resultado .valor").html(data.result); //preenche conteudo HTML
                     $(".description.resultado").show();
@@ -514,19 +545,34 @@ function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
                         }
                     }
 
+                    $(".modal-shipping-button-cart-b2c").on("click", function (e) {
+                        $(".modal-shipping-description-cart-b2c-" + e.currentTarget.attributes["data-id"].value).modal("show");
+                        e.stopPropagation();
+                    })
+
                     ChangeFrete();
                 }
                 else {
-                    $("#CallServiceShippingMiniCart").removeClass("loading");
+                    $("#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c").removeClass("loading");
                     $("#zipcode").val(zipCode);
 
                     if (data.relocateCD == true) {
                         buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true).then(function (response) {
+                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true, false, 0, RetirarLoja).then(function (response) {
                                 LoadCarrinho();
                             });
                         });
                         return;
+                    }
+
+                    if (RetirarLoja == "true") {
+                        $(".description.frete").hide();
+                        $(".description.resultado .valor").html(data.message);
+                        $(".description.resultado").show();
+                    } else {
+                        $(".description.frete").hide();
+                        $(".description.resultado .valor").html(data.message);
+                        $(".description.resultado").show();
                     }
 
                     swal({
@@ -547,7 +593,7 @@ function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
                 shippingCalculateMiniCart(false);
             },
             error: function (error) {
-                $('#CallServiceShippingMiniCart').removeClass('loading');
+                $('#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c').removeClass('loading');
                 swal({
                     title: error.title,
                     text: error.message,
@@ -569,7 +615,7 @@ function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
             cancelButtonColor: '#d33',
             confirmButtonText: 'OK'
         });
-        $('#CallServiceShippingMiniCart').removeClass('loading');
+        $('#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c').removeClass('loading');
     }
 }
 
@@ -577,12 +623,16 @@ export function ExibirDicadeFrete(shippingID, zipcode) {
     if (zipcode == "" || zipcode == "0")
         return;
 
+    let freteInputElement = document.querySelector(`.ShippingValue[value="${shippingID}"]`);
+    let hubSelecionado = freteInputElement ? freteInputElement.dataset.hub : "";
+
     $.ajax({
         method: "GET",
         url: "/Checkout/ObterDicaFrete",
         data: {
             zipcode: zipcode,
-            shippingID: shippingID
+            shippingID: shippingID,
+            shippingHub: hubSelecionado
         },
         success: function (data) {
             //EXIBE LINHA FRETE

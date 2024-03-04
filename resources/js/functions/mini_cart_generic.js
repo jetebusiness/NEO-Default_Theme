@@ -7,7 +7,7 @@ export function LoadCarrinho(showSidebar) {
     $("#ListProductsCheckout").html('<div class="row text center"><img src="/assets/image/loading.svg"></div>')
     
     if (showSidebar === null) showSidebar = false;
-    $.ajax({
+    return $.ajax({
         method: "GET",
         url: "/Checkout/LoadProductsMiniCart",
         cache: false,

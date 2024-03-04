@@ -146,6 +146,10 @@ $radiusBox: 0px;
         display: flex;
         font-size: .8rem;
         font-style: italic;
+
+        h5 {
+            margin-bottom: 0;
+        }
     }
 }
 
@@ -302,6 +306,17 @@ $radiusBox: 0px;
     &.resultado {
         display: none;
         padding-bottom: 0.6em;
+
+        .div-frete-retira-cart {
+            .button.fs {
+                margin: 0em -0.2em 0em 0em;
+                border-radius: 0.2rem 0rem 0rem 0.2rem;
+            }
+
+            .button.sc {
+                border-radius: 0rem 0.2rem 0.2rem 0rem;
+            }
+        }
     }
 
     &.frete {
@@ -594,7 +609,7 @@ $radiusBox: 0px;
             border-radius: 8px !important;
 
             .accordion,
-            #resumoCheckout{
+            #resumoCheckout {
                 .title {
                     font-size: 18px;
                 }
@@ -604,6 +619,19 @@ $radiusBox: 0px;
                         font-size: 14px;
                         line-height: 22px;
                     }
+                }
+            }
+
+            #btnsRetiraCheckout {
+                margin-left: 1rem;
+
+                .button.fs {
+                    margin: 0em -0.2em 0em 0em;
+                    border-radius: 0.2rem 0rem 0rem 0.2rem;
+                }
+
+                .button.sc {
+                    border-radius: 0rem 0.2rem 0.2rem 0rem;
                 }
             }
         }
@@ -634,6 +662,7 @@ $radiusBox: 0px;
                             border-bottom-right-radius: 0;
                         }
                     }
+
                     > .content {
                         padding: 1rem;
                     }
@@ -669,10 +698,9 @@ $radiusBox: 0px;
 
     .ui.toggle.checkbox input:checked ~ .box:before,
     .ui.toggle.checkbox input:checked ~ label:before,
-    .ui.toggle.checkbox input:focus:checked ~ label:before{
+    .ui.toggle.checkbox input:focus:checked ~ label:before {
         background-color: $action !important;
     }
-    
 }
 
 

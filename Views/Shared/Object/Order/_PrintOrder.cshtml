@@ -212,65 +212,139 @@
                 </div>
             </div>
             <div class="column display flex align-stretch">
-                <div class="ui padded segment">
-                    <h5 class="ui header">
-                        Local de Entrega
-                    </h5>
-                    <div class="ui list">
-                        <div class="item">
-                            <i class="building icon"></i>
-                            <div class="content">
-                                @string.Concat(Model.Address.StreetAddress, ", ", Model.Address.Number, ", ", Model.Address.Complement)
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="marker icon"></i>
-                            <div class="content">
-                                @string.Concat(Model.Address.Neighbourhood, ", ", Model.Address.City)
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="map icon"></i>
-                            <div class="content">
-                                @Model.Address.City - @Model.Address.State
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="phone icon"></i>
-                            <div class="content">
-                                @Model.Address.PhoneContact
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="shipping icon"></i>
-                            <div class="content">
-                                @(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping)<br>
-                            </div>
-                        </div>
-                        @if (!String.IsNullOrEmpty(Model.TrackingNumber))
-                        {
+                @if (Model.PickUpInStore && Model.PickUpAddress != null)
+                {
+                    <div class="ui padded segment">
+                        <h5 class="ui header">
+                            Ponto de Retirada
+                        </h5>
+                        <div class="ui list">
                             <div class="item">
-                                <i class="shipping icon"></i>
+                                <i class="marker icon"></i>
                                 <div class="content">
-                                    Código Rastreio: @Model.TrackingNumber<br>
+                                    <strong>@Model.NameShipping</strong>
+                                </div>
+                            </div>
+                            @if (Model.PickUpAddress.StreetAddress != null)
+                            {
+                                <div class="item">
+                                    <i class="building icon"></i>
+                                    <div class="content">
+                                        @string.Concat(Model.PickUpAddress.StreetAddress, ", ", Model.PickUpAddress.Number, (Model.PickUpAddress.Complement != null ? (" - " + Model.PickUpAddress.Complement) : ""))
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.PickUpAddress.Neighbourhood != null)
+                            {
+                                <div class="item">
+                                    <i class="map icon"></i>
+                                    <div class="content">
+                                        @string.Concat(Model.PickUpAddress.Neighbourhood, (Model.PickUpAddress.City != null ? (", " + Model.PickUpAddress.City) : ""), (Model.PickUpAddress.State != null ? (" - " + Model.PickUpAddress.State) : ""), (Model.PickUpAddress.ZipCode != null ? (" - " + Model.PickUpAddress.ZipCode) : ""))
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.PickUpAddress.ShippingDescription != null)
+                        {
+                            <div class="ui list">
+                                <div class="item">
+                                    <div class="content">
+                                        <strong>Informações Adicionais</strong>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <i class="info icon"></i>
+                                    <div class="content">
+                                        @Model.PickUpAddress.ShippingDescription
+                                    </div>
                                 </div>
                             </div>
                         }
+                        <div class="ui list">
+                            <div class="item">
+                                <div class="content">
+                                    <strong>Prazo</strong>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="shop icon"></i>
+                                @if (Model.PickUpAddress.DeliveryPickUpTime == 0)
+                                {
+                                    <div class="content">
+                                        Imediato
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="content">
+                                        @string.Concat(" ", Model.PickUpAddress.DeliveryPickUpTime, (Model.PickUpAddress.DeliveryPickUpTime > 1 ? " horas" : " hora"))
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="ui padded segment">
+                        <h5 class="ui header">
+                            Local de Entrega
+                        </h5>
+                        <div class="ui list">
+                            <div class="item">
+                                <i class="building icon"></i>
+                                <div class="content">
+                                    @string.Concat(Model.Address.StreetAddress, ", ", Model.Address.Number, ", ", Model.Address.Complement)
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="marker icon"></i>
+                                <div class="content">
+                                    @string.Concat(Model.Address.Neighbourhood, ", ", Model.Address.City)
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="map icon"></i>
+                                <div class="content">
+                                    @Model.Address.City - @Model.Address.State
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="phone icon"></i>
+                                <div class="content">
+                                    @Model.Address.PhoneContact
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="shipping icon"></i>
+                                <div class="content">
+                                    @(!string.IsNullOrEmpty(Model.NameCarrying) ? Model.NameCarrying : Model.NameShipping)<br>
+                                </div>
+                            </div>
+                            @if (!String.IsNullOrEmpty(Model.TrackingNumber))
+                            {
+                                <div class="item">
+                                    <i class="shipping icon"></i>
+                                    <div class="content">
+                                        Código Rastreio: @Model.TrackingNumber<br>
+                                    </div>
+                                </div>
+                            }
                             
-                        @if (string.IsNullOrEmpty(Model.ShippingDescription) == false)
-                        {
+                            @if (string.IsNullOrEmpty(Model.ShippingDescription) == false)
+                            {
                             <div class="item">
                                 <i class="shipping icon"></i>
                                 <div class="content">
                                     @Model.ShippingDescription<br>
                                 </div>
                             </div>
-                        }
-                    <div class="item margin top medium">
-                        @{
-                            List<DomainOrder.Entities.OrderStatus> TrackingLink = Model.HistoryListOrderStatus.Where(c => c.StatusCode == "07").ToList();
-                            if (!string.IsNullOrEmpty(TrackingLink.FirstOrDefault().TrackingLink))
-                            {
+                            }
+                            <div class="item margin top medium">
+                            @{
+                                List<DomainOrder.Entities.OrderStatus> TrackingLink = Model.HistoryListOrderStatus.Where(c => c.StatusCode == "07").ToList();
+                                if (!string.IsNullOrEmpty(TrackingLink.FirstOrDefault().TrackingLink))
+                                {
 
                                 <a href="@TrackingLink.FirstOrDefault().TrackingLink" target="_blank" class="ui button positive">Rastrear Pedido</a>
                             }
@@ -284,27 +358,28 @@
                                         string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
                                         <a href="@urlYami" target="_blank" class="ui button orange btn-yami">Solicitar troca/devolução</a>
 
-                                        string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
-                                        <a href="@urlYamiAcompanha" target="_blank" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>
+                                            string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
+                                            <a href="@urlYamiAcompanha" target="_blank" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
-                            }
 
-                            if (Model.NameShipping == "SmartEnvios" && (Model.NameStatus == "Despachado" || Model.NameStatus == "Tracking" || Model.NameStatus == "Concluído"))
-                            {
-                                <a href="" id="btn-traking-smartenvios" data-id="@Model.IdOrder" class="ui button positive">Rastrear Pedido</a>
-                                <div class="ui modal small smartenvios text center">
-                                    <i class="close icon"></i>
-                                    <div class="content">
+                                if (Model.NameShipping == "SmartEnvios" && (Model.NameStatus == "Despachado" || Model.NameStatus == "Tracking" || Model.NameStatus == "Concluído"))
+                                {
+                                    <a href="" id="btn-traking-smartenvios" data-id="@Model.IdOrder" class="ui button positive">Rastrear Pedido</a>
+                                    <div class="ui modal small smartenvios text center">
+                                        <i class="close icon"></i>
+                                        <div class="content">
                                         
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
-                        }
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
         <div class="row one column">
