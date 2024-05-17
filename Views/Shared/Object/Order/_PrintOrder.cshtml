@@ -170,6 +170,11 @@
                                         </div>
                                     </div>
                                 }
+                                @* Forma de pagamento com boleto CieloV1*@
+                                else if (Model.IdPaymentBrand == 383)
+                                {
+                                    <a href="@Model.PaymentLink" target="_blank" class="ui action button">Reimprimir boleto</a>
+                                }
                                 @* Forma de pagamento com boleto PagSeguro*@
                                 else if (!string.IsNullOrEmpty(Model.PaymentLink))
                                 {

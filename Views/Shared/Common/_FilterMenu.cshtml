@@ -28,13 +28,13 @@
                             @Html.Partial("~/Views/Shared/Blocks/Product/_ReferencesFilters.cshtml", Model.References)
                         }
 
-                        @if (Model.Brands != null && Model.Brands.Count() > 1)
+                        @if (Model.Brands != null && Model.Brands.Count() > 0)
                         {
                             <!-- Page: ~/Views/Shared/Blocks/Brand/_BrandsFilters.cshtml -->
                             @Html.Partial("~/Views/Shared/Blocks/Brand/_BrandsFilters.cshtml", Model.Brands)
                         }
 
-                        @if (Model.Categories != null && Model.Categories.Count() > 1)
+                        @if (Model.Categories != null && Model.Categories.Count() > 0)
                         {
                             <!-- Page: ~/Views/Shared/Blocks/Category/_CategoriesFilters.cshtml -->
                             @Html.Partial("~/Views/Shared/Blocks/Category/_CategoriesFilters.cshtml", Model.Categories)

@@ -2229,8 +2229,10 @@ function showAddressPayment() {
         if ($(".addAddress").length > 0) {
             var jsonArray = [];
             var splittedFormData = $("#disparaForm").serialize().split('&');
-            if($("[id^=googleResponse]", "body").length > 0)
-                jsonArray['googleResponse'] = $("[id^=googleResponse]", "body").val();
+            if ($("[id^=googleResponse]", "body").length > 0) {
+                var googleResponse = $("[id^=googleResponse]", "body").val();
+                jsonArray.push({ name: 'googleResponse', value: googleResponse });
+            }
 
             $.each(splittedFormData, function (key, value) {
                 var item = {};
@@ -2918,13 +2920,23 @@ function ReEnviarCodigoEmail() {
 
 function RecoverPasswordByEmail(form) {
     $(".RecoverPasswordByEmail").click(function () {
+        var _googleResponse = $("[id^=googleResponse]").val();
+
         $.ajax({
             method: "POST",
             url: "/customer/RecoverPasswordByEmail",
             data: {
-                email: $("#UserName").val()
+                email: $("#UserName").val(),
+                googleResponse: _googleResponse
             },
             success: function success(response) {
+                if ($("[id^=googleVersion_]").length > 0 && typeof grecaptcha !== "undefined") {
+                    if ($("[id^=googleVersion_]").eq(0).val() === "2") {
+                        grecaptcha.reset()
+                    } else {
+                        generateRecaptcha($("[id^=googleModule]").val(), "body");
+                    }
+                }
                 _alert("", response.Message, "warning");
             }
         });
