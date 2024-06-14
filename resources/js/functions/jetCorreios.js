@@ -32,6 +32,7 @@ import { _alert, _confirm } from './message';
                 if (sel[key] !== "") {
                     if (sel[key].isDropDown) {
                         sel[key].changing(dados.state);
+                        $("#estado_0").parent().addClass("disabled")
                     }
                     if (key === "numero" && sel[key] !== "") {
                         $(sel[key]).focus();
@@ -46,6 +47,7 @@ import { _alert, _confirm } from './message';
                             $(sel[key]).val(dados.neighbourhood).change();
                         } else if (key === "localidade") {
                             $(sel[key]).val(dados.city).change();
+                            $(sel[key]).parent().addClass("disabled")
                         }
                     }
 

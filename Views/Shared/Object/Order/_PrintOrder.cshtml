@@ -55,7 +55,7 @@
                                 <strong>@Model.NameStatus</strong>
                             </div>
                         </div>
-                        @if (Model.DeliveryTime != null)
+                        @if (Model.DeliveryTime != null && !Model.PickUpInStore)
                         {
                             <div class="item">
                                 <i class="shipping icon"></i>

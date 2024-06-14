@@ -704,6 +704,9 @@
                 <div class="ui grid one column">
                     <div class="column">
                         @Html.Raw(@Model.DescriptionDetail)
+                        @Html.Raw(@Model.DescriptionDetailAdditionalTwo)
+                        @Html.Raw(@Model.DescriptionDetailAdditionalThree)
+                        @Html.Raw(@Model.DescriptionDetailAdditionalFour)
                     </div>
                     @if (Model.Attributes != null && Model.Attributes.Count() > 0)
                     {

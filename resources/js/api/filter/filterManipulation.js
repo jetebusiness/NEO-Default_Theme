@@ -166,31 +166,38 @@ var newFilter = {
 
                     $(this).toggleClass("filter-selected basic").blur()
 
-                    if($(".filter-selected", configFilter.config.container).length > 0) {
+                    $(".filter-selected", configFilter.config.container).each(function () {
 
-                        $(".filter-selected", configFilter.config.container).each(function () {
+                        var type = $(this).data("type");
+                        var id = $(this).attr("id");
 
-                            if (selected[$(this).data("type")] === undefined) {
+                        if (!selected[type]) {
+                            selected[type] = id;
+                        } else {
+                            var ids = selected[type].split(",");
+                            var index = ids.indexOf(id);
 
-                                selected[$(this).data("type")] = $(this).attr("id");
-
+                            if (index === -1) {
+                                selected[type] = selected[type] + "," + id;
                             } else {
 
-                                if (selected[$(this).data("type")].indexOf($(this).attr("id")) === -1) {
-                                    selected[$(this).data("type")] = selected[$(this).data("type")] + "," + $(this).attr("id")
-                                }
-
+                                ids.splice(index, 1);
+                                selected[type] = ids.join(",");
                             }
 
-                        });
+                        }
 
-                        selected["pageNumber"] = 1;
+                    });
 
-                        Object.keys(configFilter.config.filters.types).forEach(function (key) {
-                            if(selected[key] === undefined && key !== "pageSize")
-                                selected[key] = "";
-                        });
+                    selected["pageNumber"] = 1;
 
+                    Object.keys(configFilter.config.filters.types).forEach(function (key) {
+                        if(!selected[key] && key !== "pageSize") 
+                            selected[key] = "";
+
+                    });
+
+                    if (Object.keys(selected).length > 1) {
                         newFilter.getFilter(selected);
 
                     } else {

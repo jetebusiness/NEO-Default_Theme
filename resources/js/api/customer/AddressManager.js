@@ -7,6 +7,9 @@ export function atualizaCampos(dados) {
     $("#City").val(obj.city)
     $(".state").dropdown('set value', obj.state)
     $(".state").dropdown('set text', obj.state)
+
+    $("#City").parent().addClass("disabled")
+    $(".state").dropdown().addClass("disabled")
 }
 
 export function buscaCep(cep) {
