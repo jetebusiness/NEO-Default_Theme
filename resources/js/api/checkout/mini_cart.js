@@ -553,41 +553,54 @@ function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
                     ChangeFrete();
                 }
                 else {
-                    $("#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c").removeClass("loading");
-                    $("#zipcode").val(zipCode);
-
-                    if (data.relocateCD == true) {
-                        buscaCepCD(zipCode).then(function () {
-                            changeCd(true, false, "#CallServiceShippingMiniCart", false, true, false, 0, RetirarLoja).then(function (response) {
-                                LoadCarrinho();
-                            });
+                    if (data.message == "Direcionar Carrinho" || (data.message.indexOf("Não existem") > -1 && $("#updateCartMultiCD").val().toLowerCase() == 'false')) {
+                        swal({
+                            html: 'Para finalizar sua compra, atualize os itens de seu carrinho conforme disponibilidade em nosso centro de distribuição.',
+                            type: '',
+                            showCancelButton: false,
+                            confirmButtonColor: '#4DA930',
+                            confirmButtonText: 'Voltar ao carrinho',
+                        }).then(function () {
+                            document.location.href = '/checkout?zipcode=' + zipCode
+                        }).catch(function () {
                         });
-                        return;
-                    }
-
-                    if (RetirarLoja == "true") {
-                        $(".description.frete").hide();
-                        $(".description.resultado .valor").html(data.message);
-                        $(".description.resultado").show();
                     } else {
-                        $(".description.frete").hide();
-                        $(".description.resultado .valor").html(data.message);
-                        $(".description.resultado").show();
-                    }
+                        $("#CallServiceShippingMiniCart, #frete-receber-cart-b2c, #frete-retirar-cart-b2c").removeClass("loading");
+                        $("#zipcode").val(zipCode);
 
-                    swal({
-                        title: data.title,
-                        text: data.message,
-                        type: data.type,
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'OK'
-                    }).then(function () {
-                        LoadCarrinho();
-                        if (data.recalculateShipping == true && recalculaFrete == true)
-                            CalculaFreteMiniCarrinho(zipCode, false); //recalcula frete
-                    });
+                        if (data.relocateCD == true) {
+                            buscaCepCD(zipCode).then(function () {
+                                changeCd(true, false, "#CallServiceShippingMiniCart", false, true, false, 0, RetirarLoja).then(function (response) {
+                                    LoadCarrinho();
+                                });
+                            });
+                            return;
+                        }
+
+                        if (RetirarLoja == "true") {
+                            $(".description.frete").hide();
+                            $(".description.resultado .valor").html(data.message);
+                            $(".description.resultado").show();
+                        } else {
+                            $(".description.frete").hide();
+                            $(".description.resultado .valor").html(data.message);
+                            $(".description.resultado").show();
+                        }
+
+                        swal({
+                            title: data.title,
+                            text: data.message,
+                            type: data.type,
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        }).then(function () {
+                            LoadCarrinho();
+                            if (data.recalculateShipping == true && recalculaFrete == true)
+                                CalculaFreteMiniCarrinho(zipCode, false); //recalcula frete
+                        });
+                    }
                 }
 
                 shippingCalculateMiniCart(false);

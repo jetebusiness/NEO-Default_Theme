@@ -3,7 +3,7 @@
 
 <div class="item @(Model.Stock == 0 || Model.Stock < Model.Quantity || Model.FlagExhausted == EnumeratorsCommons.EnumYesNo.Yes ? "exhausted" : "")" data-signature="@Model.IsRecurrent" data-id-cart="@Model.IdCartItem" data-id-produto="@Model.IdProduct" id="itemCartProduct_@Model.IdCartItem">
     <div class="ui image small">
-        <img src="@Model.ProductImage.ImageDefault"  onerror="imgError(this)">
+        <img src="@Model.ProductImage.ImageDefault" onerror="imgError(this)">
     </div>
     <div class="content">
         <div class="nameProduct">
@@ -49,6 +49,10 @@
                         <tr>
                             <th>Qtd</th>
                             <th>Valor</th>
+                            @if (!LojaCorp.Control.Company._Company.UpdateCartMultiCD && (!String.IsNullOrEmpty(Model.CDName) || !string.IsNullOrEmpty(Request.QueryString["zipcode"])))
+                            {
+                                <th class="center aligned">Centro de Distribuição</th>
+                            }
                             <th></th>
                         </tr>
                     </thead>
@@ -68,6 +72,57 @@
                                 </div>
                             </td>
                             <td id="preco_unitario_@Model.IdCartItem" data-qtd="@Model.Quantity" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)">@(Model.Quantity > 1 ? Model.Quantity + "x" : "") @string.Format("{0:c}", Model.PriceProduct)</td>
+                            @if (!LojaCorp.Control.Company._Company.UpdateCartMultiCD)
+                            {
+                                if (!String.IsNullOrEmpty(Model.CDName))
+                                {
+                                    if (Model.CDStock > 0)
+                                    {
+                                        if (Model.CDStock >= Model.Quantity)
+                                        {
+                                            <td class="center aligned">
+                                                <div class="multi-cd-item">
+                                                    <span class="name-multicd">@Model.CDName</span><br />
+                                                    <span class="availability text color green"><b>Disponível: </b>@Model.CDStock unidade(s)</span><br />
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="center aligned">
+                                                <div class="multi-cd-item">
+                                                    <span class="name-multicd">@Model.CDName</span><br />
+                                                    <span class="availability text color green"><b>Disponível: </b>@Model.CDStock unidade(s)</span><br />
+                                                    <span class="info text color red"><i class="info circle icon"></i> atualize a quantidade</span>
+                                                </div>
+                                            </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td class="center aligned">
+                                            <div class="multi-cd-item">
+                                                <span class="name-multicd">@Model.CDName</span><br />
+                                                <span class="availability text color red"><b>Indisponível</b></span>
+                                            </div>
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    if (!string.IsNullOrEmpty(Request.QueryString["zipcode"]))
+                                    {
+                                        <td class="center aligned">
+                                            <div class="multi-cd-item">
+                                                <span class="name-multicd">Produto indisponível</span><br />
+                                                <span class="availability text color red"><b>Indisponível</b></span>
+                                            </div>
+                                        </td>
+                                    }
+                                }
+
+
+                            }
                             <td>
                                 <button class="removeCartItem" data-id="@Model.IdCartItem" data-id-produto="@Model.IdProduct" data-id-sku="@Model.IdSku" data-id-personalization-cart="@(Model.IdCartPersonalization != null ? Model.IdCartPersonalization : 0)" data-restricted-delivery="@Model.RestrictedDelivery">
                                     <i class="trash alternate outline icon"></i>

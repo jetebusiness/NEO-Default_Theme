@@ -153,7 +153,6 @@ $(document).on("click", "#btn_compre_conjunto_selecionado", function (e) {
     if ($product_selected.length > 0) {
         let botao = this.querySelector('a.buy-conjunct')
 
-        console.log(botao)
         if (botao)
             botao.classList.add("loading")
 
@@ -390,6 +389,7 @@ function callAjaxGetSku(element) {
                 if ($parent.hasClass("conjunto")) {
                     updateStockConjunct($parent);
                     updateProductConjunctTable();
+                    $parent.attr("data-idsku", sku.IdSku);
                 }
 
                 $("#produto-sku").val(variationSelected.ids);

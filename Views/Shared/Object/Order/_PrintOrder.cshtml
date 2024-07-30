@@ -175,6 +175,11 @@
                                 {
                                     <a href="@Model.PaymentLink" target="_blank" class="ui action button">Reimprimir boleto</a>
                                 }
+                                @* Forma de pagamento com boleto AppMax*@
+                                else if (Model.IdPaymentBrand == 391)
+                                {
+                                    <a href="@Model.PaymentLink" target="_blank" class="ui action button">Reimprimir boleto</a>
+                                }
                                 @* Forma de pagamento com boleto PagSeguro*@
                                 else if (!string.IsNullOrEmpty(Model.PaymentLink))
                                 {
@@ -351,17 +356,17 @@
                                 if (!string.IsNullOrEmpty(TrackingLink.FirstOrDefault().TrackingLink))
                                 {
 
-                                <a href="@TrackingLink.FirstOrDefault().TrackingLink" target="_blank" class="ui button positive">Rastrear Pedido</a>
-                            }
+                                    <a href="@TrackingLink.FirstOrDefault().TrackingLink" target="_blank" class="ui button positive">Rastrear Pedido</a>
+                                }
 
-                            foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus.Where(o => o.DateRegisterStatus != null).OrderByDescending(o => o.DateRegisterStatus).ToList())
-                            {
-                                if ((!status.StatusName.ToLower().Contains("novo") && status.DateRegisterStatus != null) && (!status.StatusName.ToLower().Contains("aprovação") && status.DateRegisterStatus != null) && (!status.StatusName.ToLower().Contains("cancelado") && status.DateRegisterStatus != null))
+                                foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus.Where(o => o.DateRegisterStatus != null).OrderByDescending(o => o.DateRegisterStatus).ToList())
                                 {
-                                    if (ViewBag.Yami != null && ViewBag.Yami.Trim() != "")
+                                    if ((!status.StatusName.ToLower().Contains("novo") && status.DateRegisterStatus != null) && (!status.StatusName.ToLower().Contains("aprovação") && status.DateRegisterStatus != null) && (!status.StatusName.ToLower().Contains("cancelado") && status.DateRegisterStatus != null))
                                     {
-                                        string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
-                                        <a href="@urlYami" target="_blank" class="ui button orange btn-yami">Solicitar troca/devolução</a>
+                                        if (ViewBag.Yami != null && ViewBag.Yami.Trim() != "")
+                                        {
+                                            string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
+                                            <a href="@urlYami" target="_blank" class="ui button orange btn-yami">Solicitar troca/devolução</a>
 
                                             string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
                                             <a href="@urlYamiAcompanha" target="_blank" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>

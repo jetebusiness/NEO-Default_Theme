@@ -74,87 +74,102 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                 },
                 success: function success(response) {
                     if (response.success == false) {
-                        if (retirarLoja == "true") {
-                            if ($("#updateShippingPayment").length > 0)
-                                $("#updateShippingPayment").html(`<div class="row text center">Não existem opções de retirada para o seu endereço</div>`);
-
-                            if ($("#btnsRetiraCheckout").length > 0) {
-                                $("#frete-receber").removeClass('primary');
-                                $("#frete-retirar").removeClass('basic');
-                                $("#frete-receber").addClass('basic');
-                                $("#frete-retirar").addClass('primary');
-                                $("#btnsRetiraCheckout").show();
-                            }
-
+                        if (response.message == "Direcionar Carrinho") {
                             swal({
-                                title: '',
-                                text: 'Não existem opções de retirada para o seu endereço',
-                                type: 'warning',
+                                html: 'Para finalizar sua compra, atualize os itens de seu carrinho conforme disponibilidade em nosso centro de distribuição.',
+                                type: '',
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
+                                confirmButtonColor: '#4DA930',
+                                confirmButtonText: 'Voltar ao carrinho',
+                            }).then(function () {
+                                document.location.href = '/checkout?zipcode=' + cep
+                            }).catch(function () {
                             });
+                        } else {
+                            if (retirarLoja == "true") {
+                                if ($("#updateShippingPayment").length > 0)
+                                    $("#updateShippingPayment").html(`<div class="row text center">Não existem opções de retirada para o seu endereço</div>`);
 
-                            return;
-                        } else if (retirarLoja == "false") {
-                            if ($("#updateShippingPayment").length > 0)
-                                $("#updateShippingPayment").html(`<div class="row text center">Não existem opções de entrega para o seu endereço</div>`);
+                                if ($("#btnsRetiraCheckout").length > 0) {
+                                    $("#frete-receber").removeClass('primary');
+                                    $("#frete-retirar").removeClass('basic');
+                                    $("#frete-receber").addClass('basic');
+                                    $("#frete-retirar").addClass('primary');
+                                    $("#btnsRetiraCheckout").show();
+                                }
 
-                            if ($("#btnsRetiraCheckout").length > 0) {
-                                $("#frete-receber").removeClass('basic');
-                                $("#frete-retirar").removeClass('primary');
-                                $("#frete-receber").addClass('primary');
-                                $("#frete-retirar").addClass('basic');
-                                $("#btnsRetiraCheckout").show();
-                            }
-
-                            if (isModal == true) {
-                                changeCd(false, true, undefined, true, true, false, 0, "true", true);
-                            } else {
                                 swal({
                                     title: '',
-                                    text: 'Não existem opções de entrega para o seu endereço',
+                                    text: 'Não existem opções de retirada para o seu endereço',
                                     type: 'warning',
                                     showCancelButton: false,
                                     confirmButtonColor: '#3085d6',
                                     cancelButtonColor: '#d33',
                                     confirmButtonText: 'OK'
                                 });
-                            }
-                            return;
-                        } else {
-                            swal({
-                                title: 'Indisponível para sua Região!',
-                                html: response.message.replaceAll('\"', ""),
-                                type: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#16ab39',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
-                            }).then(function () {
-                                if (redirectOnError) {
-                                    document.location.href = window.location.protocol + "//" + window.location.host + document.location.pathname + (calcShipping ? "?calcShipping=true" : "");
-                                } else {
-                                    hideModal();
-                                    $.ajax({
-                                        method: "POST",
-                                        url: "/customer/GetCurrentCD",
-                                        success: function success(response) {
-                                            if (response) {
-                                                $("#shipping").val(response.CEP);
-                                                if (shippingButton && shippingButton.length > 0)
-                                                    $(shippingButton).click()
-                                            }
-                                        }
-                                    })
+
+                                return;
+                            } else if (retirarLoja == "false") {
+                                if ($("#updateShippingPayment").length > 0)
+                                    $("#updateShippingPayment").html(`<div class="row text center">Não existem opções de entrega para o seu endereço</div>`);
+
+                                if ($("#btnsRetiraCheckout").length > 0) {
+                                    $("#frete-receber").removeClass('basic');
+                                    $("#frete-retirar").removeClass('primary');
+                                    $("#frete-receber").addClass('primary');
+                                    $("#frete-retirar").addClass('basic');
+                                    $("#btnsRetiraCheckout").show();
                                 }
 
-                                if ($("#updateShippingPayment").length > 0) {
-                                    $("#updateShippingPayment").html(`<div class="row text center">Os produtos não estão disponíveis para sua região.</div>`);
+                                if (isModal == true) {
+                                    changeCd(false, true, undefined, true, true, false, 0, "true", true);
+                                } else {
+                                    swal({
+                                        title: '',
+                                        text: 'Não existem opções de entrega para o seu endereço',
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    });
                                 }
-                            })
+                                return;
+                            } else {
+                                swal({
+                                    title: 'Indisponível para sua Região!',
+                                    html: response.message.replaceAll('\"', ""),
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#16ab39',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                }).then(function () {
+                                    if (redirectOnError) {
+                                        document.location.href = window.location.protocol + "//" + window.location.host + document.location.pathname + (calcShipping ? "?calcShipping=true" : "");
+                                    } else {
+                                        hideModal();
+                                        $.ajax({
+                                            method: "POST",
+                                            url: "/customer/GetCurrentCD",
+                                            success: function success(response) {
+                                                if (response) {
+                                                    $("#shipping").val(response.CEP);
+                                                    if (shippingButton && shippingButton.length > 0)
+                                                        $(shippingButton).click()
+                                                }
+                                            }
+                                        })
+                                    }
+
+                                    if ($("#updateShippingPayment").length > 0) {
+                                        $("#updateShippingPayment").html(`<div class="row text center">Os produtos não estão disponíveis para sua região.</div>`);
+                                    }
+                                })
+                            }
                         }
+                        
+                        
                     } else {
                         if (response.sameCD == false) {
                             if (showMessage) {
@@ -232,13 +247,13 @@ export async function changeCdCheckout() {
                     if (response.replaceAll('\"', "") == "Mesmo CD") {
                         atualizaEnderecos();
                     } else if (response.replaceAll('\"', "").length != 0){
-                        changeAddress(response);
+                        changeAddress(response, cep);
                     } else {
                         changeCd(true, true, undefined, false, true, false, 0, retirarLoja);
                     }
                 },
                 error: function () {
-                    changeAddress();
+                    changeAddress(undefined, cep);
                 }
             });
         }
@@ -247,31 +262,20 @@ export async function changeCdCheckout() {
     }
 }
 
-function changeAddress(response) {
+function changeAddress(response,zipcode) {
     swal({
-        title: 'Indisponível para sua Região!',
-        html: response,
-        type: 'warning',
+        html: 'Para finalizar sua compra, atualize os itens de seu carrinho conforme disponibilidade em nosso centro de distribuição ou altere para um endereço em que todos os itens estejam disponíveis.',
+        type: '',
         showCancelButton: true,
-        confirmButtonColor: '#16ab39',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Não',
-        confirmButtonText: 'Sim'
+        confirmButtonColor: '#DCDDDE',
+        cancelButtonColor: '#4DA930',
+        cancelButtonText: 'Alterar endereço',
+        confirmButtonText: 'Voltar ao carrinho',
     }).then(function () {
+        document.location.href = '/checkout?zipcode=' + zipcode
+    }).catch(function () {
         localStorage.setItem('multiCdAddress', response);
         $("#listAddressPayment").click()
-    }).catch(function () {
-        if (response.indexOf('redirecionado') == -1) {
-            changeCd(false, true, undefined, false, false)
-        } else {
-            $.ajax({
-                method: "POST",
-                url: "/Checkout/ClearCart",
-                success: function (data) {
-                    window.location.href = "/home";
-                }
-            });
-        }
     });
 }
 

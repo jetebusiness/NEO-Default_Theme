@@ -1711,13 +1711,58 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                 var objPagSeguroV4 = response.PagSeguroV4;
                 var objPagSeguroApp = response.PagSeguroApp;
                 var objMercadoPago = response.MercadoPago;
+                var objAppMax = response.AppMax;
                 var objParcelamento = 0;
                 if (response.ListInstallment != null && response.ListInstallment != "")
                     objParcelamento = response.ListInstallment;
 
                 if (objMsgError == "" || typeof (objMsgError) == "undefined" || objParcelamento.length > 0) {
                     //if($('#divScriptPagSeguro').length > 0) $('#divScriptPagSeguro').remove();
-                    if (typeof (objPagSeguroV4) != "undefined" && objPagSeguroV4 == true) {
+                    if (typeof (objAppMax) != "undefined" && objAppMax == true) {
+                        $("#btnCardCredit").attr("data-gateway", "appmax");
+                        if (objAdditionalFields.length > 0) {
+                            if (ContainsInArray("document", objAdditionalFields) == true) {
+                                $("#documentField").show();
+                                $("#documentField").addClass("required");
+                                $("#documentField .labelCheckPayment").html("CPF/CNPJ");
+                                $("#Document").attr("data-type", "cpfCnpj");
+                            }
+                            else {
+                                $("#documentField").hide();
+                                $("#documentField").removeClass("required");
+                                $("#documentField .labelCheckPayment").html("CPF");
+                                $("#Document").attr("data-type", "cpf");
+                            }
+                        }
+                        var totalCheckout = Number($('#total_checkout').data("totalcheckout").replace("R$", "").replace(".", "").replace(",", ""));
+
+                        if (objParcelamento.length > 0) {
+                            totalCheckout = objParcelamento[0].Total.toFixed(2).replace(".", "").replace(",", "");
+                        }
+
+                        $.ajax({
+                            method: "POST",
+                            url: "installments-appmax",
+                            data: {
+                                totalPedido: totalCheckout
+                            },
+                            success: function (response) {
+                                if (response && response.data) {
+                                    var option = "";
+                                    var initialValue = 0;
+                                    $.each(response.data, function (key, value) {
+                                        if (initialValue == 0) initialValue = value;
+                                        var valueInstallment = (value / key);
+                                        var interestFree = true;
+                                        if (value > initialValue) interestFree = false;
+                                        option += "<option value='000' data-InstallmentValue='" + valueInstallment + "' data-InstallmentNumber='" + key + "' data-InstallmentTotal='" + value + "'>" + key + "x de " + valueInstallment.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) + " (" + ((interestFree) ? 'Sem juros' : 'Com juros') + ")</option>";
+                                    });
+                                    $(slParcelamento).unbind().html(option);
+                                }
+                            }
+                        });
+                    }
+                    else if (typeof (objPagSeguroV4) != "undefined" && objPagSeguroV4 == true) {
                         $("#btnCardCredit").attr("data-gateway", "pagsegurov4");
                         if (objOneClick != "" && typeof (objOneClick) != "undefined") {
                             $("#checkOneClickField").show();
@@ -2004,7 +2049,7 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                         $("#checkOneClickField").hide();
                     }
 
-                    if (!objPagSeguro && !objPagSeguroApp && !objMercadoPago) {
+                    if (!objPagSeguro && !objPagSeguroApp && !objMercadoPago && !objAppMax) {
                         if (!oneclick) {
                             for (var i = 0; i < objParcelamento.length; i++) {
                                 var IdInstallment = objParcelamento[i].IdInstallment;
@@ -2149,7 +2194,7 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
     }
     else {
         var obj_parcelamento;
-        if (($('#hasPagSeguro').val() !== "0" && $('#hasPagSeguro').val() !== undefined) || ($('#hasPagSeguroApp').val() !== "0" && $('#hasPagSeguroApp').val() !== undefined) || ($('#hasMercadoPago').val() !== "0" && $('#hasMercadoPago').val() !== undefined)) {
+        if (($('#hasPagSeguro').val() !== "0" && $('#hasPagSeguro').val() !== undefined) || ($('#hasPagSeguroApp').val() !== "0" && $('#hasPagSeguroApp').val() !== undefined) || ($('#hasMercadoPago').val() !== "0" && $('#hasMercadoPago').val() !== undefined) || ($('#hasAppMax').val() !== "0" && $('#hasAppMax').val() !== undefined)) {
             obj_parcelamento = buscaTotalParcelamentoValor(codigoBandeira, codigoPaymentMethod, 1);
         } else {
             obj_parcelamento = buscaTotalParcelamento(codigoBandeira, codigoPaymentMethod, parcela_selecionada);
@@ -2164,6 +2209,8 @@ function AtualizaResumoCarrinhocomDesconto(codigoBandeira, codigoPaymentMethod, 
             //var obj_carrinho = buscaValorFinalCarrinho();
             if (Object.keys(obj_parcelamento).length > 0) {
                 $("#total_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.result));
+                $("#interest_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.juros));
+                $("#desconto_checkout").text(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(obj_parcelamento.discount));
             }
         }, 1000)        
     }
@@ -2460,6 +2507,8 @@ function applyDiscount() {
                         var titleAlert = "Cupom de Desconto!";
                         if (response.couponfreeshipping)
                             titleAlert = "Cupom aplicado com sucesso!";
+
+                        atualizaEnderecos();
 
                         swal({
                             title: titleAlert,
@@ -3637,9 +3686,23 @@ $(document).ready(function () {
     CampoEntregaAgendada();
 
     $('#Document').blur(function () {
-        if (!TestaCPF($(this).val())) {
-            _alert("", "Número de CPF inválido.", "warning");
-            $(this).val('');
+        if ($(this).data("type") == "cpf") {
+            if (!TestaCPF($(this).val())) {
+                _alert("", "Número de CPF inválido.", "warning");
+                $(this).val('');
+            }
+        } else if ($(this).data("type") == "cpfCnpj") {
+            if ($(this).val().length <= 11) {
+                if (!TestaCPF($(this).val())) {
+                    _alert("", "Número de CPF inválido.", "warning");
+                    $(this).val('');
+                }
+            } else {
+                if (!TestaCNPJ($(this).val())) {
+                    _alert("", "Número de CNPJ inválido.", "warning");
+                    $(this).val('');
+                }
+            }
         }
         return false;
     });
@@ -4526,8 +4589,8 @@ function CalculaFretePagamento(freteGratisValeCompra = false) {
                 })
             }
             else {
+                var zipCode = $("#dadosClienteUpdate #zipcode").val();
                 if (data.relocateCD == true) {
-                    var zipCode = $("#dadosClienteUpdate #zipcode").val();
                     if (data.message.replaceAll('\"', "") !== "") {
                         swal({
                             title: 'Região atualizada!',
@@ -4549,6 +4612,9 @@ function CalculaFretePagamento(freteGratisValeCompra = false) {
                     }
                     return false;
                 }
+
+                if (data.message.toLowerCase().indexOf("direcionar carrinho") > -1)
+                    data.message = "Não existem opções de retirada para o seu endereço";
 
                 $("#updateShippingPayment").html(`<div class="row text center">${data.message}</div>`);
                 $('.ui.modal.lista-endereco-cliente').modal('hide');
