@@ -4520,115 +4520,136 @@ function removeFrete() {
 }
 
 function CalculaFretePagamento(freteGratisValeCompra = false) {
-    let RetirarLoja = "";
-    if ($("#hdnRetirar").val() != undefined) {
-        RetirarLoja = $("#hdnRetirar").val();
-    }
-    $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
-    $(".ui.modal.shipping-pickupinstore").remove();
-    removeFrete();
     $.ajax({
         method: "POST",
-        url: "/Checkout/ListaFretePagamentoV2",
+        url: "/Checkout/ChangeZipCode",
         data: {
-            RetirarLoja: RetirarLoja
+            zipCode: $("#zipcode").val().replace("-", "")
         },
-        success: function (data) {
-            if (RetirarLoja == "true") {
-                $("#frete-receber").removeClass('primary');
-                $("#frete-retirar").removeClass('basic');
-                $("#frete-receber").addClass('basic');
-                $("#frete-retirar").addClass('primary');
-            } else {
-                $("#frete-receber").removeClass('basic');
-                $("#frete-retirar").removeClass('primary');
-                $("#frete-receber").addClass('primary');
-                $("#frete-retirar").addClass('basic');
-            }
-            $("#btnsRetiraCheckout").show();
-            if (data.success == true) {
-                $("#updateShippingPayment").html(data.result);
-                $('.ui.modal.lista-endereco-cliente').modal('hide');
-                $('.ui.modal').modal('hide');
-                clickShipping();
-                CampoEntregaAgendada();
-                HabilitaBlocoPagamento(false); 
-
-                if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") 
-                    atualizaResumoCarrinho();
-
-                if ($("#recalculatedRestrictedProducts").length) {
-                    var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
-                    if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
-                        $(".productRestrictedMessage").show();
-                        $(".ui.accordion.productSummary").accordion('open', 0);
-                    }
+        success: function (response) {
+            if (response != "False") {
+                let RetirarLoja = "";
+                if ($("#hdnRetirar").val() != undefined) {
+                    RetirarLoja = $("#hdnRetirar").val();
                 }
+                $("#updateShippingPayment").html('<div class="row text center loading-shipping"><img src="/assets/image/loading.svg"></div>')
+                $(".ui.modal.shipping-pickupinstore").remove();
+                removeFrete();
+                $.ajax({
+                    method: "POST",
+                    url: "/Checkout/ListaFretePagamentoV2",
+                    data: {
+                        RetirarLoja: RetirarLoja
+                    },
+                    success: function (data) {
+                        if (RetirarLoja == "true") {
+                            $("#frete-receber").removeClass('primary');
+                            $("#frete-retirar").removeClass('basic');
+                            $("#frete-receber").addClass('basic');
+                            $("#frete-retirar").addClass('primary');
+                        } else {
+                            $("#frete-receber").removeClass('basic');
+                            $("#frete-retirar").removeClass('primary');
+                            $("#frete-receber").addClass('primary');
+                            $("#frete-retirar").addClass('basic');
+                        }
+                        $("#btnsRetiraCheckout").show();
+                        if (data.success == true) {
+                            $("#updateShippingPayment").html(data.result);
+                            $('.ui.modal.lista-endereco-cliente').modal('hide');
+                            $('.ui.modal').modal('hide');
+                            clickShipping();
+                            CampoEntregaAgendada();
+                            HabilitaBlocoPagamento(false);
 
-                if (freteGratisValeCompra) {
-                    sessionStorage.setItem("shippingSelected", $("#GetShippping .card .checkbox.checked input").val())
-                    sessionStorage.setItem("ShippingValue", $("#GetShippping .card .checkbox.checked input").data("value"))
-                    var ShippingSelected = sessionStorage.getItem("shippingSelected");
-                    var ShippingValue = sessionStorage.getItem("ShippingValue");
-                    var idShipping = $("#GetShippping .card .checkbox input[data-id='" + ShippingSelected + "']", "#updateShippingPayment");
-                    var valueShipping = $("#GetShippping .card .checkbox input[data-id='" + ShippingSelected + "']").data("value");
+                            if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0")
+                                atualizaResumoCarrinho();
 
-                    if (idShipping.length > 0 && valueShipping == ShippingValue) {
-                        idShipping.click();
-                        _alert("", "Vale compras aplicado com sucesso", "success");
-                    } else {
-                        _alert("Vale compras aplicado com sucesso", "Os valores de frete foram atualizados. Selecione o frete desejado", "warning");
-                    }
-                }
+                            if ($("#recalculatedRestrictedProducts").length) {
+                                var recalculatedRestrictedProducts = $("#recalculatedRestrictedProducts").val()
+                                if (recalculatedRestrictedProducts.toLowerCase() == 'true') {
+                                    $(".productRestrictedMessage").show();
+                                    $(".ui.accordion.productSummary").accordion('open', 0);
+                                }
+                            }
 
-                SelecionaFreteLinkPagamento();
+                            if (freteGratisValeCompra) {
+                                sessionStorage.setItem("shippingSelected", $("#GetShippping .card .checkbox.checked input").val())
+                                sessionStorage.setItem("ShippingValue", $("#GetShippping .card .checkbox.checked input").data("value"))
+                                var ShippingSelected = sessionStorage.getItem("shippingSelected");
+                                var ShippingValue = sessionStorage.getItem("ShippingValue");
+                                var idShipping = $("#GetShippping .card .checkbox input[data-id='" + ShippingSelected + "']", "#updateShippingPayment");
+                                var valueShipping = $("#GetShippping .card .checkbox input[data-id='" + ShippingSelected + "']").data("value");
 
-                $(".modal-shipping-button").on("click", function (e) {
-                    $(".modal-shipping-description-" + e.currentTarget.attributes["data-id"].value).modal("show");
-                    e.stopPropagation();
-                })
-            }
-            else {
-                var zipCode = $("#dadosClienteUpdate #zipcode").val();
-                if (data.relocateCD == true) {
-                    if (data.message.replaceAll('\"', "") !== "") {
-                        swal({
-                            title: 'Região atualizada!',
-                            html: data.message.replaceAll('\"', ""),
-                            type: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: '#16ab39',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        }).then(function () {
-                            buscaCepCD(zipCode).then(function () {
-                                changeCdCheckout();
+                                if (idShipping.length > 0 && valueShipping == ShippingValue) {
+                                    idShipping.click();
+                                    _alert("", "Vale compras aplicado com sucesso", "success");
+                                } else {
+                                    _alert("Vale compras aplicado com sucesso", "Os valores de frete foram atualizados. Selecione o frete desejado", "warning");
+                                }
+                            }
+
+                            SelecionaFreteLinkPagamento();
+
+                            $(".modal-shipping-button").on("click", function (e) {
+                                $(".modal-shipping-description-" + e.currentTarget.attributes["data-id"].value).modal("show");
+                                e.stopPropagation();
                             })
-                        });
-                    } else {
-                        buscaCepCD(zipCode).then(function () {
-                            changeCdCheckout();
-                        })
+                        }
+                        else {
+                            if (data.relocateCD == true) {
+                                var zipCode = $("#dadosClienteUpdate #zipcode").val();
+                                if (data.message.replaceAll('\"', "") !== "") {
+                                    swal({
+                                        title: 'Região atualizada!',
+                                        html: data.message.replaceAll('\"', ""),
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#16ab39',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    }).then(function () {
+                                        buscaCepCD(zipCode).then(function () {
+                                            changeCdCheckout();
+                                        })
+                                    });
+                                } else {
+                                    buscaCepCD(zipCode).then(function () {
+                                        changeCdCheckout();
+                                    })
+                                }
+                                return false;
+                            }
+
+                            $("#updateShippingPayment").html(`<div class="row text center">${data.message}</div>`);
+                            $('.ui.modal.lista-endereco-cliente').modal('hide');
+                            $('.ui.modal').modal('hide');
+                            HabilitaBlocoPagamento(false);
+                        }
+                    },
+                    error: function (error) {
+                        $("#updateShippingPayment").html(`<div class="row text center">${error.message}</div>`);
+                        $('.ui.modal.lista-endereco-cliente').modal('hide');
+                        $('.ui.modal').modal('hide');
+                        HabilitaBlocoPagamento(false);
                     }
-                    return false;
-                }
-
-                if (data.message.toLowerCase().indexOf("direcionar carrinho") > -1)
-                    data.message = "Não existem opções de retirada para o seu endereço";
-
-                $("#updateShippingPayment").html(`<div class="row text center">${data.message}</div>`);
-                $('.ui.modal.lista-endereco-cliente').modal('hide');
-                $('.ui.modal').modal('hide');   
-                HabilitaBlocoPagamento(false);    
+                });
+            } else {
+                swal({
+                    html: 'Os produtos da loja foram atualizados conforme sua região.',
+                    type: 'warning',
+                    title: 'Região atualizada!',
+                    showCancelButton: false,
+                    confirmButtonColor: '#4DA930',
+                    confirmButtonText: 'OK',
+                }).then(function () {
+                    document.location.reload()
+                }).catch(function () {
+                });
             }
-        },
-        error: function (error) {
-            $("#updateShippingPayment").html(`<div class="row text center">${error.message}</div>`);
-            $('.ui.modal.lista-endereco-cliente').modal('hide');
-            $('.ui.modal').modal('hide');      
-            HabilitaBlocoPagamento(false);
         }
-    });
+    })
+    
 }
 
 function SelecionaFreteLinkPagamento() {

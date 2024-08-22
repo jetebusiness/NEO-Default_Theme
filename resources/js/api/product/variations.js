@@ -516,14 +516,24 @@ variations = {
                 $("#video-product").hide();
                 $("#video-product").attr('src', '');
             }
- 
 
+            // Reset EasyZoom instance
+            $easyzoom.each(function () {
+                var api = $(this).data('easyZoom');
+                if (api) {
+                    api.teardown();
+                }
+            });
+ 
             if ($toggle.data("active") === true || !variations.isDevice()) {
                 $easyzoom.easyZoom().filter('.easyzoom--with-thumbnails').data('easyZoom').swap($this.data('standard'), $this.attr('href'));
             } else {
                 $(">a", ".easyzoom").attr("href", $this.data('standard'))
                 $(">a>img", ".easyzoom").attr("src", $this.data('standard'))
             }
+
+            // Reinitialize EasyZoom instance
+            $easyzoom.easyZoom();
 
         });
     },

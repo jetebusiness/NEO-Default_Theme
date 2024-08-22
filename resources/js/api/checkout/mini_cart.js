@@ -62,7 +62,30 @@ $(document).ready(function () {
     $(document).on("click", "#CallServiceShippingMiniCart", function (event) {
         var zipCode = $('#CallServiceShippingMiniCart').prev('input').cleanVal();
         $(".ui.dimmer.modals.page.transition.hidden").html("");
-        CalculaFreteMiniCarrinho(zipCode, true);
+        $.ajax({
+            method: "POST",
+            url: "/Checkout/ChangeZipCode",
+            data: {
+                zipCode: zipCode
+            },
+            success: function (response) {
+                if (response != "False") {
+                    CalculaFreteMiniCarrinho(zipCode, true);
+                } else {
+                    swal({
+                        html: 'Os produtos da loja foram atualizados conforme sua região.',
+                        type: 'warning',
+                        title: 'Região atualizada!',
+                        showCancelButton: false,
+                        confirmButtonColor: '#4DA930',
+                        confirmButtonText: 'OK',
+                    }).then(function () {
+                        document.location.reload()
+                    }).catch(function () {
+                    });
+                }
+            }
+        })
         event.stopPropagation();
     });
 

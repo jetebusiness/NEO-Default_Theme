@@ -78,7 +78,7 @@
                                 </button>
                             </div>
                         </div>
-
+                        @Html.Action("getRecaptchaV3", "company", new { Module = "FirstAccess" })
                     </div>
 
                 </div>
@@ -106,7 +106,7 @@
                     $.ajax({
                         method: "POST",
                         url: "/Customer/CheckAccessKey",
-                        data: {             
+                        data: {
                             Email: $("#Email").val(),
                             KeyAccess: $("#KeyAccess").val()
                         },
@@ -142,16 +142,18 @@
             $(document).on("click",
                 "#ReenviarCodigo",
                 function () {
+                    let googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
                     $.ajax({
                         method: "POST",
                         url: "/Customer/Accesskey",
                         data: {
                             __RequestVerificationToken: gettoken(),
-                            Email: emailCustomer
+                            Email: $("#Email").val(),
+                            GoogleResponse: googleResponse
                         },
                         success: function (data) {
                             if (data.Success == true) {
-                                swal({                               
+                                swal({
                                     text: "Código de acesso reenviado!",
                                     type: 'success',
                                     showCancelButton: false,
@@ -160,7 +162,7 @@
                                     confirmButtonText: 'OK'
                                 });
                             } else {
-                                swal({                                
+                                swal({
                                     text: data.Message,
                                     type: 'error',
                                     showCancelButton: false,
@@ -171,7 +173,7 @@
                             }
                         },
                         error: function (data) {
-                            swal({                             
+                            swal({
                                 text: data.Message,
                                 type: 'error',
                                 showCancelButton: false,

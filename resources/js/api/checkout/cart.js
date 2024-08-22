@@ -189,7 +189,30 @@ function LoadServiceShipping() {
     $("#CallServiceShipping").click(function (event) {
         $(".ui.dimmer.modals.page.transition.hidden").html("");
         var zipCode = $("#shipping").val();
-        CalculaFreteCarrinho(zipCode, true)
+        $.ajax({
+            method: "POST",
+            url: "/Checkout/ChangeZipCode",
+            data: {
+                zipCode: zipCode
+            },
+            success: function (response) {
+                if (response != "False") {
+                    CalculaFreteCarrinho(zipCode, true)
+                } else {
+                    swal({
+                        html: 'Os produtos da loja foram atualizados conforme sua região.',
+                        type: 'warning',
+                        title: 'Região atualizada!',
+                        showCancelButton: false,
+                        confirmButtonColor: '#4DA930',
+                        confirmButtonText: 'OK',
+                    }).then(function () {
+                        document.location.reload()
+                    }).catch(function () {
+                    });
+                }
+            }
+        })
         event.stopPropagation();
     });
 }
