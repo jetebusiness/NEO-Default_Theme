@@ -7,7 +7,7 @@ import { CompraRecorrenteStorage, CompraRecorrenteCart } from '../../functions/r
 import { atualizaResumoCarrinho } from './payment'
 import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 import { loading } from "../../functions/loading";
-import { debounce } from "../../functions/util"; 
+import { debounce } from "../../functions/util";
 import { isGtmEnabled, getProductAndPushRemoveFromCartEvent } from "../../api/googleTagManager/googleTagManager";
 
 function InserirQuantidadeManual() {
