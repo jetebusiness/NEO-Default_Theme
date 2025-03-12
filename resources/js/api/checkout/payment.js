@@ -253,7 +253,10 @@ function GerarPedidoCompleto(
             eci3DS20: eci3DS20,
             version3DS20: version3DS20,
             referenceId3DS20: referenceId3DS20,
-            cancelBonus: cancelBonus
+            cancelBonus: cancelBonus,
+            colorDepth: screen.colorDepth,
+            screenHeight: screen.height,
+            screenWidth: screen.width
         },
         success: function (response) {
             if (response.success === true) {
@@ -1250,6 +1253,28 @@ function OrderCreate() {
                             //Gerar pedido completo com atraso de 5 segundos
                             setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument); }, 5000);
                         }
+                        else if (tipoVerificacao === "S" && $this.attr("data-gateway") === "iugu") {
+                            Iugu.createPaymentToken($('#validCardCredit').get(0), function (response) {
+                                if (response.errors) {
+                                    swal({
+                                        //title: 'Ops! Encontramos um problema ..',
+                                        html: "Não foi possível gerar o token do cartão na Iugu.",
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    });
+
+                                    $(".GerarPedido").removeClass("loading");
+                                    $(".GerarPedido").removeClass("disabled");
+                                } else {
+                                    cardToken = response.id;
+
+                                    GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick);
+                                }
+                            });
+                        }
                         else if (tipoVerificacao === "S" && ($this.attr("data-gateway") === "pagseguro" || $this.attr("data-gateway") === "pagseguroapp")) {
 
                             PagSeguroDirectPayment.createCardToken({
@@ -1712,13 +1737,17 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                 var objPagSeguroApp = response.PagSeguroApp;
                 var objMercadoPago = response.MercadoPago;
                 var objAppMax = response.AppMax;
+                var objIugu = response.Iugu;
                 var objParcelamento = 0;
                 if (response.ListInstallment != null && response.ListInstallment != "")
                     objParcelamento = response.ListInstallment;
 
                 if (objMsgError == "" || typeof (objMsgError) == "undefined" || objParcelamento.length > 0) {
                     //if($('#divScriptPagSeguro').length > 0) $('#divScriptPagSeguro').remove();
-                    if (typeof (objAppMax) != "undefined" && objAppMax == true) {
+                    if (typeof (objIugu) != "undefined" && objIugu == true) {
+                        $("#btnCardCredit").attr("data-gateway", "iugu");
+                    }
+                    else if (typeof (objAppMax) != "undefined" && objAppMax == true) {
                         $("#btnCardCredit").attr("data-gateway", "appmax");
                         if (objAdditionalFields.length > 0) {
                             if (ContainsInArray("document", objAdditionalFields) == true) {
@@ -3591,6 +3620,27 @@ $(document).ready(function () {
                     if (parseFloat(shoppingVoucherValue) > 0 && shoppingVoucherValue <= valorCompare && shoppingVoucherValue <= saldoShoppingVoucher) {
                         ValeCompraAplicar(shoppingVoucherValue);
                     }
+                }
+            }
+        });
+    }
+
+    if ($('#hasIugu').val() !== "0" && $('#hasIugu').val() !== undefined) {
+        $.ajax({
+            async: false,
+            method: "GET",
+            url: "/Checkout/GetConfigIugu",
+            success: function (responseConfig) {
+                console.log(responseConfig);
+                if (responseConfig.Active) {
+                    $.getScript("https://js.iugu.com/v2", function () {
+                        Iugu.setAccountID(responseConfig.AccountId);
+                        Iugu.setTestMode(responseConfig.Homologation);
+
+                        if (Iugu.utils.isBlockedByAdBlock()) {
+                            _alert("", "Bloqueadores de anúncio causam conflito com a forma de pagamento Cartão de Crédito, favor desbilite o Bloqueador(es) e recarregue a pagina!", "warning");
+                        }
+                    });
                 }
             }
         });

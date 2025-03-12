@@ -1,27 +1,21 @@
 ﻿import { _alert, _confirm } from '../../functions/message';
 
 $(document).ready(function () {
-    $(document).on("click", ".btn-yami", function () {
+    $(document).on("click", ".btn-aftersale", function (e) {
+        e.preventDefault()
         //_alert("Troca ou Devolução, Url=" + $(this).attr("href"));
 
         var iframe = document.createElement('iframe');
         iframe.src = $(this).attr("href");
-        iframe.frameBorder = "0";
-        iframe.width = "900px";
-        iframe.height = "500px";
-        //iframe.scrolling = "yes";
 
-        //$('.ui.modal').css({
-        //    'background-color': '#fff',
-        //    'with': '600px',
-        //    'height': '400px'
-        //});
+        if (window.innerWidth <= 992)
+            inframe.minHeight = "initial"
+
+        $('.ui.modal.aftersale > .iframe-modal').empty().html(iframe)
 
         iframe.onload = function () {
-            $('.ui.modal.yami').modal('show');
+            $('.ui.modal.aftersale').modal('show');
         };
-
-        $('.ui.modal.yami .iframe-modal').empty().append(iframe);
 
         return false;
     });

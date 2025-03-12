@@ -48,6 +48,15 @@ $(document).on("click", "#addProducInCart", function (e) {
 
 	$(this).addClass("loading");
 	CancelarCalculoFreteCart(1);
+
+	var type = $(this).data("purchasetracking-type");
+	var value = $(this).data("purchasetracking-value");
+
+	if (type != undefined && value != undefined) {
+		let purchasetracking = { type: type, value: value };
+		sessionStorage.setItem('purchasetracking', JSON.stringify(purchasetracking));
+	}
+
 	callAjaxInsertItemInCart($(this).data("idproduct"), $(this).data("variations"), 1, this, true);
 })
 

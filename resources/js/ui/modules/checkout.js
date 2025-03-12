@@ -1,6 +1,7 @@
 import { generateRecaptcha }  from "./recaptcha";
 import { isMobile } from '../../functions/mobile';
 import { CompraRecorrenteStorage, CompraRecorrenteCheckout } from '../../functions/recurringPurchase';
+import { initializeDiscountCart } from "../../functions/mini_cart_generic";
 
 require("../../functions/jetCheckout");
 require("card/dist/jquery.card");
@@ -363,5 +364,9 @@ $(document).ready(function () {
     if (isMobile()) {
         $(".box.detalhes, .box.success").sticky("destroy");
         $(".ui.accordion.compra div, .ui.accordion.resumo div, .ui.accordion.usuario div").removeClass("active");
+    }
+
+    if ($(".description.discountCart").length > 0) {
+        initializeDiscountCart();
     }
 });

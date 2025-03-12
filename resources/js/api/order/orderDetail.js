@@ -300,7 +300,8 @@ $(document).ready(function () {
 
 })
 
-$(document).on("click", ".btn-yami", function () {
+$(document).on("click", ".btn-aftersale", function (e) {
+    e.preventDefault()
     var iframe = document.createElement('iframe');
     iframe.src = $(this).attr("href");
     iframe.frameBorder = "0";
@@ -308,15 +309,16 @@ $(document).on("click", ".btn-yami", function () {
     iframe.height = "500px";
 
     iframe.onload = function () {
-        $('.ui.modal.yami').modal('show');
+        $('.ui.modal.aftersale').modal('show');
     };
 
-    $('.ui.modal.yami .iframe-modal').empty().append(iframe);
+    $('.ui.modal.aftersale .iframe-modal').empty().append(iframe);
 
     return false;
 });
 
-$(document).on("click", ".btn-yami-acompanha", function () {
+$(document).on("click", ".btn-aftersale-acompanha", function () {
+    e.preventDefault()
     var iframe = document.createElement('iframe');
     iframe.src = $(this).attr("href");
     iframe.frameBorder = "0";
@@ -324,10 +326,10 @@ $(document).on("click", ".btn-yami-acompanha", function () {
     iframe.height = "500px";
 
     iframe.onload = function () {
-        $('.ui.modal.yami').modal('show');
+        $('.ui.modal.aftersale').modal('show');
     };
 
-    $('.ui.modal.yami .iframe-modal').empty().append(iframe);
+    $('.ui.modal.aftersale .iframe-modal').empty().append(iframe);
 
     return false;
 });

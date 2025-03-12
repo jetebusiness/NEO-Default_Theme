@@ -221,7 +221,7 @@
                         @if (Model.HistoryListOrderStatus != null && Model.HistoryListOrderStatus.Count() > 0)
                         {
                             var count = 0;
-                            foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus)
+                            foreach (DomainOrder.Entities.OrderStatus status in Model.HistoryListOrderStatus.Where(o => o.DateRegisterStatus != null).OrderBy(o => o.DateRegisterStatus).ToList())
                             {
                                 count++;
                                 if (count > 3)

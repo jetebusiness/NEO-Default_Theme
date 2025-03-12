@@ -1,0 +1,25 @@
+﻿
+.ui.modal.aftersale {
+    height: 700px;
+
+    .content {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        @media only screen and (max-width: 992px) {
+            max-height: initial;
+        }
+    }
+
+    @media only screen and (max-width: 992px) {
+        height: initial;
+    }
+
+    iframe {
+        width: 100% !important;
+        height: 100% !important;
+        border: none;
+        min-height: 400px;
+    }
+}

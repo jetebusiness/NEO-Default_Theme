@@ -183,6 +183,7 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
                                     confirmButtonText: 'OK'
                                 }).then(function () {
                                     notSameCD(redirect, calcShipping, shippingButton, response.message.replaceAll('\"', ""), idFrete, retirarLoja);
+                                    updatePartialView_checkoutProductsList();
                                     if (refreshPage > 0)
                                         window.location.reload();
                                 }).catch(function () {
@@ -226,6 +227,20 @@ export async function changeCd(calcShipping = false, redirect = false, shippingB
         hideModal()
     }
     $("#selecionar").removeClass('loading');
+}
+
+function updatePartialView_checkoutProductsList() {
+    $.ajax({
+        url: window.location.href, 
+        type: 'GET',
+        success: function (result) {
+            var newContent = $(result).find('#checkout_products_list').html();
+            $('#checkout_products_list').html(newContent);
+        },
+        error: function (xhr, status, error) {
+            console.error("Erro ao atualizar a PartialView:", error);
+        }
+    });
 }
 
 export async function changeCdCheckout() {

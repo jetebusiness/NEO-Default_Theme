@@ -3,15 +3,16 @@ import { generateRecaptcha } from "../../ui/modules/recaptcha";
 
 function RegisterNews() {
     var googleResponse = $("[id^=googleResponse]", "body").length > 0 ? $("[id^=googleResponse]", "body").val() : "";
+    let data = {
+        email: $("#email_news").val(),
+        name: $("#name_news").val(),
+        phone: $("#phone_news").cleanVal(),
+        googleResponse: googleResponse
+    }
     $.ajax({
         url: '/Customer/RegisterNewsletter/',
-        type: 'GET',
-        data: {
-            email: $("#email_news").val(),
-            name: $("#name_news").val(),
-            phone: $("#phone_news").val(),
-            googleResponse: googleResponse  
-        },
+        type: 'POST',
+        data: data,
         dataType: 'json',
         success: function (response) {
             if (response.Success === true) {

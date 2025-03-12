@@ -458,11 +458,14 @@ function AdicionarProdutosCompreJuntoAjx() {
 
         listaSkus = listaSkus.concat(sku_selecionado_produto_principal);
 
+        let purchaseTrackingType = $("#btn_comprejunto").data("purchasetracking-type");
+        let purchaseTrackingValue = $("#btn_comprejunto").data("purchasetracking-value");
+
         $.ajax({
             url: '/Product/AddMultipleProductCart',
             type: 'POST',
             contentType: 'application/json; charset=UTF-8',
-            data: JSON.stringify({ productIDSKU: listaSkus }),
+            data: JSON.stringify({ productIDSKU: listaSkus, purchaseTrackingType, purchaseTrackingValue }),
             dataType: 'json',
             success: function (response) {
                 if (response.success === true) {
@@ -512,6 +515,12 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
     if (personaliza.length > 0) {
         product.personalizations = personalization.renderArray();
         product.personalizationString = $("#json-personalizations").val()
+    }
+
+    let purchasetracking = JSON.parse(sessionStorage.getItem('purchasetracking'));
+
+    if (purchasetracking != undefined && purchasetracking.type != undefined) {
+        product.purchaseTracking = purchasetracking;
     }
 
     Cart.push(product);
@@ -581,6 +590,97 @@ function AdicionarProdutoAjx(productSKU, productID, quantity, oneclick, signatur
     });
 }
 
+function AdicionarProdutoPurchaseTrackingAjx(productSKU, productID, quantity, oneclick, signature = false, purchasetrackingtype = "", purchasetrackingvalue = "") {
+
+    var Cart = [],
+        product = new Object(),
+        personaliza = personalization.renderArray();
+
+    product.IdProduct = productID;
+    product.IdSku = productSKU;
+    product.Quantity = quantity;
+    product.isRecurrent = signature;
+
+    if (personaliza.length > 0) {
+        product.personalizations = personalization.renderArray();
+        product.personalizationString = $("#json-personalizations").val()
+    }
+
+    let purchasetracking = JSON.parse(sessionStorage.getItem('purchasetracking'));
+
+    if (purchasetrackingtype != "") {
+        product.purchaseTracking = {
+            type: purchasetrackingtype,
+            value: purchasetrackingvalue
+        };
+    }
+
+    Cart.push(product);
+
+    $.ajax({
+        url: '/Checkout/InsertItemCart',
+        type: 'POST',
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify({ CartItem: Cart }),
+        dataType: 'json',
+        success: function (response) {
+            if (response.success === true) {
+
+                if (isGtmEnabled()) {
+                    getProductAndPushAddToCartEvent({ idProduct: product.IdProduct, idSku: product.IdSku, quantity: product.Quantity });
+                }
+
+                // Ativa ou desativa o modal de termos de aceite do Compra Recorrente
+                if ($(CompraRecorrenteCart.modalConfig.id).length > 0)
+                    $(CompraRecorrenteCart.modalConfig.id).attr("data-active", signature);
+
+                // Limpa a Storage caso um produto sem recorrencia seja adicionado
+                if (!signature)
+                    CompraRecorrenteStorage.cleanStorage();
+
+                if (typeof (oneclick) != undefined && oneclick === true) {
+                    $.ajax({
+                        method: "GET",
+                        url: "/Checkout/CheckoutNext",
+                        data: {},
+                        success: function (data) {
+                            if (data.success === true)
+                                window.location.href = "/" + data.redirect
+                            else
+                                _alert("Mensagem", data.message, "error")
+                        },
+                        onFailure: function (data) {
+                            //console.log("Erro ao excluir frete");
+                        }
+                    });
+                }
+                else {
+                    $(document).find(".loading").removeClass("loading");
+                    LoadCarrinho();
+                    $(".carrinho").sidebar('toggle');
+                }
+                //window.location.href = "/checkout/index";
+
+            }
+            else {
+                swal({
+                    title: '',
+                    text: response.msg,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+                $(document).find(".loading").removeClass("loading");
+            }
+
+        },
+        error: function (request, error) {
+            $(document).find(".loading").removeClass("loading");
+        }
+    });
+}
 
 function AdicionarProdutoAjxEventList(productSKU, productID, quantity) {
     $.ajax({

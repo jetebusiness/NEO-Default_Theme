@@ -607,3 +607,14 @@ $(document).on("click", "#finalizePurchase", function (e) {
     });
 })
 
+$(document).on("click", ".product-in-card .content > a, .product-in-card .content .info .botoes a.btnDetalhes", function () {
+    var div = $(this).parents(".product-in-card");
+    var type = $(div).data("purchasetracking-type");
+    var value = $(div).data("purchasetracking-value");
+
+    if (type != undefined && value != undefined) {
+        let purchasetracking = { type: type, value: value };
+        sessionStorage.setItem('purchasetracking', JSON.stringify(purchasetracking));
+    }
+});
+

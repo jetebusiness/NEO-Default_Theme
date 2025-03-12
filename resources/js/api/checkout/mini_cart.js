@@ -10,6 +10,7 @@ import { buscaCepCD, changeCd } from "../../ui/modules/multiCd";
 import { debounce } from "../../functions/util";
 import { isGtmEnabled, tryPushEvent, getProductAndPushRemoveFromCartEvent, getProductAndPushAddToCartEvent } from "../../api/googleTagManager/googleTagManager";
 import { getCartItens } from "../../functions/checkout"
+import { updateDiscountCartEmpty, updateDiscountCart } from "../../functions/mini_cart_generic"
 
 $(document).ready(function () {
     $(document).on("click", "#mini-carrinho-checkout", function (event) {
@@ -443,6 +444,8 @@ export function disparaAjaxUpdate(idCurrent, valorInput, action, idCartPersonali
                     $("#qtd_" + idCurrent).val(qtdInicial);
                 }
 
+                updateDiscountCartEmpty();
+                updateDiscountCart();
                 LoadingCart(loading)
             }
         },
@@ -576,7 +579,7 @@ function CalculaFreteMiniCarrinho(zipCode, recalculaFrete = true) {
                     ChangeFrete();
                 }
                 else {
-                    if (data.message == "Direcionar Carrinho" || (data.message.indexOf("Não existem") > -1 && $("#updateCartMultiCD").val().toLowerCase() == 'false')) {
+                    if (data.message == "Direcionar Carrinho" || (data.message.indexOf("Não existem") > -1 && $("#updateCartMultiCD").val().toLowerCase() == 'false' && $("#multiCDActive").val().toLowerCase() == "true")) {
                         swal({
                             html: 'Para finalizar sua compra, atualize os itens de seu carrinho conforme disponibilidade em nosso centro de distribuição.',
                             type: '',

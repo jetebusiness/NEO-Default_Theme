@@ -161,9 +161,17 @@ $(document).ready(function () {
                         title: item.Name,
                         url: item.UrlFriendlyCustom != null ? item.UrlFriendlyCustom : item.UrlFriendly,
                         image: item.ImageHome,
+                        purchasetrackingtype: item.PurchaseTracking != undefined && item.PurchaseTracking.Type != undefined ? item.PurchaseTracking.Type : "",
+                        purchasetrackingvalue: item.PurchaseTracking != undefined && item.PurchaseTracking.Value != undefined ? item.PurchaseTracking.Value : ""
                     });
                 });
                 return response;
+            }
+        },
+        onSelect: function (result, response) {
+            if (result.purchasetrackingtype != undefined && result.purchasetrackingvalue != undefined) {
+                let purchasetracking = { type: result.purchasetrackingtype, value: result.purchasetrackingvalue };
+                sessionStorage.setItem('purchasetracking', JSON.stringify(purchasetracking));
             }
         },
         onResultsAdd: function () {

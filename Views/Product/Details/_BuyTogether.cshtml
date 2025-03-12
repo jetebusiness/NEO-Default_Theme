@@ -242,19 +242,30 @@
                             </tr>
                         </tbody>
                     </table>
+                    @{
+                        var BuyTogetherPurchaseTracking = Model.BuyTogether.FirstOrDefault().PurchaseTracking;
+                        var BuyTogetherPurchaseTrackingType = "";
+                        var BuyTogetherPurchaseTrackingValue = "";
+
+                        if (BuyTogetherPurchaseTracking != null && !string.IsNullOrEmpty(BuyTogetherPurchaseTracking.Type))
+                        {
+                            BuyTogetherPurchaseTrackingType = BuyTogetherPurchaseTracking.Type;
+                            BuyTogetherPurchaseTrackingValue = BuyTogetherPurchaseTracking.Value;
+                        }
+                    }
 
                     @if (Model.HaveSku)
                     {
                         if (SKUPadrao.Stock > 0)
                         {
-                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false" data-purchasetracking-type="@BuyTogetherPurchaseTrackingType" data-purchasetracking-value="@BuyTogetherPurchaseTrackingValue">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
                         }
                         else
                         {
-                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false" data-purchasetracking-type="@BuyTogetherPurchaseTrackingType" data-purchasetracking-value="@BuyTogetherPurchaseTrackingValue">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
@@ -264,14 +275,14 @@
                     {
                         if (Model.Stock > 0)
                         {
-                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together text uppercase disabled" id="btn_comprejunto" onclick="return false" data-purchasetracking-type="@BuyTogetherPurchaseTrackingType" data-purchasetracking-value="@BuyTogetherPurchaseTrackingValue">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>
                         }
                         else
                         {
-                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false">
+                            <a href="" class="ui button action fluid buy-together disabled text uppercase disabled" id="btn_comprejunto" onclick="return false" data-purchasetracking-type="@BuyTogetherPurchaseTrackingType" data-purchasetracking-value="@BuyTogetherPurchaseTrackingValue">
                                 <i class="icon add to cart"></i>
                                 Comprar Junto
                             </a>

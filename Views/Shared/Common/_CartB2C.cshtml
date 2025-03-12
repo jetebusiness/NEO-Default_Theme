@@ -1,4 +1,13 @@
-﻿<div id="miniCarrinho" class="ui right sidebar carrinho ui grid">
+﻿@{
+    string discountKey = Request.Cookies["DiscountKeyCart"] != null
+    ? Request.Cookies["DiscountKeyCart"].Value
+    : "";
+
+    ViewData["DiscountKeyCart"] = discountKey;
+
+}
+
+<div id="miniCarrinho" class="ui right sidebar carrinho ui grid">
     <div class="row padding none">
         <div class="column">
             <div class="ui grid top aligned elementos">
@@ -18,7 +27,7 @@
                 <div class="row elemento">
                     <div class="column">
                         <div class="ui items relaxed listaItems unstackable" id="ListProductsCheckout">
-                            
+
                         </div>
 
                         <div class="ui divided items right aligned dados-carrinho hideme">
@@ -78,6 +87,10 @@
                                     <span id="descricao_dica"></span>
                                 </div>
                             </div>
+
+                            @* Cupom de desconto de carrinho/mini carrinho *@
+                            @Html.Partial("~/Views/Shared/Common/_DiscountCartPartial.cshtml")
+
                             <div class="item detalhes">
                                 <div class="content">
                                     <span class="subtotal">Total a pagar: <span id="totalCarrinho"></span></span>
@@ -86,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                   
+
                 @{
                     if (Session["EventList"] == null)
                     {

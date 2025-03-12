@@ -135,8 +135,13 @@
                   {
                     if (stock > 0 && !item.FlagExhausted)
                     {
-                      <button id="addProducInCart" data-idproduct="@item.IdProduct" data-idsku="@Html.Raw(item.Sku != null ? item.Sku.FirstOrDefault().IdSku : 0)"
-                              data-variations="@Html.Raw(variations)" class="ui action button w-100">
+                      <button 
+                              id="addProducInCart" 
+                              data-idproduct="@item.IdProduct" 
+                              data-idsku="@Html.Raw(item.Sku != null ? item.Sku.FirstOrDefault().IdSku : 0)"
+                              data-variations="@Html.Raw(variations)" class="ui action button w-100"
+                              data-purchasetracking-type="wishlist" 
+                              data-purchasetracking-value="">
                         <i class="icon shopping cart"></i>
                         Adicionar ao carrinho
                       </button>

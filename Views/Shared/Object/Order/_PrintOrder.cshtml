@@ -350,7 +350,7 @@
                                 </div>
                             </div>
                             }
-                            <div class="item margin top medium">
+                        <div class="item margin top medium">
                             @{
                                 List<DomainOrder.Entities.OrderStatus> TrackingLink = Model.HistoryListOrderStatus.Where(c => c.StatusCode == "07").ToList();
                                 if (!string.IsNullOrEmpty(TrackingLink.FirstOrDefault().TrackingLink))
@@ -363,13 +363,12 @@
                                 {
                                     if ((!status.StatusName.ToLower().Contains("novo") && status.DateRegisterStatus != null) && (!status.StatusName.ToLower().Contains("aprovação") && status.DateRegisterStatus != null) && (!status.StatusName.ToLower().Contains("cancelado") && status.DateRegisterStatus != null))
                                     {
-                                        if (ViewBag.Yami != null && ViewBag.Yami.Trim() != "")
+                                        if (ViewBag.Aftersale != null && ViewBag.Aftersale.Trim() != "")
                                         {
-                                            string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", Model.IdOrder, "/", Model.Email, "/");
-                                            <a href="@urlYami" target="_blank" class="ui button orange btn-yami">Solicitar troca/devolução</a>
-
-                                            string urlYamiAcompanha = string.Concat("https://", ViewBag.Yami.Trim(), ".meuspedidos.yami.com.br/sac/8/timeline/", Model.IdOrder, "/", Model.Email);
-                                            <a href="@urlYamiAcompanha" target="_blank" class="ui button basic orange btn-yami-acompanha">Acompanhar Troca/Devolução</a>
+                                            string urlAftersale = string.Concat(ViewBag.Aftersale.Trim(), "/order/", Model.IdOrder, "/", ViewBag.OrderEmail, "/");
+                                            <a href="@urlAftersale" class="ui icon orange small button margin top bottom btn-aftersale" data-tooltip="Troca ou Devolução">
+                                                <i class="exchange icon"></i>
+                                            </a>
                                         }
                                     }
                                     break;
@@ -381,12 +380,12 @@
                                     <div class="ui modal small smartenvios text center">
                                         <i class="close icon"></i>
                                         <div class="content">
-                                        
+
                                         </div>
                                     </div>
                                 }
                             }
-                            </div>
+                        </div>
                         </div>
                     </div>
                 }

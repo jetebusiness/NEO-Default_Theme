@@ -86,10 +86,10 @@
                                             if (!order.NameStatus.ToLower().Contains("novo") && !order.NameStatus.ToLower().Contains("aprovação") && !order.NameStatus.ToLower().Contains("cancelado"))
                                             {
 
-                                                if (ViewBag.Yami.Trim() != "")
+                                                if (ViewBag.Aftersale.Trim() != "")
                                                 {
-                                                    string urlYami = string.Concat("https://", ViewBag.Yami.Trim(), ".minhatroca.com.br/request/", order.IdOrder, "/", ViewBag.OrderEmail, "/");
-                                                    <a href="@urlYami" class="ui icon orange small button margin top bottom btn-yami" data-tooltip="Troca ou Devolução">
+                                                    string urlAftersale = string.Concat(ViewBag.Aftersale.Trim(), "/order/", order.IdOrder, "/", ViewBag.OrderEmail, "/");
+                                                    <a href="@urlAftersale" class="ui icon orange small button margin top bottom btn-aftersale" data-tooltip="Troca ou Devolução">
                                                         <i class="exchange icon"></i>
                                                     </a>
                                                 }
@@ -150,7 +150,7 @@
 
 <div id="htmlOrderPrint" class="hideme"></div>
 
-<div class="ui modal yami">
+<div class="ui modal aftersale">
     <!--<div class="header">
         Troca ou Devolução
     </div>-->

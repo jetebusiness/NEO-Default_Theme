@@ -5,7 +5,17 @@
     reference: https://developers.google.com/search/docs/data-types/product
 *@
 
-<div id="Product_@Model.IdProduct" data-id="Product_@Model.IdProduct" class="ui card produto product-in-card" data-exhausted="@Model.FlagExhausted" data-signature="@Model.PurchaseRecurring" itemscope itemtype="http://schema.org/Product">
+<div 
+     id="Product_@Model.IdProduct" 
+     data-id="Product_@Model.IdProduct" 
+     class="ui card produto product-in-card" 
+     data-exhausted="@Model.FlagExhausted" 
+     data-signature="@Model.PurchaseRecurring" 
+     itemscope 
+     itemtype="http://schema.org/Product"
+     data-purchasetracking-type="@(Model.PurchaseTracking != null ? Model.PurchaseTracking.Type : "")" 
+     data-purchasetracking-value="@(Model.PurchaseTracking != null ? Model.PurchaseTracking.Value : "")" 
+     >
     <input type="hidden" id="selected-references_@Model.IdProduct" />
     <meta itemprop="productID" content="@Model.IdProduct">
     <div class="content">

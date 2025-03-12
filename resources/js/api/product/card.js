@@ -57,17 +57,25 @@ $(document).on('change', 'input.conjunct_product', function () {
 });
 
 $(document).on("click", ".btn-comprar-card", function () {
+    var div = $(this).parents(".product-in-card");
+    var type = $(div).data("purchasetracking-type");
+    var value = $(div).data("purchasetracking-value");
+
     if (!$(this).hasClass("btn-comprar-card-b2b")) {
         $(this).addClass("loading");
         CancelarCalculoFreteCart(1);
-        insertItemInCart($(this).data("idproduct"), this, true, false);
+        insertItemInCart($(this).data("idproduct"), this, true, false, type, value);
     }
 });
 
 $(document).on("click", ".btn-assinatura-card", function () {
+    var div = $(this).parents(".product-in-card");
+    var type = $(div).data("purchasetracking-type");
+    var value = $(div).data("purchasetracking-value");
+
     $(this).addClass("loading");
     CancelarCalculoFreteCart(1);
-    insertItemInCart($(this).data("idproduct"), this, true, true);
+    insertItemInCart($(this).data("idproduct"), this, true, false, type, value);
 });
 
 $(document).on("click", ".add-event-list", function () {
@@ -238,12 +246,12 @@ $(document).ready(function () {
 
 });
 
-export function insertItemInCart(productId, element, showSideBar, signature = false) {
+export function insertItemInCart(productId, element, showSideBar, signature = false, purchaseTrackingType = "", purchaseTrackingValue = "") {
     let $parent = $(element).closest("div[id^='Product_']"),
         variationSelected = getVariationIds($parent, productId);
 
     if (variationSelected.status) {
-        callAjaxInsertItemInCart(productId, variationSelected.ids, 1, element, showSideBar, signature);
+        callAjaxInsertItemInCartPurchaseTracking(productId, variationSelected.ids, 1, element, showSideBar, signature, purchaseTrackingType, purchaseTrackingValue);
     }
     else {
         _alert("", "Variação não selecionada!", "warning");
@@ -251,9 +259,13 @@ export function insertItemInCart(productId, element, showSideBar, signature = fa
     }
 }
 
+
+
 function insertItemsInCart($product_selected, minicart = true) {
 
     CancelarCalculoFreteCart(minicart);
+
+    let purchasetracking = JSON.parse(sessionStorage.getItem('purchasetracking'));
 
     let cart = []
 
@@ -263,6 +275,11 @@ function insertItemsInCart($product_selected, minicart = true) {
         let variations = getVariationIds(parent, productId)
         let idSku = parent.attr("data-idSku") && variations.ids ? parent.attr("data-idSku") : null
         let itemCart = { idProduct: productId, idSku: idSku, quantity: 1, variations: variations }
+
+        if (purchasetracking != undefined && purchasetracking.type != undefined) {
+            itemCart.purchaseTracking = purchasetracking;
+        }
+
         cart.push(itemCart)
     }
 
@@ -402,10 +419,50 @@ function callAjaxGetSku(element) {
 }
 
 export function callAjaxInsertItemInCart(idProduct, variations, quantity, element, showSidebar, signature = false) {
+
+    let purchasetracking = JSON.parse(sessionStorage.getItem('purchasetracking'));
+    let purchaseTrackingType = purchasetracking != undefined && purchasetracking.type != undefined ? purchasetracking.type : "";
+    let purchaseTrackingValue = purchasetracking != undefined && purchasetracking.value != undefined ? purchasetracking.value : "";
+
     $.ajax({
         url: "/Checkout/InsertUniqueItemCart",
         method: "POST",
-        data: { idProduct, variations, quantity, signature},
+        data: { idProduct, variations, quantity, signature, purchaseTrackingType, purchaseTrackingValue },
+        success: function (response) {
+            if (response.success) {
+
+                if (isGtmEnabled()) {
+                    getProductAndPushAddToCartEvent({ idProduct: idProduct, variations: variations, quantity: quantity });
+                }
+
+                $(document).find(".loading").removeClass("loading");
+                LoadCarrinho(showSidebar);
+
+                // Ativa ou desativa o modal de termos de aceite do Compra Recorrente
+                if ($(CompraRecorrenteCart.modalConfig.id).length > 0)
+                    $(CompraRecorrenteCart.modalConfig.id).attr("data-active", signature);
+
+                // Limpa a Storage caso um produto sem recorrencia seja adicionado
+                if (!signature)
+                    CompraRecorrenteStorage.cleanStorage();
+            }
+            else {
+                $(document).find(".loading").removeClass("loading");
+                _alert("Mensagem", response.msg, "warning")
+            }
+        },
+        error: function (response) {
+            //console.log(response);
+        }
+    });
+}
+
+export function callAjaxInsertItemInCartPurchaseTracking(idProduct, variations, quantity, element, showSidebar, signature = false, purchaseTrackingType = "", purchaseTrackingValue = "") {
+
+    $.ajax({
+        url: "/Checkout/InsertUniqueItemCart",
+        method: "POST",
+        data: { idProduct, variations, quantity, signature, purchaseTrackingType, purchaseTrackingValue },
         success: function (response) {
             if (response.success) {
 

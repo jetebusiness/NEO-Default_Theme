@@ -15,6 +15,7 @@
     string RecoverCartErrorMsg = TempData["RecoverCartError"] != null ? TempData["RecoverCartError"].ToString() : null;
     bool ShowAlert = TempData["HasCartItens"] != null ? Convert.ToBoolean(TempData["HasCartItens"]) : false;
     string hashAbandonedCart = Session["HashAbandonedCart"] != null ? Session["HashAbandonedCart"].ToString() : null;
+    bool IsRecurrent = false;
 
 
     if (payPal != null && payPal.Active)
@@ -29,6 +30,12 @@
             Env = "production";
         }
     }
+
+    string discountKey = Request.Cookies["DiscountKeyCart"] != null
+    ? Request.Cookies["DiscountKeyCart"].Value
+    : "";
+
+    ViewData["DiscountKeyCart"] = discountKey;
 }
 @section logo {
     <a href="/home" title="@LojaCorp.Control.Company._Company.FantasyName">
@@ -189,6 +196,7 @@
                     <div class="ui divided items relaxed cart" id="checkout_products_list_cart">
                         @if (Model != null && Model.CartItems != null)
                         {
+                            IsRecurrent = Model.CartItems.FirstOrDefault().IsRecurrent;
                             foreach (var product in Model.CartItems.OrderByDescending(c => c.IdCartItem))
                             {
                                 <!-- Page: ~/Views/Shared/Object/Product/_ProductCartItem.cshtml -->
@@ -260,6 +268,13 @@
                                     <span id="descricao_dica"></span>
                                 </div>
                             </div>
+
+                            @if (!IsRecurrent)
+                            {
+                                @* Cupom de desconto de carrinho/mini carrinho *@
+                                @Html.Partial("~/Views/Shared/Common/_DiscountCartPartial.cshtml")
+                            }
+
                             <div class="item detalhes">
                                 <div class="content">
                                     <div class="description">

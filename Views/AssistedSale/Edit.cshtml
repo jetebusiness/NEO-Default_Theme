@@ -216,42 +216,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    @{
-                                        if (ViewBag.CadastroCheckout != null)
-                                        {
-                                            if (ViewBag.CadastroCheckout == "S")
-                                            {
-                                                <!--CRIAR CONTA-->
-                                                <h4 class="ui dividing header">Crie sua conta</h4>
-
-                                                <div class="two fields">
-                                                    <div class="field required">
-                                                        <label>E-mail</label>
-                                                        <div class="ui left icon input">
-                                                            <i class="mail icon"></i>
-                                                            <input type="text" name="User.Email" id="UserEmail" placeholder="Seu Email"
-                                                                   value="@Model.User.UserName" data-validate="email">
-                                                        </div>
-                                                    </div>
-                                                    <div class="field required">
-                                                        <label>Senha</label>
-                                                        <div class="ui right action left icon input">
-                                                            <i class="lock icon"></i>
-                                                            <input type="password" name="User.password"
-                                                                   placeholder="*******" data-validate="password" class="password_box">
-                                                            <div class="ui basic icon button password_unhide">
-                                                                <i class="unhide icon"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--CRIAR CONTA-->
-                                            }
-                                        }
-                                    }
-
-
                                 </div>
                             </div>
 

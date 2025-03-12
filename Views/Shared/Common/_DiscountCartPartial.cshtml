@@ -1,0 +1,25 @@
+﻿@{
+    string discountKey = Request.Cookies["DiscountKeyCart"] != null
+    ? Request.Cookies["DiscountKeyCart"].Value
+    : "";
+
+    bool hasDiscountKey = !string.IsNullOrEmpty(discountKey);
+}
+
+<div class="item detalhes right aligned discountCartBlock">
+    <div class="content description discountCart" data-has-discount="@hasDiscountKey">
+        <div class="ui form">
+            <div class="inline field">
+                <div class="ui action input">
+                    <input type="text" placeholder="Cupom de Desconto"
+                           class="masked" name="key" id="key" value="@discountKey">
+                    <button class="ui right labeled icon button frete calcular buttonsMiniCart"
+                            id="applyDiscountCart">
+                        <i class="tag icon"></i>
+                        <span class="buttonText">Validar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

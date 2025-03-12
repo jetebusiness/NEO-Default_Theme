@@ -16,6 +16,20 @@ export function LoadCarrinho(showSidebar) {
             var listaProdutos = retornoAjax[0];
             $("#ListProductsCheckout").html(listaProdutos);
             UpdateCarrinho(showSidebar);
+
+            var isRecurrent = false;
+            var signatureElement = document.querySelector('[data-signature]'); 
+            if (signatureElement) {
+                var signatureValue = signatureElement.getAttribute('data-signature');
+                isRecurrent = (signatureValue === "True"); 
+            }
+            if (isRecurrent) {
+                document.querySelector(".discountCartBlock").style.display = "none";
+            } else {
+                document.querySelector(".discountCartBlock").style.display = "block";
+            }
+
+            updateDiscountUI();
         }
     });
 }
@@ -140,6 +154,8 @@ export function UpdateCarrinho(showSidebar) {
                     '    </div>\n' +
                     '</div>';
 
+                updateDiscountCartEmpty();
+
                 $("#ListProductsCheckout").html(emptyCart)
 
                 $(".dados-carrinho, .dividerPaypal").addClass("hideme")
@@ -211,4 +227,221 @@ export function LoadCarrinhoEventList(showSidebar) {
 
         }
     });
+}
+
+export function updateDiscountCart() {
+    var $discountCart = $(".description.discountCart");
+    var $applyButton = $discountCart.find("#applyDiscountCart");
+    var $keyInput = $discountCart.find("#key");
+    var hasDiscount = $discountCart.data("has-discount") === true;
+
+    updateButtonState(hasDiscount);
+
+    $keyInput.val("");
+    hasDiscount = false;
+    updateButtonState(hasDiscount);
+
+    LoadCarrinho();
+}
+
+export function updateButtonState(hasDiscount) {
+    var $discountCart = $(".description.discountCart");
+    var $applyButton = $discountCart.find("#applyDiscountCart");
+
+    if (hasDiscount) {
+        $applyButton.addClass("red")
+            .find("i").removeClass("tag icon").addClass("trash alternate icon");
+        $applyButton.find(".buttonText").text("Remover");
+    } else {
+        $applyButton.removeClass("red")
+            .find("i").removeClass("trash alternate icon").addClass("tag icon");
+        $applyButton.find(".buttonText").text("Validar");
+    }
+}
+
+
+export function updateDiscountCartEmpty() {
+    updateButtonState(false);
+    $("#key").val("");
+    deleteCookie("DiscountKeyCart");
+
+    $.ajax({
+        method: "POST",
+        url: `${window.location.origin}/Checkout/ClearDiscountSession`,
+        success: function () {}
+    });
+}
+
+export function initializeDiscountCart() {
+    var $discountCart = $(".description.discountCart");
+    var $applyButton = $discountCart.find("#applyDiscountCart");
+    var $keyInput = $discountCart.find("#key");
+
+    var discountKey = getCookie("DiscountKeyCart") || "";
+    var hasDiscount = discountKey !== ""; 
+
+    $keyInput.val(discountKey);
+    updateButtonState(hasDiscount);
+
+    $applyButton.click(function (e) {
+        e.preventDefault();
+        var key = $keyInput.val().trim();
+
+        if (hasDiscount) {
+            $.ajax({
+                method: "GET",
+                url: `${window.location.origin}/Checkout/RemoveDescontoCheckout`,
+                success: function (response) {
+                    if (response.success) {
+                        swal({
+                            title: "Cupom removido!",
+                            text: `O cupom ${discountKey} foi removido com sucesso.`,
+                            icon: "success",
+                            timer: 2500,
+                            buttons: false
+                        });
+
+                        deleteCookie("DiscountKeyCart");
+                        $keyInput.val("");
+                        hasDiscount = false;
+                        updateButtonState(hasDiscount);
+
+                        $.ajax({
+                            method: "POST",
+                            url: `${window.location.origin}/Checkout/ClearDiscountSession`,
+                            success: function () {}
+                        });
+
+                    } else {
+                        swal({
+                            title: "Erro ao remover!",
+                            text: "Ocorreu um erro ao tentar remover o cupom.",
+                            icon: "error",
+                            timer: 2500,
+                            buttons: false
+                        });
+                    }
+                    LoadCarrinho();
+                },
+                error: function () {
+                    swal({
+                        title: "Erro!",
+                        text: "Não foi possível remover o cupom.",
+                        icon: "warning",
+                        timer: 2500,
+                        buttons: false
+                    });
+                }
+            });
+            return;
+        }
+
+        if (key !== "") {
+            setCookie("DiscountKeyCart", key, 1);
+            $.ajax({
+                method: "POST",
+                url: `${window.location.origin}/Checkout/AplicaDescontoCheckout`,
+                data: { key },
+                success: function (response) {
+                    if (response.success) {
+                        swal({
+                            title: "Cupom aplicado!",
+                            text: `O desconto foi aplicado com sucesso para o cupom ${key}.`,
+                            icon: "success",
+                            timer: 2500,
+                            buttons: false
+                        });
+                        hasDiscount = true;
+                        updateButtonState(hasDiscount);
+                    } else {
+                        swal({
+                            title: "Cupom inválido!",
+                            text: "Verifique o código e tente novamente.",
+                            icon: "error",
+                            timer: 2500,
+                            buttons: false
+                        });
+
+                        deleteCookie("DiscountKeyCart");
+                        hasDiscount = false;
+                        updateButtonState(hasDiscount);
+                    }
+                    LoadCarrinho();
+                },
+                error: function () {
+                    swal({
+                        title: "Erro!",
+                        text: "Não foi possível aplicar o cupom.",
+                        icon: "warning",
+                        timer: 2500,
+                        buttons: false
+                    });
+                    deleteCookie("DiscountKeyCart");
+                    updateButtonState(false);
+                }
+            });
+        } else {
+            swal({
+                title: "Cupom vazio!",
+                text: "Digite um código de desconto antes de aplicar.",
+                icon: "info",
+                timer: 2500,
+                buttons: false
+            });
+            updateButtonState(false);
+        }
+    });
+
+    $keyInput.on("input", function () {
+        hasDiscount = false;
+        updateButtonState(hasDiscount);
+    });
+}
+
+export function updateDiscountUI() {
+    var $discountCart = $(".description.discountCart");
+    var $applyButton = $discountCart.find("#applyDiscountCart");
+    var $keyInput = $discountCart.find("#key");
+
+    var discountKey = getCookie("DiscountKeyCart");
+    var hasDiscount = !!discountKey;
+
+    $keyInput.val(discountKey || "");
+
+    if (hasDiscount) {
+        $applyButton.addClass("red")
+            .find("i").removeClass("tag icon").addClass("trash alternate icon");
+        $applyButton.find(".buttonText").text("Remover");
+    } else {
+        $applyButton.removeClass("red")
+            .find("i").removeClass("trash alternate icon").addClass("tag icon");
+        $applyButton.find(".buttonText").text("Validar");
+    }
+}
+
+
+export function getCookie(name) {
+    let nameEQ = name + "=";
+    let cookiesArray = document.cookie.split(';');
+    for (let i = 0; i < cookiesArray.length; i++) {
+        let cookie = cookiesArray[i].trim();
+        if (cookie.indexOf(nameEQ) === 0) {
+            return cookie.substring(nameEQ.length, cookie.length);
+        }
+    }
+    return null;
+}
+
+export function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = `${name}=${value}; path=/;${expires}`;
+}
+
+export function deleteCookie(name) {
+    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
 }

@@ -1,7 +1,12 @@
 ﻿@model DomainCheckout.Entities.Cart
 @{
     bool permiteVenda = true;
-    var currentClient = (DomainCustomer.Entities.Customer) Session["UserAuthenticated"];
+    var currentClient = (DomainCustomer.Entities.Customer)Session["UserAuthenticated"];
+    string discountKey = Request.Cookies["DiscountKeyCart"] != null
+    ? Request.Cookies["DiscountKeyCart"].Value
+    : "";
+
+    ViewData["DiscountKeyCart"] = discountKey;
 }
 @if (Model != null)
 {
@@ -34,12 +39,12 @@
                                                 <div class="description">
                                                     <p>@Html.Raw(currentClient.Email.ToString())</p>
                                                     <p>
-                                                        CPF: 
+                                                        CPF:
                                                         @{
-                                                        string CpfCnpj = currentClient.Cpf_cnpj;
+                                                            string CpfCnpj = currentClient.Cpf_cnpj;
 
-                                                        if (!CpfCnpj.Contains("*"))
-                                                        {
+                                                            if (!CpfCnpj.Contains("*"))
+                                                            {
                                                                 CpfCnpj = Convert.ToUInt64(CpfCnpj).ToString(@"000\.000\.000\-00");
                                                             }
                                                         }
@@ -59,7 +64,7 @@
                         </div>
                         <!-- Fim Venda Assistida -->
                     }
-                    
+
                     @if (Session["Seller"] != null && (currentClient == null || currentClient.User == null || currentClient.User.UserName == null))
                     {
                         permiteVenda = false;
@@ -121,64 +126,68 @@
 
                             @if (Session["EventList"] == null)
                             {
-                                <div class="ui divided items right aligned dados-carrinho @(Model != null && Model.CartItems != null && Model.CartItems.Any() ? "" : "hideme")">
-                                    <div class="item detalhes text right">
-                                        <div class="content">
-                                            <div class="description">
-                                                <span>Desconto: <span id="descontoCarrinho">@string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)</span></span>
-                                            </div>
-                                        </div>
+                        <div class="ui divided items right aligned dados-carrinho @(Model != null && Model.CartItems != null && Model.CartItems.Any() ? "" : "hideme")">
+                            <div class="item detalhes text right">
+                                <div class="content">
+                                    <div class="description">
+                                        <span>Desconto: <span id="descontoCarrinho">@string.Format("{0:c}", Model != null ? Model.TotalDiscount : 0)</span></span>
                                     </div>
-                                    <div class="item detalhes text right">
-                                        <div class="content">
-                                            <div class="description">
-                                                <span>Subtotal: <span id="subTotalCarrinho">@string.Format("{0:c}", Model != null ? Model.SubTotal : 0)</span></span>
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes text right">
+                                <div class="content">
+                                    <div class="description">
+                                        <span>Subtotal: <span id="subTotalCarrinho">@string.Format("{0:c}", Model != null ? Model.SubTotal : 0)</span></span>
                                     </div>
-                                    <div class="item detalhes">
-                                        <div class="content">
-                                            <div class="description frete">
-                                                <div class="ui form">
-                                                    <div class="inline field">
-                                                        <label>Calcular Frete</label>
-                                                        <div class="ui action input">
-                                                            <input type="text" placeholder="00000-000"
-                                                                   class="masked mask_zipcode" size="9" name="cep" id="shipping">
-                                                            <button class="ui right labeled icon button frete calcular buttonsMiniCart" id="CallServiceShippingMiniCart">
-                                                                <i class="shipping icon"></i>
-                                                                Calcular
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="description resultado">
-                                                <div class="ui form">
-                                                    <div class="field">
-                                                        <label class="frete valor"></label>
-                                                        <div class="ui">
-                                                            <button class="ui right labeled icon mini button frete recalcular margin none" id="btn_recalcular_frete">
-                                                                <i class="refresh icon"></i>
-                                                                Recalcular
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                </div>
+                            </div>
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <div class="description frete">
+                                        <div class="ui form">
+                                            <div class="inline field">
+                                                <label>Calcular Frete</label>
+                                                <div class="ui action input">
+                                                    <input type="text" placeholder="00000-000"
+                                                           class="masked mask_zipcode" size="9" name="cep" id="shipping">
+                                                    <button class="ui right labeled icon button frete calcular buttonsMiniCart" id="CallServiceShippingMiniCart">
+                                                        <i class="shipping icon"></i>
+                                                        Calcular
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="item detalhes hideme" id="dica_frete">
-                                        <div class="content">
-                                            <span id="descricao_dica"></span>
-                                        </div>
-                                    </div>
-                                    <div class="item detalhes">
-                                        <div class="content">
-                                            <span class="subtotal">Total a pagar: <span id="totalCarrinho">@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></span>
+                                    <div class="description resultado">
+                                        <div class="ui form">
+                                            <div class="field">
+                                                <label class="frete valor"></label>
+                                                <div class="ui">
+                                                    <button class="ui right labeled icon mini button frete recalcular margin none" id="btn_recalcular_frete">
+                                                        <i class="refresh icon"></i>
+                                                        Recalcular
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="item detalhes hideme" id="dica_frete">
+                                <div class="content">
+                                    <span id="descricao_dica"></span>
+                                </div>
+                            </div>
+
+                            @* Cupom de desconto de carrinho/mini carrinho *@
+                            @Html.Partial("~/Views/Shared/Common/_DiscountCartPartial.cshtml")
+
+                            <div class="item detalhes">
+                                <div class="content">
+                                    <span class="subtotal">Total a pagar: <span id="totalCarrinho">@string.Format("{0:c}", Model != null ? Model.Total : 0)</span></span>
+                                </div>
+                            </div>
+                        </div>
                             }
                         </div>
                     </div>
@@ -200,7 +209,7 @@
         <input type="hidden" id="permiteVenda" value="@permiteVenda.ToString()" />
     </div>
 
-  @* Compra Recorrente: Termo de Aceite *@
-  @Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_Terms.cshtml")
+    @* Compra Recorrente: Termo de Aceite *@
+    @Html.Partial("~/Views/Shared/Blocks/RecurringPurchase/_Terms.cshtml")
 
 }
