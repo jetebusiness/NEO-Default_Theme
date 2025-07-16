@@ -202,7 +202,8 @@ var useAntiFraudMaxiPago = false;
 function GerarPedidoCompleto(
     idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick,
     saveCardOneClick, userAgent, hasScheduledDelivery, paymentSession, paymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken,
-    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument, has3DS20, cavv3DS20, xid3DS20, eci3DS20, version3DS20, referenceId3DS20, cancelBonus
+    googleResponse, deliveryTime, usefulDay, SelectedRecurrentTime, labelOneClick, typeDocument, has3DS20, cavv3DS20, xid3DS20, eci3DS20, version3DS20, referenceId3DS20, cancelBonus,
+    latitude, longitude
 ) {
     if ($("#PaymentLinkChangeBrand").val() == undefined || $("#PaymentLinkChangeBrand").val() == "0") {
         var stop = false;
@@ -256,7 +257,9 @@ function GerarPedidoCompleto(
             cancelBonus: cancelBonus,
             colorDepth: screen.colorDepth,
             screenHeight: screen.height,
-            screenWidth: screen.width
+            screenWidth: screen.width,
+            latitude: latitude,
+            longitude: longitude
         },
         success: function (response) {
             if (response.success === true) {
@@ -1074,6 +1077,8 @@ function OrderCreate() {
 
                 var validaFrete = "";
                 //var hasBraspag3DS20 = $('#hasBraspag3DS20').val();
+                var latitude = "";
+                var longitude = "";
 
                 switch ($this.prop("id")) {
                     case "btnCardDebit":
@@ -1252,6 +1257,26 @@ function OrderCreate() {
                             LoadIframeAntiFraudMaxiPago(idCustomer, idInstallment, idPaymentBrand, idAddress, mensagem)
                             //Gerar pedido completo com atraso de 5 segundos
                             setTimeout(function () { GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument); }, 5000);
+                        }
+                        else if (tipoVerificacao === "S" && $this.attr("data-gateway") === "mundipagg") {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(
+                                    function (position) {
+                                        latitude = position.coords.latitude;
+                                        longitude = position.coords.longitude;
+
+                                        GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument, null, null, null, null, null, null, null, latitude, longitude);
+                                    },
+                                    function (error) {
+                                        GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument);
+                                    }
+                                );
+
+                                return;
+                            }
+                            else {
+                                GerarPedidoCompleto(idCustomer, idAddress, presente, mensagem, idInstallment, idPaymentBrand, card, nameCard, expDateCard, cvvCard, brandCard, installmentNumber, kind, document, idOneClick, saveCardOneClick, userAgent, hasScheduledDelivery, PaymentSession, PaymentHash, shippingMode, dateOfBirth, phone, installmentValue, installmentTotal, cardToken, googleResponse, deliveryTime, usefulDay, selectedRecurrentTime, labelOneClick, typeDocument);
+                            }
                         }
                         else if (tipoVerificacao === "S" && $this.attr("data-gateway") === "iugu") {
                             Iugu.createPaymentToken($('#validCardCredit').get(0), function (response) {
@@ -1738,13 +1763,17 @@ function atualizaParcelamento(codigoBandeira, oneclick, idOnBlur, slParcelamento
                 var objMercadoPago = response.MercadoPago;
                 var objAppMax = response.AppMax;
                 var objIugu = response.Iugu;
+                var objMundiPagg = response.MundiPagg;
                 var objParcelamento = 0;
                 if (response.ListInstallment != null && response.ListInstallment != "")
                     objParcelamento = response.ListInstallment;
 
                 if (objMsgError == "" || typeof (objMsgError) == "undefined" || objParcelamento.length > 0) {
                     //if($('#divScriptPagSeguro').length > 0) $('#divScriptPagSeguro').remove();
-                    if (typeof (objIugu) != "undefined" && objIugu == true) {
+                    if (typeof (objMundiPagg) != "undefined" && objMundiPagg == true) {
+                        $("#btnCardCredit").attr("data-gateway", "mundipagg");
+                    }
+                    else if (typeof (objIugu) != "undefined" && objIugu == true) {
                         $("#btnCardCredit").attr("data-gateway", "iugu");
                     }
                     else if (typeof (objAppMax) != "undefined" && objAppMax == true) {
